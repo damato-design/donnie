@@ -1,3 +1,1 @@
-# [donniedamato](https://donniedamato.info)
-
-Personal site, hosted using netlify
+# [donnie.damato.design](https://donnie.damato.design)
