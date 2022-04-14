@@ -402,11 +402,20 @@ footer .blueprint:after {
   width: 1em;
 }
 
-.copyright {
-  font-family: monospace;
+.copyright a {
   font-size: .8em;
-  text-align: right;
   margin: 1rem 0 0;
+  display: flex;
+  align-items: center;
+  gap: 1ch;
+  justify-content: center;
+  color: currentColor;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.ds-house-logo {
+  width: 2rem;
 }
 
 /* illustrations */
