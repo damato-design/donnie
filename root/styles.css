@@ -6,6 +6,10 @@ body {
   padding-inline: var(--space--near);
 }
 
+.button {
+  font-weight: bolder;
+}
+
 .blueprint {
   position: relative;
   border: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
