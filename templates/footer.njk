@@ -1,8 +1,7 @@
-<footer class="max-width content-padding">
-  <div class="content-padding blueprint">
-  <div class="contact-social split">
-  <div>
-       <a href="https://codepen.io/fauxserious" title="CodePen" aria-label="CodePen">
+<div class="blueprint">
+  <fab-four threshold="600px" gap="var(--space--near)">
+    <div class="group">
+      <a href="https://codepen.io/fauxserious" title="CodePen" aria-label="CodePen">
         {% include "svg/social-codepen.svg" %}
       </a>
       <a href="https://github.com/ddamato" title="GitHub" aria-label="GitHub">
@@ -14,8 +13,8 @@
       <a href="https://medium.com/ddamato" title="Medium" aria-label="Medium">
         {% include "svg/social-medium.svg" %}
       </a>
-      </div>
-      <div>
+    </div>
+    <div class="group">
       <a href="https://stackoverflow.com/users/story/3928045" title="StackOverflow" aria-label="StackOverflow">
         {% include "svg/social-stackoverflow.svg" %}
       </a>
@@ -28,13 +27,7 @@
       <a href="https://youtube.com/c/donniedamato" title="YouTube" aria-label="YouTube">
         {% include "svg/social-youtube.svg" %}
       </a>
-      </div>
-  </div>
-  <div class="copyright">
-    <a href="https://damato.design">
-        Member of
-       {% include "svg/ds-house.svg" %}
-       circa 2020
-    </a>
-  </div>
-</footer>
+    </div>
+  </fab-four>
+  <site-attribution></site-attribution>
+</div>
