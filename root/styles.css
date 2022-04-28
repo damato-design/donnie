@@ -60,6 +60,8 @@ section {
 
 section h2 {
   text-align: center;
+  font: inherit;
+  font-weight: bolder;
   display: flex;
   justify-content: space-between;
   gap: var(--space--near);
