@@ -1,14 +1,10 @@
-let blockColor = 'var(--blockcolor)';
-let pegColor = 'var(--pegcolor)';
-let pegFace = 'var(--pegface)';
-
-blockColor = 'rgb(9, 83, 156)';
-pegColor = 'rgb(8, 75 ,152)';
-pegFace = 'rgb(9, 83, 156)';
+const blockColor = '#102d8c';
+const pegColor = '#0d287b';
+const pegFace = '#102d8c';
 
 const illo = new Zdog.Illustration({
 	// set canvas with selector
-	element: ".zdog-illustration",
+	element: "#zdog-illustration",
 	zoom: 16,
 	resize: true,
 	rotate: { 
@@ -77,5 +73,5 @@ function animate() {
 	requestAnimationFrame(animate);
 	t0 = t1;
 }
-
 animate();
+

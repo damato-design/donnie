@@ -5,13 +5,9 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf _site",
-    "compile": "nunjucks index.njk -p templates -o _site/",
-    "dev": "rm -rf _site && npm run compile && npm run copy",
-    "build": "npm run dev && npm run minify",
     "copy": "mkdir -p _site && cp -r root/. _site",
-    "minify": "npm run minify:resources && npm run minify:content",
-    "minify:resources": "ls-minifier --input=./_site --js-compressor=terser --css-compressor=clean-css --override",
-    "minify:content": "html-minifier --conservative-collapse --minify-css --minify-js --remove-comments --output-dir _site --input-dir _site --file-ext=html"
+    "compile": "nunjucks index.njk -p templates -o _site/",
+    "build": "rm -rf _site && npm run compile && npm run copy"
   },
   "repository": {
     "type": "git",
@@ -25,8 +21,6 @@
   },
   "homepage": "https://github.com/damato-design/donnie#readme",
   "devDependencies": {
-    "html-minifier": "^4.0.0",
-    "ls-minifier": "^2.0.0",
     "nunjucks": "^3.2.2",
     "nunjucks-cli": "^1.0.0"
   }

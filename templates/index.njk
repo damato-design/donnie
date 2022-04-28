@@ -3,13 +3,42 @@
   <head>
     {% include "head.njk" %}
   </head>
-  <body>
-    {% include "header.njk" %}
-    {% include "hero.njk" %}
-    {% include "ds-cards.njk" %}
-    {% include "uxeng.njk" %}
-    {% include "dd-feature.njk" %}
-    {% include "education.njk" %}
-    {% include "footer.njk" %}
+  <body data-density-shift>
+    <canvas id="zdog-illustration" role="presentation"></canvas>
+    <header>
+      <div class="max-content">
+        {% include "header.njk" %}
+      </div>
+    </header>
+    <section class="feature" style="margin: 0;">
+      <div class="max-content" style="padding-block: var(--space--away);">
+        {% include "hero.njk" %}
+      </div>
+    </section>
+    <section>
+      <div class="max-content">
+        {% include "ds-cards.njk" %}
+      </div>
+    </section>
+    <section>
+      <div class="max-content">
+        {% include "uxeng.njk" %}
+      </div>
+    </section>
+    <section class="feature">
+      <div class="max-content">
+        {% include "dd-feature.njk" %}
+      </div>
+    </section>
+    <section>
+      <div class="max-content">
+        {% include "education.njk" %}
+      </div>
+    </section>
+    <footer>
+      <div class="max-content">
+        {% include "footer.njk" %}
+      </div>
+    </footer>
   </body>
 </html>
