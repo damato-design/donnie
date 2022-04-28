@@ -59,7 +59,7 @@ fab-four a:hover svg {
 }
 
 section {
-  padding-block: var(--space--away);
+  margin-block: var(--space--away);
 }
 
 section h2 {
@@ -87,12 +87,14 @@ p > strong {
   background: var(--box_low-contrast_background-color);
   border-top: var(--box_standard_border-size) solid var(--box_low-contrast_border-color);
   border-bottom: var(--box_standard_border-size) solid var(--box_low-contrast_border-color);
+  padding-block: var(--space--away);
 }
 
 header {
   position: sticky;
   top: 0;
   z-index: 1;
+  background: var(--box_low-contrast_background-color);
 }
 
 #header {
