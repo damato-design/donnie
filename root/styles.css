@@ -1,3 +1,7 @@
+body {
+  background-attachment: fixed;
+}
+
 .max-content {
   padding-inline: var(--space--near);
 }
@@ -5,7 +9,7 @@
 .blueprint {
   position: relative;
   border: 1px dashed;
-  padding: var(--space--near);
+  padding: var(--space--away);
   margin-top: var(--space--near);
 }
 
@@ -37,6 +41,19 @@ fab-four {
   align-self: stretch;
 }
 
+fab-four ~ p {
+  text-align: justify;
+}
+
+fab-four svg {
+  opacity: .4;
+  transition: .218s ease;
+}
+
+fab-four a:hover svg {
+  opacity: 1;
+}
+
 section {
   padding-block: var(--space--away);
 }
@@ -55,6 +72,22 @@ section h2:after {
   flex: 1;
   border-bottom: 1px dashed;
   transform: translateY(-50%);
+}
+
+strong {
+  color: var(--feedback_standard_foreground-color);
+}
+
+.feature {
+  background: var(--box_low-contrast_background-color);
+  border-top: var(--box_standard_border-size) solid var(--box_low-contrast_border-color);
+  border-bottom: var(--box_standard_border-size) solid var(--box_low-contrast_border-color);
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 #header {
@@ -104,6 +137,7 @@ section h2:after {
 
 .group svg {
   width: 6em;
+  fill: currentColor;
 }
 
 .group a svg {
@@ -112,11 +146,16 @@ section h2:after {
 
 #brick-illustration svg {
   filter: grayscale(1);
-  mix-blend-mode: soft-light;
+  mix-blend-mode: hard-light;
   padding: var(--space--near);
   padding-bottom: 0;
 }
 
 footer {
   text-align: center;
+}
+
+footer a,
+footer a:hover {
+  color: inherit;
 }
