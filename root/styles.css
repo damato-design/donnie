@@ -8,7 +8,7 @@ body {
 
 .blueprint {
   position: relative;
-  border: 1px dashed;
+  border: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
   padding: var(--space--away);
   margin-top: var(--space--near);
 }
@@ -23,15 +23,15 @@ body {
 }
 
 .blueprint:before {
-  border-bottom: 1px dashed;
-  border-left: 1px dashed;
+  border-bottom: inherit;
+  border-left: inherit;
   bottom: 100%;
   left: 100%;
 }
 
 .blueprint:after {
-  border-top: 1px dashed;
-  border-right: 1px dashed;
+  border-top: inherit;
+  border-right: inherit;
   top: 100%;
   right: 100%;
 }
@@ -60,7 +60,6 @@ section {
 
 section h2 {
   text-align: center;
-  font: inherit;
   font-weight: bolder;
   display: flex;
   justify-content: space-between;
@@ -72,11 +71,11 @@ section h2:before,
 section h2:after {
   content: '';
   flex: 1;
-  border-bottom: 1px dashed;
+  border-bottom: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
   transform: translateY(-50%);
 }
 
-strong {
+p > strong {
   color: var(--feedback_standard_foreground-color);
 }
 
@@ -114,19 +113,19 @@ header {
 }
 
 .topic-card liga-icon {
-  border: 1px dashed;
+  border: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
   border-radius: 50%;
   padding: 0.25em;
   transition: .218s ease;
 }
 
-.topic-card h3 {
+.topic-card strong {
   align-self: center;
 }
 
 .topic-card hr {
   border: 0;
-  border-left: 1px dashed;
+  border-left: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
   margin: 0 auto;
 }
 
