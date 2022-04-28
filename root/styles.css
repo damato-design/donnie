@@ -1,6 +1,17 @@
+.max-content {
+  padding-inline: var(--space--near);
+}
+
+section {
+  margin-block: var(--space--away);
+}
+
 #header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space--near);
+}
+
+#hero {
+  align-items: center;
 }
