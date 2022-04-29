@@ -112,6 +112,11 @@ header {
   align-items: center;
 }
 
+.headline {
+  font-size: 4em;
+  white-space: pre-line;
+}
+
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
