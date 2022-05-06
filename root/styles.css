@@ -130,6 +130,7 @@ header {
   grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
   gap: var(--space--away);
   margin-block: var(--space--away);
+  align-items: baseline;
 }
 
 topic-summary liga-icon {
