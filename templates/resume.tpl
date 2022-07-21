@@ -8,7 +8,7 @@
     <script type="text/javascript" src="qrcode.min.js"></script>
   </head>
   <body data-density-shift>
-    <main data-density-shift class="max-content content" id="main">
+    <main data-density-shift class="max-content" id="main">
       {% include "_includes/resume-header.njk" %}
       {% include "_includes/resume-summary.njk" %}
       {% include "_includes/resume-experience.njk" %}
