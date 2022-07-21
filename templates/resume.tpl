@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     {% include "_includes/head.njk" %}
-    <link href="https://fonts.googleapis.com/css2?family=Hepta+Slab:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lustria&family=Manrope:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://system.damato.design/themes/resume.theme.css">
     <link rel="stylesheet" href="resume.styles.css">
     <script type="text/javascript" src="qrcode.min.js"></script>
   </head>

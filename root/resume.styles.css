@@ -1,10 +1,7 @@
-body {
-  font-family: Hepta Slab, sans-serif;
-  color: #111;
-}
-
 h1, h2, h3 {
   font-weight: bolder;
+  margin: 0 !important;
+  border: 0 !important;
 }
 
 hr {
@@ -51,9 +48,10 @@ hr {
 .tags li {
   font-weight: bolder;
   margin: 0;
-  background: #eee;
-  border-radius: .25em;
-  padding: .5em 1em;
+  background: var(--box_low-contrast_background-color);
+  border:var(--box_standard_border-size) solid var(--box_low-contrast_border-color);;
+  border-radius: var(--box_standard_border-curve);
+  padding: .2em .7em;
 }
 
 .experience small {
