@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf _site",
     "copy": "mkdir -p _site && cp -r root/. _site",
-    "compile": "nunjucks index.njk -p templates -o _site/",
+    "compile": "nunjucks *.tpl -p templates -o _site/",
     "build": "rm -rf _site && npm run compile && npm run copy"
   },
   "repository": {
