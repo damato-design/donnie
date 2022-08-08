@@ -60,10 +60,6 @@ hr {
   -webkit-print-color-adjust: exact !important;
 }
 
-.experience {
-  break-before: page;
-}
-
 .experience h3 {
   margin: 0;
 }
