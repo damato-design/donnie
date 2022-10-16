@@ -55,10 +55,6 @@ fab-four {
   align-self: stretch;
 }
 
-fab-four ~ p {
-  text-align: justify;
-}
-
 fab-four svg {
   opacity: .4;
   transition: .218s ease;
@@ -110,6 +106,7 @@ header {
   top: 0;
   z-index: 1;
   background: var(--box_standard_background-color);
+  border-bottom: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
 }
 
 #header {
