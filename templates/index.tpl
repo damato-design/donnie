@@ -15,7 +15,7 @@
       </div>
     </header>
     <section class="feature" id="hero">
-      <div class="max-content" style="padding-block: var(--space--away);">
+      <div class="max-content">
         {% include "_includes/index-hero.njk" %}
       </div>
     </section>
