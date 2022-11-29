@@ -44,6 +44,5 @@
         {% include "_includes/index-footer.njk" %}
       </div>
     </footer>
-    <a rel="me" href="https://social.design.systems/@donnie"></a>
   </body>
 </html>
