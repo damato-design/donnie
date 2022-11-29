@@ -44,5 +44,6 @@
         {% include "_includes/index-footer.njk" %}
       </div>
     </footer>
+    <a rel="me" href="https://mastodon.social/@donniedamato"></a>
   </body>
 </html>
