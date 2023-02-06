@@ -35,16 +35,14 @@
 </script>
 
 <link rel="preconnect" href="https://www.google-analytics.com" crossorigin />
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-54428903-2"></script>
+<script src="https://getinsights.io/js/insights.js"></script>
 <script>
-  if (window.location.hostname === 'donnie.damato.design') {
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'UA-54428903-2', {'transport_type': 'beacon'});
-  }
+insights.init('ZXc1EYEuX0C3DxZJ', {
+  disabled: 'donnie.damato.design' !== window.location.hostname
+});
+console.info(`Analytics disabled: ${insights.DEFAULT_APP.options.disabled}`);
+insights.trackPages();
 </script>
-
 <script type="application/ld+json">
 {
   "@context": "schema.org",
