@@ -36,10 +36,10 @@ export default class InterestPoint extends window.HTMLElement {
             if (this.url) {
                 const link = document.createElement('a');
                 link.href = this.url;
-                link.textContent = this.title;
+                link.innerHTML = this.title;
                 this._$title.appendChild(link);
             } else {
-                this._$title.textContent = this.title;
+                this._$title.innerHTML = this.title;
             }
         }
 

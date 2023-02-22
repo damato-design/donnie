@@ -1,5 +1,15 @@
 [
     {
+        "title": "Complementary Space",
+        "url": "https://complementary.space",
+        "type": "exploration",
+        "datetime": "2022-11-15T00:00:00.000Z"
+    }, {
+        "title": "Gridless Design",
+        "url": "https://gridless.design",
+        "type": "exploration",
+        "datetime": "2021-07-15T00:00:00.000Z"
+    }, {
         "title": "Engineering Consultant @ Candy",
         "url": "https://candy.com",
         "type": "role",
