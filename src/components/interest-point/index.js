@@ -7,7 +7,7 @@ const TYPES = {
     role: 'work_history',
     podcast: 'podcasts',
     package: 'code',
-    presentation: 'podium',
+    presentation: 'co_present',
     video: 'play_circle',
 }
 

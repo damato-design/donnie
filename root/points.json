@@ -10,6 +10,26 @@
         "type": "exploration",
         "datetime": "2021-07-15T00:00:00.000Z"
     }, {
+        "title": "Grids are not inclusive",
+        "url": "https://uxdx.com/blog/grids-are-not-inclusive-how-to-design-without-the-grid/",
+        "type": "article",
+        "datetime": "2023-02-20T00:00:00.000Z"
+    }, {
+        "title": "Shifting towards a gridless design system",
+        "url": "https://www.youtube.com/watch?v=V_FfUrmLnQ0",
+        "type": "presentation",
+        "datetime": "2022-10-20T00:00:00.000Z"
+    }, {
+        "title": "What does a UX Architect do?",
+        "url": "https://www.youtube.com/watch?v=tevn_OlmiHw",
+        "type": "podcast",
+        "datetime": "2022-06-27T00:00:00.000Z"
+    }, {
+        "title": "Design systems reflect those who use, maintain and are a part of it",
+        "url": "https://www.designsystemspodcast.com/episodes/episode/760029f3/59-jennifer-damato-senior-uiux-designer-and-donnie-damato-senior-engineer-design-systems-reflect-those-who-use-maintain-and-are-a-part-of-it",
+        "type": "podcast",
+        "datetime": "2023-01-30T00:00:00.000Z"
+    }, {
         "title": "Engineering Consultant @ Candy",
         "url": "https://candy.com",
         "type": "role",
