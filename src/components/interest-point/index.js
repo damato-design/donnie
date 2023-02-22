@@ -86,4 +86,7 @@ export default class InterestPoint extends window.HTMLElement {
     }
 }
 
-window.customElements.define('interest-point', InterestPoint);
+window.customElements.whenDefined('time-marker').then(() => {
+    window.customElements.define('interest-point', InterestPoint);
+});
+

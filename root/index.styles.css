@@ -47,8 +47,9 @@ h1, h2 {
 main {
     max-width: var(--max-width);
     margin-inline: auto;
-    margin-block: var(--space-away);
+    margin-block-start: var(--space-away);
     padding: var(--space-away);
+    padding-block-end: 0;
     background-position: center;
     background-size: var(--space-away) var(--space-away);
     background-image: 
@@ -139,11 +140,30 @@ header span {
     font-size: min(10vw, 4em);
     color: var(--accent-fg);
     line-height: 1;
-    margin: 0 0 var(--space-near);
+    margin: 0; 
 }
 
 .hero p {
-    margin: 0;
+    margin: var(--space-away) 0;
+}
+
+.hero time-marker {
+    position: absolute;
+    top: 100%;
+    transform: translateY(-50%);
+    right: calc(100% - var(--space-away) + var(--timeline-width) + 1px);
+}
+
+.hero:hover time-marker::part(scale) {
+    --scale: 1;
+}
+
+.hero:hover time-marker::part(background) {
+    background-color: var(--accent-bg);
+}
+
+.hero:hover time-marker::part(display) {
+    display: block;
 }
 
 .timeline {
@@ -153,4 +173,5 @@ header span {
     margin: 0;
     margin-inline-start: var(--space-away);
     padding: var(--space-away) 0;
+    gap: calc(var(--space-away) * 2);
 }
