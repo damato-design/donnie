@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');
+
+:host {
+    --width: 460px;
+    --gap: 20vw;
+    display: flex;
+}
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+:host:before {
+    content: '';
+    display: block;
+    width: var(--gap);
+}
+
+li {
+    list-style: none;
+    background-color: var(--contrast-bg);
+    border: 1px dashed var(--contrast-fg);
+    border-top-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    position: relative;
+    padding: var(--space-away);
+    flex: 1;
+    box-shadow: var(--lift-shadow);
+}
+
+li:before,
+li:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: var(--space-near);
+    aspect-ratio: 1/1;
+}
+
+li:before {
+    right: 100%;
+    bottom: 100%;
+    border-bottom: 1px dashed var(--contrast-fg);
+    border-right: 1px dashed var(--contrast-fg);
+}
+
+li:after {
+    left: 100%;
+    top: 100%;
+    border-top: 1px dashed var(--contrast-fg);
+    border-left: 1px dashed var(--contrast-fg);
+}
+
+summary {
+    display: flex;
+    gap: var(--space-near);
+}
+
+#type {
+    background-color: var(--accent-bg);
+    color: var(--accent-fg);
+    padding: .2em .5em;
+    font-size: .8em;
+    text-transform: uppercase;
+}
+
+#title {
+    font-family: Cy, sans-serif;
+    font-size: min(5vw, 2em);
+    margin: 0;
+    line-height: 1.1;
+}
+
+.anchor {
+    color: var(--accent-bg);
+    background: repeating-linear-gradient(
+        -45deg, transparent, 
+        transparent 8px, 
+        currentcolor 8px, 
+        currentcolor 9px
+    );
+    padding: var(--space-near);
+    display: flex;
+    align-items: center;
+}
+
+.point {
+    padding: 2px;
+    display: inline-flex;
+    border: 1px solid var(--accent-fg);
+    align-items: center;
+    position: relative;
+    background-color: var(--contrast-bg);
+}
+
+#icon {
+    background-color: var(--accent-fg);
+    color: var(--contrast-bg);
+}
+
+.track {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    right: 100%;
+    --spacing: calc(var(--space-near) + var(--space-away) + var(--timeline-width) + 1px);
+    width: calc(var(--gap) + var(--spacing));
+}
+
+.track hr {
+    flex: 1;
+    height: 4px;
+    border-top: 1px solid var(--accent-fg);
+    border-bottom: 1px solid var(--accent-fg);
+    border-left: 1px solid var(--contrast-bg);
+    border-right: 1px solid var(--contrast-bg);
+    background-color: var(--contrast-bg);
+}
+
+.content {
+    border-inline-start: 6px solid var(--accent-fg);
+    padding-inline-start: var(--space-near);
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    flex: 1;
+}

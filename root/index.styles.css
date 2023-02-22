@@ -1,181 +1,156 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');
+
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+:root {
+    --contrast-fg: #fff;
+    --contrast-bg: #0f0c29;
+    --accent-fg: #28fbbc;
+    --accent-bg: #243842;
+    --max-width: 860px;
+    --timeline-width: 4px;
+    --lift-shadow: 
+        6px 6px var(--contrast-bg),
+        -6px 6px var(--contrast-bg),
+        6px -6px var(--contrast-bg),
+        -6px -6px var(--contrast-bg);
+}
+
 body {
-  background-attachment: fixed;
-  overflow-x: hidden;
+    --space-away: min(4vw, 2rem);
+    --space-near: min(2vw, 1rem);
+    margin: 0;
+    background-color: var(--contrast-bg);
+    color: var(--contrast-fg);
+    font-family: poppins, sans-serif;
+    line-height: 1.5;
+    letter-spacing: 1px;
 }
 
-#zdog-illustration {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  pointer-events: none;
+body [data-density-shift] {
+    --space-away: 1rem;
+    --space-near: .5rem;
 }
 
-.max-content {
-  padding-inline: var(--space--near);
+abbr {
+    text-decoration: none;
 }
 
-.button {
-  font-weight: bolder;
+h1, h2 {
+    font-family: Cy, sans-serif;
+    line-height: 1.2;
+    font-weight: 600;
 }
 
-.blueprint {
-  position: relative;
-  border: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
-  padding: var(--space--away);
-  margin-top: var(--space--near);
+main {
+    max-width: var(--max-width);
+    margin-inline: auto;
+    margin-block: var(--space-away);
+    padding: var(--space-away);
+    background-position: center;
+    background-size: var(--space-away) var(--space-away);
+    background-image: 
+        linear-gradient(var(--accent-bg) 1px, transparent 1px), 
+        linear-gradient(90deg, var(--accent-bg) 1px, transparent 1px);
 }
 
-.blueprint:before,
-.blueprint:after {
-  position: absolute;
-  content: '';
-  display: block;
-  height: var(--space--away);
-  width: var(--space--away);
-}
-
-.blueprint:before {
-  border-bottom: inherit;
-  border-left: inherit;
-  bottom: 100%;
-  left: 100%;
-}
-
-.blueprint:after {
-  border-top: inherit;
-  border-right: inherit;
-  top: 100%;
-  right: 100%;
-}
-
-fab-four {
-  align-items: center;
-  align-self: stretch;
-}
-
-fab-four svg {
-  opacity: .4;
-  transition: .218s ease;
-}
-
-fab-four a:hover svg {
-  opacity: 1;
-}
-
-section {
-  margin-block: var(--space--away);
-}
-
-section h2 {
-  text-align: center;
-  font-weight: bolder;
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space--near);
-  margin-block: var(--space--away);
-}
-
-section h2:before,
-section h2:after {
-  content: '';
-  flex: 1;
-  border-bottom: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
-  transform: translateY(-50%);
-}
-
-p > strong {
-  color: var(--feedback_standard_foreground-color);
-}
-
-.feature {
-  background: repeating-linear-gradient(-45deg, transparent, transparent 8px, var(--box_low-contrast_border-color) 8px, var(--box_low-contrast_border-color) 9px);
-  padding-block: var(--space--away);
-  padding-inline: var(--space--near);
-}
-
-.feature > .max-content {
-  border: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
-  background: var(--box_standard_background-color);
-  padding-block: var(--space--away);
+main > div {
+    padding-inline: var(--space-near);
 }
 
 header {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: var(--box_standard_background-color);
-  border-bottom: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
+    position: sticky;
+    top: var(--space-away);
+    border: 1px solid var(--accent-fg);
+    padding: 2px;
+    box-shadow: var(--lift-shadow);
+    margin: var(--space-away);
+    background-color: var(--contrast-bg);
+    z-index: 1;
 }
 
-#header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+header > div {
+    display: flex;
+    justify-content: space-between;
 }
 
-.headline {
-  font-size: min(4em, 12vw);
-  white-space: pre-line;
+header span {
+    padding: var(--space-near);
+    border-inline-start: var(--timeline-width) solid var(--accent-fg);
+    vertical-align: middle;
 }
 
-#hero {
-  margin: 0;
-  min-height: 80vh;
-  display: flex;
-  align-items: center;
+.btn {
+    background-color: var(--accent-fg);
+    color: var(--contrast-bg);
+    border: 0;
+    padding: var(--space-near);
+    font: inherit;
+    display: inline-flex;
+    align-items: center;
 }
 
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
-  gap: var(--space--away);
-  margin-block: var(--space--away);
-  align-items: baseline;
+.btn svg {
+    display: inline-flex;
 }
 
-topic-summary liga-icon {
-  border: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
-  border-radius: 50%;
-  padding: var(--space--near);
-  transition: .218s ease;
+.hero {
+    background-color: var(--contrast-bg);
+    border: 1px dashed var(--contrast-fg);
+    border-top-right-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    position: relative;
+    padding: var(--space-away);
+    display: flex;
+    flex-wrap: wrap;
+    box-shadow: var(--lift-shadow);
 }
 
-topic-summary hr {
-  border: 0;
-  border-left: var(--box_standard_border-size) dashed var(--box_low-contrast_border-color);
-  margin: 0 auto;
+.hero > div {
+    flex: 1;
 }
 
-.group {
-  display: flex;
-  justify-content: space-around;
-  align-items: inherit;
-  gap: var(--space--near);
+.hero:before,
+.hero:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: var(--space-near);
+    aspect-ratio: 1/1;
 }
 
-.group svg {
-  width: 6em;
-  fill: currentColor;
+.hero:before {
+    right: 100%;
+    bottom: 100%;
+    border-bottom: 1px dashed var(--contrast-fg);
+    border-right: 1px dashed var(--contrast-fg);
 }
 
-.group a svg {
-  width: 1em;
+.hero:after {
+    left: 100%;
+    top: 100%;
+    border-top: 1px dashed var(--contrast-fg);
+    border-left: 1px dashed var(--contrast-fg);
 }
 
-#brick-illustration svg {
-  filter: grayscale(1);
-  mix-blend-mode: hard-light;
-  padding: var(--space--near);
-  padding-bottom: 0;
+.hero h1 {
+    font-size: min(10vw, 4em);
+    color: var(--accent-fg);
+    line-height: 1;
+    margin: 0 0 var(--space-near);
 }
 
-footer {
-  text-align: center;
+.hero p {
+    margin: 0;
 }
 
-footer a,
-footer a:hover {
-  color: inherit;
+.timeline {
+    display: flex;
+    flex-direction: column;
+    border-left: var(--timeline-width) solid var(--accent-fg);
+    margin: 0;
+    margin-inline-start: var(--space-away);
+    padding: var(--space-away) 0;
 }

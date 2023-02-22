@@ -7,8 +7,8 @@
     "clean": "rm -rf _site",
     "copy": "mkdir -p _site && cp -r root/. _site",
     "compile": "nunjucks *.tpl -p templates -o _site/",
-    "components":"rollup src/components/**/*.js --file _site/components.iife.js --format iife -p html -p 'postcss={ inject: false }' -p terser",
-    "build": "rm -rf _site && npm run compile && npm run copy"
+    "components":"rollup src/components/index.js --file _site/components.iife.js --format iife -p html -p 'postcss={ inject: false }' -p terser",
+    "build": "npm run compile && npm run copy && npm run components"
   },
   "repository": {
     "type": "git",
