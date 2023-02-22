@@ -1,6 +1,16 @@
 import html from './template.html';
 import css from './styles.css';
 
+const TYPES = {
+    article: 'history_edu',
+    exploration: 'lightbulb',
+    role: 'work_history',
+    podcast: 'podcasts',
+    package: 'code',
+    presentation: 'podium',
+    video: 'play_circle',
+}
+
 export default class InterestPoint extends window.HTMLElement {
     constructor() {
         super();
@@ -9,6 +19,7 @@ export default class InterestPoint extends window.HTMLElement {
         this._$title = this.shadowRoot.getElementById('title');
         this._$type = this.shadowRoot.getElementById('type');
         this._$marker = this.shadowRoot.getElementById('time-marker');
+        this._$icon = this.shadowRoot.getElementById('icon');
     }
 
     static get observedAttributes() {
@@ -34,6 +45,7 @@ export default class InterestPoint extends window.HTMLElement {
 
         if (attr === 'type') {
             this._$type.textContent = this.type;
+            this._$icon.textContent = TYPES[this.type];
         }
     }
 

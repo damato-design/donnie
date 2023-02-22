@@ -1,0 +1,23 @@
+[
+    {
+        "title": "Engineering Consultant @ Candy",
+        "url": "https://candy.com",
+        "type": "role",
+        "datetime": "2022-01-15T00:00:00.000Z"
+    }, {
+        "title": "Adjunct Professor @ Parsons School of Design",
+        "url": "https://parsons.edu",
+        "type": "role",
+        "datetime": "2020-01-30T00:00:00.000Z"
+    }, {
+        "title": "Senior Engineer @ GoDaddy",
+        "url": "https://godaddy.com",
+        "type": "role",
+        "datetime": "2019-07-28T00:00:00.000Z"
+    }, {
+        "title": "Senior UX Engineer @ Compass",
+        "url": "https://compass.com",
+        "type": "role",
+        "datetime": "2017-04-15T00:00:00.000Z"
+    }
+]
