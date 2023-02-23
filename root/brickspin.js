@@ -6,7 +6,7 @@ const illo = new Zdog.Illustration({
 	// set canvas with selector
 	element: "#zdog-illustration",
 	zoom: 8,
-	resize: true,
+	// resize: true,
 	rotate: { 
 		x: -Zdog.TAU/12,
 		y: Zdog.TAU/8,
