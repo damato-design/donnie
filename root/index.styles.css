@@ -18,6 +18,11 @@
         -6px -6px var(--contrast-bg);
 }
 
+:focus {
+    outline: 1px solid var(--accent-fg);
+    outline-offset: 2px;
+}
+
 body {
     --space-away: min(4vw, 2rem);
     --space-near: min(2vw, 1rem);
@@ -118,7 +123,7 @@ header span {
 .canvas {
     color: var(--accent-bg);
     background: repeating-linear-gradient(
-        -45deg, transparent, 
+        -45deg, transparent,
         transparent 8px, 
         currentcolor 8px, 
         currentcolor 9px
@@ -154,11 +159,21 @@ header span {
     font-size: min(8vw, 3.5em);
     color: var(--accent-fg);
     line-height: 1;
-    margin: 0; 
+    margin: 0;
+    margin-block-end: var(--space-away);
+}
+
+.hero span {
+    background-color: var(--accent-bg);
+    color: var(--accent-fg);
+    padding: 0.4em 0.6em;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    font-family: cy, sans-serif;
 }
 
 .hero p {
-    margin: var(--space-away) 0;
+    margin: var(--space-near) 0 var(--space-away);
 }
 
 .hero time-marker {
@@ -181,21 +196,47 @@ header span {
 }
 
 #timeline {
-    display: flex;
-    flex-direction: column;
     border-left: var(--timeline-width) solid var(--accent-fg);
     margin: 0;
     margin-inline-start: calc(var(--space-away) + 3px);
     padding: var(--space-away) 0;
-    gap: calc(var(--space-away) * 2);
     min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
 }
 
-#timeline interest-point {
+.select {
+    margin-inline-end: var(--space-away);
+}
+
+#filter {
+  background-color: var(--accent-bg);
+  color: var(--accent-fg);
+  border: 0;
+  box-shadow: var(--lift-shadow);
+  padding: 0.4em 0.6em;
+  margin: 0;
+  width: 100%;
+  font-family: cy, sans-serif;
+  font-size: .7em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#points {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding-block: var(--space-away);
+}
+
+#points interest-point {
     opacity: 0;
+    outline: 0;
 }
 
-#timeline[data-loaded="true"] interest-point {
+#points[data-loaded="true"] interest-point {
     animation: appear 2s ease forwards;
 }
 

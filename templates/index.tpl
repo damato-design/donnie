@@ -9,7 +9,12 @@
       <div>
         {% include "_includes/header.njk" %}
         {% include "_includes/hero.njk" %}
-        <div id="timeline"></div>
+        <div id="timeline">
+          <div class="select">
+            <select id="filter"></select>
+          </div>
+          <div id="points"></div>
+        </div>
       </div>
     </main>
     {% include "_includes/footer.njk" %}
