@@ -23,6 +23,10 @@
     outline-offset: 2px;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     --space-away: min(4vw, 2rem);
     --space-near: min(2vw, 1rem);
@@ -39,11 +43,20 @@ body [data-density-shift] {
     --space-near: .5rem;
 }
 
+a {
+    color: var(--accent-fg);
+    transition: .218s ease;
+}
+
+a:hover {
+    color: var(--contrast-fg);
+}
+
 abbr {
     text-decoration: none;
 }
 
-h1, h2 {
+h1, h2, h3 {
     font-family: Cy, sans-serif;
     line-height: 1.2;
     font-weight: 600;
@@ -99,6 +112,11 @@ header span {
     align-items: center;
 }
 
+.btn:hover {
+    background-color: var(--contrast-fg);
+    color: var(--contrast-bg);
+}
+
 .btn svg {
     display: inline-flex;
 }
@@ -111,7 +129,6 @@ header span {
     position: relative;
     padding: var(--space-away);
     display: flex;
-    /* flex-wrap: wrap; */
     box-shadow: var(--lift-shadow);
     gap: var(--space-near);
 }
@@ -229,6 +246,7 @@ header span {
     flex-direction: column;
     gap: 3rem;
     padding-block: var(--space-away);
+    width: 100%;
 }
 
 #points interest-point {
@@ -252,6 +270,40 @@ footer > div {
     max-width: var(--max-width);
     margin-inline: auto;
     padding: var(--space-away);
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-away);
+    align-items: end;
+}
+
+footer h3 {
+    margin-block-start: 0;
+}
+
+footer p {
+    font-size: .8em;
+    margin-block: 0.25em;
+}
+
+.social {
+    list-style: none;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    align-content: center;
+    justify-content: center;
+    margin-inline-end: var(--space-near);
+}
+
+.social a {
+    display: flex;
+    width: 1.5em;
+}
+
+.social svg {
+    display: flex;
+    aspect-ratio: 1/1;
 }
 
 @media (max-width: 640px) {

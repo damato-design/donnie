@@ -10,7 +10,7 @@
         "url": "https://gridless.design",
         "type": "exploration",
         "datetime": "2021-07-15T00:00:00.000Z",
-        "textContent": "The web is good at these things, just not in the ways that designers have been accustomed to working. We'll take a look at how we got here and how we might change our perspective. Let's think outside of the grid and allow other guidelines to provide a comprehensive layout."
+        "textContent": "Get rid of the grid!"
     }, {
         "title": "Grids are not inclusive",
         "url": "https://uxdx.com/blog/grids-are-not-inclusive-how-to-design-without-the-grid/",
@@ -48,24 +48,64 @@
         "datetime": "2023-01-30T00:00:00.000Z",
         "textContent": "Jen, Donnie and Chris discuss how design systems reflect the people a part of it, who use it and who maintain it; and the importance of collaboration, that systems are built for and with people."
     }, {
-        "title": "Engineering Consultant @ Candy",
+        "title": "Design Systems and Systems Design — what's the difference?",
+        "url": "https://uxdesign.cc/design-systems-and-systems-design-whats-the-difference-b184aa6e5f0d",
+        "type": "article",
+        "datetime": "2019-11-12T00:00:00.000Z",
+        "textContent": "I've had several recruiters read my resumé about my experience in Design Systems and contact me about jobs. Only to find out they were hiring for people with Systems Design experience. I'd like to outline what both topics are and help people understand the qualities of each."
+    }, {
+        "title": "Epic React",
+        "url": "https://epicreact.dev",
+        "type": "certification",
+        "datetime": "2023-01-30T00:00:00.000Z",
+        "textContent": "Confidently Ship Well-Architected Production Ready React Apps Like a Pro."
+    }, {
+        "title": "WAI0.1x: Introduction to Web Accessibility",
+        "url": "https://www.edx.org/course/web-accessibility-introduction",
+        "type": "certification",
+        "datetime": "2020-08-22T00:00:00.000Z",
+        "textContent": "Get a strong foundation in digital accessibility to make your websites and apps work well for people with disabilities, meet international standards, and provide a better user experience for everyone."
+    }, {
+        "title": "INCLTEACH1x: Inclusive Teaching: Supporting All Students in the College Classroom",
+        "url": "https://www.edx.org/course/inclusive-teaching-supporting-all-students-in-the",
+        "type": "certification",
+        "datetime": "2020-01-10T00:00:00.000Z",
+        "textContent": "Explore the principles of inclusive teaching and learn how to apply them in your classroom to support diverse learners."
+    }, {
+        "title": "Candy",
         "url": "https://candy.com",
         "type": "role",
-        "datetime": "2022-01-15T00:00:00.000Z"
+        "datetime": "2022-01-15T00:00:00.000Z",
+        "textContent":"Engineering Consultant, Design Systems"
     }, {
-        "title": "Adjunct Professor @ Parsons School of Design",
+        "title": "Twine",
+        "url": "https://www.knoetic.com",
+        "type": "role",
+        "datetime": "2019-11-15T00:00:00.000Z",
+        "textContent":"Engineering Consultant, Product"
+    }, {
+        "title": "Parsons School of Design",
         "url": "https://parsons.edu",
         "type": "role",
-        "datetime": "2020-01-30T00:00:00.000Z"
+        "datetime": "2020-01-30T00:00:00.000Z",
+        "textContent":"Adjunct Professor, User Research and Interaction Design"
     }, {
-        "title": "Senior Engineer @ GoDaddy",
+        "title": "GoDaddy",
         "url": "https://godaddy.com",
         "type": "role",
-        "datetime": "2019-07-28T00:00:00.000Z"
+        "datetime": "2019-07-28T00:00:00.000Z",
+        "textContent":"Senior Engineer, UX Platform"
     }, {
-        "title": "Senior UX Engineer @ Compass",
+        "title": "Compass",
         "url": "https://compass.com",
         "type": "role",
-        "datetime": "2017-04-15T00:00:00.000Z"
+        "datetime": "2017-04-15T00:00:00.000Z",
+        "textContent":"Senior UX Engineer, Design Systems"
+    }, {
+        "title": "Itemize",
+        "url": "https://itemize.com",
+        "type": "role",
+        "datetime": "2015-05-15T00:00:00.000Z",
+        "textContent":"Lead UI Designer and Developer, Products and Tools"
     }
 ]
