@@ -9,7 +9,7 @@
     --contrast-bg: #0f0c29;
     --accent-fg: #28fbbc;
     --accent-bg: #243842;
-    --max-width: 860px;
+    --max-width: clamp(860px, 80vw, 1200px);
     --timeline-width: 4px;
     --lift-shadow: 
         6px 6px var(--contrast-bg),
@@ -133,11 +133,10 @@ header span {
     gap: var(--space-near);
 }
 
-.hero > div {
-    flex: 1;
-}
-
 .canvas {
+    display: flex;
+    align-items: center;
+    flex: 1 0 300px;
     color: var(--accent-bg);
     background: repeating-linear-gradient(
         -45deg, transparent,
@@ -145,8 +144,6 @@ header span {
         currentcolor 8px, 
         currentcolor 9px
     );
-    display: flex;
-    align-items: center;
 }
 
 .hero:before,
