@@ -69,6 +69,9 @@ function success(results) {
         .flat()
         .sort(datesort);
 
+    createFilters();
+    $filter.addEventListener('change', ({ target }) => useFilter(target.value));
+
     render(data);
     $points.dataset.loaded = true;
 }
@@ -77,10 +80,14 @@ function render(points) {
     $points.innerHTML = points.map(pointCreate).join('');
 }
 
+function count(type) {
+    return (type === 'all' ? data : data.filter((point) => point.type === type)).length;
+}
+
 function createFilters() {
     $filter.innerHTML = ['all'].concat(Object.keys(TYPES)).map((type) => {
         const selected = type === 'all' ? ' selected' : '';
-        return `<option value="${type}" ${selected}>${type}</option>`;
+        return `<option value="${type}" ${selected}>${type} (${count(type)})</option>`;
     }).join('');
 }
 
@@ -89,10 +96,6 @@ function useFilter(type) {
 }
 
 export default (function timeline () {
-
-    createFilters();
-    $filter.addEventListener('change', ({ target }) => useFilter(target.value));
-
     window.customElements.whenDefined('interest-point').then(() => {
         Promise.allSettled([
             fetch(LOCAL_POINTS_URL),
