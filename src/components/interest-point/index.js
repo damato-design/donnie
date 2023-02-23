@@ -2,12 +2,12 @@ import html from './template.html';
 import css from './styles.css';
 
 const TYPES = {
-    article: 'history_edu',
+    article: 'description',
     exploration: 'lightbulb',
-    role: 'work_history',
+    role: 'work',
     podcast: 'podcasts',
     package: 'code',
-    presentation: 'co_present',
+    presentation: 'campaign',
     video: 'play_circle',
 }
 

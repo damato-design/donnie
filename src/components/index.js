@@ -11,15 +11,21 @@ function datesort(a, b) {
 }
 
 function pointCreate(point) {
-    $timeline.appendChild(Object.assign(document.createElement('interest-point'), point));
+    const attrs = Object.entries(point)
+        .filter(({ name }) => name !== 'textContent')
+        .map(([name, value]) => `${name}="${value}"`)
+        .join(' ');
+    const textContent = point.textContent || '';
+    return `<interest-point ${attrs}>${textContent}</interest-point>`
 }
 
 function blogFormat({ items }) {
-    return items.map(({ title, url, date_published }) => {
+    return items.map(({ title, url, date_published, summary }) => {
         return {
             title,
             url,
             type: 'article',
+            textContent: summary,
             datetime: date_published
         }
     });
@@ -31,13 +37,14 @@ function npmFormat({ objects }) {
             title: pkg.name,
             url: pkg.links.npm,
             type: 'package',
+            textContent: pkg.description,
             datetime: pkg.date
         }
     });
 }
 
 function success(results) {
-    results.filter(({ status }) => status === 'fulfilled').map(({ value }) => {
+    $timeline.innerHTML = results.filter(({ status }) => status === 'fulfilled').map(({ value }) => {
         if (value.items) {
             return blogFormat(value);
         }
@@ -47,7 +54,8 @@ function success(results) {
         }
 
         return value;
-    }).flat().sort(datesort).forEach(pointCreate);
+    }).flat().sort(datesort).map(pointCreate).join('');
+    $timeline.dataset.loaded = true;
 }
 
 function fail(err) {

@@ -174,4 +174,14 @@ header span {
     margin-inline-start: calc(var(--space-away) + 3px);
     padding: var(--space-away) 0;
     gap: calc(var(--space-away) * 2);
+    min-height: 80vh;
+}
+
+#timeline interest-point {
+    opacity: 0;
+    transition: opacity .218s ease;
+}
+
+#timeline[data-loaded="true"] interest-point {
+    /* opacity: 1; */
 }

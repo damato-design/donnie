@@ -3,32 +3,38 @@
         "title": "Complementary Space",
         "url": "https://complementary.space",
         "type": "exploration",
-        "datetime": "2022-11-15T00:00:00.000Z"
+        "datetime": "2022-11-15T00:00:00.000Z",
+        "textContent": "Design spacing tokens semantically."
     }, {
         "title": "Gridless Design",
         "url": "https://gridless.design",
         "type": "exploration",
-        "datetime": "2021-07-15T00:00:00.000Z"
+        "datetime": "2021-07-15T00:00:00.000Z",
+        "textContent": "The web is good at these things, just not in the ways that designers have been accustomed to working. We'll take a look at how we got here and how we might change our perspective. Let's think outside of the grid and allow other guidelines to provide a comprehensive layout."
     }, {
         "title": "Grids are not inclusive",
         "url": "https://uxdx.com/blog/grids-are-not-inclusive-how-to-design-without-the-grid/",
         "type": "article",
-        "datetime": "2023-02-20T00:00:00.000Z"
+        "datetime": "2023-02-20T00:00:00.000Z",
+        "textContent": "My recommendation is to let the rules of the web allow for content to flow. Be prepared for changes based on user preference. To describe the space between elements, use relationships over pixels and identify when the density should shift as appropriate."
     }, {
         "title": "Shifting towards a gridless design system",
         "url": "https://www.youtube.com/watch?v=V_FfUrmLnQ0",
         "type": "presentation",
-        "datetime": "2022-10-20T00:00:00.000Z"
+        "datetime": "2022-10-20T00:00:00.000Z",
+        "textContent": "What the limitations are with designing on the grid but also why this is the current norms; how you can start implementing this methodology to your current design systems; and why gridless design is the designing for the future of your products."
     }, {
         "title": "What does a UX Architect do?",
         "url": "https://www.youtube.com/watch?v=tevn_OlmiHw",
         "type": "podcast",
-        "datetime": "2022-06-27T00:00:00.000Z"
+        "datetime": "2022-06-27T00:00:00.000Z",
+        "textContent": "One question we see pop up regularly, what does a UX architect do? And when a companies or projects need to get one to improve the design process?"
     }, {
-        "title": "Design systems reflect those who use, maintain and are a part of it",
+        "title": "#59. Design Systems Podcast",
         "url": "https://www.designsystemspodcast.com/episodes/episode/760029f3/59-jennifer-damato-senior-uiux-designer-and-donnie-damato-senior-engineer-design-systems-reflect-those-who-use-maintain-and-are-a-part-of-it",
         "type": "podcast",
-        "datetime": "2023-01-30T00:00:00.000Z"
+        "datetime": "2023-01-30T00:00:00.000Z",
+        "textContent": "Jen, Donnie and Chris discuss how design systems reflect the people a part of it, who use it and who maintain it; and the importance of collaboration, that systems are built for and with people."
     }, {
         "title": "Engineering Consultant @ Candy",
         "url": "https://candy.com",

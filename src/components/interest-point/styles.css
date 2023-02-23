@@ -21,7 +21,7 @@ a {
     width: var(--gap);
 }
 
-li {
+#item {
     list-style: none;
     background-color: var(--contrast-bg);
     border: 1px dashed var(--contrast-fg);
@@ -31,10 +31,13 @@ li {
     padding: var(--space-away);
     flex: 1;
     box-shadow: var(--lift-shadow);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-near);
 }
 
-li:before,
-li:after {
+#item:before,
+#item:after {
     content: '';
     position: absolute;
     display: block;
@@ -42,23 +45,18 @@ li:after {
     aspect-ratio: 1/1;
 }
 
-li:before {
+#item:before {
     right: 100%;
     bottom: 100%;
     border-bottom: 1px dashed var(--contrast-fg);
     border-right: 1px dashed var(--contrast-fg);
 }
 
-li:after {
+#item:after {
     left: 100%;
     top: 100%;
     border-top: 1px dashed var(--contrast-fg);
     border-left: 1px dashed var(--contrast-fg);
-}
-
-summary {
-    display: flex;
-    gap: var(--space-near);
 }
 
 #type {
@@ -101,6 +99,7 @@ summary {
 #icon {
     background-color: var(--accent-fg);
     color: var(--contrast-bg);
+    padding: .1em;
 }
 
 .track {
@@ -132,14 +131,18 @@ summary {
     gap: var(--space-near);
 }
 
-li:hover time-marker::part(scale) {
+.summary {
+    grid-column-end: -1;
+}
+
+#item:hover time-marker::part(scale) {
     --scale: 1;
 }
 
-li:hover time-marker::part(background) {
+#item:hover time-marker::part(background) {
     background-color: var(--accent-bg);
 }
 
-li:hover time-marker::part(display) {
+#item:hover time-marker::part(display) {
     display: block;
 }

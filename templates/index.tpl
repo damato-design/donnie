@@ -9,7 +9,7 @@
       <div>
         {% include "_includes/header.njk" %}
         {% include "_includes/hero.njk" %}
-        <ul id="timeline"></ul>
+        <div id="timeline"></div>
       </div>
     </main>
   </body>

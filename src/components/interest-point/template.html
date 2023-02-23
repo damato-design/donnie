@@ -1,20 +1,18 @@
-<li>
-    <details>
-        <summary>
-            <div class="anchor">
-                <div class="point">
-                    <div class="material-icons-outlined" id="icon"></div>
-                    <div class="track">
-                        <time-marker id="time-marker"></time-marker>
-                        <hr/>
-                    </div>
-                </div>
+<div id="item">
+    <div class="anchor">
+        <div class="point">
+            <div class="material-icons-outlined" id="icon"></div>
+            <div class="track">
+                <time-marker id="time-marker"></time-marker>
+                <hr/>
             </div>
-            <div class="content">
-                <span id="type">article</span>
-                <h2 id="title"></h2>
-            </div>
-        </summary>
+        </div>
+    </div>
+    <div class="content">
+        <span id="type">article</span>
+        <h2 id="title"></h2>
+    </div>
+    <div class="summary">
         <slot></slot>
-    </details>
-</li>
+    </div>
+</div>
