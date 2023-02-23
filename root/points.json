@@ -30,6 +30,18 @@
         "datetime": "2022-06-27T00:00:00.000Z",
         "textContent": "One question we see pop up regularly, what does a UX architect do? And when a companies or projects need to get one to improve the design process?"
     }, {
+        "title": "deltazeus",
+        "url": "https://deltazeus.com",
+        "type": "project",
+        "datetime": "2020-04-27T00:00:00.000Z",
+        "textContent": "Get notified about significant weather changes in your area every day."
+    }, {
+        "title": "willarrive.in",
+        "url": "https://willarrive.in",
+        "type": "project",
+        "datetime": "2020-05-27T00:00:00.000Z",
+        "textContent": "A quick way to find your subway arrival time in New York City."
+    }, {
         "title": "#59. Design Systems Podcast",
         "url": "https://www.designsystemspodcast.com/episodes/episode/760029f3/59-jennifer-damato-senior-uiux-designer-and-donnie-damato-senior-engineer-design-systems-reflect-those-who-use-maintain-and-are-a-part-of-it",
         "type": "podcast",

@@ -24,44 +24,31 @@ new Zdog.Box({
 	color: blockColor,
 });
 
-const peg = new Zdog.Cylinder({
-	addTo: block,
-	rotate: { x: Zdog.TAU/4 },
-	translate: { x: -9, y: -5, z: 3 },
-	diameter: 4,
-	length: 2,
-	stroke: false,
-	color: pegColor,
-	frontFace: pegFace
-});
+const pegs = new Zdog.Group({ addTo: illo });
 
-peg.copy({
-	translate: { x: -9, y: -5, z: -3 },
-});
+function makePegs(sign) {
+	return Array.from({ length: 4 }, (_, i) => {
+		return {
+			x: (i * 6) - 9,
+			y: -6,
+			z: sign * 3
+		}
+	}).map((translate) => {
+		return new Zdog.Cylinder({
+			addTo: pegs,
+			rotate: { x: Zdog.TAU/4 },
+			translate,
+			diameter: 4,
+			length: 1.25,
+			stroke: false,
+			color: pegColor,
+			frontFace: pegFace
+		})
+	});
+}
 
-peg.copy({
-	translate: { x: -3, y: -5, z: -3 },
-});
-
-peg.copy({
-	translate: { x: 3, y: -5, z: -3 },
-});
-
-peg.copy({
-	translate: { x: 9, y: -5, z: -3 },
-});
-
-peg.copy({
-	translate: { x: 9, y: -5, z: 3 },
-});
-
-peg.copy({
-	translate: { x: 3, y: -5, z: 3 },
-});
-
-peg.copy({
-	translate: { x: -3, y: -5, z: 3 },
-});
+makePegs(-1);
+makePegs(1);
 
 let t0 = performance.now();
 function animate() {
@@ -74,6 +61,4 @@ function animate() {
 }
 animate();
 
-document.getElementById('zdog-illustration').addEventListener('click', () => {
-	t0 = -Infinity;
-});
+document.getElementById('zdog-illustration').addEventListener('click', () => (t0 = -Infinity));

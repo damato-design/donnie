@@ -24,8 +24,8 @@ body {
     margin: 0;
     background-color: var(--contrast-bg);
     color: var(--contrast-fg);
-    font-family: poppins, sans-serif;
-    line-height: 1.5;
+    font-family: anonymous-pro, sans-serif;
+    line-height: 1.25;
     letter-spacing: 1px;
 }
 
@@ -151,7 +151,7 @@ header span {
 }
 
 .hero h1 {
-    font-size: min(10vw, 4em);
+    font-size: min(8vw, 3.5em);
     color: var(--accent-fg);
     line-height: 1;
     margin: 0; 
@@ -201,6 +201,16 @@ header span {
 
 @keyframes appear {
     to { opacity: 1; }
+}
+
+footer {
+    border-top: 1px solid var(--accent-fg);
+}
+
+footer > div {
+    max-width: var(--max-width);
+    margin-inline: auto;
+    padding: var(--space-away);
 }
 
 @media (max-width: 640px) {

@@ -12,5 +12,6 @@
         <div id="timeline"></div>
       </div>
     </main>
+    {% include "_includes/footer.njk" %}
   </body>
 </html>

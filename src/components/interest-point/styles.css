@@ -62,9 +62,10 @@ a {
 #type {
     background-color: var(--accent-bg);
     color: var(--accent-fg);
-    padding: .2em .5em;
-    font-size: .8em;
+    padding: 0.4em 0.6em;
+    font-size: 0.7em;
     text-transform: uppercase;
+    font-family: cy, sans-serif;
 }
 
 #title {
@@ -72,6 +73,25 @@ a {
     font-size: min(5vw, 2em);
     margin: 0;
     line-height: 1.1;
+}
+
+#title:after {
+    --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M7 7h8.586L5.293 17.293l1.414 1.414L17 8.414V17h2V5H7v2z'/%3E%3C/svg%3E");
+    content: '';
+    -webkit-mask-image: var(--svg);
+    mask-image: var(--svg);
+    background-color: currentColor;
+    color: var(--accent-fg);
+    width: 24px;
+    aspect-ratio: 1/1;
+    display: inline-block;
+    vertical-align: bottom;
+    transform-origin: bottom left;
+    transition: .218s ease;
+}
+
+#title:hover:after {
+    transform: scale(1.2);
 }
 
 .anchor {

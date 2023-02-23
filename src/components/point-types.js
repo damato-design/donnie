@@ -4,6 +4,7 @@ export const TYPES = {
   role: 'badge',
   podcast: 'podcasts',
   package: 'code',
+  project: 'handyman',
   presentation: 'campaign',
   video: 'play_circle',
 }
