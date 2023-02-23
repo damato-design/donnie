@@ -1,0 +1,55 @@
+:host {
+    display: block;
+    width: 1.5rem;
+}
+
+time {
+    --scale: .5;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--accent-fg);
+    color: var(--accent-fg);
+    line-height: 1;
+    aspect-ratio: 1/1;
+    width: 3rem;
+    transform-origin: center center;
+    transform: rotate(-45deg) scale(var(--scale));
+    font-variant-numeric: tabular-nums;
+    font-family: Cy, sans-serif;
+    justify-content: stretch;
+    align-items: stretch;
+    padding: 4px;
+    gap: 4px;
+    position: relative;
+    border-top-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    transition: .218s ease;
+    background: var(--contrast-bg);
+}
+
+span {
+    display: flex;
+    text-align: center;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    transition: .218s ease;
+    background: var(--accent-fg);
+}
+
+#month {
+    border-top-left-radius: calc(1rem - 6px);
+}
+
+#year {
+    border-bottom-right-radius: calc(1rem - 6px);
+    font-size: .8em;
+}
+
+hr {
+    border: 0;
+    margin: 0;
+    border-top: 1px solid var(--accent-fg);
+    transition: .218s ease;
+    display: none;
+}
