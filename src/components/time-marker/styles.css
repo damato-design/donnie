@@ -23,7 +23,6 @@ time {
     position: relative;
     border-top-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
-    transition: .218s ease;
     background: var(--contrast-bg);
 }
 
@@ -33,7 +32,6 @@ span {
     flex: 1;
     justify-content: center;
     align-items: center;
-    transition: .218s ease;
     background: var(--accent-fg);
 }
 
@@ -50,6 +48,12 @@ hr {
     border: 0;
     margin: 0;
     border-top: 1px solid var(--accent-fg);
-    transition: .218s ease;
     display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    time, span, hr {
+        transition: .218s ease;
+    }
+
 }

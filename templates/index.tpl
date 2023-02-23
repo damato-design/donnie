@@ -5,18 +5,18 @@
     <link rel="stylesheet" href="index.styles.css">
   </head>
   <body>
-    <main>
+    <div class="max-width">
       <div>
         {% include "_includes/header.njk" %}
         {% include "_includes/hero.njk" %}
-        <div id="timeline">
+        <main id="timeline">
           <div class="select">
             <select id="filter"></select>
           </div>
           <div id="points"></div>
-        </div>
+        </main>
       </div>
-    </main>
+    </div>
     {% include "_includes/footer.njk" %}
   </body>
 </html>

@@ -62,7 +62,7 @@ h1, h2, h3 {
     font-weight: 600;
 }
 
-main {
+.max-width {
     max-width: var(--max-width);
     margin-inline: auto;
     margin-block-start: var(--space-away);
@@ -76,11 +76,11 @@ main {
         linear-gradient(90deg, var(--accent-bg) 1px, transparent 1px);
 }
 
-main > div {
+.max-width > div {
     padding-inline: var(--space-near);
 }
 
-header {
+.header {
     position: sticky;
     top: var(--space-away);
     border: 1px solid var(--accent-fg);
@@ -91,12 +91,12 @@ header {
     z-index: 1;
 }
 
-header > div {
+.header > div {
     display: flex;
     justify-content: space-between;
 }
 
-header span {
+.header span {
     padding: var(--space-near) var(--space-away);
     border-inline-start: var(--timeline-width) solid var(--accent-fg);
     vertical-align: middle;
@@ -175,6 +175,7 @@ header span {
     line-height: 1;
     margin: 0;
     margin-block-end: var(--space-away);
+    white-space: pre-line;
 }
 
 .hero span {
