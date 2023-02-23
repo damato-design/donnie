@@ -130,7 +130,7 @@ header span {
     padding: var(--space-away);
     display: flex;
     box-shadow: var(--lift-shadow);
-    gap: var(--space-near);
+    gap: var(--space-away);
 }
 
 .canvas {
