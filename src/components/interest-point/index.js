@@ -1,15 +1,6 @@
 import html from './template.html';
 import css from './styles.css';
-
-const TYPES = {
-    article: 'description',
-    exploration: 'lightbulb',
-    role: 'work',
-    podcast: 'podcasts',
-    package: 'code',
-    presentation: 'campaign',
-    video: 'play_circle',
-}
+import { TYPES } from '../point-types.js';
 
 export default class InterestPoint extends window.HTMLElement {
     constructor() {

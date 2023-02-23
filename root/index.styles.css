@@ -50,7 +50,8 @@ main {
     margin-block-start: var(--space-away);
     padding: var(--space-away);
     padding-block-end: 0;
-    background-position: center;
+    background-position: center var(--space-near);
+    background-attachment: fixed;
     background-size: var(--space-away) var(--space-away);
     background-image: 
         linear-gradient(var(--accent-bg) 1px, transparent 1px), 
@@ -78,7 +79,7 @@ header > div {
 }
 
 header span {
-    padding: var(--space-near);
+    padding: var(--space-near) var(--space-away);
     border-inline-start: var(--timeline-width) solid var(--accent-fg);
     vertical-align: middle;
 }
@@ -105,12 +106,25 @@ header span {
     position: relative;
     padding: var(--space-away);
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     box-shadow: var(--lift-shadow);
+    gap: var(--space-near);
 }
 
 .hero > div {
     flex: 1;
+}
+
+.canvas {
+    color: var(--accent-bg);
+    background: repeating-linear-gradient(
+        -45deg, transparent, 
+        transparent 8px, 
+        currentcolor 8px, 
+        currentcolor 9px
+    );
+    display: flex;
+    align-items: center;
 }
 
 .hero:before,
@@ -179,9 +193,18 @@ header span {
 
 #timeline interest-point {
     opacity: 0;
-    transition: opacity .218s ease;
 }
 
 #timeline[data-loaded="true"] interest-point {
-    /* opacity: 1; */
+    animation: appear 2s ease forwards;
+}
+
+@keyframes appear {
+    to { opacity: 1; }
+}
+
+@media (max-width: 640px) {
+    .canvas {
+        display: none;
+    }
 }
