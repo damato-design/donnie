@@ -72,6 +72,18 @@
         "datetime": "2021-11-05T00:00:00.000Z",
         "textContent": "Where we talk (mostly) about how to support “exotic” platforms in your design system. (Think TVs, Cars, VR, etc.)."
     }, {
+        "title": "DSSC: #11 new tools!",
+        "url": "https://www.youtube.com/watch?v=I9Uc6-0Fn9Y",
+        "type": "video",
+        "datetime": "2022-03-11T00:00:00.000Z",
+        "textContent": "Where we talk (mostly) about new design system tools."
+    }, {
+        "title": "DSSC: #13 Managers",
+        "url": "https://www.youtube.com/watch?v=wN5_JKnZtxM",
+        "type": "video",
+        "datetime": "2022-05-06T00:00:00.000Z",
+        "textContent": "Where we speak mostly about managing a design system."
+    }, {
         "title": "Epic React",
         "url": "https://epicreact.dev",
         "type": "certification",
