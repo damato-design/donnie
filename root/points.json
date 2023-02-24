@@ -60,6 +60,18 @@
         "datetime": "2019-11-12T00:00:00.000Z",
         "textContent": "Outlining what both topics are to help people understand the qualities of each."
     }, {
+        "title": "DSSC: #7 Governance",
+        "url": "https://www.youtube.com/watch?v=BrCtfoLeteo",
+        "type": "video",
+        "datetime": "2021-10-01T00:00:00.000Z",
+        "textContent": "Where we talk (mostly) about how to govern a design system team."
+    }, {
+        "title": "DSSC: #8 “Exotic” platforms",
+        "url": "https://www.youtube.com/watch?v=hRi3VA6sEDA",
+        "type": "video",
+        "datetime": "2021-11-05T00:00:00.000Z",
+        "textContent": "Where we talk (mostly) about how to support “exotic” platforms in your design system. (Think TVs, Cars, VR, etc.)."
+    }, {
         "title": "Epic React",
         "url": "https://epicreact.dev",
         "type": "certification",

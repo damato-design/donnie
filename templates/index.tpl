@@ -13,7 +13,7 @@
           <div class="select">
             <select id="filter"></select>
           </div>
-          <div id="points"></div>
+          <div id="points" aria-live="polite"></div>
         </main>
       </div>
     </div>
