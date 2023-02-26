@@ -15,6 +15,12 @@ a {
     text-decoration: none;
 }
 
+a:before {
+    content: '';
+    position: absolute;
+    inset: 0;
+}
+
 a:focus {
     outline: 1px solid var(--accent-fg);
     outline-offset: 2px;
