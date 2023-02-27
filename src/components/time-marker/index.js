@@ -1,7 +1,7 @@
 import html from './template.html';
 import css from './styles.css';
 
-const { format } = new Intl.DateTimeFormat('en-US', {
+const { format } = new Intl.DateTimeFormat(undefined, {
     year: 'numeric',
     month: 'short',
     timeZone: 'UTC'
