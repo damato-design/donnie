@@ -70,10 +70,8 @@ a:focus {
     border-left: 1px dashed var(--contrast-fg);
 }
 
-#type {
-    background-color: var(--accent-bg);
+#relative-time {
     color: var(--accent-fg);
-    padding: 0.4em 0.6em;
     font-size: 0.7em;
     text-transform: uppercase;
     font-family: cy, sans-serif;
@@ -153,8 +151,6 @@ a:focus {
 }
 
 .content {
-    border-inline-start: 6px solid var(--accent-fg);
-    padding-inline-start: var(--space-near);
     display: flex;
     flex-direction: column;
     align-items: start;

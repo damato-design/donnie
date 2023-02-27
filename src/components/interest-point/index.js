@@ -2,13 +2,39 @@ import html from './template.html';
 import css from './styles.css';
 import { TYPES } from '../point-types.js';
 
+const formatter = new Intl.RelativeTimeFormat(undefined, {
+    numeric: 'auto'
+  })
+  
+  const DIVISIONS = [
+    { amount: 60, name: 'seconds' },
+    { amount: 60, name: 'minutes' },
+    { amount: 24, name: 'hours' },
+    { amount: 7, name: 'days' },
+    { amount: 4.34524, name: 'weeks' },
+    { amount: 12, name: 'months' },
+    { amount: Number.POSITIVE_INFINITY, name: 'years' }
+  ]
+  
+  function formatTimeAgo(date) {
+    let duration = (date - new Date()) / 1000
+  
+    for (let i = 0; i < DIVISIONS.length; i++) {
+      const division = DIVISIONS[i]
+      if (Math.abs(duration) < division.amount) {
+        return formatter.format(Math.round(duration), division.name)
+      }
+      duration /= division.amount
+    }
+  }
+
 export default class InterestPoint extends window.HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' }).innerHTML = `<style>${css}</style>${html}`;
 
         this._$title = this.shadowRoot.getElementById('title');
-        this._$type = this.shadowRoot.getElementById('type');
+        this._$reltime = this.shadowRoot.getElementById('relative-time');
         this._$marker = this.shadowRoot.getElementById('time-marker');
         this._$icon = this.shadowRoot.getElementById('icon');
     }
@@ -20,6 +46,7 @@ export default class InterestPoint extends window.HTMLElement {
     attributeChangedCallback(attr) {
         if (attr === 'datetime') {
             this._$marker.datetime = this.datetime;
+            this._$reltime.textContent = formatTimeAgo(new Date(this.datetime));
         }
 
         if (attr === 'title' || attr === 'url') {
@@ -35,7 +62,6 @@ export default class InterestPoint extends window.HTMLElement {
         }
 
         if (attr === 'type') {
-            this._$type.textContent = this.type;
             this._$icon.textContent = TYPES[this.type];
         }
     }
