@@ -82,7 +82,7 @@ h1, h2, h3 {
 
 .header {
     position: sticky;
-    top: var(--space-away);
+    inset-block-start: var(--space-away);
     border: 1px solid var(--accent-fg);
     padding: 2px;
     box-shadow: var(--lift-shadow);
@@ -124,8 +124,8 @@ h1, h2, h3 {
 .hero {
     background-color: var(--contrast-bg);
     border: 1px dashed var(--contrast-fg);
-    border-top-right-radius: 1rem;
-    border-bottom-left-radius: 1rem;
+    border-start-end-radius: 1rem;
+    border-end-start-radius: 1rem;
     position: relative;
     padding: var(--space-away);
     display: flex;
@@ -156,17 +156,17 @@ h1, h2, h3 {
 }
 
 .hero:before {
-    right: 100%;
-    bottom: 100%;
-    border-bottom: 1px dashed var(--contrast-fg);
-    border-right: 1px dashed var(--contrast-fg);
+    inset-inline-end: 100%;
+    inset-block-end: 100%;
+    border-block-end: 1px dashed var(--contrast-fg);
+    border-inline-end: 1px dashed var(--contrast-fg);
 }
 
 .hero:after {
-    left: 100%;
-    top: 100%;
-    border-top: 1px dashed var(--contrast-fg);
-    border-left: 1px dashed var(--contrast-fg);
+    inset-inline-start: 100%;
+    inset-block-start: 100%;
+    border-block-start: 1px dashed var(--contrast-fg);
+    border-inline-start: 1px dashed var(--contrast-fg);
 }
 
 .hero h1 {
@@ -195,7 +195,7 @@ h1, h2, h3 {
     position: absolute;
     top: 100%;
     transform: translateY(-50%);
-    right: calc(100% - var(--space-away) + var(--timeline-width) - 2px);
+    inset-inline-end: calc(100% - var(--space-away) + var(--timeline-width) - 2px);
 }
 
 .hero:hover time-marker::part(scale) {
@@ -211,11 +211,11 @@ h1, h2, h3 {
 }
 
 #timeline {
-    border-left: var(--timeline-width) solid var(--accent-fg);
+    border-inline-start: var(--timeline-width) solid var(--accent-fg);
     margin: 0;
     margin-inline-start: calc(var(--space-away) + 3px);
     padding: var(--space-away) 0;
-    min-height: 80vh;
+    min-block-size: 80vh;
     display: flex;
     flex-direction: column;
     align-items: end;
@@ -232,7 +232,7 @@ h1, h2, h3 {
   box-shadow: var(--lift-shadow);
   padding: 0.4em 0.6em;
   margin: 0;
-  width: 100%;
+  inline-size: 100%;
   font-family: cy, sans-serif;
   font-size: .7em;
   text-transform: uppercase;
@@ -248,7 +248,7 @@ h1, h2, h3 {
     flex-direction: column;
     gap: 3rem;
     padding-block: var(--space-away);
-    width: 100%;
+    inline-size: 100%;
 }
 
 #points interest-point {
@@ -265,11 +265,11 @@ h1, h2, h3 {
 }
 
 footer {
-    border-top: 1px solid var(--accent-fg);
+    border-block-start: 1px solid var(--accent-fg);
 }
 
 footer > div {
-    max-width: var(--max-width);
+    max-inline-size: var(--max-width);
     margin-inline: auto;
     padding: var(--space-away);
     display: flex;
@@ -300,7 +300,7 @@ footer p {
 
 .social a {
     display: flex;
-    width: 1.5em;
+    inline-size: 1.5em;
 }
 
 .social svg {

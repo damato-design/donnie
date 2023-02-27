@@ -29,15 +29,15 @@ a:focus {
 :host:before {
     content: '';
     display: block;
-    width: var(--gap);
+    inline-size: var(--gap);
 }
 
 #item {
     list-style: none;
     background-color: var(--contrast-bg);
     border: 1px dashed var(--contrast-fg);
-    border-top-right-radius: 1rem;
-    border-bottom-left-radius: 1rem;
+    border-start-end-radius: 1rem;
+    border-end-start-radius: 1rem;
     position: relative;
     padding: var(--space-away);
     flex: 1;
@@ -52,22 +52,22 @@ a:focus {
     content: '';
     position: absolute;
     display: block;
-    width: var(--space-near);
+    inline-size: var(--space-near);
     aspect-ratio: 1/1;
 }
 
 #item:before {
-    right: 100%;
-    bottom: 100%;
-    border-bottom: 1px dashed var(--contrast-fg);
-    border-right: 1px dashed var(--contrast-fg);
+    inset-inline-end: 100%;
+    inset-block-end: 100%;
+    border-block-end: 1px dashed var(--contrast-fg);
+    border-inline-end: 1px dashed var(--contrast-fg);
 }
 
 #item:after {
-    left: 100%;
-    top: 100%;
-    border-top: 1px dashed var(--contrast-fg);
-    border-left: 1px dashed var(--contrast-fg);
+    inset-inline-start: 100%;
+    inset-block-start: 100%;
+    border-block-start: 1px dashed var(--contrast-fg);
+    border-inline-start: 1px dashed var(--contrast-fg);
 }
 
 #relative-time {
@@ -93,7 +93,7 @@ a:focus {
     mask-image: var(--svg);
     background-color: currentColor;
     color: var(--accent-fg);
-    width: 24px;
+    inline-size: 24px;
     aspect-ratio: 1/1;
     display: inline-block;
     vertical-align: middle;
@@ -137,18 +137,18 @@ a:focus {
     position: absolute;
     display: flex;
     align-items: center;
-    right: 100%;
+    inset-inline-end: 100%;
     --spacing: calc(var(--space-near) + var(--space-away) + var(--timeline-width) + 1.5rem + 6px);
-    width: calc(var(--gap) + var(--spacing));
+    inline-size: calc(var(--gap) + var(--spacing));
 }
 
 .track hr {
     flex: 1;
-    height: 4px;
-    border-top: 1px solid var(--accent-fg);
-    border-bottom: 1px solid var(--accent-fg);
-    border-left: 1px solid var(--contrast-bg);
-    border-right: 1px solid var(--contrast-bg);
+    block-size: 4px;
+    border-block-start: 1px solid var(--accent-fg);
+    border-block-end: 1px solid var(--accent-fg);
+    border-inline-start: 1px solid var(--contrast-bg);
+    border-inline-end: 1px solid var(--contrast-bg);
     background-color: var(--contrast-bg);
 }
 

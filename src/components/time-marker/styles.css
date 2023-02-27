@@ -1,6 +1,6 @@
 :host {
     display: block;
-    width: 1.5rem;
+    inline-size: 1.5rem;
 }
 
 time {
@@ -47,7 +47,7 @@ span {
 hr {
     border: 0;
     margin: 0;
-    border-top: 1px solid var(--accent-fg);
+    border-block-start: 1px solid var(--accent-fg);
     display: none;
 }
 
