@@ -72,6 +72,8 @@ a:focus {
 
 #relative-time {
     color: var(--accent-fg);
+    background-color: var(--accent-bg);
+    padding: 0.4em 0.6em;
     font-size: 0.7em;
     text-transform: uppercase;
     font-family: cy, sans-serif;
