@@ -127,10 +127,18 @@ a:focus {
     background-color: var(--contrast-bg);
 }
 
+/* SEGREGATE NON-RESOURCE ITEMS?
+:host(:not([type="role"], [type="certification"])) .point {
+    border-radius: 50%;
+}
+*/
+
+
 #icon {
     background-color: var(--accent-fg);
     color: var(--contrast-bg);
     padding: .1em;
+    border-radius: inherit;
 }
 
 .track {
