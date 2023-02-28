@@ -23,6 +23,8 @@
 <meta name="msapplication-TileColor" content="#0f0c29">
 <meta name="theme-color" content="#0f0c29">
 
+<link rel="preconnect" href="https://p.typekit.net" crossorigin>
+<link rel="preconnect" href="https://use.typekit.net" crossorigin>
 <link rel="stylesheet" href="https://use.typekit.net/ijd1dct.css"/>
 <script src="index.iife.js" defer></script>
 <script type="text/javascript" src="zdog.dist.min.js" defer></script>
@@ -32,13 +34,13 @@
   window.onload = () => 'serviceWorker' in navigator && navigator.serviceWorker.register('sw.js').then((registration) => registration.update()).catch((err) => {});
 </script>
 
-<script src="https://getinsights.io/js/insights.js"></script>
-<script>
-insights.init('ZXc1EYEuX0C3DxZJ', {
-  disabled: 'donnie.damato.design' !== window.location.hostname
-});
-console.info(`Analytics disabled: ${insights.DEFAULT_APP.options.disabled}`);
-insights.trackPages();
+<script type="module" async>
+  import './insights.js';
+  insights.init('ZXc1EYEuX0C3DxZJ', {
+    disabled: 'donnie.damato.design' !== window.location.hostname
+  });
+  console.info(`Analytics disabled: ${insights.DEFAULT_APP.options.disabled}`);
+  insights.trackPages();
 </script>
 <script type="application/ld+json">
 {
