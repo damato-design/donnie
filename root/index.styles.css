@@ -9,6 +9,8 @@
     --contrast-bg: #0f0c29;
     --accent-fg: #28fbbc;
     --accent-bg: #243842;
+    --focus-ol: var(--contrast-fg);
+    --focus-width: 2px;
     --max-width: clamp(860px, 80vw, 1200px);
     --timeline-width: 4px;
     --lift-shadow: 
@@ -19,8 +21,8 @@
 }
 
 :focus {
-    outline: 1px solid var(--accent-fg);
-    outline-offset: 2px;
+    outline: var(--focus-width) solid var(--focus-ol);
+    outline-offset: var(--focus-width)
 }
 
 html {
@@ -106,10 +108,13 @@ h1, h2, h3 {
     background-color: var(--accent-fg);
     color: var(--contrast-bg);
     border: 0;
-    padding: var(--space-near);
+    padding: .5em .75em;
     font: inherit;
+    font-family: cy, sans-serif;
+    text-decoration: none;
     display: inline-flex;
     align-items: center;
+    gap: .5ch;
 }
 
 .btn:hover {
@@ -132,11 +137,13 @@ h1, h2, h3 {
     justify-content: space-between;
     box-shadow: var(--lift-shadow);
     gap: var(--space-away);
+    scroll-margin-block-start: var(--space-away);
 }
 
 .content {
     flex: 1 1 auto;
     max-width: 50ch;
+    padding-block-end: var(--space-away);
 }
 
 .canvas {
@@ -296,7 +303,7 @@ footer p {
     margin-block: 0.25em;
 }
 
-.social {
+#social {
     list-style: none;
     margin: 0;
     display: grid;
@@ -307,12 +314,12 @@ footer p {
     margin-inline-end: var(--space-near);
 }
 
-.social a {
+#social a {
     display: flex;
     inline-size: 1.5em;
 }
 
-.social svg {
+#social svg {
     display: flex;
     aspect-ratio: 1/1;
 }

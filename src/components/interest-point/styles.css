@@ -22,8 +22,8 @@ a:before {
 }
 
 a:focus {
-    outline: 1px solid var(--accent-fg);
-    outline-offset: 2px;
+    outline: var(--focus-width) solid var(--focus-ol);
+    outline-offset: var(--focus-width);
 }
 
 :host:before {
