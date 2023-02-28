@@ -129,12 +129,14 @@ h1, h2, h3 {
     position: relative;
     padding: var(--space-away);
     display: flex;
+    justify-content: space-between;
     box-shadow: var(--lift-shadow);
     gap: var(--space-away);
 }
 
 .content {
     flex: 1 1 auto;
+    max-width: 50ch;
 }
 
 .canvas {
@@ -142,6 +144,7 @@ h1, h2, h3 {
     align-items: center;
     justify-content: center;
     flex: 1 0 auto;
+    max-width: 360px;
     overflow: hidden;
     color: var(--accent-bg);
     background: repeating-linear-gradient(
