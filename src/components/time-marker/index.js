@@ -1,20 +1,12 @@
 import html from './template.html';
 import css from './styles.css';
+import utc from '../utc.js';
 
 const { format } = new Intl.DateTimeFormat(undefined, {
     year: 'numeric',
     month: 'short',
     timeZone: 'UTC'
 });
-
-function utc() {
-    const d = new Date();
-    const str = [d.getFullYear(), d.getMonth() + 1, d.getDate()].map((n) => {
-        const s = String(n);
-        return s.length === 1 ? s.padStart(2, '0') : s;
-    }).join('-');
-    return `${str}T00:00:00.000Z`;
-}
 
 export default class TimeMarker extends window.HTMLElement {
     constructor() {
