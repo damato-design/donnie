@@ -1,6 +1,7 @@
 export { default as InterestPoint } from './interest-point/index.js';
 export { default as TimeMarker } from './time-marker/index.js';
 import { TYPES } from './point-types.js';
+import utc from './utc.js';
 
 const LOCAL_POINTS_URL = './points.json';
 const BLOG_POINTS_URL = 'https://blog.damato.design/feed.json';
@@ -44,7 +45,7 @@ function npmFormat({ objects }) {
             url: pkg.links.npm,
             type: 'package',
             textContent: pkg.description,
-            datetime: pkg.date
+            datetime: utc(pkg.date)
         }
     });
 }
