@@ -1,6 +1,6 @@
-const blockColor = '#28fbbc';
-const pegColor = '#243842';
-const pegFace = '#28fbbc';
+const blockColor = 'var(--accent-fg)';
+const pegColor = 'var(--accent-bg)';
+const pegFace = 'var(--accent-fg)';
 
 const illo = new Zdog.Illustration({
 	// set canvas with selector
