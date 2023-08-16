@@ -4,12 +4,14 @@
         "url": "https://complementary.space",
         "type": "exploration",
         "datetime": "2022-11-15T00:00:00.000Z",
+        "thumbnail": "https://complementary.space/og-image.jpg",
         "textContent": "Design spacing tokens semantically."
     }, {
         "title": "Gridless Design",
         "url": "https://gridless.design",
         "type": "exploration",
         "datetime": "2021-07-15T00:00:00.000Z",
+        "thumbnail":"https://gridless.design/og-image.jpg",
         "textContent": "Get rid of the grid!"
     }, {
         "title": "Grids are not inclusive",

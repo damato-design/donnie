@@ -20,6 +20,15 @@
         -6px -6px var(--contrast-bg);
 }
 
+@media (prefers-color-scheme: light) {
+    :root {
+        --contrast-fg: #111;
+        --contrast-bg: #f0efd3;
+        --accent-fg: #ff0084;
+        --accent-bg: #f0c4c4;
+    }
+}
+
 :focus {
     outline: var(--focus-width) solid var(--focus-ol);
     outline-offset: var(--focus-width)
