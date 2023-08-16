@@ -7,6 +7,13 @@ const formatter = new Intl.RelativeTimeFormat(undefined, {
   numeric: "auto",
 });
 
+function getThumbnail(url) {
+  if (url.includes('youtube.com')) {
+    const [, videoId] = url.match(/.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/)
+    return `https://i.ytimg.com/vi_webp/${videoId}/mqdefault.webp`;
+  }
+}
+
 const DIVISIONS = [
   { amount: 7, name: "days" },
   { amount: 4.34524, name: "weeks" },
@@ -37,10 +44,11 @@ export default class InterestPoint extends window.HTMLElement {
     this._$reltime = this.shadowRoot.getElementById("relative-time");
     this._$marker = this.shadowRoot.getElementById("time-marker");
     this._$icon = this.shadowRoot.getElementById("icon");
+    this._$thumbnail = this.shadowRoot.getElementById("thumbnail");
   }
 
   static get observedAttributes() {
-    return ["title", "url", "type", "datetime"];
+    return ["title", "url", "type", "datetime", "thumbnail"];
   }
 
   attributeChangedCallback(attr) {
@@ -56,6 +64,12 @@ export default class InterestPoint extends window.HTMLElement {
         link.href = this.url;
         link.innerHTML = this.title;
         this._$title.appendChild(link);
+
+        const thumbnail = getThumbnail(this.url);
+        if (thumbnail) {
+          this.thumbnail = thumbnail;
+        }
+
       } else {
         this._$title.innerHTML = this.title;
       }
@@ -63,6 +77,10 @@ export default class InterestPoint extends window.HTMLElement {
 
     if (attr === "type") {
       this._$icon.textContent = TYPES[this.type];
+    }
+
+    if (attr === 'thumbnail') {
+      this._$thumbnail.src = this.thumbnail;
     }
   }
 
@@ -111,6 +129,18 @@ export default class InterestPoint extends window.HTMLElement {
       this.setAttribute("url", newVal);
     } else {
       this.removeAttribute("url");
+    }
+  }
+
+  get thumbnail() {
+    return this.getAttribute("thumbnail");
+  }
+
+  set thumbnail(newVal) {
+    if (newVal) {
+      this.setAttribute("thumbnail", newVal);
+    } else {
+      this.removeAttribute("thumbnail");
     }
   }
 }
