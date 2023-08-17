@@ -12,6 +12,11 @@ function getThumbnail(url) {
     const [, videoId] = url.match(/.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/)
     return `https://i.ytimg.com/vi_webp/${videoId}/mqdefault.webp`;
   }
+
+  if (url.includes('npmjs.com')) {
+    const [, repo] = url.match(/https:\/\/www.npmjs.com\/package\/(.+)/);
+    return `https://opengraph.githubassets.com/og/ddamato/${repo}`;
+  }
 }
 
 const DIVISIONS = [
