@@ -43,12 +43,14 @@
         "url": "https://deltazeus.com",
         "type": "project",
         "datetime": "2020-04-27T00:00:00.000Z",
+        "thumbnail":"https://deltazeus.com/og-image.jpg",
         "textContent": "Get notified about significant weather changes in your area every day."
     }, {
         "title": "willarrive.in",
         "url": "https://willarrive.in",
         "type": "project",
         "datetime": "2020-05-27T00:00:00.000Z",
+        "thumbnail": "https://willarrive.in/og-image.jpg",
         "textContent": "A quick way to find your subway arrival time in New York City."
     }, {
         "title": "#59. Design Systems Podcast",
