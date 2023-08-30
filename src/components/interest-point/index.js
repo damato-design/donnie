@@ -17,6 +17,11 @@ function getThumbnail(url) {
     const [, repo] = url.match(/https:\/\/www.npmjs.com\/package\/(.+)/);
     return `https://opengraph.githubassets.com/og/ddamato/${repo}`;
   }
+
+  if (url.includes('blog.damato.design')) {
+    const [, slug] = url.match(/https:\/\/blog.damato.design\/posts\/([^/]+)/);
+    return `https://blog.damato.design/og-images/${slug}.png`;
+  }
 }
 
 const DIVISIONS = [
