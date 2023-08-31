@@ -21,6 +21,12 @@
         "thumbnail": "https://storage.googleapis.com/uxdx-blog-images/grids-are-not-inclusive-how-to-design-without-the-grid.jpg",
         "textContent": "Accessibility is a big part of design and while we often cite for color contrast, this only affects about 4% of the world population. To have a larger impact, we should consider the 70% of the world that doesn't speak English."
     }, {
+        "title": "Theming in Complex Ecosystems with Donnie D'Amato, Skim Kimball, & Mark Reynolds",
+        "url": "https://www.youtube.com/watch?v=DPvxOcWlLn0",
+        "type": "video",
+        "datetime": "2023-08-30T00:00:00.000Z",
+        "textContent": "Explore how emerging tools like Token Studio and Figma Variables are reshaping the design and dev workflows. In this session, we'll dive into the evolving perspectives on theming in complex ecosystems, and discuss shifts in the way design and engineering collaborate."
+    }, {
         "title": "Shifting towards a gridless design system",
         "url": "https://www.youtube.com/watch?v=V_FfUrmLnQ0",
         "type": "presentation",
