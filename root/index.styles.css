@@ -22,10 +22,10 @@
 
 @media (prefers-color-scheme: light) {
     :root {
-        --contrast-fg: #111;
-        --contrast-bg: #f0efd3;
-        --accent-fg: #ff0084;
-        --accent-bg: #f0c4c4;
+        --contrast-fg: #0f0c29;
+        --contrast-bg: #c7ffee;
+        --accent-fg: #243842;
+        --accent-bg: #28fbbc;
     }
 }
 
