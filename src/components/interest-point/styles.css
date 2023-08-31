@@ -212,7 +212,7 @@ a:focus {
 #thumbnail-overlay:before {
     content: '';
     background-color: var(--accent-fg);
-    mix-blend-mode: multiply;
+    mix-blend-mode: hue;
     inset: 0;
     position: absolute;
 }
