@@ -33,6 +33,12 @@
         "datetime": "2023-09-20T00:00:00.000Z",
         "textContent": "The Design Tokens Community Group has been working towards a formal standardization about how tools expect tokens to be delivered. How might we enhance the format to transform tokens from static values to support dynamic needs? This talk introduces the idea of “token operations” a recommendation for the DTCG specification to meet the needs of the most complex systems."
     }, {
+        "title": "HTML by CSS",
+        "url": "https://twitter.com/Rich_Harris/status/1714059602474549645",
+        "type": "presentation",
+        "datetime": "2023-10-16T00:00:00.000Z",
+        "textContent": "There's a few projects out there that are HTML preprocessors (Haml, Pug) which have their own (sometimes CSS-like) syntax. I wondered if we could get closer to just writing CSS to produce HTML. With the new nesting specification and the power of postcss, it looks like we can!"
+    }, {
         "title": "Shifting towards a gridless design system",
         "url": "https://www.youtube.com/watch?v=V_FfUrmLnQ0",
         "type": "presentation",
