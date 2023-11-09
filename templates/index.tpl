@@ -18,5 +18,6 @@
       </div>
     </div>
     {% include "_includes/footer.njk" %}
+    <img src="https://analytics.damato.design/api/track?domain=donnie.damato.design" style="display: none">
   </body>
 </html>
