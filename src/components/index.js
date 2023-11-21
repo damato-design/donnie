@@ -5,7 +5,7 @@ import utc from './utc.js';
 
 const LOCAL_POINTS_URL = './points.json';
 const BLOG_POINTS_URL = 'https://blog.damato.design/feed.json';
-const PKG_POINTS_URL = 'https://registry.npmjs.org/-/v1/search?text=author:fauxserious';
+const PKG_POINTS_URL = 'https://registry.npmjs.org/-/v1/search?text=maintainer:fauxserious';
 const $points = document.getElementById('points');
 const $filter = document.getElementById('filter');
 
