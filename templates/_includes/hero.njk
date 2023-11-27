@@ -1,13 +1,24 @@
 <header class="hero" id="top">
     <div class="content">
-        <h1>design
-            systems
-        architect</h1>
-        <span>noun</span>
-        <p>a person who organizes resources with design and engineering collaboration for the purpose of crafting cohesive user experiences.</p>
-        <a href="#social" class="btn">
-            Connect
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24" fill="currentcolor" role="presentation"><path d="M480 976q-83 0-156-31.5T197 859q-54-54-85.5-127T80 576q0-83 31.5-156T197 293q54-54 127-85.5T480 176q83 0 156 31.5T763 293q54 54 85.5 127T880 576q0 83-31.5 156T763 859q-54 54-127 85.5T480 976Zm-43-61v-82q-35 0-59-26t-24-61v-44L149 497q-5 20-7 39.5t-2 39.5q0 130 84.5 227T437 915Zm294-108q22-24 38.5-51t28-56.5q11.5-29.5 17-60.5t5.5-63q0-106-58-192.5T607 257v18q0 35-24 61t-59 26h-87v87q0 17-13.5 28T393 488h-83v88h258q17 0 28 13t11 30v127h43q29 0 51 17t30 44Z"/></svg>
+        <h1>donnie
+            d'amato
+        </h1>
+        <p class="overline">
+            <label for="slider">variable biography</label><input id="slider" step="any" type="range"/>
+        </p>
+        <vari-bio id="vari-bio">
+            <p>I'm a <a href="https://ds.house/">design systems architect</a> in New York.</p>
+
+            <p>I am a creative <a href="https://ds.house/">design systems architect</a> residing in New York with over 20 years of experience in design. I give back to the design community through <a href="https://design-systems.slack.com/">discourse</a> and <a href="https://blog.damato.design/">resources</a> on a regular basis. </p>
+
+            <p>I have founded <a href="https://ds.house/">Design Systems House, LLC.</a> located in New York to help shape the future of design systems. I often write <a href="https://blog.damato.design/">articles about design systems</a> to help guide best practices, leveraging my 20 years of experience in design. I frequent the <a href="https://design-systems.slack.com/">design systems community</a> as a volunteer moderator in my spare time.</p>
+
+            <p>I am the Founder & Chief Architect of <a href="https://ds.house/">Design Systems House, LLC.</a> located within New York where I am dedicated to the future of design systems. I frequently write <a href="https://blog.damato.design/">spicy opinions about design systems</a> on the internet. I am regularly active in the <a href="https://design-systems.slack.com/">design systems community</a> as a volunteer moderator. When I'm not <a href="https://mode.place/">arguing about rectangles</a>, I relax by playing <a href="https://www.team17.com/games/overcooked-2/">Overcooked</a> in random online lobbies.</p>
+        </vari-bio>
+        
+        <a href="https://cal.com/donnie-damato" class="btn">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24" fill="currentcolor" role="presentation"><path d="M80 776V218q0-14 13-28t27-14h519q15 0 28 13.5t13 28.5v356q0 14-13 28t-28 14H240L80 776Zm201 40q-14 0-27.5-14T240 774v-98h500V336h100q14 0 27 14t13 29v596L721 816H281Zm339-580H140v395l75-75h405V236Zm-480 0v395-395Z"></path></svg>
+            Chat
         </a>
     </div>
     <div class="canvas">
@@ -15,3 +26,16 @@
     </div>
     <time-marker></time-marker>
 </header>
+
+<script>
+      const $slider = document.getElementById("slider");
+      const $bio = document.getElementById("vari-bio");
+      $bio.addEventListener('ready', ({ detail }) => {
+        Object.assign($slider, detail);
+        $slider.addEventListener('input', () => $bio.value = $slider.value);
+        $slider.addEventListener('change', () => {
+          $bio.value = $slider.value = Math.min(Math.round($slider.value), $slider.max);
+        });
+      });
+    
+</script>

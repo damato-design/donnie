@@ -91,28 +91,6 @@ h1, h2, h3 {
     padding-inline: var(--space-near);
 }
 
-.header {
-    position: sticky;
-    inset-block-start: var(--space-away);
-    border: 1px solid var(--accent-fg);
-    padding: 2px;
-    box-shadow: var(--lift-shadow);
-    margin: var(--space-away);
-    background-color: var(--contrast-bg);
-    z-index: 1;
-}
-
-.header > div {
-    display: flex;
-    justify-content: space-between;
-}
-
-.header span {
-    padding: var(--space-near) var(--space-away);
-    border-inline-start: var(--timeline-width) solid var(--accent-fg);
-    vertical-align: middle;
-}
-
 .btn {
     background-color: var(--accent-fg);
     color: var(--contrast-bg);
@@ -124,6 +102,7 @@ h1, h2, h3 {
     display: inline-flex;
     align-items: center;
     gap: .5ch;
+    justify-content: center;
 }
 
 .btn:hover {
@@ -147,6 +126,42 @@ h1, h2, h3 {
     box-shadow: var(--lift-shadow);
     gap: var(--space-away);
     scroll-margin-block-start: var(--space-away);
+}
+
+.overline {
+    display: flex;
+    align-items: center;
+    gap: var(--space-near);
+    flex-wrap: wrap;
+}
+
+.overline label {
+    background-color: var(--accent-bg);
+    color: var(--accent-fg);
+    padding: 0.4em 0.6em;
+    font-size: 0.7em;
+    text-transform: uppercase;
+    font-family: cy, sans-serif;
+    white-space: pre-line;
+}
+
+vari-bio {
+    font-family: anonymous-pro, sans-serif;
+    padding-block: var(--space-near);
+    --vari-bio-background: fixed linear-gradient(90deg, var(--accent-fg) 0%, var(--accent-fg) 100%);
+    --vari-bio-radius: 3px;
+    --vari-bio-duration: .7s;
+    --vari-bio-height: 2.55ex;
+    --vari-bio-leading: .2ex;
+    --vari-bio-space: 1.1ch;
+}
+
+vari-bio p {
+    margin: 0;
+}
+
+input[type="range"] {
+    accent-color: var(--accent-fg);
 }
 
 .content {
@@ -201,19 +216,6 @@ h1, h2, h3 {
     margin: 0;
     margin-block-end: var(--space-away);
     white-space: pre-line;
-}
-
-.hero span {
-    background-color: var(--accent-bg);
-    color: var(--accent-fg);
-    padding: 0.4em 0.6em;
-    font-size: 0.7em;
-    text-transform: uppercase;
-    font-family: cy, sans-serif;
-}
-
-.hero p {
-    margin: var(--space-near) 0 var(--space-away);
 }
 
 .hero time-marker {

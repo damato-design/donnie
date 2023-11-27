@@ -7,7 +7,6 @@
   <body>
     <div class="max-width">
       <div>
-        {% include "_includes/header.njk" %}
         {% include "_includes/hero.njk" %}
         <main id="timeline">
           <div class="select">
