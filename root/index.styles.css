@@ -147,13 +147,25 @@ h1, h2, h3 {
 
 vari-bio {
     font-family: anonymous-pro, sans-serif;
-    padding-block: var(--space-near);
+    padding: var(--space-near) 0 var(--space-away);
     --vari-bio-background: fixed linear-gradient(90deg, var(--accent-fg) 0%, var(--accent-fg) 100%);
     --vari-bio-radius: 3px;
     --vari-bio-duration: .7s;
     --vari-bio-height: 2.55ex;
     --vari-bio-leading: .2ex;
     --vari-bio-space: 1.1ch;
+}
+
+vari-bio:not(:defined) {
+    display: grid;
+}
+
+vari-bio:not(:defined) > * {
+    grid-area: 1 / 1 / -1 / -1;
+}
+
+vari-bio:not(:defined) > :not(:last-child) {
+    opacity: 0; /* Only show the first paragraph of content before the component loads */
 }
 
 vari-bio p {
