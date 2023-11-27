@@ -165,6 +165,7 @@ vari-bio:not(:defined) > * {
 }
 
 vari-bio:not(:defined) > :not(:last-child) {
+    pointer-events: none;
     opacity: 0; /* Only show the first paragraph of content before the component loads */
 }
 
