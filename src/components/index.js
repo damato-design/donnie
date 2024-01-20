@@ -27,13 +27,13 @@ function pointCreate(point) {
 }
 
 function blogFormat({ items }) {
-    return items.map(({ title, url, date_modified, summary }) => {
+    return items.map(({ title, url, date_published, date_modified, summary }) => {
         return {
             title,
             url,
             type: 'article',
             textContent: summary,
-            datetime: date_modified
+            datetime: date_published || date_modified
         }
     });
 }
