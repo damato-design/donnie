@@ -1,0 +1,36 @@
+---
+const { 
+    title = "Donnie D'Amato", 
+    description = "Design Systems Architect"
+} = Astro.props;
+const ogImage = new URL('og-image.png', Astro.url);
+---
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content={ description }>
+    <meta name="viewport" content="width=device-width">
+    <meta name="generator" content={Astro.generator}>
+    <title>{title}</title>
+    <meta property="og:title" content={ title }>
+    <meta property="og:description" content={ description }>
+    <meta property="og:url" content={ Astro.url }>
+    <meta property="og:image" content={ ogImage }>
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content={ title }>
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:creator" content="@donniedamato" />
+    <meta name="twitter:creator:id" content="230538553" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Delicious+Handrawn&display=swap" rel="stylesheet">
+
+    <style is:global>
+        *, :before, :after {
+            box-sizing: border-box;
+        }
+    </style>
+</head>
