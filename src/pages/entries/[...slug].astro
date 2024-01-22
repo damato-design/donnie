@@ -1,5 +1,5 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from '@layouts/Layout.astro';
 import Frame from '@components/Frame.astro';
 import Figure from '@components/Figure.astro';
 import Article from '@components/Article.astro';
@@ -13,9 +13,7 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { image, headline, year, summary, link } = entry.data;
 const { Content } = await entry.render();
-const { host } = new URL(link);
 ---
 
 <style>
