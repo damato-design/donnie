@@ -3,13 +3,16 @@ const { message } = Astro.props;
 ---
 
 <div class="sticky-notes">
+    <div class="content">{ message }</div>
+    <div class="slot">
+        <slot/>
+    </div>
     <ul class="stickies">
         { Array.from({ length: 12 }, (_, i) => <li
             class="sticky"
             data-content={ message }
-            style={ `--index: ${i}; --rotate: ${(Math.random() - .5) * 5}deg` }/>) }
+            style={ `--rotate: ${(Math.random() - .5) * 5}deg` }/>) }
     </ul>
-    <div class="content">{ message }</div>
 </div>
 
 <style>
@@ -18,10 +21,16 @@ const { message } = Astro.props;
         max-width: 900px;
         margin-inline: auto;
         display: block;
-        font-family: 'Delicious Handrawn', 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive;
-        font-size: 6rem;
-        text-align: center;
         container-type: inline-size;
+    }
+
+    .slot {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
     }
 
     .stickies {
@@ -33,6 +42,7 @@ const { message } = Astro.props;
         display: flex;
         flex-wrap: wrap;
         perspective: 1000px;
+        pointer-events: none;
     }
 
     .sticky {
@@ -50,18 +60,39 @@ const { message } = Astro.props;
         box-shadow: 0 13px 18px rgba(128, 128, 128, .3);
         transform-origin: center top;
         transform-style: preserve-3d;
-        transform: rotate(var(--rotate));
+        transform: translate(var(--x, 0px), var(--y, 0px)) rotate(var(--rotate));
         overflow: hidden;
         position: relative;
         transition: transform .218s ease;
+        pointer-events: initial;
     }
 
     .sticky:hover {
-        transform: rotatex(10deg);
+        transform: translate(var(--x, 0px), var(--y, 0px)) rotatex(10deg);
+        z-index: 1;
+        cursor: grab;
         background-image: linear-gradient(
             to bottom, 
             color-mix(in srgb, black, transparent 91%) 15%,
             color-mix(in srgb, white, transparent 90%) 25%);
+    }
+
+    .sticky[data-grabbed="true"] {
+        transform: translate(var(--x, 0px), var(--y, 0px)) rotatex(10deg);
+        z-index: 1;
+        cursor: grabbing;
+        transition: none;
+    }
+
+    .sticky[data-grabbed="false"] {
+        animation: drop .6s ease-in forwards;
+    }
+
+    @keyframes drop {
+        to {
+            visibility: hidden;
+            transform: translate(var(--x, 0px), 150dvh) rotatex(90deg);
+        }
     }
 
     .sticky:after {
@@ -176,5 +207,50 @@ const { message } = Astro.props;
         align-items: center;
         justify-content: center;
         padding: 6rem;
+        font-family: 'Delicious Handrawn', 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive;
+        font-size: 6rem;
+        text-align: center;
     }
 </style>
+
+<script>
+    const target = {
+        x: 0,
+        y: 0
+    };
+
+    function onPointerMove({ pageX, pageY }) {
+        this.style.setProperty('--x', `${pageX - target.x}px`);
+        this.style.setProperty('--y', `${pageY - target.y}px`);
+    }
+
+    function onPointerUp() {
+        this.dataset.grabbed = false;
+        document.documentElement.removeEventListener('pointermove', target.onPointerMove);
+        document.documentElement.removeEventListener('pointerup', target.onPointerUp);
+    }
+
+    function onPointerDown({ pageX, pageY }) {
+        target.x = pageX;
+        target.y = pageY;
+        target.onPointerMove = onPointerMove.bind(this);
+        target.onPointerUp = onPointerUp.bind(this);
+        this.dataset.grabbed = true;
+        document.documentElement.addEventListener('pointermove', target.onPointerMove);
+        document.documentElement.addEventListener('pointerup', target.onPointerUp);
+    }
+
+    function reset($sticky) {
+        $sticky.removeAttribute('data-grabbed');
+        $sticky.style.removeProperty('--x');
+        $sticky.style.removeProperty('--y');
+    }
+
+    const $notes = document.querySelectorAll('.sticky');
+    $notes.forEach(($note) => $note.addEventListener('pointerdown', onPointerDown));
+    const $root = document.querySelector('.stickies');
+    new IntersectionObserver((entries) => {
+        if (!entries || !entries.length) return;
+        entries.every(({ isIntersecting }) => !isIntersecting) && $notes.forEach(reset);
+    }, { threshold: 0 }).observe($root);
+</script>
