@@ -1,0 +1,12 @@
+---
+import Head from '@components/Head.astro';
+---
+
+<!doctype html>
+<html lang="en">
+    <Head { ...Astro.props }/>
+    <body>
+        <slot/>
+		<img src="https://analytics.damato.design/api/track?domain=donnie.damato.design" style="display: none"/>
+    </body>
+</html>

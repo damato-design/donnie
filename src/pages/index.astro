@@ -1,39 +1,23 @@
 ---
-import Head from '@components/Head.astro';
+import Layout from '../layouts/Layout.astro';
 import StickyNotes from '@components/StickyNotes.astro';
 import PhotoCard from '@components/PhotoCard.astro';
 import PhotoFrames from '@components/PhotoFrames.astro';
-import PhotoFrame from '@components/PhotoFrame.astro';
+
 ---
 
-<!doctype html>
-<html lang="en">
-    <Head { ...Astro.props }/>
-    <body>
-        <StickyNotes message="Keep dreamin'">
-            <strong>TO DO:</strong>
-            <ul>
-                <li><s>Visit donnie.damato.design</s></li>
-                <li><s>Remove stickies</s></li>
-                <li><a href="#about">Scroll down</a></li>
-            </ul>
-        </StickyNotes>
-        <PhotoCard name="Donnie" image="#">
-            <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
-            <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
-        </PhotoCard>
-        <PhotoFrames>
-            <PhotoFrame
-                id="damato"
-                image="#"
-                headline="DAMATO design"
-                year="2020"
-                link="https://damato.design"
-                summary="Design System experimentation">
-                <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
-                <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
-            </PhotoFrame>
-        </PhotoFrames>
-		<img src="https://analytics.damato.design/api/track?domain=donnie.damato.design" style="display: none"/>
-    </body>
-</html>
+<Layout>
+    <StickyNotes message="Keep dreamin'">
+        <strong>TO DO:</strong>
+        <ul>
+            <li><s>Visit donnie.damato.design</s></li>
+            <li><s>Remove stickies</s></li>
+            <li><a href="#about">Scroll down</a></li>
+        </ul>
+    </StickyNotes>
+    <PhotoCard name="Donnie" image="#">
+        <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
+        <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
+    </PhotoCard>
+    <PhotoFrames/>
+</Layout>

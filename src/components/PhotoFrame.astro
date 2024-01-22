@@ -1,162 +1,26 @@
 ---
+import Frame from '@components/Frame.astro';
+import Figure from '@components/Figure.astro';
 const {
     id,
     image,
     headline,
     year,
-    link,
-    summary
 } = Astro.props;
 
-const { host } = new URL(link);
+const href = `/entries/${id}`;
 ---
 
 <style>
-    .photo-frame {
-        padding: 1rem 1rem 0;
-        border: 10px solid;
-        border-top-color: black;
-        border-left-color: color-mix(in srgb, black, white 10%);
-        border-right-color: color-mix(in srgb, black, white 20%);
-        border-bottom-color: color-mix(in srgb, black, white 30%);
-        background-color: #e0e0e0;
-        position: relative;
-        margin: 0;
-        transition: .4s ease;
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-    }
-
-    .photo-frame:not([data-focus="true"]):after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-image: linear-gradient(
-            135deg, 
-            transparent, 
-            transparent 50%, 
-            color-mix(in srgb, white, transparent 80%) 50%,
-            transparent 100%);
-    }
-
-    .photo-frame[data-focus="true"] {
-        position: fixed;
-        inset: 0;
-        z-index: 1;
-    }
-
-    .hero {
-        position: relative;
-        max-width: 100%;
-        margin: 0;
-        flex: 0 1 300px;
-    }
-
-    .hero img {
-        width: 100%;
-        border: 1px solid color-mix(in srgb, black, white 50%);
-        margin-block-end: 1rem;
-        margin-inline-start: auto;
-        max-width: 300px;
-        transition: filter .4s ease-in-out;
-    }
-
-    .hero img[src="#"] {
-        aspect-ratio: 1;
-        background-color: #ccc;
-        display: block;
-        padding: 1rem;
-    }
-
-    .hero figcaption {
-        --translate: -1em;
-        text-align: right;
-        position: absolute;
-        inset: 1rem;
-        color: white;
-        opacity: 0;
-        transition: 0s linear;
-    }
-
-    .photo-frame[data-focus="true"] .hero figcaption {
-        --translate: 0;
-        position: unset;
+    a {
+        display: inline-block;
+        text-decoration: none;
         color: inherit;
-        opacity: 1;
-    }
-
-    .hero h2 {
-        margin: 0;
-        line-height: 1;
-        transition: .4s ease;
-        transform: translateY(var(--translate));
-        font-family: Rockwell, 'Rockwell Nova', 'Roboto Slab', 'DejaVu Serif', 'Sitka Small', serif;
-    }
-
-    .hero time:before {
-        content: '';
-        display: block;
-        width: 2ch;
-        border-bottom: 1px solid;
-        margin: .5em 0 .5em auto;
-    }
-
-    .photo-frame:not([data-focus="true"]):hover img {
-        filter: sepia(1) saturate(2) brightness(.2);
-    }
-
-    .photo-frame:hover .hero figcaption {
-        opacity: 1;
-        transition: .1s ease-out;
-    }
-
-    .photo-frame:hover .hero h2 {
-        transform: translateY(0);
-    }
-
-    article {
-        display: none;
-        flex: 0 1 70ch;
-    }
-
-    .photo-frame[data-focus="true"] article {
-        display: initial;
-    }
-
-    article .header {
-        display: flex;
-        gap: 1rem;
-        justify-content: space-between;
-        border-bottom: 1px solid;
-        padding-block-end: 1rem;
-    }
-
-    article a {
-        color: inherit;
-    }
-
-    article .content {
-        font-size: 1.2em;
     }
 </style>
 
-<div class="photo-frame" id={id} style={ `view-transition-name: ${id};` }>
-    <figure class="hero">
-        <img src={ image } alt={ headline }/>
-        <figcaption>
-            <h2>{ headline }</h2>
-            <time>{ year }</time>
-        </figcaption>
-    </figure>
-    <article>
-        <div class="header">
-            <span>{ summary }</span>
-            <a href={ link }>{ host }</a>
-        </div>
-        <div class="content">
-            <slot/>
-        </div>
-        <div class="controls"></div>
-    </article>
-</div>
+<Frame id={ id } sheen>
+    <a href={ href }>
+        <Figure { ...Astro.props }/>
+    </a>
+</Frame>

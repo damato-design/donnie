@@ -174,7 +174,30 @@ declare module 'astro:content' {
 	>;
 
 	type ContentEntryMap = {
-		
+		"entries": {
+"damato.md": {
+	id: "damato.md";
+  slug: "damato";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"mise-en-mode.md": {
+	id: "mise-en-mode.md";
+  slug: "mise-en-mode";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"willarrive.md": {
+	id: "willarrive.md";
+  slug: "willarrive";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+};
+
 	};
 
 	type DataEntryMap = {
@@ -183,5 +206,5 @@ declare module 'astro:content' {
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;
 
-	type ContentConfig = never;
+	type ContentConfig = typeof import("../src/content/config.js");
 }

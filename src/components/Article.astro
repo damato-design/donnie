@@ -1,0 +1,33 @@
+---
+const { summary, link } = Astro.props;
+const { host } = new URL(link);
+---
+
+<style>
+    article {
+        flex: 3;
+    }
+
+    header {
+        display: flex;
+        gap: 1rem;
+        justify-content: space-between;
+        border-bottom: 1px solid;
+        padding-block-end: 1rem;
+    }
+
+    .content {
+        font-size: 1.5em;
+    }
+</style>
+
+<article>
+    <header>
+        <span>{ summary }</span>
+        <a href={ link }>{ host }</a>
+    </header>
+    <div class="content">
+        <slot/>
+    </div>
+    <div class="controls"></div>
+</article>

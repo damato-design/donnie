@@ -1,0 +1,38 @@
+---
+const { id, sheen } = Astro.props;
+---
+
+<style>
+    .photo-frame {
+        padding: 1rem;
+        border: 10px solid;
+        border-top-color: black;
+        border-left-color: color-mix(in srgb, black, white 10%);
+        border-right-color: color-mix(in srgb, black, white 20%);
+        border-bottom-color: color-mix(in srgb, black, white 30%);
+        background-color: #e0e0e0;
+        position: relative;
+    }
+
+    .photo-frame[data-sheen] {
+        display: inline-block;
+    }
+
+    .photo-frame[data-sheen]:after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image: linear-gradient(
+            135deg, 
+            transparent, 
+            transparent 50%, 
+            color-mix(in srgb, white, transparent 80%) 50%,
+            transparent 100%);
+    }
+
+</style>
+
+<div class="photo-frame" transition:name={ id } data-sheen={ Boolean(sheen) }>
+    <slot/>
+</div>

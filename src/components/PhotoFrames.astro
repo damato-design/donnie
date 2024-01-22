@@ -1,20 +1,20 @@
+---
+import PhotoFrame from '@components/PhotoFrame.astro';
+import { getCollection } from 'astro:content';
+const entries = await getCollection('entries');
+---
+
 <style>
     .photo-frames {
-        display: grid;
-        margin-inline: auto;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        columns: 6 300px;
+        text-align: center;
+        padding-inline-start: 1rem;
+        padding-block-start: 1rem;
     }
 </style>
 
 <div class="photo-frames">
-    <slot/>
+    { entries.map(({ data, slug }) => (
+        <PhotoFrame { ...data } id={ slug } hover />
+    )) }
 </div>
-
-<script>
-    const $frames = document.querySelector('.photo-frames').children;
-    [...$frames].forEach(($frame) => $frame.addEventListener('click', function() {
-        const toggle = () => (this.dataset.focus = this.dataset.focus !== 'true');
-        if (!document.startViewTransition) return toggle();
-        document.startViewTransition(() => toggle());
-    }));
-</script>
