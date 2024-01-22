@@ -4,19 +4,93 @@ const { name, image } = Astro.props;
 
 <style>
     .photo-card {
+        --bg: #faf3ac;
         line-height: 1.5;
-        background-image: linear-gradient(#ffdb00 1px, #ffffb4 0);
+        background-image: linear-gradient(color-mix(in srgb, var(--bg), blue 15%), var(--bg) 1px);
         background-size: 100% 1lh;
         background-position-y: 0;
         max-width: 8in;
+        box-shadow: 0 13px 18px 2px color-mix(in srgb, #888, transparent 80%);
+        margin-inline: auto;
+        transform: rotate(2deg);
+    }
+
+    .photo {
+        float: left;
+        background-color: white;
+        padding: 1rem;
+        box-shadow: 0 13px 18px 2px color-mix(in srgb, #888, transparent 80%);
+        max-width: 300px;
+        width: 100%;
+        margin: 0;
+        border-bottom: 1px solid color-mix(in srgb, #888, transparent 80%);
+        transform: rotate(-5deg);
+        margin-inline-end: 1rem;
+    }
+
+    .paperclip {
+        --thickness: 3px;
+        --width: 1.5rem;
+        bottom: 100%;
+        transform-origin: 100% 25%;
+        transform: translateY(75%) rotate(10deg);
+        margin-block-end: 2px;
+        left: 70%;
+        position: absolute;
+        display: inline-flex;
+        flex-direction: column;
+        width: var(--width);
+    }
+
+    .paperclip:before,
+    .paperclip:after {
+        content: '';
+        border: var(--thickness) groove #ccc;
+    }
+
+    .paperclip:before {
+        padding-block-start: 100%;
+        width: 100%;
+        border-radius: 2rem 2rem 0 0;
+        border-bottom: none;
+    }
+
+    .paperclip:after {
+        padding-block-start: 300%;
+        width: calc(100% - var(--thickness));
+        border-radius: 0 0 2rem 2rem;
+        border-top: none;
+    }
+
+    .photo img[src="#"] {
+        aspect-ratio: 1;
+        background-color: #ccc;
+        display: block;
+        padding: 1rem;
+    }
+
+    .photo figcaption {
+        font-family: 'Permanent Marker', 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive;
+        font-size: 3rem;
+        text-align: center;
+    }
+
+    .card {
+        padding-inline: .5in;
+        padding-block: 1lh;
+    }
+
+    .card :global(:where(p, ul, li)) {
+        margin-block: 1lh;
     }
 </style>
 
 <div class="photo-card">
-    <div class="photo">
+    <figure class="photo">
         <span class="paperclip"></span>
         <img src={ image } alt={ name } />
-    </div>
+        <figcaption>{ name }</figcaption>
+    </figure>
     <div class="card">
         <slot/>
     </div>

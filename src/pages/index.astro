@@ -2,7 +2,15 @@
 import Head from '@components/Head.astro';
 import StickyNotes from '@components/StickyNotes.astro';
 import PhotoCard from '@components/PhotoCard.astro';
+import PhotoFrame from '@components/PhotoFrame.astro';
 ---
+
+<style>
+    .photo-frames {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+</style>
 
 <!doctype html>
 <html lang="en">
@@ -13,12 +21,25 @@ import PhotoCard from '@components/PhotoCard.astro';
             <ul>
                 <li><s>Visit donnie.damato.design</s></li>
                 <li><s>Remove stickies</s></li>
-                <li><a href="#about">Scroll down</s></li>
+                <li><a href="#about">Scroll down</a></li>
             </ul>
         </StickyNotes>
         <PhotoCard name="Donnie" image="#">
-            hello world
+            <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
+            <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
         </PhotoCard>
+        <div class="photo-frames">
+            <PhotoFrame
+                id="damato"
+                image="#"
+                headline="DAMATO design"
+                year="2020"
+                link="https://damato.design"
+                summary="Design System experimentation">
+                <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
+                <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
+            </PhotoFrame>
+        </div>
 		<img src="https://analytics.damato.design/api/track?domain=donnie.damato.design" style="display: none"/>
     </body>
 </html>
