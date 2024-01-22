@@ -2,15 +2,9 @@
 import Head from '@components/Head.astro';
 import StickyNotes from '@components/StickyNotes.astro';
 import PhotoCard from '@components/PhotoCard.astro';
+import PhotoFrames from '@components/PhotoFrames.astro';
 import PhotoFrame from '@components/PhotoFrame.astro';
 ---
-
-<style>
-    .photo-frames {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    }
-</style>
 
 <!doctype html>
 <html lang="en">
@@ -28,7 +22,7 @@ import PhotoFrame from '@components/PhotoFrame.astro';
             <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
             <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
         </PhotoCard>
-        <div class="photo-frames">
+        <PhotoFrames>
             <PhotoFrame
                 id="damato"
                 image="#"
@@ -39,7 +33,7 @@ import PhotoFrame from '@components/PhotoFrame.astro';
                 <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
                 <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
             </PhotoFrame>
-        </div>
+        </PhotoFrames>
 		<img src="https://analytics.damato.design/api/track?domain=donnie.damato.design" style="display: none"/>
     </body>
 </html>

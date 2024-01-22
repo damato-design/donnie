@@ -1,0 +1,20 @@
+<style>
+    .photo-frames {
+        display: grid;
+        margin-inline: auto;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+</style>
+
+<div class="photo-frames">
+    <slot/>
+</div>
+
+<script>
+    const $frames = document.querySelector('.photo-frames').children;
+    [...$frames].forEach(($frame) => $frame.addEventListener('click', function() {
+        const toggle = () => (this.dataset.focus = this.dataset.focus !== 'true');
+        if (!document.startViewTransition) return toggle();
+        document.startViewTransition(() => toggle());
+    }));
+</script>

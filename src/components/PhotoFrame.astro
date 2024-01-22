@@ -28,7 +28,7 @@ const { host } = new URL(link);
         gap: 1rem;
     }
 
-    .photo-frame:not([data-focus]):after {
+    .photo-frame:not([data-focus="true"]):after {
         content: '';
         position: absolute;
         inset: 0;
@@ -40,7 +40,7 @@ const { host } = new URL(link);
             transparent 100%);
     }
 
-    .photo-frame[data-focus] {
+    .photo-frame[data-focus="true"] {
         position: fixed;
         inset: 0;
         z-index: 1;
@@ -79,7 +79,7 @@ const { host } = new URL(link);
         transition: 0s linear;
     }
 
-    .photo-frame[data-focus] .hero figcaption {
+    .photo-frame[data-focus="true"] .hero figcaption {
         --translate: 0;
         position: unset;
         color: inherit;
@@ -102,7 +102,7 @@ const { host } = new URL(link);
         margin: .5em 0 .5em auto;
     }
 
-    .photo-frame:not([data-focus]):hover img {
+    .photo-frame:not([data-focus="true"]):hover img {
         filter: sepia(1) saturate(2) brightness(.2);
     }
 
@@ -120,7 +120,7 @@ const { host } = new URL(link);
         flex: 0 1 70ch;
     }
 
-    .photo-frame[data-focus] article {
+    .photo-frame[data-focus="true"] article {
         display: initial;
     }
 
@@ -141,24 +141,22 @@ const { host } = new URL(link);
     }
 </style>
 
-<div id={ id }>
-    <div class="photo-frame" data-focus>
-        <figure class="hero">
-            <img src={ image } alt={ headline }/>
-            <figcaption>
-                <h2>{ headline }</h2>
-                <time>{ year }</time>
-            </figcaption>
-        </figure>
-        <article>
-            <div class="header">
-                <span>{ summary }</span>
-                <a href={ link }>{ host }</a>
-            </div>
-            <div class="content">
-                <slot/>
-            </div>
-            <div class="controls"></div>
-        </article>
-    </div>
+<div class="photo-frame" id={id} style={ `view-transition-name: ${id};` }>
+    <figure class="hero">
+        <img src={ image } alt={ headline }/>
+        <figcaption>
+            <h2>{ headline }</h2>
+            <time>{ year }</time>
+        </figcaption>
+    </figure>
+    <article>
+        <div class="header">
+            <span>{ summary }</span>
+            <a href={ link }>{ host }</a>
+        </div>
+        <div class="content">
+            <slot/>
+        </div>
+        <div class="controls"></div>
+    </article>
 </div>
