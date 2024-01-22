@@ -1,0 +1,23 @@
+---
+const { name, image } = Astro.props;
+---
+
+<style>
+    .photo-card {
+        line-height: 1.5;
+        background-image: linear-gradient(#ffdb00 1px, #ffffb4 0);
+        background-size: 100% 1lh;
+        background-position-y: 0;
+        max-width: 8in;
+    }
+</style>
+
+<div class="photo-card">
+    <div class="photo">
+        <span class="paperclip"></span>
+        <img src={ image } alt={ name } />
+    </div>
+    <div class="card">
+        <slot/>
+    </div>
+</div>

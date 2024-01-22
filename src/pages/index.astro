@@ -1,13 +1,14 @@
 ---
 import Head from '@components/Head.astro';
 import StickyNotes from '@components/StickyNotes.astro';
+import PhotoCard from '@components/PhotoCard.astro';
 ---
 
 <!doctype html>
 <html lang="en">
     <Head { ...Astro.props }/>
     <body>
-        <StickyNotes message="Hello world">
+        <StickyNotes message="Keep dreamin'">
             <strong>TO DO:</strong>
             <ul>
                 <li><s>Visit donnie.damato.design</s></li>
@@ -15,6 +16,9 @@ import StickyNotes from '@components/StickyNotes.astro';
                 <li><a href="#about">Scroll down</s></li>
             </ul>
         </StickyNotes>
+        <PhotoCard name="Donnie" image="#">
+            hello world
+        </PhotoCard>
 		<img src="https://analytics.damato.design/api/track?domain=donnie.damato.design" style="display: none"/>
     </body>
 </html>

@@ -52,12 +52,12 @@ const { message } = Astro.props;
         --row: 0;
         width: calc(100% / var(--cols));
         height: calc(100% / var(--rows));
-        background-color: yellow;
+        background-color: #e471a8;
         background-image: linear-gradient(
             to bottom, 
             color-mix(in srgb, black, transparent 90%) 15%,
             color-mix(in srgb, white, transparent 100%) 25%);
-        box-shadow: 0 13px 18px rgba(128, 128, 128, .3);
+        box-shadow: 0 13px 18px 2px color-mix(in srgb, #888, transparent 80%);
         transform-origin: center top;
         transform-style: preserve-3d;
         transform: translate(var(--x, 0px), var(--y, 0px)) rotate(var(--rotate));
@@ -102,6 +102,21 @@ const { message } = Astro.props;
         height: calc(100% * var(--rows));
         left: calc(var(--col) * -100%);
         top: calc(var(--row) * -100%);
+    }
+
+    .content {
+        visibility: hidden;
+    }
+
+    .content,
+    .sticky:after {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6rem;
+        font-family: 'Permanent Marker', 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive;
+        font-size: 6rem;
+        text-align: center;
     }
 
     .sticky {
@@ -197,20 +212,6 @@ const { message } = Astro.props;
         }
     }
 
-    .content {
-        visibility: hidden;
-    }
-
-    .content,
-    .sticky:after {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 6rem;
-        font-family: 'Delicious Handrawn', 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive;
-        font-size: 6rem;
-        text-align: center;
-    }
 </style>
 
 <script>
