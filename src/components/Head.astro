@@ -48,5 +48,13 @@ const ogImage = new URL('og-image.png', Astro.url);
             text-rendering: optimizeLegibility;
             overscroll-behavior-y: none;
         }
+
+        body {
+            background-image: url(/images/yellow-bkgd-top.jpg), url(/images/yellow-bkgd-bottom.jpg);
+            background-size: 400px, min(100vw, 600px);
+            background-repeat: no-repeat, no-repeat;
+            background-color: #fdd900;
+            background-position: left top, right bottom;
+        }
     </style>
 </head>

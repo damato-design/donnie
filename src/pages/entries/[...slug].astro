@@ -1,15 +1,16 @@
 ---
-import Layout from '@layouts/Layout.astro';
-import Frame from '@components/Frame.astro';
-import Figure from '@components/Figure.astro';
-import Article from '@components/Article.astro';
-import { getCollection } from 'astro:content';
+import Layout from "@layouts/Layout.astro";
+import Frame from "@components/Frame.astro";
+import Figure from "@components/Figure.astro";
+import Article from "@components/Article.astro";
+import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-    const entries = await getCollection('entries');
-    return entries.map((entry) => ({
-        params: { slug: entry.slug }, props: { entry },
-    }));    
+  const entries = await getCollection("entries");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
 }
 
 const { entry } = Astro.props;
@@ -17,25 +18,23 @@ const { Content } = await entry.render();
 ---
 
 <style>
-    .entry {
-        min-height: 100dvh;
-        display: flex;
-        max-width: 80ch;
-        margin-inline: auto;
-        gap: 1rem;
-        flex-wrap: wrap;
-    }
+  .entry {
+    min-height: 100dvh;
+    display: flex;
+    max-width: 80ch;
+    margin-inline: auto;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
 </style>
 
-
 <Layout>
-    <Frame id={ entry.slug }>
-        <div class="entry">
-            <Figure { ...entry.data }/>
-            <Article { ...entry.data }>
-                <Content/>
-            </Article>
-        </div>
-    </Frame>
+  <Frame id={entry.slug}>
+    <div class="entry">
+      <Figure {...entry.data} />
+      <Article {...entry.data}>
+        <Content />
+      </Article>
+    </div>
+  </Frame>
 </Layout>
-
