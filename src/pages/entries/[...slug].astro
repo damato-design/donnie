@@ -31,7 +31,7 @@ const { Content } = await entry.render();
   <Frame id={entry.slug}>
     <div class="entry">
       <Figure {...entry.data} />
-      <Article {...entry.data}>
+      <Article {...entry.data} id={ entry.slug }>
         <Content />
       </Article>
     </div>

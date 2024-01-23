@@ -1,14 +1,7 @@
 ---
 import Frame from '@components/Frame.astro';
 import Figure from '@components/Figure.astro';
-const {
-    id,
-    image,
-    headline,
-    year,
-} = Astro.props;
-
-const href = `/entries/${id}`;
+const { id } = Astro.props;
 ---
 
 <style>
@@ -20,7 +13,7 @@ const href = `/entries/${id}`;
 </style>
 
 <Frame id={ id } sheen>
-    <a href={ href }>
+    <a href={ `/entries/${id}` }>
         <Figure { ...Astro.props }/>
     </a>
 </Frame>

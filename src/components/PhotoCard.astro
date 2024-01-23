@@ -41,6 +41,7 @@ const { name, image } = Astro.props;
         display: inline-flex;
         flex-direction: column;
         width: var(--width);
+
     }
 
     .paperclip:before,
@@ -65,6 +66,7 @@ const { name, image } = Astro.props;
 
     .photo img {
         max-width: 100%;
+        background-color: #ccc;
     }
 
     @supports (animation-timeline: view()) {
@@ -81,7 +83,6 @@ const { name, image } = Astro.props;
 
     .photo img[src="#"] {
         aspect-ratio: 1;
-        background-color: #ccc;
         display: block;
         padding: 1rem;
     }
@@ -106,8 +107,8 @@ const { name, image } = Astro.props;
 
 <div class="photo-card">
     <figure class="photo">
-        <span class="paperclip"></span>
         <img src={ image } alt={ name }/>
+        <span class="paperclip"></span>
         <figcaption>{ name }</figcaption>
     </figure>
     <div class="card">

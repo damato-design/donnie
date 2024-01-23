@@ -68,6 +68,6 @@ const { links } = Astro.props;
 <div class="keyboard">
   { Object.entries(links).map(([label, href]) => {
     const { host } = new URL(href);
-    return <a class="key" data-host={ host } href={ href }><Fragment set:html={ label } /></a>
+    return <a class="key" data-host={ host } href={ href }>{ label }</a>
   }) }
 </div>

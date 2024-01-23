@@ -58,13 +58,13 @@ const { message } = Astro.props;
             to bottom, 
             color-mix(in srgb, black, transparent 90%) 15%,
             color-mix(in srgb, white, transparent 100%) 25%);
-        box-shadow: 0 13px 18px 2px color-mix(in srgb, #888, transparent 80%);
+        box-shadow:0 .5rem .5rem color-mix(in srgb,#000,transparent 80%);
         transform-origin: center top;
         transform-style: preserve-3d;
         transform: translate(var(--x, 0px), var(--y, 0px)) rotate(var(--rotate));
         overflow: hidden;
         position: relative;
-        transition: transform .218s ease;
+        transition: .218s ease;
         pointer-events: initial;
     }
 
@@ -72,6 +72,7 @@ const { message } = Astro.props;
         transform: translate(var(--x, 0px), var(--y, 0px)) rotatex(10deg);
         z-index: 1;
         cursor: grab;
+        box-shadow:0 .75rem .5rem color-mix(in srgb,#000,transparent 85%);
         background-image: linear-gradient(
             to bottom, 
             color-mix(in srgb, black, transparent 91%) 15%,
@@ -87,6 +88,7 @@ const { message } = Astro.props;
 
     .sticky[data-grabbed="false"] {
         animation: drop .6s ease-in forwards;
+        box-shadow:0 1rem 1rem color-mix(in srgb,#000,transparent 60%);
     }
 
     @keyframes drop {

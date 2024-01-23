@@ -39,6 +39,6 @@ const { id, sheen } = Astro.props;
 
 </style>
 
-<div class="photo-frame" transition:name={ id } data-sheen={ Boolean(sheen) }>
+<div class="photo-frame" transition:name={ id } data-sheen={ Boolean(sheen) } id={ id }>
     <slot/>
 </div>
