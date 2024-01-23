@@ -1,0 +1,94 @@
+<style>
+  button {
+    --color: red;
+    font-size: 4em;
+    font-family: Inter, Roboto, "Helvetica Neue", "Arial Nova", "Nimbus Sans",
+      Arial, sans-serif;
+    border: 0;
+    border-radius: 100vw;
+    aspect-ratio: 1;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    tap-highlight-color: transparent;
+    transform: rotate(25deg);
+    position: relative;
+    background:
+      repeating-radial-gradient(circle at center, transparent
+            0%, transparent 1.2%, color-mix(in srgb, white, transparent 90%) 2%),
+      radial-gradient(circle at 80%, #e6e6e6 5%, #d9d9d9 30%, #999999
+            100%);
+  }
+
+  button::before,
+  button:after {
+    content: "CSS";
+    display: flex;
+    justify-content:center;
+    align-items:center;
+    aspect-ratio: 1;
+    border-radius: inherit;
+    transition: 0.1s linear;
+  }
+
+  button:before {
+    content: "CSS";
+    color: transparent;
+    padding: 0.25em;
+    margin: .5rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.13)), var(--color);
+    box-shadow:
+      0.2em 0.2em 0.5em rgba(0, 0, 0, 0.47),
+      0 0.1em 0 0.1em rgba(255, 255, 255, 0.27),
+      -0.2em 0 0.2em color-mix(in srgb, var(--color), black 40%) inset,
+      0 0.2em 0.2em rgba(255, 255, 255, 0.27) inset,
+      0.2em 0 0.2em rgba(255, 255, 255, 0.27) inset,
+      0 -0.2em 0.2em color-mix(in srgb, var(--color), black 40%) inset;
+  }
+
+  button:after {
+    text-shadow: 0 0 0.2em rgba(255, 255, 255, 0.47), 1px 1px black;
+    color: #f0f0f0;
+    position: absolute;
+    inset: 0;
+  }
+
+  button:active:before {
+    box-shadow:
+      0 0 0 rgba(0, 0, 0, 0.47),
+      0 0.1em 0 0.1em rgba(255, 255, 255, 0.27),
+      -0.2em 0 0.2em color-mix(in srgb, var(--color), black 50%) inset,
+      0 0.2em 0.2em rgba(0, 0, 0, 0.27) inset,
+      0.2em 0 0.2em rgba(0, 0, 0, 0.27) inset,
+      0 -0.2em 0.2em color-mix(in srgb, var(--color), black 50%) inset;
+  }
+
+  button:active:after {
+    transform: scale(.95);
+  }
+
+</style>
+
+<easy-button { ...Astro.props }>
+  <button/>
+</easy-button>
+
+<script>
+  class EasyButton extends window.HTMLElement {
+    constructor() {
+      super();
+    }
+
+    connectedCallback() {
+      this._$button = this.querySelector('button');
+      this._speak = (() => window.speechSynthesis.speak(new SpeechSynthesisUtterance('CSS is easy'))).bind(this);
+      this._$button.addEventListener('click', this._speak);
+    }
+
+    disconnectedCallback() {
+      this._$button.removeEventListener('click', this._speak);
+    }
+  }
+
+  window.customElements.define('easy-button', EasyButton);
+</script>

@@ -1,12 +1,19 @@
+---
+import Keyboard from "@components/Keyboard.astro";
+const links = {
+  'Read': 'https://blog.damato.design',
+  'Meet': 'https://cal.com/donnie-damato',
+  'Connect': 'https://bento.me/donnie'
+}
+---
+
 <style>
   header {
-      max-width: 900px;
-      margin-inline: auto;
-      padding-inline: 1rem;
+
       text-align: right;
   }
 </style>
 
 <header>
-  header goes here
+  <Keyboard links={links }/>
 </header>

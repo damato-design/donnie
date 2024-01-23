@@ -1,0 +1,71 @@
+---
+const { links } = Astro.props;
+---
+
+<style>
+  .keyboard {
+    background-image: linear-gradient(90deg, #aaa, #ccc);
+    box-shadow: -1em -1em 1.5em rgba(0, 0, 0, 0.6), 0 0 0 1px #aaa inset, -0.05em 0.1em 0 0.05em #aaa;
+    border: 1px solid #bbb;
+    font-family: -apple-system, BlinkMacSystemFont,"Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    padding: 0.5em;
+    margin-block: -3.5em;
+    border-radius: 0.5em;
+    display: inline-flex;
+    transform: translate(2.5em, -2.5em) rotate(2deg);
+    flex-wrap: wrap;
+  }
+
+  .keyboard:before {
+    content: '';
+    width: 100%;
+    height: 3.5em;
+  }
+
+  .keyboard:after {
+    content: '⌘';
+    width: 3.5em;
+    height: 3.5em;
+  }
+
+  .key, .keyboard:before, .keyboard:after {
+    text-align: left;
+    text-decoration: none;
+    background: #333;
+    display: flex;
+    flex-direction: column;
+    color: #eee;
+    border-radius: 0.3em;
+    margin: 0.2em;
+    padding: .4em 0.6em .4em;
+    gap: .5em;
+    cursor: pointer;
+    -webkit-user-select: none;
+    border: 1px solid #444;
+    box-shadow: 0 0.1em 0 0.05em #222;
+    border-bottom-color: #555;
+    transition: .1s linear;
+    color: #777;
+    background-color: #eee;
+    box-shadow: -0.2em -0.125em 0.125em rgba(0, 0, 0, 0.25), 0 0 0 0.04em rgba(0, 0, 0, 0.3), 0.02em 0.02em 0.02em rgba(0, 0, 0, 0.4) inset, -0.05em -0.05em 0.02em rgba(255, 255, 255, 0.8) inset;
+  }
+
+  .key {
+    flex: 1;
+  }
+
+  .key:after {
+    content: attr(data-host);
+    letter-spacing: -.05em;
+    font-size: .4em;
+    align-self: end;
+    text-indent: 5ch;
+  }
+</style>
+
+<div class="keyboard">
+  { Object.entries(links).map(([label, href]) => {
+    const { host } = new URL(href);
+    return <a class="key" data-host={ host } href={ href }><Fragment set:html={ label } /></a>
+  }) }
+</div>

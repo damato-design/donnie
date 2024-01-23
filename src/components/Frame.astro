@@ -20,6 +20,10 @@ const { id, sheen } = Astro.props;
         box-shadow: 0 4px 8px 0 color-mix(in srgb, #000, transparent 50%);
     }
 
+    .photo-frame:not([data-sheen]) {
+        min-height: 100dvh;
+    }
+
     .photo-frame[data-sheen]:after {
         content: '';
         position: absolute;
