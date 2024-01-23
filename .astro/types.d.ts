@@ -175,6 +175,13 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"entries": {
+"compass.md": {
+	id: "compass.md";
+  slug: "compass";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
 "damato.md": {
 	id: "damato.md";
   slug: "damato";
@@ -182,9 +189,86 @@ declare module 'astro:content' {
   collection: "entries";
   data: InferEntrySchema<"entries">
 } & { render(): Render[".md"] };
-"mise-en-mode.md": {
-	id: "mise-en-mode.md";
-  slug: "mise-en-mode";
+"danceparade.md": {
+	id: "danceparade.md";
+  slug: "danceparade";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"ddrfreak.md": {
+	id: "ddrfreak.md";
+  slug: "ddrfreak";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"deltazeus.md": {
+	id: "deltazeus.md";
+  slug: "deltazeus";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"domtricks.md": {
+	id: "domtricks.md";
+  slug: "domtricks";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"galvanize.md": {
+	id: "galvanize.md";
+  slug: "galvanize";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"godaddy.md": {
+	id: "godaddy.md";
+  slug: "godaddy";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"itemize.md": {
+	id: "itemize.md";
+  slug: "itemize";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"nextup.md": {
+	id: "nextup.md";
+  slug: "nextup";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"nyit.md": {
+	id: "nyit.md";
+  slug: "nyit";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"parsons.md": {
+	id: "parsons.md";
+  slug: "parsons";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"roxorgames.md": {
+	id: "roxorgames.md";
+  slug: "roxorgames";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"savager.md": {
+	id: "savager.md";
+  slug: "savager";
   body: string;
   collection: "entries";
   data: InferEntrySchema<"entries">

@@ -3,21 +3,48 @@ import Layout from '@layouts/Layout.astro';
 import StickyNotes from '@components/StickyNotes.astro';
 import PhotoCard from '@components/PhotoCard.astro';
 import PhotoFrames from '@components/PhotoFrames.astro';
-
 ---
 
+<style>
+    main {
+        max-width: 900px;
+        margin-inline: auto;
+        padding-inline: 1rem;
+    }
+
+    section {
+        min-height: 80dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .todo li {
+        margin-block: 1rem;
+    }
+</style>
+
 <Layout>
-    <StickyNotes message="Keep dreamin'">
-        <strong>TO DO:</strong>
-        <ul>
-            <li><s>Visit donnie.damato.design</s></li>
-            <li><s>Remove stickies</s></li>
-            <li><a href="#about">Scroll down</a></li>
-        </ul>
-    </StickyNotes>
-    <PhotoCard name="Donnie" image="#">
-        <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
-        <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
-    </PhotoCard>
-    <PhotoFrames/>
+    <main>
+       <section>
+            <StickyNotes message="Keep dreamin'">
+                <strong>TO DO:</strong>
+                <ul class="todo">
+                    <li><s>Visit donnie.damato.design</s></li>
+                    <li><s>Remove stickies</s></li>
+                    <li><a href="#about">Scroll down</a></li>
+                </ul>
+            </StickyNotes>
+       </section>
+        <section id="about">
+            <PhotoCard name="Donnie" image="./images/donnie.webp">
+                <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
+                <p>Cliche wolf disrupt, bitters 8-bit hoodie bicycle rights scenester everyday carry heirloom pop-up drinking vinegar cornhole. Next level af succulents freegan squid single-origin coffee pug. Pork belly vaporware vice everyday carry enamel pin. Bespoke bicycle rights single-origin coffee vice, forage you probably haven't heard of them pinterest.</p>
+            </PhotoCard>
+        </section>
+        <section>
+            <PhotoFrames/>
+        </section>
+    </main>
 </Layout>

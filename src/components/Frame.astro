@@ -16,6 +16,8 @@ const { id, sheen } = Astro.props;
 
     .photo-frame[data-sheen] {
         display: inline-block;
+        margin-block-end: 1rem;
+        box-shadow: 0 4px 8px 0 color-mix(in srgb, #000, transparent 50%);
     }
 
     .photo-frame[data-sheen]:after {

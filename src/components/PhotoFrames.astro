@@ -2,19 +2,18 @@
 import PhotoFrame from '@components/PhotoFrame.astro';
 import { getCollection } from 'astro:content';
 const entries = await getCollection('entries');
+const chronos = entries.sort((a, b) => b.data.year - a.data.year);
 ---
 
 <style>
     .photo-frames {
-        columns: 6 300px;
+        columns: 6 260px;
         text-align: center;
-        padding-inline-start: 1rem;
-        padding-block-start: 1rem;
     }
 </style>
 
 <div class="photo-frames">
-    { entries.map(({ data, slug }) => (
+    { chronos.map(({ data, slug }) => (
         <PhotoFrame { ...data } id={ slug } hover />
     )) }
 </div>

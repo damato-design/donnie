@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 const { 
     image,
     headline,
@@ -20,6 +21,7 @@ const {
 
     img {
         width: 100%;
+        height: auto;
         border: 1px solid color-mix(in srgb, black, white 50%);
         margin-inline-start: auto;
         transition: filter .4s ease-in-out;
@@ -78,7 +80,7 @@ const {
 </style>
 
 <figure data-hover={ Boolean(hover) }>
-    <img src={ image } alt={ headline }/>
+    <Image src={ image } alt={ headline }/>
     <figcaption>
         <h2>{ headline }</h2>
         <time>{ year }</time>

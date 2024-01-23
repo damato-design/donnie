@@ -2,7 +2,17 @@
 import Head from '@components/Head.astro';
 ---
 
-<!doctype html>
+<style>
+    body {
+        background-image: url(/images/yellow-bkgd-top.jpg), url(/images/yellow-bkgd-bottom.jpg);
+        background-size: 300px, min(100vw, 600px);
+        background-repeat: no-repeat, no-repeat;
+        background-color: #fdd900;
+        background-position: left top, right bottom;
+    }
+
+</style>
+
 <html lang="en">
     <Head { ...Astro.props }/>
     <body>

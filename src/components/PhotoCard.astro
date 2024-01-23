@@ -9,7 +9,6 @@ const { name, image } = Astro.props;
         background-image: linear-gradient(color-mix(in srgb, var(--bg), blue 15%), var(--bg) 1px);
         background-size: 100% 1lh;
         background-position-y: 0;
-        max-width: 8in;
         box-shadow: 0 13px 18px 2px color-mix(in srgb, #888, transparent 80%);
         margin-inline: auto;
         transform: rotate(2deg);
@@ -62,6 +61,10 @@ const { name, image } = Astro.props;
         border-top: none;
     }
 
+    .photo img {
+        max-width: 100%;
+    }
+
     .photo img[src="#"] {
         aspect-ratio: 1;
         background-color: #ccc;
@@ -88,7 +91,7 @@ const { name, image } = Astro.props;
 <div class="photo-card">
     <figure class="photo">
         <span class="paperclip"></span>
-        <img src={ image } alt={ name } />
+        <img src={ image } alt={ name }/>
         <figcaption>{ name }</figcaption>
     </figure>
     <div class="card">
