@@ -53,6 +53,7 @@ const { message } = Astro.props;
         width: calc(100% / var(--cols));
         height: calc(100% / var(--rows));
         background-color: #e471a8;
+        color: color-mix(in srgb, #e471a8, black 70%);
         background-image: linear-gradient(
             to bottom, 
             color-mix(in srgb, black, transparent 90%) 15%,
@@ -113,9 +114,9 @@ const { message } = Astro.props;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 6rem;
+        padding: 4rem;
         font-family: 'Permanent Marker', 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive;
-        font-size: 6rem;
+        font-size: min(6rem, 10vw + 1rem);
         text-align: center;
     }
 
