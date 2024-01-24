@@ -68,7 +68,7 @@ const { name } = Astro.props;
         max-width: 100%;
         background-color: #ccc;
         aspect-ratio: 1;
-        background-image: url('./images/donnie.webp');
+        background-image: url('/images/donnie.webp');
         background-size: cover;
         object-fit: cover;
         object-position: center top;
@@ -109,7 +109,7 @@ const { name } = Astro.props;
 
 <div class="photo-card">
     <figure class="photo">
-        <img class="image" src="./images/donnie.webp" alt={ name }>
+        <img class="image" src="/images/donnie.webp" alt={ name }>
         <span class="paperclip"></span>
         <figcaption>{ name }</figcaption>
     </figure>
