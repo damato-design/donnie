@@ -70,6 +70,10 @@ const { name } = Astro.props;
         aspect-ratio: 1;
         background-image: url('./images/donnie.webp');
         background-size: cover;
+        object-fit: cover;
+        object-position: center top;
+        display: block;
+        color: transparent;
     }
 
     @supports (animation-timeline: view()) {
@@ -105,7 +109,7 @@ const { name } = Astro.props;
 
 <div class="photo-card">
     <figure class="photo">
-        <div class="image"></div>
+        <img class="image" src="./images/donnie.webp" alt={ name }>
         <span class="paperclip"></span>
         <figcaption>{ name }</figcaption>
     </figure>
