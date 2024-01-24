@@ -23,7 +23,7 @@
     justify-content: center;
     align-items: center;
     padding: 2rem;
-    padding-bottom: 4rem;
+    padding-block-end: 4rem;
     isolation: isolate;
     grid-row: 2;
   }
@@ -36,16 +36,13 @@
     grid-template-columns: 4fr 1fr;
     border-radius: .5rem;
     padding: 6%;
-    padding-block-end: 8%;
     gap: 2em;
     flex: 1;
   }
 
   .television-frame {
-    border: 6px double #554513;
-    box-shadow: 0 8px 4px 0px #383838, 2px 0 2px #444, -2px 0 2px #444, 0 -2px 2px #111;
-    border-radius: 4rem / 3rem;
-    overflow: auto;
+    border-image: radial-gradient(#3333, #000 10%,#333 10.5% 11%,transparent 12.5%) 45.5% fill / 150px / 150px;
+    overflow: hidden;
     display: flex;
     aspect-ratio: 4/3;
     justify-content: center;
@@ -92,6 +89,7 @@
     animation: scroll 30s infinite linear;
     transform: translateY(0);
     font-size: .9em;
+    max-width: 100%;
     top: 100%;
     font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
   }
@@ -107,6 +105,7 @@
   .television-content :global(dt) {
     opacity: .7;
     font-weight: lighter;
+    text-transform: capitalize;
   }
 
   .television-content :global(dd) {
