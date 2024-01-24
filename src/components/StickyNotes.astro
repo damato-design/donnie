@@ -249,10 +249,6 @@ const { message } = Astro.props;
         document.documentElement.addEventListener('pointerup', target.onPointerUp);
     }
 
-    window.addEventListener("pointerout", () => {
-        console.log('pointerout');
-    });
-
     function reset($sticky) {
         $sticky.removeAttribute('data-grabbed');
         $sticky.style.removeProperty('--x');
