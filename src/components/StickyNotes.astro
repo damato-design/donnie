@@ -223,9 +223,14 @@ const { message } = Astro.props;
         y: 0
     };
 
-    function onPointerMove({ pageX, pageY }) {
+    let t;
+
+    function onPointerMove(ev) {
+        t && clearTimeout(t);
+        const { pageX, pageY } = ev;
         this.style.setProperty('--x', `${pageX - target.x}px`);
         this.style.setProperty('--y', `${pageY - target.y}px`);
+        t = setTimeout(target.onPointerUp, 1000);
     }
 
     function onPointerUp() {
@@ -243,6 +248,10 @@ const { message } = Astro.props;
         document.documentElement.addEventListener('pointermove', target.onPointerMove);
         document.documentElement.addEventListener('pointerup', target.onPointerUp);
     }
+
+    window.addEventListener("pointerout", () => {
+        console.log('pointerout');
+    });
 
     function reset($sticky) {
         $sticky.removeAttribute('data-grabbed');
