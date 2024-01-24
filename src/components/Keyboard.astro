@@ -15,6 +15,7 @@ const { links } = Astro.props;
     flex-wrap: wrap;
     margin-block: -3.5em;
     transform: translate(2.5em, -2.5em) rotate(2deg);
+    will-change: transform;
   }
 
   .keyboard:before {
@@ -48,11 +49,8 @@ const { links } = Astro.props;
     transition: .1s linear;
     color: #777;
     background-color: #eee;
-    text-rendering: geometricPrecision;
     box-shadow: -0.2em -0.125em 0.125em rgba(0, 0, 0, 0.25), 0 0 0 0.04em rgba(0, 0, 0, 0.3), 0.02em 0.02em 0.02em rgba(0, 0, 0, 0.4) inset, -0.05em -0.05em 0.02em rgba(255, 255, 255, 0.8) inset;
   }
-
-
 
   .key:after {
     content: attr(data-host);
