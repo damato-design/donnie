@@ -98,6 +98,7 @@ const { name, image } = Astro.props;
         padding-inline: .5in;
         padding-block: 1lh;
         text-wrap: pretty;
+        isolation: isolate;
     }
 
     .card :global(:where(p, ul, li)) {
