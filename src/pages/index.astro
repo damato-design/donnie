@@ -5,6 +5,7 @@ import StickyNotes from "@components/StickyNotes.astro";
 import PhotoCard from "@components/PhotoCard.astro";
 import PhotoFrames from "@components/PhotoFrames.astro";
 import EasyButton from "@components/EasyButton.astro";
+import Television from "@components/Television.astro";
 ---
 
 <style>
@@ -12,7 +13,6 @@ import EasyButton from "@components/EasyButton.astro";
     max-width: 900px;
     margin-inline: auto;
     padding-inline: 1rem;
-    overflow: hidden;
   }
 
   section {
@@ -42,7 +42,7 @@ import EasyButton from "@components/EasyButton.astro";
       </StickyNotes>
     </section>
     <section id="about">
-      <PhotoCard name="Donnie" image="./images/donnie.webp">
+      <PhotoCard name="Donnie">
         <p><strong>Donnie D'Amato</strong> is a seasoned professional in the world of design, with a passion for creating seamless and cohesive user experiences. Born with a keen eye for aesthetics, Donnie found his true calling in the intricate realm of design systems.</p>
 
           <p>Donnie is renowned for his meticulous approach to building and maintaining design systems that serve as the backbone for product consistency. His commitment to usability and accessibility is evident in the user-friendly interfaces that emerge from his design philosophy.</p>
@@ -58,4 +58,5 @@ import EasyButton from "@components/EasyButton.astro";
       <PhotoFrames/>
     </section>
   </main>
+  <Television/>
 </Layout>

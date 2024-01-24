@@ -1,5 +1,5 @@
 ---
-const { name, image } = Astro.props;
+const { name } = Astro.props;
 ---
 
 <style>
@@ -12,7 +12,7 @@ const { name, image } = Astro.props;
         background-position-y: 0;
         box-shadow: 0 13px 18px 2px color-mix(in srgb, #888, transparent 80%);
         margin-inline: auto;
-        transform: rotate(2deg);
+        transform: rotate(1deg);
     }
 
     .photo {
@@ -64,13 +64,16 @@ const { name, image } = Astro.props;
         border-top: none;
     }
 
-    .photo img {
+    .image {
         max-width: 100%;
         background-color: #ccc;
+        aspect-ratio: 1;
+        background-image: url('./images/donnie.webp');
+        background-size: cover;
     }
 
     @supports (animation-timeline: view()) {
-        .photo img {
+        .image {
             opacity: 0;
             animation: fade linear forwards;
             animation-timeline: view(block 100% 0%);
@@ -81,12 +84,6 @@ const { name, image } = Astro.props;
         to { opacity: 1 }
     }
 
-    .photo img[src="#"] {
-        aspect-ratio: 1;
-        display: block;
-        padding: 1rem;
-    }
-
     .photo figcaption {
         font-family: 'Permanent Marker', 'Segoe Print', 'Bradley Hand', Chilanka, TSCu_Comic, casual, cursive;
         font-size: 3rem;
@@ -95,7 +92,7 @@ const { name, image } = Astro.props;
     }
 
     .card {
-        padding-inline: .5in;
+        padding-inline: min(.5in, 5vw);
         padding-block: 1lh;
         text-wrap: pretty;
         isolation: isolate;
@@ -108,7 +105,7 @@ const { name, image } = Astro.props;
 
 <div class="photo-card">
     <figure class="photo">
-        <img src={ image } alt={ name }/>
+        <div class="image"></div>
         <span class="paperclip"></span>
         <figcaption>{ name }</figcaption>
     </figure>
