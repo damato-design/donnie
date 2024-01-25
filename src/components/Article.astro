@@ -46,7 +46,7 @@ const { host } = new URL(link);
 </style>
 
 <article>
-    <header id="top">
+    <header id="summary">
         <span>{ summary }</span>
         <a href={ link }>{ host }</a>
     </header>
@@ -54,7 +54,7 @@ const { host } = new URL(link);
         <slot/>
     </div>
     <div class="controls">
-        <a href="javascript:top.scrollIntoView({ behavior: 'smooth'})" aria-label="Back to top">
+        <a href="javascript:summary.scrollIntoView({ behavior: 'smooth'})" aria-label="Back to top">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 380" fill="currentColor"><path d="M330.21 272.88v-99L201 44.69 70.84 174.88v99l89.69-89.69v150h80v-151l89.68 89.69z"/></svg>
         </a>
         <a href="javascript:history.back()" aria-label="Back to home page">
