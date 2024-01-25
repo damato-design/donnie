@@ -1,7 +1,7 @@
 ---
 image: ./images/willarrive.jpg
 headline: willarrive.in
-year: 2020
+datetime: 2016-03-22T00:00:00.000Z
 summary: NYC transit arrivals
 link: https://willarrive.in
 ---

@@ -1,7 +1,7 @@
 ---
 image: ./images/roxorgames.jpg
 headline: Roxor Games
-year: 2006
+datetime: 2006-08-16T00:00:00.000Z
 summary: Gameplay Designer
 link: https://roxorgames.com
 ---

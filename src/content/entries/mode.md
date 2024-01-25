@@ -1,8 +1,8 @@
 ---
-image: ./images/parsons.jpg
-headline: Parsons
-datetime: 2020-01-30T00:00:00.000Z
-summary: Adjunct Faculty, UX
-link: https://newschool.edu/parsons
+image: ./images/mode.jpg
+headline: Mise en mode
+datetime: 2023-11-02T00:00:00.000Z
+summary: Form following function
+link: https://mode.place
 ---
 Williamsburg prism small batch, umami cold-pressed banh mi mixtape try-hard leggings ugh pitchfork. Hot chicken vaporware lumbersexual migas small batch synth. Helvetica master cleanse hell of selvage hoodie, shabby chic mumblecore prism twee meditation quinoa ethical meh pickled 3 wolf moon. Pour-over pok pok affogato 3 wolf moon, live-edge pug gastropub godard bitters chillwave health goth lo-fi.

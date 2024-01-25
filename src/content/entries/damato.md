@@ -1,7 +1,7 @@
 ---
 image: ./images/damato.jpg
 headline: DAMATO Design
-year: 2020
+datetime: 2022-04-12T00:00:00.000Z
 summary: Design System experimentation
 link: https://damato.design
 ---

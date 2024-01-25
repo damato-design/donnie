@@ -2,7 +2,7 @@
 import PhotoFrame from '@components/PhotoFrame.astro';
 import { getCollection } from 'astro:content';
 const entries = await getCollection('entries');
-const chronos = entries.sort((a, b) => b.data.year - a.data.year);
+const chronos = entries.sort((a, b) => b.data.datetime - a.data.datetime);
 ---
 
 <style>

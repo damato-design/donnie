@@ -1,7 +1,7 @@
 ---
 image: ./images/deltazeus.jpg
 headline: deltazeus
-year: 2020
+datetime: 2015-03-22T00:00:00.000Z
 summary: Active weather notifications
 link: https://deltazeus.com
 ---

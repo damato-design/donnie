@@ -1,7 +1,7 @@
 ---
 image: ./images/itemize.jpg
 headline: Itemize
-year: 2015
+datetime: 2015-05-15T00:00:00.000Z
 summary: Lead UI Designer / Developer
 link: https://itemize.com
 ---

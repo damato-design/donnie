@@ -1,7 +1,7 @@
 ---
 image: ./images/nyit.jpg
 headline: NYIT
-year: 2014
+datetime: 2014-05-23T00:00:00.000Z
 summary: Adjunct Faculty, Communication Arts
 link: https://nyit.edu
 ---

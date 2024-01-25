@@ -1,7 +1,7 @@
 ---
 image: ./images/galvanize.jpg
 headline: Galvanize
-year: 2018
+datetime: 2017-09-01T00:00:00.000Z
 summary: Instructor, Web Development
 link: https://galvanize.com
 ---

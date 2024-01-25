@@ -1,7 +1,7 @@
 ---
 image: ./images/compass.jpg
 headline: Compass
-year: 2017
+datetime: 2017-04-15T00:00:00.000Z
 summary: Senior UX Engineer, Design Systems
 link: https://compass.com
 ---

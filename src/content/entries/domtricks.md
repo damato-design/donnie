@@ -1,7 +1,7 @@
 ---
 image: ./images/domtricks.jpg
 headline: DOM Tricks
-year: 2020
+datetime: 2020-04-03T00:00:00.000Z
 summary: Byte-sized techniques for web pages
 link: https://dom-tricks.com
 ---

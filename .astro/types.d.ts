@@ -182,23 +182,16 @@ declare module 'astro:content' {
   collection: "entries";
   data: InferEntrySchema<"entries">
 } & { render(): Render[".md"] };
+"complementary.md": {
+	id: "complementary.md";
+  slug: "complementary";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
 "damato.md": {
 	id: "damato.md";
   slug: "damato";
-  body: string;
-  collection: "entries";
-  data: InferEntrySchema<"entries">
-} & { render(): Render[".md"] };
-"danceparade.md": {
-	id: "danceparade.md";
-  slug: "danceparade";
-  body: string;
-  collection: "entries";
-  data: InferEntrySchema<"entries">
-} & { render(): Render[".md"] };
-"ddrfreak.md": {
-	id: "ddrfreak.md";
-  slug: "ddrfreak";
   body: string;
   collection: "entries";
   data: InferEntrySchema<"entries">
@@ -217,6 +210,20 @@ declare module 'astro:content' {
   collection: "entries";
   data: InferEntrySchema<"entries">
 } & { render(): Render[".md"] };
+"dshouse.md": {
+	id: "dshouse.md";
+  slug: "dshouse";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"events.md": {
+	id: "events.md";
+  slug: "events";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
 "galvanize.md": {
 	id: "galvanize.md";
   slug: "galvanize";
@@ -231,9 +238,23 @@ declare module 'astro:content' {
   collection: "entries";
   data: InferEntrySchema<"entries">
 } & { render(): Render[".md"] };
+"gridless.md": {
+	id: "gridless.md";
+  slug: "gridless";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
 "itemize.md": {
 	id: "itemize.md";
   slug: "itemize";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"mode.md": {
+	id: "mode.md";
+  slug: "mode";
   body: string;
   collection: "entries";
   data: InferEntrySchema<"entries">
@@ -262,13 +283,6 @@ declare module 'astro:content' {
 "roxorgames.md": {
 	id: "roxorgames.md";
   slug: "roxorgames";
-  body: string;
-  collection: "entries";
-  data: InferEntrySchema<"entries">
-} & { render(): Render[".md"] };
-"savager.md": {
-	id: "savager.md";
-  slug: "savager";
   body: string;
   collection: "entries";
   data: InferEntrySchema<"entries">

@@ -3,9 +3,11 @@ import { Image } from 'astro:assets';
 const { 
     image,
     headline,
-    year,
+    datetime,
     hover
 } = Astro.props;
+
+const year = new Date(datetime).getFullYear();
 ---
 
 <style>

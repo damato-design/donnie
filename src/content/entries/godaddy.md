@@ -1,7 +1,7 @@
 ---
 image: ./images/godaddy.jpg
 headline: GoDaddy
-year: 2019
+datetime: 2019-07-28T00:00:00.000Z
 summary: Senior Software Engineer, UX Platform
 link: https://godaddy.com
 ---

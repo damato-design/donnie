@@ -1,7 +1,7 @@
 ---
 image: ./images/nextup.jpg
 headline: Next Up
-year: 2014
+datetime: 2014-07-27T00:00:00.000Z
 summary: Automated tournament software
 link: https://nextup.me
 ---
