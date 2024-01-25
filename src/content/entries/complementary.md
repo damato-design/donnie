@@ -2,7 +2,12 @@
 image: ./images/complementary.jpg
 headline: Complementary Space
 datetime: 2022-11-15T00:00:00.000Z
-summary: Semantic spacing tokens
+summary: Design spacing tokens semantically
 link: https://complementary.space
 ---
-Williamsburg prism small batch, umami cold-pressed banh mi mixtape try-hard leggings ugh pitchfork. Hot chicken vaporware lumbersexual migas small batch synth. Helvetica master cleanse hell of selvage hoodie, shabby chic mumblecore prism twee meditation quinoa ethical meh pickled 3 wolf moon. Pour-over pok pok affogato 3 wolf moon, live-edge pug gastropub godard bitters chillwave health goth lo-fi.
+
+Semantic tokens have been a helpful concept in the world of design systems. Their utility is clear when supporting dark mode and other branding needs. While the construction of these is well understood for style properties such as color and typography, other facets of design have eluded us for some time.
+
+Complementary Space was the result of a 6-month long exploration to fully understand what a semantic token is meant to solve and how we can reframe our current methods of applying space to user interfaces.
+
+The site comes with visual examples built using vanilla web components for responsiveness and themability. Code samples describe a potential method of use; where the site itself uses an early version of this approach. Print styles were also added for readability. A custom syntax highlighting script was written specifically to highlight CSS custom properties. Footnotes are included to go deeper into concepts that were considered in the research.
