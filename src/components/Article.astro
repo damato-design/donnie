@@ -1,5 +1,5 @@
 ---
-const { summary, link } = Astro.props;
+const { summary, link, disabled } = Astro.props;
 const { host } = new URL(link);
 ---
 
@@ -15,6 +15,11 @@ const { host } = new URL(link);
         border-bottom: 1px solid;
         padding-block-end: 1rem;
         font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
+    }
+
+    header a:not([href]) {
+        cursor: not-allowed;
+        opacity: .6;
     }
 
     .content {
@@ -48,7 +53,7 @@ const { host } = new URL(link);
 <article>
     <header id="summary">
         <span>{ summary }</span>
-        <a href={ link }>{ host }</a>
+        <a href={  disabled ? null : link } aria-disabled={ disabled }>{ host }</a>
     </header>
     <div class="content">
         <slot/>

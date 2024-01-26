@@ -9,6 +9,7 @@ export const collections = {
       datetime: z.date(),
       link: z.string(),
       summary: z.string(),
+      disabled: z.boolean().optional(),
     }),
   }),
 };
