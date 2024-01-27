@@ -5,8 +5,9 @@ datetime: 2022-11-15T00:00:00.000Z
 summary: Design spacing tokens semantically
 link: https://complementary.space
 ---
-
 Semantic tokens have been a helpful concept in the world of design systems. Their utility is clear when supporting dark mode and other branding needs. While the construction of these is well understood for style properties such as color and typography, other facets of design have eluded us for some time.
+
+> How might we support semantic spacing tokens?
 
 Complementary Space was the result of a 6-month long exploration to fully understand what a semantic token is meant to solve and how we can reframe our current methods of applying space to user interfaces.
 

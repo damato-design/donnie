@@ -5,7 +5,9 @@ datetime: 2023-09-19T00:00:00.000Z
 summary: Discover design system events around the world
 link: https://ds.events
 ---
-The design systems practice has a worldwide audience looking for ways of connecting. While many platforms can help host events, they aren't often specific to any one group. To help our community coordinate events across the world, this project was created to easily find the next gathering for folks interested in design systems.
+The design systems practice has a worldwide audience looking for ways of connecting. While many platforms can help host events, they aren't often specific to any one group.
+
+> How might we help easily find the next gathering for folks interested in design systems?
 
 The design was collaborative with other members of the community across the globe. There was a delicate balance between a whirlwind of ideas and what was possible as a viable solution. We aimed to keep things simple for the first release; a feed of events, accessible through iCal and RSS formats. We also tried to make it easy for the community to add their events and switch time zones quickly for planning travel.
 

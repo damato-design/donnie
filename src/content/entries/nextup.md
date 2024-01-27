@@ -8,7 +8,9 @@ disabled: true
 ---
 During my years after high school, I was very interested in competitive video gaming. I'd go to local tournaments fairly regularly and even some across state lines. Eventually, I'd become a well-known tournament organizer and host some of the first international gaming tournaments with significant prizes.
 
-One of the most stressful responsibilities would be finding registered competitors. At large events with multiple stations for playing, it's hard to keep track of everyone and all the scores. Even with helpful staff, things can get challenging as folks wander off-site. I thought, how might we make this better; more automated?
+One of the most stressful responsibilities would be finding registered competitors. At large events with multiple stations for playing, it's hard to keep track of everyone and all the scores. Even with helpful staff, things can get challenging as folks wander off-site. 
+
+> How might we make tournament organization more automated?
 
 The NextUp platform was launched with the ability to link to Challonge, a free bracketing system. A tournament organizer would input participant's names and phone numbers into the system. Once the tournament starts, the system automatically reads the bracket and sends a text message to the participants ready to compete. Once the match ends, the competitors would reply to that text message with their results; either a W or L. The system would then update the bracket and text the next match. The system could also catch conflicts for tournament organizer verification.
 

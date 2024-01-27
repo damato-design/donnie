@@ -4,75 +4,107 @@ const { host } = new URL(link);
 ---
 
 <style>
-    article {
-        flex: 3;
-    }
+  article {
+    flex: 3;
+  }
 
-    header {
-        display: flex;
-        gap: 1rem;
-        justify-content: space-between;
-        border-bottom: 1px solid;
-        padding-block-end: 1rem;
-        font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
-    }
+  header {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    border-bottom: 1px solid;
+    padding-block-end: 1rem;
+    font-family: Optima, Candara, "Noto Sans", source-sans-pro, sans-serif;
+  }
 
-    header a:not([href]) {
-        cursor: not-allowed;
-        opacity: .6;
-    }
+  header a:not([href]) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 
-    .content {
-        font-size: 1.2em;
-        font-family: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
-    }
+  .content {
+    font-size: 1.2em;
+    font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, serif;
+  }
 
-    .controls {
-        position: sticky;
-        bottom: 1rem;
-        right: 1rem;
-        text-align: right;
-    }
+  .content :global(blockquote) {
+    font-size: 1.5em;
+    line-height: 1;
+    font-weight: bold;
+    font-family: Optima, Candara, 'Noto Sans', source-sans-pro, sans-serif;
+    text-align: center;
+    text-wrap: balance;
+  }
 
-    .controls a {
-        text-decoration: none;
-        color: white;
-        background: black;
-        display: inline-flex;
-        padding: 0.4em;
-        align-items: center;
-        justify-content: center;
-    }
+  .content :global(blockquote:before),
+  .content :global(blockquote:after) {
+    content: '❖';
+    display: block;
+    text-align: center;
+    font-size: 1rem;
+  }
 
-    .controls svg {
-        display: flex;
-        height: 2em;
-    }
+  .controls {
+    position: sticky;
+    bottom: 1rem;
+    right: 1rem;
+    text-align: right;
+  }
+
+  .controls a {
+    text-decoration: none;
+    background: currentColor;
+    display: inline-flex;
+    padding: 0.4em;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .controls svg {
+    display: flex;
+    height: 2em;
+    color: white;
+  }
 </style>
 
 <article>
-    <header id="summary">
-        <span>{ summary }</span>
-        <a href={  disabled ? null : link } aria-disabled={ disabled }>{ host }</a>
-    </header>
-    <div class="content">
-        <slot/>
-    </div>
-    <div class="controls">
-        <a id="top" href="#summary" aria-label="Back to top">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 380" fill="currentColor"><path d="M330.21 272.88v-99L201 44.69 70.84 174.88v99l89.69-89.69v150h80v-151l89.68 89.69z"/></svg>
-        </a>
-        <a id="back" href="/" aria-label="Back to home page">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 742.87 380" fill="currentColor"><path d="M497.09 319.13h99l129.19-129.19L595.09 59.75h-99l89.69 89.69h-150v80h151l-89.69 89.69zM54.77 379.76h148.94S217.23 367 224 360.54c5.27-4.47 5.73-7.52 14.77-7.33 9.82.17 19.68.36 29.5.52l-27.74 26h41.31L304 357.5V199.88h-40.71c-6.38 0-7.28-.86-11.4-5L228.3 167c-6.54 14.31-12.7 26.47-19.22 40.28-.73 1.42-2.47 4.59-1.17 7.06l64.82 130.88-23.73-.07c-12.44.28-17.62-8.3-22-16q-26.29-53-52.71-106L171 286.06c-.87 10.89-8.23 13.66-17.86 14l-108.9.24c0-12.51 12.4-29 32.6-29.83 0 0 38.89.43 59.23.52 2.57 0 3.28-1.44 3.58-3.59 1-16.17 1.84-32.46 2.85-48.64.62-8 1.33-13.59 3.66-19.67 7.6-16.29 15.2-32.49 22.8-48.73l-27.87-.36a1.64 1.64 0 00-1.68.78l-20.14 35.29c-8.31 15.15-30.76 4.1-23.24-12l24.7-41.31c4.35-6.46 6.33-8.69 17.62-9 0 0 52.74-.08 79.15-.08 8.57-.19 9.55 2.5 13.65 6.87 11 13.59 23.07 28.09 33.82 40.76 1.49 1.8 2.33 2.53 5.89 2.53H304V49.7l-227.08.22s.36 144.37.17 215c-23.16.73-39.09 18.23-40 40.79 13 .16 26.44-.46 39.79-.3v52.09zm166-316.4c15.12 0 26.7 11.61 26.7 26.81S235.84 117 220.73 117 194 105.4 194 90.17a26.31 26.31 0 0126.73-26.81z"/></svg>
-        </a>
-    </div>
+  <header id="summary">
+    <span>{summary}</span>
+    <a href={disabled ? null : link} aria-disabled={disabled}>{host}</a>
+  </header>
+  <div class="content">
+    <slot />
+  </div>
+  <div class="controls">
+    <a id="top" href="#summary" aria-label="Back to top">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 400 380"
+        fill="currentColor"
+        ><path
+          d="M330.21 272.88v-99L201 44.69 70.84 174.88v99l89.69-89.69v150h80v-151l89.68 89.69z"
+        ></path></svg
+      >
+    </a>
+    <a id="back" href="/" aria-label="Back to home page">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 742.87 380"
+        fill="currentColor"
+        ><path
+          d="M497.09 319.13h99l129.19-129.19L595.09 59.75h-99l89.69 89.69h-150v80h151l-89.69 89.69zM54.77 379.76h148.94S217.23 367 224 360.54c5.27-4.47 5.73-7.52 14.77-7.33 9.82.17 19.68.36 29.5.52l-27.74 26h41.31L304 357.5V199.88h-40.71c-6.38 0-7.28-.86-11.4-5L228.3 167c-6.54 14.31-12.7 26.47-19.22 40.28-.73 1.42-2.47 4.59-1.17 7.06l64.82 130.88-23.73-.07c-12.44.28-17.62-8.3-22-16q-26.29-53-52.71-106L171 286.06c-.87 10.89-8.23 13.66-17.86 14l-108.9.24c0-12.51 12.4-29 32.6-29.83 0 0 38.89.43 59.23.52 2.57 0 3.28-1.44 3.58-3.59 1-16.17 1.84-32.46 2.85-48.64.62-8 1.33-13.59 3.66-19.67 7.6-16.29 15.2-32.49 22.8-48.73l-27.87-.36a1.64 1.64 0 00-1.68.78l-20.14 35.29c-8.31 15.15-30.76 4.1-23.24-12l24.7-41.31c4.35-6.46 6.33-8.69 17.62-9 0 0 52.74-.08 79.15-.08 8.57-.19 9.55 2.5 13.65 6.87 11 13.59 23.07 28.09 33.82 40.76 1.49 1.8 2.33 2.53 5.89 2.53H304V49.7l-227.08.22s.36 144.37.17 215c-23.16.73-39.09 18.23-40 40.79 13 .16 26.44-.46 39.79-.3v52.09zm166-316.4c15.12 0 26.7 11.61 26.7 26.81S235.84 117 220.73 117 194 105.4 194 90.17a26.31 26.31 0 0126.73-26.81z"
+        ></path></svg
+      >
+    </a>
+  </div>
 </article>
 
 <script defer>
-    function injectBehavior() {
-        document.getElementById('top').href = 'javascript:summary.scrollIntoView({ behavior: "smooth"})';
-        document.getElementById('back').href = 'javascript:history.back()';
-    }
+  function injectBehavior() {
+    document.getElementById("top").href =
+      'javascript:summary.scrollIntoView({ behavior: "smooth"})';
+    document.getElementById("back").href = "javascript:history.back()";
+  }
 
-    injectBehavior();
+  injectBehavior();
 </script>
