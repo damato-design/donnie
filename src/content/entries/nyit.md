@@ -5,4 +5,6 @@ datetime: 2014-05-23T00:00:00.000Z
 summary: Adjunct Faculty, Communication Arts
 link: https://nyit.edu
 ---
-Williamsburg prism small batch, umami cold-pressed banh mi mixtape try-hard leggings ugh pitchfork. Hot chicken vaporware lumbersexual migas small batch synth. Helvetica master cleanse hell of selvage hoodie, shabby chic mumblecore prism twee meditation quinoa ethical meh pickled 3 wolf moon. Pour-over pok pok affogato 3 wolf moon, live-edge pug gastropub godard bitters chillwave health goth lo-fi.
+After finishing my Master's degree in Communication Arts and using my experience in the live event production space prior, I was invited to teach a few courses focusing on live event production to new students. The course expected students to create a handful of live shows meant to be streamed over the internet.
+
+In the course, the students learned the value of preproduction and how to respond to unplanned circumstances. The motto "the show must go on" enforced a responsibility to their audience. They also got involved in other facets of supplimental media, such as holding a positive social presence and building brand awareness.
