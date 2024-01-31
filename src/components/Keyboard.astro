@@ -61,6 +61,12 @@ const { links } = Astro.props;
     align-self: end;
     text-indent: 5ch;
   }
+
+  @media print {
+    .keyboard {
+      display: none;
+    }
+  }
 </style>
 
 <div class="keyboard">

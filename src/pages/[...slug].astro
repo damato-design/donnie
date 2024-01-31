@@ -26,6 +26,12 @@ const { Content } = await entry.render();
     flex-wrap: wrap;
     color: #444;
   }
+
+  @media print {
+    .entry {
+      flex-direction: column;
+    }
+  }
 </style>
 
 <Layout>

@@ -65,6 +65,12 @@ const { host } = new URL(link);
     height: 2em;
     color: white;
   }
+
+  @media print {
+    .controls {
+      display: none;
+    }
+  }
 </style>
 
 <article>

@@ -105,6 +105,17 @@ const { name } = Astro.props;
     .card :global(:where(p, ul, li)) {
         margin-block: 1lh;
     }
+
+    @media print {
+        .photo-card {
+            transform: none;
+            page-break-inside: avoid;
+        }
+
+        .paperclip {
+            display: none;
+        }
+    }
 </style>
 
 <div class="photo-card">

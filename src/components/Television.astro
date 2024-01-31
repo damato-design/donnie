@@ -192,6 +192,15 @@
     width: 20%;
   }
 
+  @media print {
+    img {
+      display: none;
+    }
+
+    .television {
+      page-break-inside: avoid;
+    }
+  }
   
 </style>
 

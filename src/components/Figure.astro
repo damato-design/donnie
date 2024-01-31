@@ -80,6 +80,12 @@ const year = new Date(datetime).getFullYear();
     [data-hover]:hover h2 {
         transform: translateY(0);
     }
+
+    @media print {
+        img {
+            max-width: 300px;
+        }
+    }
 </style>
 
 <figure data-hover={ Boolean(hover) }>
