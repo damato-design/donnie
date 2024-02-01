@@ -1,0 +1,296 @@
+---
+const { message } = Astro.props;
+---
+
+<div class="sticky-notes">
+  <div class="content">{message}</div>
+  <div class="slot">
+    <slot />
+  </div>
+  <ul class="stickies">
+    {
+      Array.from({ length: 12 }, (_, i) => (
+        <li
+          class="sticky"
+          data-content={message}
+          style={`--rotate: ${(Math.random() - 0.5) * 5}deg`}
+        />
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .sticky-notes {
+    position: relative;
+    display: block;
+    z-index: 1;
+    container-type: inline-size;
+    width: 100%;
+  }
+
+  .slot {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .stickies {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-wrap: wrap;
+    perspective: 1000px;
+    pointer-events: none;
+  }
+
+  .sticky {
+    --cols: calc(var(--amount) / 2);
+    --rows: 2;
+    --col: 0;
+    --row: 0;
+    width: calc(100% / var(--cols));
+    height: calc(100% / var(--rows));
+    background-color: #e471a8;
+    color: color-mix(in srgb, #e471a8, black 70%);
+    background-image: linear-gradient(
+      to bottom,
+      color-mix(in srgb, black, transparent 90%) 15%,
+      color-mix(in srgb, white, transparent 100%) 25%
+    );
+    box-shadow: 0 0.5rem 0.5rem color-mix(in srgb, #000, transparent 80%);
+    transform-origin: center top;
+    transform-style: preserve-3d;
+    transform: translate(var(--x, 0px), var(--y, 0px)) rotate(var(--rotate));
+    overflow: hidden;
+    position: relative;
+    transition: 0.218s ease;
+    pointer-events: initial;
+  }
+
+  .sticky:hover {
+    transform: translate(var(--x, 0px), var(--y, 0px)) rotatex(10deg);
+    z-index: 1;
+    cursor: grab;
+    box-shadow: 0 0.75rem 0.5rem color-mix(in srgb, #000, transparent 85%);
+    background-image: linear-gradient(
+      to bottom,
+      color-mix(in srgb, black, transparent 91%) 15%,
+      color-mix(in srgb, white, transparent 90%) 25%
+    );
+  }
+
+  .sticky[data-grabbed="true"] {
+    transform: translate(var(--x, 0px), var(--y, 0px)) rotatex(10deg);
+    z-index: 2;
+    cursor: grabbing;
+    transition: none;
+  }
+
+  .sticky[data-grabbed="false"] {
+    animation: drop 0.6s ease-in forwards;
+    box-shadow: 0 1rem 1rem color-mix(in srgb, #000, transparent 60%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  @keyframes drop {
+    to {
+      visibility: hidden;
+      transform: translate(var(--x, 0px), 150dvh) rotatex(90deg);
+    }
+  }
+
+  .sticky:after {
+    content: attr(data-content);
+    position: absolute;
+    width: calc(100% * var(--cols));
+    height: calc(100% * var(--rows));
+    left: calc(var(--col) * -100%);
+    top: calc(var(--row) * -100%);
+  }
+
+  .content {
+    visibility: hidden;
+  }
+
+  .content,
+  .sticky:after {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+    font-family: "Permanent Marker", "Segoe Print", "Bradley Hand", Chilanka,
+      TSCu_Comic, casual, cursive;
+    font-size: min(6rem, 10vw + 1rem);
+    text-align: center;
+  }
+
+  .sticky {
+    --amount: 4;
+    display: none;
+  }
+
+  .sticky:nth-child(n + 3) {
+    --row: 1;
+  }
+
+  .sticky:nth-child(2n + 2) {
+    --col: 1;
+  }
+
+  .sticky:not(:nth-child(n + 5)) {
+    display: block;
+  }
+
+  @container (min-width: 580px) {
+    .sticky {
+      --amount: 8;
+    }
+
+    .sticky:nth-child(n + 3) {
+      --row: 0;
+    }
+
+    .sticky:nth-child(n + 5) {
+      --row: 1;
+    }
+
+    .sticky:nth-child(4n + 1) {
+      --col: 0;
+    }
+
+    .sticky:nth-child(4n + 2) {
+      --col: 1;
+    }
+
+    .sticky:nth-child(4n + 3) {
+      --col: 2;
+    }
+
+    .sticky:nth-child(4n + 4) {
+      --col: 3;
+    }
+
+    .sticky:not(:nth-child(n + 9)) {
+      display: block;
+    }
+  }
+
+  @container (min-width: 780px) {
+    .sticky {
+      --amount: 12;
+    }
+
+    .sticky:nth-child(n + 5) {
+      --row: 0;
+    }
+
+    .sticky:nth-child(n + 7) {
+      --row: 1;
+    }
+
+    .sticky:nth-child(6n + 1) {
+      --col: 0;
+    }
+
+    .sticky:nth-child(6n + 2) {
+      --col: 1;
+    }
+
+    .sticky:nth-child(6n + 3) {
+      --col: 2;
+    }
+
+    .sticky:nth-child(6n + 4) {
+      --col: 3;
+    }
+
+    .sticky:nth-child(6n + 5) {
+      --col: 4;
+    }
+
+    .sticky:nth-child(6n + 6) {
+      --col: 5;
+    }
+
+    .sticky:not(:nth-child(n + 13)) {
+      display: block;
+    }
+  }
+</style>
+
+<script defer>
+  function stickySetup() {
+    const target = {
+      x: 0,
+      y: 0,
+    };
+
+    let t;
+
+    function onPointerMove(ev) {
+      t && clearTimeout(t);
+      const { pageX, pageY } = ev;
+      this.style.setProperty("--x", `${pageX - target.x}px`);
+      this.style.setProperty("--y", `${pageY - target.y}px`);
+      t = setTimeout(target.onPointerUp, 1000);
+    }
+
+    function onPointerUp() {
+      this.dataset.grabbed = false;
+      document.documentElement.removeEventListener(
+        "pointermove",
+        target.onPointerMove
+      );
+      document.documentElement.removeEventListener(
+        "pointerup",
+        target.onPointerUp
+      );
+    }
+
+    function onPointerDown({ pageX, pageY }) {
+      target.x = pageX;
+      target.y = pageY;
+      target.onPointerMove = onPointerMove.bind(this);
+      target.onPointerUp = onPointerUp.bind(this);
+      this.dataset.grabbed = true;
+      document.documentElement.addEventListener(
+        "pointermove",
+        target.onPointerMove
+      );
+      document.documentElement.addEventListener(
+        "pointerup",
+        target.onPointerUp
+      );
+    }
+
+    function reset($sticky) {
+      $sticky.removeAttribute("data-grabbed");
+      $sticky.style.removeProperty("--x");
+      $sticky.style.removeProperty("--y");
+    }
+
+    const $notes = document.querySelectorAll(".sticky");
+    $notes.forEach(($note) =>
+      $note.addEventListener("pointerdown", onPointerDown)
+    );
+    const $root = document.querySelector(".stickies");
+    new IntersectionObserver(
+      (entries) => {
+        if (!entries || !entries.length) return;
+        entries.every(({ isIntersecting }) => !isIntersecting) &&
+          $notes.forEach(reset);
+      },
+      { threshold: 0 }
+    ).observe($root);
+  }
+
+  stickySetup();
+</script>

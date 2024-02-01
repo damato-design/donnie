@@ -1,0 +1,46 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Frame from "@components/Frame.astro";
+import Figure from "@components/Figure.astro";
+import Article from "@components/Article.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("entries");
+  return entries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<style>
+  .entry {
+    display: flex;
+    max-width: 80ch;
+    margin-inline: auto;
+    gap: 1rem;
+    flex-wrap: wrap;
+    color: #444;
+  }
+
+  @media print {
+    .entry {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<Layout>
+  <Frame id={entry.slug}>
+    <div class="entry">
+      <Figure {...entry.data} />
+      <Article {...entry.data} id={ entry.slug }>
+        <Content />
+      </Article>
+    </div>
+  </Frame>
+</Layout>

@@ -1,0 +1,85 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Header from "@components/Header.astro";
+import StickyNotes from "@components/StickyNotes.astro";
+import PhotoCard from "@components/PhotoCard.astro";
+import PhotoFrames from "@components/PhotoFrames.astro";
+import EasyButton from "@components/EasyButton.astro";
+import Television from "@components/Television.astro";
+---
+
+<style>
+  main {
+    max-width: 900px;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  section {
+    min-height: min(80vh, 900px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .todo li {
+    margin-block: 1rem;
+  }
+</style>
+
+<Layout>
+  <Header />
+  <main>
+    <section>
+      <StickyNotes message="play nice">
+        <strong>TO DO:</strong>
+        <ul class="todo">
+          <li><s>Visit donnie.damato.design</s></li>
+          <li><s>Remove stickies</s></li>
+          <li><a href="javascript:about.scrollIntoView({ behavior: 'smooth'})">Scroll down</a></li>
+        </ul>
+      </StickyNotes>
+    </section>
+    <section id="about">
+      <PhotoCard name="Donnie">
+        <p><strong>Donnie D'Amato</strong> is a seasoned professional in the world of design, with a passion for creating seamless and cohesive user experiences. Born with a keen eye for aesthetics, Donnie found his true calling in the intricate realm of design systems.</p>
+
+          <p>Donnie is renowned for his meticulous approach to building and maintaining design systems that serve as the backbone for product consistency. His commitment to usability and accessibility is evident in the user-friendly interfaces that emerge from his design philosophy.</p>
+
+          <p>In addition to his technical prowess, Donnie is a collaborative force within cross-functional teams. His ability to communicate design principles and advocate for the importance of design systems has made him a respected figure among colleagues and peers.</p>
+
+          <p>Outside of the design systems practice, Donnie is a continuous learner, always staying abreast of the latest design trends and technological advancements. He firmly believes in the power of innovation and its role in pushing the boundaries of what design systems can achieve.</p>
+
+          <p>Donnie's journey in the realm of design systems is a testament to his unwavering dedication to elevating digital experiences through thoughtful and systematic design.</p>
+      </PhotoCard>
+    </section>
+    <section>
+      <PhotoFrames/>
+    </section>
+  </main>
+  <Television>
+    <dl>
+      <dt>Producer</dt>
+      <dd>Donnie D'Amato</dd>
+      <dt>Designer</dt>
+      <dd>Donnie D'Amato</dd>
+      <dt>Developer</dt>
+      <dd>Donnie D'Amato</dd>
+      <dt>Development Environment</dt>
+      <dd>Visual Studio Code</dd>
+      <dt>Site framework</dt>
+      <dd>Astro</dd>
+      <dt>Web hosting</dt>
+      <dd>Netlify</dd>
+      <dt>Source hosting</dt>
+      <dd>Github</dd>
+      <dt>Photography</dt>
+      <dd>Unsplash, Freepik</dd>
+      <dt>Photo Manipulation</dt>
+      <dd>Adobe Photoshop</dd>
+    </dl>
+    <h2>donnie.damato.design</h2>
+    <p>Copyright © 2024. All rights reserved.</p>
+  </Television>
+</Layout>

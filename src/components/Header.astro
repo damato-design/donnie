@@ -1,0 +1,20 @@
+---
+import Keyboard from "@components/Keyboard.astro";
+const links = {
+  'Read': 'https://blog.damato.design',
+  'Watch': 'https://youtube.com/playlist?list=PLGdCLFdGE_uwOSFPB0IwRv1JpQoEygdGA',
+  'Meet': 'https://cal.com/donnie-damato',
+  'Connect': 'https://bento.me/donnie'
+}
+---
+
+<style>
+  header {
+      overflow: hidden;
+      text-align: right;
+  }
+</style>
+
+<header>
+  <Keyboard links={links }/>
+</header>
