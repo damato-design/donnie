@@ -189,6 +189,13 @@ declare module 'astro:content' {
   collection: "entries";
   data: InferEntrySchema<"entries">
 } & { render(): Render[".md"] };
+"cssreviews.md": {
+	id: "cssreviews.md";
+  slug: "cssreviews";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
 "damato.md": {
 	id: "damato.md";
   slug: "damato";
@@ -290,6 +297,13 @@ declare module 'astro:content' {
 "willarrive.md": {
 	id: "willarrive.md";
   slug: "willarrive";
+  body: string;
+  collection: "entries";
+  data: InferEntrySchema<"entries">
+} & { render(): Render[".md"] };
+"wireframe.md": {
+	id: "wireframe.md";
+  slug: "wireframe";
   body: string;
   collection: "entries";
   data: InferEntrySchema<"entries">
