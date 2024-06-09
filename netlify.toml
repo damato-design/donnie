@@ -2,6 +2,9 @@
   publish = "dist"
   command = "npm run build"
 
+[[redirects]]
+  from = "/resume"
+  to = "https://resume.damato.design/donnie"
 
 [[headers]]
   for = "/*"
