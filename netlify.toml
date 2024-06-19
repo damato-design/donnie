@@ -6,6 +6,15 @@
   from = "/resume"
   to = "https://resume.damato.design/donnie"
 
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  force = true
+
+[dev]
+  targetPort = 4321
+
 [[headers]]
   for = "/*"
     [headers.values]

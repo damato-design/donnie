@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/damato-design/donnie#readme",
   "dependencies": {
-    "astro": "^4.2.1"
+    "astro": "^4.2.1",
+    "rss-to-json": "^2.1.1"
   }
 }
