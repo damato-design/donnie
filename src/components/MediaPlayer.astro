@@ -2,7 +2,7 @@
   media-player {
     background-image: url('/images/earbuds.png');
     background-repeat: no-repeat;
-    background-size: 400px;
+    background-size: min(400px, 100%);
     background-position-y: center;
     background-position-x: 40%;
     display: flex;
@@ -14,12 +14,15 @@
   .ipod {
     background-image: linear-gradient(45deg, #f1f2f3, #ffffff);
     box-shadow: 
-      inset 3px -3px 14px 2px color-mix(in srgb,#444444,transparent 20%),
-      -24px 3px 28px 14px color-mix(in srgb,#000000,transparent 80%),
-      0 1px 3px 1px color-mix(in srgb,#000000,transparent 50%);
+      inset 5px -3px 16px 2px color-mix(in srgb,#444444,transparent 40%),
+      -34px 3px 28px 14px color-mix(in srgb,#000000,transparent 80%),
+      -12px 1px 13px -10px color-mix(in srgb,#000000,transparent 50%);
     border-radius: 1rem;
-    padding: 1.5rem;
-    padding-inline-start: 2.25rem;
+    border: 1px solid #a2a2a2;
+    padding-inline-start: 2rem;
+    padding-inline-end: 1rem;
+    padding-block-start: 1rem;
+    padding-block-end: 1.5rem;
     max-width: 240px;
     display: flex;
     flex-direction: column;
@@ -33,9 +36,9 @@
   .screen {
     background-image: linear-gradient(135deg, #a5a59b, #d6d5d0);
     box-shadow: inset 0px 0px 10px 2px #6a6a6a;
-    border: 1px solid #d6d5d0;
+    border: 1px solid #ffffff;
     color: #484647;
-    border-radius: .25rem;
+    border-radius: .35rem;
     opacity: .8;
     flex: 1;
     display: grid;
@@ -106,7 +109,7 @@
     margin: 0;
     padding: 0;
     overflow: auto;
-    aspect-ratio: 4/3;
+    max-height: 120px;
     grid-row: 2;
     grid-column: 1;
   }
@@ -152,7 +155,8 @@
     grid-row: 1 / -1;
     grid-column: 1 / -1;
     transform: translateX(100%);
-    transition: .4s ease;
+    transition: transform .4s ease;
+    will-change: transform;
   }
 
   .media[src] {
