@@ -7,9 +7,6 @@ import Head from "@components/Head.astro";
   <Head {...Astro.props} />
   <body>
     <slot />
-    <img
-      src="https://analytics.damato.design/api/track?domain=donnie.damato.design"
-      style="display: none"
-    />
+    <script async defer src="https://scripts.withcabin.com/hello.js"></script>
   </body>
 </html>
