@@ -1,0 +1,40 @@
+---
+const { level, rugged = true } = Astro.props;
+const Tag = typeof level === 'string' ? 'nav' : 'div';
+---
+
+<style>
+    .section {
+        grid-area: 1 / 1 / -1 / -1;
+        display: flex;
+        flex-direction: column;
+        padding: 32px;
+        height: 100%;
+        background: #fbffd0;
+    }
+
+    nav.content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .trailing {
+        font-size: .8em;
+    }
+</style>
+
+<div>
+    <div class:list={['section', { rugged }]}>
+        <div class="leading">
+            <slot name="leading"/>
+        </div>
+        <Tag class="content" aria-label={ level }>
+            <slot/>
+        </Tag>
+        <div class="trailing">
+            <slot name="trailing"/>
+        </div>
+    </div>
+</div>

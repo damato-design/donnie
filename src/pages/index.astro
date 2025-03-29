@@ -1,11 +1,148 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Head from "@components/Head.astro";
+import PrimaryNav from "@components/PrimaryNav.astro";
+import SecondaryNav from "@components/SecondaryNav.astro";
+import Main from "@components/Main.astro";
+import Rugged from "@components/Rugged.astro";
+import List from '@components/List.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const primary = {
+	Expertise: '/expertise',
+	Projects: '/projects',
+	Media: '/media',
+	Connect: '/connect'
+}
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<style is:global>
+	body {
+		display: flex;
+		height: 100vh;
+		background: color-mix(in oklch, #fbffd0, black 30%);
+		overflow: hidden;
+		--rotate: -10deg;
+		--abs-rotate: max(var(--rotate), -1 * var(--rotate));
+		--amount: 110%;
+		--duration: .8s;
+		--timing: ease-in-out;
+	}
+
+	.tearout {
+		position: relative;
+		scrollbar-width: 0;
+	}
+
+	[aria-live] {
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
+
+	[aria-live]:has(.tearout) {
+		overflow-x: visible;
+		overflow-y: clip;
+	}
+
+	.tearout > * {
+		clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        animation: hide var(--duration) var(--timing) forwards;
+	}
+
+	.tearout:after {
+		content: '';
+        width: calc(100% / cos(var(--abs-rotate)));
+        display: block;
+        position: absolute;
+        rotate: var(--rotate);
+        transform-origin: top left;
+        background: color-mix(in oklch, #fbffd0, white 30%);
+        z-index: 1;
+        filter: url(#rugged) drop-shadow(-16px 16px 20px rgba(20, 20, 20, .2));
+		top: 0%;
+		height: 0%;
+        animation: tear var(--duration) var(--timing) forwards;
+	}
+
+	@keyframes tear {
+		to {
+			top: calc(var(--amount));
+			height: var(--amount);
+		}
+	}
+
+	@keyframes hide {
+		to {
+			clip-path: polygon(0 var(--amount), 100% var(--amount), 100% 100%, 0% 100%);
+		}
+	}
+
+	@keyframes show {
+		to {
+			clip-path: polygon(0 0, 100% 0, 100% var(--amount), 0% var(--amount));
+		}
+	}
+
+</style>
+
+<!doctype html>
+<html lang="en">
+  <Head {...Astro.props} />
+  <body>
+    <PrimaryNav>
+		<List list={ primary } target="secondary" tabs/>
+	</PrimaryNav>
+	<SecondaryNav/>
+	<Main/>
+	<Rugged/>
+    <script async defer src="https://scripts.withcabin.com/hello.js"></script>
+  </body>
+</html>
+
+<script>
+	class Audio {
+		#ctx;
+		#buffer: any;
+
+		constructor(url: string) {
+			this.#ctx = new AudioContext();
+			this.#load(url);
+		}
+
+		#load(url: string) {
+			fetch(url)
+				.then((res) => res.arrayBuffer())
+				.then((buf) => this.#ctx.decodeAudioData(buf))
+				.then((data) => this.#buffer = data)
+		}
+
+		play() {
+			if (!this.#buffer) return;
+			const source = this.#ctx.createBufferSource();
+			source.buffer = this.#buffer;
+			source.connect(this.#ctx.destination);
+			source.addEventListener("ended", () => source.disconnect());
+			source.start();
+		}
+
+		cleanup() {
+			this.#buffer = null;
+			this.#ctx.close();
+		}
+	}
+
+	const audio = new Audio('/paper-tear.mp3');
+
+	document.addEventListener('click', (ev: Event) => {
+		const $elem = ev.target as HTMLAnchorElement;
+		if (!$elem || !$elem.dataset.target) return;
+		ev.preventDefault();
+		const target = $elem.dataset.target as string;
+		const $host = document.getElementById(target) as HTMLElement;
+		const $content = $host.firstElementChild;
+		$content?.addEventListener('animationend', () => $content.remove());
+		fetch($elem.href).then((res) => res.text()).then((str) => {
+			$host.insertAdjacentHTML('afterbegin', str);
+			$content?.classList.add('tearout');
+			audio.play();
+		});
+	});
+</script>

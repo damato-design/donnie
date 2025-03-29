@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import Section from '@components/Section.astro';
+import List from '@components/List.astro';
+export const partial = true;
+
+const projects = await getCollection('projects');
+const links = projects.reduce((acc, entry) => {
+    return Object.assign(acc, {[entry.id]: `/projects/${entry.id}`})
+}, {});
+---
+
+<Section level="secondary">
+    <strong slot="leading">projects</strong>
+    <List list={ links } target="main"/>
+    <div slot="trailing">
+        Regular spicy thoughts found at <a href="https://blog.damato.design">my blog</a>.
+    </div>
+</Section>

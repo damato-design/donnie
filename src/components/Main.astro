@@ -1,0 +1,20 @@
+---
+import Section from "@components/Section.astro"
+---
+
+<style>
+    #main {
+        flex: 5;
+        display: grid;
+    }
+
+    #main > :global(*) {
+        grid-area: 1 / 1 / -1 / -1;
+    }
+</style>
+
+<main id="main" aria-live="polite">
+    <Section>
+        <slot/>
+    </Section>
+</main>

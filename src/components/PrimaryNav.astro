@@ -1,0 +1,22 @@
+---
+import Section from "@components/Section.astro"
+---
+
+<style>
+    #primary {
+        flex: 2;
+        display: grid;
+    }
+
+    #primary > :global(*) {
+        grid-area: 1 / 1 / -1 / -1;
+    }
+</style>
+
+<div id="primary" aria-live="polite">
+    <Section level="primary">
+        <strong slot="leading">logo</strong>
+        <slot/>
+        <div slot="trailing">CONTROLS</div>
+    </Section>
+</div>

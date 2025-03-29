@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import Section from '@components/Section.astro';
+import List from '@components/List.astro';
+export const partial = true;
+
+const expertise = await getCollection('expertise');
+const links = expertise.reduce((acc, entry) => {
+    return Object.assign(acc, {[entry.id]: `/expertise/${entry.id}`})
+}, {});
+---
+
+<Section level="secondary">
+    <strong slot="leading">expertise</strong>
+    <List list={ links } target="main"/>
+    <div slot="trailing">
+        Looking for a more professional format? <a href="https://resume.damato.design/donnie">Check out my resume</a>
+    </div>
+</Section>

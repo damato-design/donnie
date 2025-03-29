@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import Section from '@components/Section.astro';
+import List from '@components/List.astro';
+export const partial = true;
+
+const media = await getCollection('media');
+const links = media.reduce((acc, entry) => {
+    return Object.assign(acc, {[entry.id]: `/media/${entry.id}`})
+}, {});
+---
+
+<Section level="secondary">
+    <strong slot="leading">media</strong>
+    <List list={ links } target="main"/>
+    <div slot="trailing">
+        Check out my live talk show at 5pm ET every Tuesday.
+    </div>
+</Section>
