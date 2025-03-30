@@ -44,7 +44,10 @@ const primary = {
 
 	.tearout > * {
 		clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-        animation: hide var(--duration) var(--timing) forwards;
+		animation-name: hide-vertical;
+		animation-duration: var(--duration);
+		animation-timing-function: var(--timing);
+		animation-fill-mode: forwards;
 	}
 
 	.tearout:after {
@@ -59,25 +62,60 @@ const primary = {
         filter: url(#rugged) drop-shadow(-16px 16px 20px rgba(20, 20, 20, .2));
 		top: 0%;
 		height: 0%;
-        animation: tear var(--duration) var(--timing) forwards;
+		animation-name: tear-vertical;
+		animation-duration: var(--duration);
+		animation-timing-function: var(--timing);
+		animation-fill-mode: forwards;
 	}
 
-	@keyframes tear {
+	@keyframes tear-vertical {
 		to {
 			top: calc(var(--amount));
 			height: var(--amount);
 		}
 	}
 
-	@keyframes hide {
+	@keyframes hide-vertical {
 		to {
 			clip-path: polygon(0 var(--amount), 100% var(--amount), 100% 100%, 0% 100%);
 		}
 	}
 
-	@keyframes show {
+	@keyframes tear-horizontal {
 		to {
-			clip-path: polygon(0 0, 100% 0, 100% var(--amount), 0% var(--amount));
+			left: calc(var(--amount));
+			width: var(--amount);
+		}
+	}
+
+	@keyframes hide-horizontal {
+		to {
+			clip-path: polygon(var(--amount) 0, 100% 0, 100% 100%, var(--amount) 100%);
+		}
+	}
+
+	@media (max-width: 900px) {
+		body {
+			flex-direction: column;
+			height: auto;
+			min-height: 100vh;
+			overflow-y: auto;
+			overflow-x: clip;
+		}
+
+		[aria-live]:has(.tearout) {
+			overflow: visible;
+		}
+
+		.tearout > * {
+			animation-name: hide-horizontal;
+		}
+
+		.tearout:after {
+			left: 0%;
+			width: 0%;
+			height: calc(100% / cos(var(--abs-rotate)));
+			animation-name: tear-horizontal;
 		}
 	}
 
