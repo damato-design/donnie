@@ -1,5 +1,5 @@
 ---
-const { list, target, tabs } = Astro.props;
+const { list, target, tabs, colors = ['currentColor'] } = Astro.props;
 ---
 
 <style>
@@ -8,28 +8,28 @@ const { list, target, tabs } = Astro.props;
         display: flex;
         flex-direction: column;
         gap: 16px;
-        font-family: "Special Elite", monspace;
         margin-block: 32px;
     }
 
     .list.tabs {
         gap: 8px;
         list-style: none;
-        margin: 0;
+        margin-inline: 0;
         padding: 0;
     }
 
     .list.tabs li {
-        font-family: "Special Elite", monspace;
-        font-weight: bold;
-        rotate: calc(var(--rand) * 2deg);
-        background: #f3b0d0;
+        font-family: "Permanent Marker", monspace;
+        font-size: 1.5em;
+        rotate: calc(var(--rand) * 3deg);
+        background: var(--item-color);
+        color: #111;
         transform-origin: left center;
         transform-style: preserve-3d;
         transition: 0.218s ease;
         box-shadow: 5px 2px 8px -2px rgba(20,20,20,.3);
-        border-bottom: 1px solid color-mix(in oklch, #f3b0d0, black 10%);
-        border-right: 1px solid color-mix(in oklch, #f3b0d0, black 10%);
+        border-bottom: 1px solid color-mix(in oklch, var(--item-color), black 10%);
+        border-right: 1px solid color-mix(in oklch, var(--item-color), black 10%);
     }
 
     .list.tabs li:hover {
@@ -37,25 +37,25 @@ const { list, target, tabs } = Astro.props;
     }
 
     a {
-        opacity: 0.8;
         font-size: 1.2em;
+        text-decoration-color: var(--item-color);
     }
 
     .list.tabs li a {
         display: flex;
-        margin-top: 4px;
         align-items: center;
         text-decoration: none;
-        padding: .75em 1em;
+        padding: .25em .5em;
+        opacity: 0.8;
     }
 </style>
 
 <ol class:list={['list', { tabs }]}>
     {
-        Object.entries(list).map(([label, href]) => {
+        Object.entries(list).map(([label, href], index) => {
             const rand = Math.random();
             return (
-                <li style={`--rand: ${rand}`}>
+                <li style={`--rand: ${rand}; --item-color: ${colors.at(index) || colors.at(0)}`}>
                     <a href={href as string} data-target={target}>
                         {label}
                     </a>

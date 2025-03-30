@@ -1,22 +1,55 @@
 ---
-import Section from "@components/Section.astro"
+import Section from "@components/Section.astro";
+import Logo from "@components/Logo.astro";
+import List from '@components/List.astro';
+import SchemeToggle from '@components/SchemeToggle.astro';
+import AudioToggle from '@components/AudioToggle.astro';
+
+const primary = {
+	Expertise: '/expertise',
+	Projects: '/projects',
+	Media: '/media',
+	Connect: '/connect'
+}
+
+const colors = [
+    '#e370ae',
+    '#f4dd66',
+    '#d8f97a',
+    '#79c5f4',
+];
 ---
 
 <style>
     #primary {
-        flex: 2;
+        flex: 1 1 200px;
         display: grid;
     }
 
     #primary > :global(*) {
         grid-area: 1 / 1 / -1 / -1;
     }
+
+    a {
+        text-decoration: none;
+    }
+
+    .toggles {
+        display: flex;
+        gap: 1em;
+        align-items: center;
+    }
 </style>
 
 <div id="primary" aria-live="polite">
     <Section level="primary">
-        <strong slot="leading">logo</strong>
-        <slot/>
-        <div slot="trailing">CONTROLS</div>
+        <a slot="leading" href="/">
+            <Logo/>
+        </a>
+        <List list={ primary } target="secondary" colors={ colors } tabs/>
+        <div slot="trailing" class="toggles">
+            <SchemeToggle/>
+            <AudioToggle/>
+        </div>
     </Section>
 </div>

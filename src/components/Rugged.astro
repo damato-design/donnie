@@ -1,7 +1,6 @@
 <style is:global>
     .rugged {
-        filter: url(#rugged) drop-shadow(2px 0 4px rgba(20,20,20, .2));
-        background: linear-gradient(9deg, #f0f0f0, #fdfdfd);
+        filter: url(#rugged);
     }
 </style>
 
@@ -9,7 +8,7 @@
     <defs>
         <filter id="rugged">
             <feTurbulence type="fractalNoise" baseFrequency=".1" numOctaves="4" />
-            <feDisplacementMap in="SourceGraphic" scale="4" />
+            <feDisplacementMap in="SourceGraphic" scale="6" />
             <feComposite in="SourceGraphic" operator="in" />
         </filter>
     </defs>

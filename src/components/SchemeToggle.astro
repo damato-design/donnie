@@ -1,0 +1,72 @@
+---
+import LightMode from '@assets/light-mode.svg';
+import DarkMode from '@assets/dark-mode.svg';
+---
+
+<style>
+    label {
+        cursor: pointer;
+        padding: .5rem;
+        font-size: 2em;
+        user-select: none;
+        display: flex;
+    }
+
+    label:has(:focus-visible) {
+        outline: 5px auto Highlight;
+        outline: 5px auto -webkit-focus-ring-color;
+    }
+
+    label :global(svg) {
+        fill: #ff69b4;
+        stroke: color-mix(in oklch, white, var(--bg) 70%);
+        stroke-width: 25%;
+        stroke-linejoin: round;
+        paint-order: stroke fill;
+        overflow: visible;
+        filter: drop-shadow(1px 1px 1px rgba(20, 20, 20, .2));
+        rotate: 10deg;
+        pointer-events: none;
+    }
+
+    input[type="checkbox"] {
+        position: absolute;
+        scale: 0;
+    }
+
+    input[type="checkbox"]:not(:checked) ~ :global(#light-mode),
+    input[type="checkbox"]:checked ~ :global(#dark-mode) {
+        display: none;
+    }
+
+</style>
+
+<label for="scheme-toggle">
+    <input
+        type="checkbox"
+        id="scheme-toggle"
+        aria-label="mode switch"
+        checked/>
+    <LightMode/>
+    <DarkMode/>
+</label>
+
+<script>
+    const id = 'scheme-toggle';
+
+    const $checkbox = document.getElementById(id);
+    $checkbox.addEventListener('change', () => {
+        localStorage.setItem(id, $checkbox.checked);
+        document.body.dataset.scheme = localStorage.getItem(id) === 'true' ? 'light' : 'dark';
+    });
+
+    function getPreference() {
+        if (typeof localStorage.getItem(id) === 'string') return localStorage.getItem(id) === 'true' ? 'light' : 'dark';
+        if (window.matchMedia('(prefers-color-scheme: light)')) return 'light';
+        if (window.matchMedia('(prefers-color-scheme: dark)')) return 'dark';
+        $checkbox.checked ? 'light' : 'dark';
+    }
+
+    $checkbox.checked = localStorage.getItem(id) !== 'false';
+    document.body.dataset.scheme = getPreference();
+</script>

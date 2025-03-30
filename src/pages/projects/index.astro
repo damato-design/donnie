@@ -4,16 +4,18 @@ import Section from '@components/Section.astro';
 import List from '@components/List.astro';
 export const partial = true;
 
-const projects = await getCollection('projects');
-const links = projects.reduce((acc, entry) => {
-    return Object.assign(acc, {[entry.id]: `/projects/${entry.id}`})
+const entries = await getCollection('projects');
+const links = entries.reduce((acc, entry) => {
+    return Object.assign(acc, {[entry.data.title]: `/projects/${entry.id}`})
 }, {});
+
+const color = '#f4dd66';
 ---
 
 <Section level="secondary">
-    <strong slot="leading">projects</strong>
-    <List list={ links } target="main"/>
+    <h2 slot="leading" style={{ color }}>projects</h2>
+    <List list={ links } target="main" colors={[color]}/>
     <div slot="trailing">
-        Regular spicy thoughts found at <a href="https://blog.damato.design">my blog</a>.
+        Looking for some spicy design systems hot takes? Check out <a href="https://blog.damato.design">my blog</a>.
     </div>
 </Section>

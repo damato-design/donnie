@@ -3,14 +3,17 @@ import { glob, file } from 'astro/loaders';
 
 const metadata = z.object({
   title: z.string(),
-  description: z.string(),
   link: z.string().url(),
   date: z.date(),
   image: z.string()
 });
 
 const expertise = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/expertise' })
+  loader: glob({ pattern: '**/*.md', base: './src/content/expertise' }),
+  schema: z.object({
+    title: z.string(),
+    sort: z.number()
+  })
 });
 
 const projects = defineCollection({
@@ -23,8 +26,8 @@ const media = defineCollection({
   schema: metadata
 });
 
-const contact = defineCollection({
-  loader: file('src/content/contact.json'),
+const connect = defineCollection({
+  loader: file('src/content/connect.json'),
   schema: z.object({
     id: z.number(),
     title: z.string(),
@@ -37,5 +40,5 @@ export const collections = {
   expertise,
   projects,
   media,
-  contact
+  connect
 };

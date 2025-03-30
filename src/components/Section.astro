@@ -10,7 +10,7 @@ const Tag = typeof level === 'string' ? 'nav' : 'div';
         flex-direction: column;
         padding: 32px;
         height: 100%;
-        background: #fbffd0;
+        background: var(--bg);
     }
 
     nav.content {
@@ -20,8 +20,13 @@ const Tag = typeof level === 'string' ? 'nav' : 'div';
         justify-content: center;
     }
 
+    .content:not(nav) {
+        max-width: 40ch;
+    }
+
     .trailing {
         font-size: .8em;
+        text-wrap: balance;
     }
 </style>
 

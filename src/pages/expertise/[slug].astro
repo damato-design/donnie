@@ -4,8 +4,8 @@ import Section from '@components/Section.astro';
 export const partial = true;
 
 export async function getStaticPaths() {
-    const expertise = await getCollection('expertise');
-    return expertise.map((entry) => {
+    const entries = await getCollection('expertise');
+    return entries.map((entry) => {
         return {
             params: { slug: entry.id },
             props: { entry },

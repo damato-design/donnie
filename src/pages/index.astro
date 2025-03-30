@@ -17,8 +17,9 @@ const primary = {
 <style is:global>
 	body {
 		display: flex;
+		gap: 1px;
 		height: 100vh;
-		background: color-mix(in oklch, #fbffd0, black 30%);
+		background: color-mix(in oklch, var(--bg), var(--fg) 20%);
 		overflow: hidden;
 		--rotate: -10deg;
 		--abs-rotate: max(var(--rotate), -1 * var(--rotate));
@@ -52,16 +53,18 @@ const primary = {
 
 	.tearout:after {
 		content: '';
-        width: calc(100% / cos(var(--abs-rotate)));
         display: block;
         position: absolute;
         rotate: var(--rotate);
         transform-origin: top left;
-        background: color-mix(in oklch, #fbffd0, white 30%);
+		background: linear-gradient(var(--rotate),
+			color-mix(in oklch, var(--bg), black 10%),
+			color-mix(in oklch, var(--bg), white 10%));
         z-index: 1;
         filter: url(#rugged) drop-shadow(-16px 16px 20px rgba(20, 20, 20, .2));
 		top: 0%;
 		height: 0%;
+		width: calc(100% / cos(var(--abs-rotate)));
 		animation-name: tear-vertical;
 		animation-duration: var(--duration);
 		animation-timing-function: var(--timing);
@@ -103,6 +106,7 @@ const primary = {
 			overflow-x: clip;
 		}
 
+		[aria-live],
 		[aria-live]:has(.tearout) {
 			overflow: visible;
 		}
@@ -125,9 +129,7 @@ const primary = {
 <html lang="en">
   <Head {...Astro.props} />
   <body>
-    <PrimaryNav>
-		<List list={ primary } target="secondary" tabs/>
-	</PrimaryNav>
+    <PrimaryNav/>
 	<SecondaryNav/>
 	<Main/>
 	<Rugged/>
@@ -136,38 +138,7 @@ const primary = {
 </html>
 
 <script>
-	class Audio {
-		#ctx;
-		#buffer: any;
-
-		constructor(url: string) {
-			this.#ctx = new AudioContext();
-			this.#load(url);
-		}
-
-		#load(url: string) {
-			fetch(url)
-				.then((res) => res.arrayBuffer())
-				.then((buf) => this.#ctx.decodeAudioData(buf))
-				.then((data) => this.#buffer = data)
-		}
-
-		play() {
-			if (!this.#buffer) return;
-			const source = this.#ctx.createBufferSource();
-			source.buffer = this.#buffer;
-			source.connect(this.#ctx.destination);
-			source.addEventListener("ended", () => source.disconnect());
-			source.start();
-		}
-
-		cleanup() {
-			this.#buffer = null;
-			this.#ctx.close();
-		}
-	}
-
-	const audio = new Audio('/paper-tear.mp3');
+	const $audio = document.getElementById('audio-player');
 
 	document.addEventListener('click', (ev: Event) => {
 		const $elem = ev.target as HTMLAnchorElement;
@@ -180,7 +151,7 @@ const primary = {
 		fetch($elem.href).then((res) => res.text()).then((str) => {
 			$host.insertAdjacentHTML('afterbegin', str);
 			$content?.classList.add('tearout');
-			audio.play();
+			$audio?.play();
 		});
 	});
 </script>

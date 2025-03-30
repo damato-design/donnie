@@ -4,16 +4,18 @@ import Section from '@components/Section.astro';
 import List from '@components/List.astro';
 export const partial = true;
 
-const media = await getCollection('media');
-const links = media.reduce((acc, entry) => {
-    return Object.assign(acc, {[entry.id]: `/media/${entry.id}`})
+const entries = await getCollection('media');
+const links = entries.reduce((acc, entry) => {
+    return Object.assign(acc, {[entry.data.title]: `/media/${entry.id}`})
 }, {});
+
+const color = '#d8f97a';
 ---
 
 <Section level="secondary">
-    <strong slot="leading">media</strong>
-    <List list={ links } target="main"/>
+    <h2 slot="leading" style={{ color }}>media</h2>
+    <List list={ links } target="main" colors={[color]}/>
     <div slot="trailing">
-        Check out my live talk show at 5pm ET every Tuesday.
+        Check out <a href="https://www.linkedin.com/in/fauxserious/recent-activity/events/">my live talk show</a> at 5pm ET every Tuesday.
     </div>
 </Section>

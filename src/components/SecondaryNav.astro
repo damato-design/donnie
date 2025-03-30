@@ -1,5 +1,6 @@
 ---
 import Section from "@components/Section.astro"
+import Arrow from '@assets/arrow.svg';
 ---
 
 <style>
@@ -11,12 +12,40 @@ import Section from "@components/Section.astro"
     #secondary > :global(*) {
         grid-area: 1 / 1 / -1 / -1;
     }
+
+    .arrow {
+        margin-top: 16px;
+        margin-bottom: auto;
+        width: 70px;
+    }
+
+    @media (max-width: 900px) {
+        #secondary:has(.arrow) {
+            position: relative;
+            -webkit-text-stroke: .5em var(--bg);
+            paint-order: stroke fill;
+        }
+
+        .arrow {
+            transform: scaleX(-1) translateX(100%) rotate(150deg) ;
+            position: absolute;
+            right: 0;
+            bottom: 50%;
+            z-index: -1;
+        }
+    }
+
+    p {
+        margin: 0;
+    }
 </style>
 
 <div id="secondary" aria-live="polite">
     <Section level="secondary">
-        <div slot="leading"/>
-        <slot/>
-        <div slot="trailing"/>
+        <p slot="leading">Use the navigation over here to explore the site.</p>
+        <div class="arrow">
+            <Arrow/>
+        </div>
+        <p slot="trailing">&copy; Donnie D'Amato. All rights reserved.</p>
     </Section>
 </div>
