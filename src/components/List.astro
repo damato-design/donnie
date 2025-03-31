@@ -1,12 +1,13 @@
 ---
+import NewWindow from '@assets/new-window.svg';
 const { list, target, tabs, colors = ['currentColor'] } = Astro.props;
 ---
 
 <style>
     .list {
+        display: grid;
+        grid-template-columns: 1fr;
         perspective: 1000px;
-        display: flex;
-        flex-direction: column;
         gap: 16px;
         margin-block: 32px;
     }
@@ -39,14 +40,17 @@ const { list, target, tabs, colors = ['currentColor'] } = Astro.props;
     a {
         font-size: 1.2em;
         text-decoration-color: var(--item-color);
+        line-height: 1.2;
+        display: flex;
+        align-items: end;
+        gap: .5ch;
     }
 
     .list.tabs li a {
-        display: flex;
-        align-items: center;
         text-decoration: none;
         padding: .25em .5em;
         opacity: 0.8;
+        flex: 1;
     }
 </style>
 
@@ -58,6 +62,7 @@ const { list, target, tabs, colors = ['currentColor'] } = Astro.props;
                 <li style={`--rand: ${rand}; --item-color: ${colors.at(index) || colors.at(0)}`}>
                     <a href={href as string} data-target={target}>
                         {label}
+                        { !href.startsWith('/') && <NewWindow/> }
                     </a>
                 </li>
             );

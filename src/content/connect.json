@@ -1,8 +1,23 @@
 [
     {
         "id": 1,
-        "title": "label 1",
-        "link": "https://google.com",
+        "title": "LinkedIn",
+        "link": "https://linkedin.com/in/fauxserious",
+        "icon": "icon"
+    }, {
+        "id": 2,
+        "title": "Bluesky",
+        "link": "https://bsky.app/profile/donnie.damato.design",
+        "icon": "icon"
+    }, {
+        "id": 3,
+        "title": "Github",
+        "link": "https://github.com/fauxserious",
+        "icon": "icon"
+    }, {
+        "id": 4,
+        "title": "Mastodon",
+        "link": "https://social.design.systems/@donnie",
         "icon": "icon"
     }
 ]
