@@ -1,6 +1,7 @@
 ---
 const { level, rugged = true } = Astro.props;
 const Tag = typeof level === 'string' ? 'nav' : 'div';
+const rand = Math.random() * 10;
 ---
 
 <style>
@@ -28,11 +29,20 @@ const Tag = typeof level === 'string' ? 'nav' : 'div';
         font-size: .8em;
         text-wrap: balance;
     }
+
+    .leading :global(.scribble) {
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: -1;
+        transform-origin: center;
+        transform: translate(40%, -40%) rotate(calc(var(--rand) * -45deg));
+    }
 </style>
 
 <div>
     <div class:list={['section', { rugged }]}>
-        <div class="leading">
+        <div class="leading" style={{ '--rand': rand }}>
             <slot name="leading"/>
         </div>
         <Tag class="content" aria-label={ level }>

@@ -10,5 +10,8 @@
   },
   "dependencies": {
     "astro": "^5.5.5"
+  },
+  "devDependencies": {
+    "unist-util-visit": "^5.0.0"
   }
 }

@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import Section from '@components/Section.astro';
 import List from '@components/List.astro';
+import Scribble from '@assets/scribble.svg';
 export const partial = true;
 
 const entries = await getCollection('projects');
@@ -13,7 +14,7 @@ const color = '#f4dd66';
 ---
 
 <Section level="secondary">
-    <h2 slot="leading" style={{ color }}>projects</h2>
+    <h2 slot="leading">projects <Scribble fill={ color }/></h2>
     <List list={ links } target="main" colors={[color]}/>
     <div slot="trailing">
         Looking for some spicy design systems hot takes? Check out <a href="https://blog.damato.design">my blog</a>.

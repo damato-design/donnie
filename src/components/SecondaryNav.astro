@@ -22,6 +22,9 @@ import Arrow from '@assets/arrow.svg';
     @media (max-width: 900px) {
         #secondary:has(.arrow) {
             position: relative;
+        }
+
+        .stroke {
             -webkit-text-stroke: .5em var(--bg);
             paint-order: stroke fill;
         }
@@ -42,10 +45,10 @@ import Arrow from '@assets/arrow.svg';
 
 <div id="secondary" aria-live="polite">
     <Section level="secondary">
-        <p slot="leading">Use the navigation over here to explore the site.</p>
+        <p slot="leading" class="stroke">Use the navigation over here to explore the site.</p>
         <div class="arrow">
             <Arrow/>
         </div>
-        <p slot="trailing">&copy; Donnie D'Amato. All rights reserved.</p>
+        <p slot="trailing" class="stroke">&copy; Donnie D'Amato. All rights reserved.</p>
     </Section>
 </div>
