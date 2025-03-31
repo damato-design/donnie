@@ -8,4 +8,3 @@ date: 2024-07-08
 
 ![Strictly from Nowhere](https://www.youtube.com/watch?v=xLWBnZPwa_0)
 
-TODO: include synopsis.

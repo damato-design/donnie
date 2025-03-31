@@ -8,6 +8,5 @@ date: 2022-06-28
 
 ![What does a UX ARCHITECT do?](https://i.ytimg.com/vi/tevn_OlmiHw/maxresdefault.jpg)
 
-[Embedding disabled](https://www.youtube.com/watch?v=tevn_OlmiHw)
+[Watch on YouTube](https://www.youtube.com/watch?v=tevn_OlmiHw)
 
-TODO: include synopsis.

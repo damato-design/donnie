@@ -22,7 +22,7 @@ import Section from "@components/Section.astro"
         border-bottom: 1px solid 
     color-mix(in oklch, #888, transparent 70%);
         rotate: -3deg;
-        margin-block-end: 1.5lh;
+        margin-block: 1.5lh;
         transition: rotate .218s ease;
     }
 
@@ -34,8 +34,8 @@ import Section from "@components/Section.astro"
         text-align: center;
         text-wrap: pretty;
         font-family: "Permanent Marker", monspace;
-        letter-spacing: .1em;
         color: black;
+        font-size: 1.3em;
     }
 
     #main :global(figure iframe) {
@@ -52,6 +52,14 @@ import Section from "@components/Section.astro"
 
 <main id="main" aria-live="polite">
     <Section>
-        <slot/>
+        <h2>Design Systems Architect</h2>
+        <p>Hey, I'm Donnie! 👋</p>
+        <p>I’m a Design Systems Architect with a passion for making design and code work beautifully together. With a background in user-experience design, front-end engineering, and higher education, I build systems that aren’t just component libraries—they’re strategic frameworks that help teams move faster and smarter.</p>
+        <p>Over the years, I’ve tackled everything from enterprise applications to accessibility-first design solutions, always keeping users and maintainability in mind. I love bridging the gap between designers and developers, turning chaos into cohesion with scalable, intuitive systems.</p>
+        <p>I also have a strong connection to higher education, where I’ve mentored, taught, and shaped curricula in UX and web technologies. Sharing knowledge is just as important to me as building great systems—because the best design systems don’t just scale products, they scale people too.</p>
+        <figure style="max-width: 260px;">
+            <img src="/donnie.webp" alt="Donnie"/>
+            <figcaption>Donnie</figcaption>
+        </figure>
     </Section>
 </main>

@@ -9,4 +9,3 @@ date: 2022-05-07
 
 ![Design Systems Social Club](https://www.youtube.com/watch?v=wN5_JKnZtxM)
 
-TODO: include synopsis.

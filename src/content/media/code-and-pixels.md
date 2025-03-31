@@ -8,4 +8,3 @@ date: 2024-04-16
 
 ![Code & Pixels](https://youtu.be/3BOrvnyQAK0)
 
-TODO: include synopsis.

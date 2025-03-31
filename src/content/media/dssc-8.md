@@ -8,6 +8,5 @@ date: 2021-10-02
 
 ![Design Systems Social Club](https://i.ytimg.com/vi/hRi3VA6sEDA/maxresdefault.jpg)
 
-[Embedding Disabled](https://www.youtube.com/watch?v=hRi3VA6sEDA)
+[Watch on YouTube](https://www.youtube.com/watch?v=hRi3VA6sEDA)
 
-TODO: include synopsis.

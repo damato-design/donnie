@@ -8,4 +8,3 @@ date: 2023-09-27
 
 ![Token Operations](https://youtu.be/DBYcH5Al8u8)
 
-TODO: include synopsis.

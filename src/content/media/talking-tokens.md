@@ -8,4 +8,3 @@ date: 2025-02-28
 
 ![Talking Tokens](https://www.youtube.com/watch?v=TqyPBEjtycI)
 
-TODO: include synopsis.

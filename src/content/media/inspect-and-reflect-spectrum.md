@@ -8,4 +8,3 @@ date: 2025-02-07
 
 ![Inspect & Reflect, Adobe Spectrum](https://www.youtube.com/watch?v=q6ARBhKVqzY)
 
-TODO: include synopsis.

@@ -8,4 +8,3 @@ date: 2024-04-22
 
 ![State of Design Tokens](https://www.youtube.com/watch?v=HNEo0dop4oY)
 
-TODO: include synopsis.
