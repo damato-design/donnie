@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import Section from '@components/Section.astro';
 import List from '@components/List.astro';
-import Scribble from '@assets/scribble.svg';
 export const partial = true;
 
 const entries = await getCollection('expertise');
@@ -13,8 +12,8 @@ const links = entries.sort((a, b) => a.data.sort - b.data.sort).reduce((acc, ent
 const color = '#e370ae';
 ---
 
-<Section level="secondary">
-    <h2 slot="leading">expertise <Scribble fill={ color }/></h2>
+<Section level="secondary" color={ color }>
+    <h2 slot="leading">expertise</h2>
     <List list={ links } target="main" colors={[color]}/>
     <div slot="trailing">
         Looking for a more professional format? Check out <a href="https://resume.damato.design/donnie">my resume</a>.

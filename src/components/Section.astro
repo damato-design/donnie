@@ -1,7 +1,8 @@
 ---
-const { level, rugged = true } = Astro.props;
+import Scribble from '@assets/scribble.svg';
+const { level, color, rugged = true } = Astro.props;
 const Tag = typeof level === 'string' ? 'nav' : 'div';
-const rand = Math.random() * 10;
+const rand = Math.random() * 17;
 ---
 
 <style>
@@ -30,19 +31,34 @@ const rand = Math.random() * 10;
         text-wrap: balance;
     }
 
-    .leading :global(.scribble) {
+    .scribble {
         position: absolute;
         top: 0;
         right: 0;
         z-index: -1;
-        transform-origin: center;
-        transform: translate(40%, -40%) rotate(calc(var(--rand) * -45deg));
+        width: 150px;
+        height: 150px;
+        overflow: hidden;
+    }
+
+    .scribble :global(span) {
+        background: var(--color);
+        mask-image: url(scribble.png);
+        mask-size: 100% 100%;
+        display: block;
+        width: 100%;
+        height: 100%;
+        opacity: .8;
+        transform:
+            translate(20%, -20%)
+            rotate(calc(var(--rand) * 67deg));
     }
 </style>
 
 <div>
     <div class:list={['section', { rugged }]}>
-        <div class="leading" style={{ '--rand': rand }}>
+        { color && <div class="scribble" style={{ '--rand': rand, '--color': color }}><span/></div> }
+        <div class="leading">
             <slot name="leading"/>
         </div>
         <Tag class="content" aria-label={ level }>

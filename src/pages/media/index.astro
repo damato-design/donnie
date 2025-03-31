@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import Section from '@components/Section.astro';
 import List from '@components/List.astro';
-import Scribble from '@assets/scribble.svg';
 export const partial = true;
 
 const entries = await getCollection('media');
@@ -13,8 +12,8 @@ const links = entries.reduce((acc, entry) => {
 const color = '#d8f97a';
 ---
 
-<Section level="secondary">
-    <h2 slot="leading">media <Scribble fill={ color }/></h2>
+<Section level="secondary" color={ color }>
+    <h2 slot="leading">media</h2>
     <List list={ links } target="main" colors={[color]}/>
     <div slot="trailing">
         Check out <a href="https://www.linkedin.com/in/fauxserious/recent-activity/events/">my live talk show</a> at 5pm ET every Tuesday.
