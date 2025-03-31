@@ -5,7 +5,7 @@ import List from '@components/List.astro';
 export const partial = true;
 
 const entries = await getCollection('media');
-const links = entries.reduce((acc, entry) => {
+const links = entries.sort((a, b) => b.data.date - a.data.date).reduce((acc, entry) => {
     return Object.assign(acc, {[entry.data.title]: `/media/${entry.id}`})
 }, {});
 

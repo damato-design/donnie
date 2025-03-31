@@ -5,7 +5,6 @@ const metadata = z.object({
   title: z.string(),
   link: z.string().url(),
   date: z.date(),
-  image: z.string()
 });
 
 const expertise = defineCollection({

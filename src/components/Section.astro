@@ -13,6 +13,13 @@ const rand = Math.random() * 17;
         padding: 32px;
         height: 100%;
         background: var(--bg);
+        min-height: 100vh;
+    }
+
+    @media (max-width: 900px) {
+        .section {
+            min-height: auto;
+        }
     }
 
     nav.content {

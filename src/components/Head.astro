@@ -31,10 +31,6 @@ const ogImage = new URL('og-image.png', Astro.url);
     <meta name="twitter:creator" content="@donniedamato" />
     <meta name="twitter:creator:id" content="230538553" />
 
-    <link href="https://fonts.cdnfonts.com/css/permanent-marker" rel="stylesheet">
-    <link href="https://fonts.cdnfonts.com/css/penstand-125893" rel="stylesheet">
-
-
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
@@ -62,6 +58,20 @@ const ogImage = new URL('og-image.png', Astro.url);
     </script>
 
     <style is:global>
+        @font-face {
+            font-family: 'Penstand';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Penstand'), url('/Penstand.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-family: 'Permanent Marker';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Permanent Marker'), url('/PermanentMarker-Regular.woff2') format('woff2');
+        }
+
         *, :before, :after {
             box-sizing: border-box;
         }
@@ -86,7 +96,7 @@ const ogImage = new URL('og-image.png', Astro.url);
         }
 
         body[data-scheme="dark"] {
-            --bg: #111;
+            --bg: #222;
             --fg: #fcfcfc;
             --ac: ;
         }
@@ -96,6 +106,10 @@ const ogImage = new URL('og-image.png', Astro.url);
             font-weight: normal;
             font-size: 3em;
             margin: 0;
+            line-height:.7;
+            text-indent: -1ch;
+            margin-inline-start: 1ch;
+            text-wrap: balance;
         }
 
         a {
