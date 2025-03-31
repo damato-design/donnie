@@ -6,6 +6,8 @@ import Section from "@components/Section.astro"
     #main {
         flex: 5;
         display: grid;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     #main > :global(*) {
@@ -52,7 +54,7 @@ import Section from "@components/Section.astro"
 
 <main id="main" aria-live="polite">
     <Section>
-        <h2>Design Systems Architect</h2>
+        <h2 slot="leading">Design Systems Architect</h2>
         <p>Hey, I'm Donnie! 👋</p>
         <p>I’m a Design Systems Architect with a passion for making design and code work beautifully together. With a background in user-experience design, front-end engineering, and higher education, I build systems that aren’t just component libraries—they’re strategic frameworks that help teams move faster and smarter.</p>
         <p>Over the years, I’ve tackled everything from enterprise applications to accessibility-first design solutions, always keeping users and maintainability in mind. I love bridging the gap between designers and developers, turning chaos into cohesion with scalable, intuitive systems.</p>

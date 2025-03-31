@@ -21,86 +21,8 @@ const primary = {
 		height: 100vh;
 		background: color-mix(in oklch, var(--bg), var(--fg) 20%);
 		overflow: hidden;
-		--rotate: -10deg;
-		--abs-rotate: max(var(--rotate), -1 * var(--rotate));
-		--amount: 110%;
-		--duration: .8s;
-		--timing: ease-in-out;
 	}
-
-	/** TODO: attach tearout to [aria-live] region for full size */
-
-	.tearout {
-		scrollbar-width: 0;
-		position: relative;
-	}
-
-	[aria-live] {
-		overflow-x: hidden;
-		overflow-y: auto;
-	}
-
-	[aria-live]:has(.tearout) {
-		overflow-x: visible;
-		overflow-y: clip;
-	}
-
-	.tearout > * {
-		clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
-		animation-name: hide-vertical;
-		animation-duration: var(--duration);
-		animation-timing-function: var(--timing);
-		animation-fill-mode: forwards;
-	}
-
-	.tearout:after {
-		content: '';
-        display: block;
-        position: absolute;
-        rotate: var(--rotate);
-        transform-origin: top left;
-		background: linear-gradient(var(--rotate),
-			color-mix(in oklch, var(--bg), black 10%),
-			color-mix(in oklch, var(--bg), white 10%));
-        z-index: 1;
-        filter: url(#rugged) drop-shadow(-16px 16px 20px rgba(20, 20, 20, .2));
-		top: 0%;
-		height: 0%;
-		max-height: 100vh;
-		max-width: 100vw;
-		width: calc(100% / cos(var(--abs-rotate)));
-		animation-name: tear-vertical;
-		animation-duration: var(--duration);
-		animation-timing-function: var(--timing);
-		animation-fill-mode: forwards;
-	}
-
-	@keyframes tear-vertical {
-		to {
-			top: calc(var(--amount));
-			height: var(--amount);
-		}
-	}
-
-	@keyframes hide-vertical {
-		to {
-			clip-path: polygon(0 var(--amount), 100% var(--amount), 100% 100%, 0% 100%);
-		}
-	}
-
-	@keyframes tear-horizontal {
-		to {
-			left: calc(var(--amount));
-			width: var(--amount);
-		}
-	}
-
-	@keyframes hide-horizontal {
-		to {
-			clip-path: polygon(var(--amount) 0, 100% 0, 100% 100%, var(--amount) 100%);
-		}
-	}
-
+	
 	@media (max-width: 900px) {
 		body {
 			flex-direction: column;
@@ -108,26 +30,6 @@ const primary = {
 			min-height: 100vh;
 			overflow-y: auto;
 			overflow-x: hidden;
-		}
-
-		[aria-live],
-		[aria-live]:has(.tearout) {
-			overflow: visible;
-		}
-
-		.tearout {
-			contain: layout;
-		}
-
-		.tearout > * {
-			animation-name: hide-horizontal;
-		}
-
-		.tearout:after {
-			left: 0%;
-			width: 0%;
-			height: calc(100% / cos(var(--abs-rotate)));
-			animation-name: tear-horizontal;
 		}
 	}
 
@@ -155,10 +57,9 @@ const primary = {
 		const target = $elem.dataset.target as string;
 		const $host = document.getElementById(target) as HTMLElement;
 		const $content = $host.firstElementChild;
-		$content?.addEventListener('animationend', () => $content.remove());
 		fetch($elem.href).then((res) => res.text()).then((str) => {
 			$host.insertAdjacentHTML('afterbegin', str);
-			$content?.classList.add('tearout');
+			$content.remove();
 			$audio?.play();
 		});
 	});
