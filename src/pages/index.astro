@@ -103,12 +103,16 @@ const primary = {
 			height: auto;
 			min-height: 100vh;
 			overflow-y: auto;
-			overflow-x: clip;
+			overflow-x: hidden;
 		}
 
 		[aria-live],
 		[aria-live]:has(.tearout) {
 			overflow: visible;
+		}
+
+		.tearout {
+			contain: layout;
 		}
 
 		.tearout > * {
