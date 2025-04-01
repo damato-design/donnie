@@ -1,58 +1,9 @@
 ---
-import Section from "@components/Section.astro"
+import Section from "@components/Section.astro";
+import Tearout from '@components/Tearout.astro';
 ---
 
-<style>
-    #main {
-        flex: 5;
-        display: grid;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-
-    #main > :global(*) {
-        grid-area: 1 / 1 / -1 / -1;
-    }
-
-    #main :global(figure) {
-        background-color: #fff;
-        padding: 1rem;
-        box-shadow: 0 2px 2px 0 
-    color-mix(in oklch, #888, transparent 80%);
-        max-width: 100%;
-        margin: 0;
-        border-bottom: 1px solid 
-    color-mix(in oklch, #888, transparent 70%);
-        rotate: -3deg;
-        margin-block: 1.5lh;
-        transition: rotate .218s ease;
-    }
-
-    #main :global(figure:hover) {
-        rotate: 0deg;
-    }
-
-    #main :global(figcaption) {
-        text-align: center;
-        text-wrap: pretty;
-        font-family: "Permanent Marker", monspace;
-        color: black;
-        font-size: 1.3em;
-    }
-
-    #main :global(figure iframe) {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 16/9;
-    }
-
-    #main :global(img) {
-        max-width: 100%;
-    }
-
-</style>
-
-<main id="main" aria-live="polite">
+<Tearout id="main" aria-live="polite" style="flex: 5">
     <Section>
         <h2 slot="leading">Design Systems Architect</h2>
         <p>Hey, I'm Donnie! 👋</p>
@@ -64,4 +15,4 @@ import Section from "@components/Section.astro"
             <figcaption>Donnie</figcaption>
         </figure>
     </Section>
-</main>
+</Tearout>

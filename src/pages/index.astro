@@ -57,9 +57,17 @@ const primary = {
 		const target = $elem.dataset.target as string;
 		const $host = document.getElementById(target) as HTMLElement;
 		const $content = $host.firstElementChild;
+
+		// Check for motion
+		$host.addEventListener('animationend', () => {
+			$content.remove();
+			$host.classList.remove('tearout');
+		});
+		$host.classList.add('tearout');
+
 		fetch($elem.href).then((res) => res.text()).then((str) => {
 			$host.insertAdjacentHTML('afterbegin', str);
-			$content.remove();
+			// if no motion, remove $content
 			$audio?.play();
 		});
 	});

@@ -5,6 +5,7 @@ import List from '@components/List.astro';
 import SchemeToggle from '@components/SchemeToggle.astro';
 import AudioToggle from '@components/AudioToggle.astro';
 import MotionToggle from '@components/MotionToggle.astro';
+import Tearout from '@components/Tearout.astro';
 
 const primary = {
 	Expertise: '/expertise',
@@ -22,18 +23,6 @@ const colors = [
 ---
 
 <style>
-    #primary {
-        flex: 1 1 200px;
-        display: grid;
-        align-items: start;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-
-    #primary > :global(*) {
-        grid-area: 1 / 1 / -1 / -1;
-    }
-
     a {
         text-decoration: none;
     }
@@ -45,7 +34,7 @@ const colors = [
     }
 </style>
 
-<div id="primary" aria-live="polite">
+<Tearout id="primary" aria-live="polite" style="flex: 2">
     <Section level="primary">
         <a slot="leading" href="/">
             <Logo/>
@@ -57,4 +46,4 @@ const colors = [
             <MotionToggle/>
         </div>
     </Section>
-</div>
+</Tearout>

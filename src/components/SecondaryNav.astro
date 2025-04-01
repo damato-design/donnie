@@ -1,31 +1,21 @@
 ---
 import Section from "@components/Section.astro"
 import Arrow from '@assets/arrow.svg';
+import Tearout from '@components/Tearout.astro';
 ---
 
 <style>
-    #secondary {
-        flex: 3;
-        display: grid;
-        align-items: start;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-
-    #secondary > :global(*) {
-        grid-area: 1 / 1 / -1 / -1;
-    }
-
     .arrow {
         margin-top: 16px;
         margin-bottom: auto;
         width: 70px;
     }
 
+    p {
+        margin: 0;
+    }
+
     @media (max-width: 900px) {
-        #secondary:has(.arrow) {
-            position: relative;
-        }
 
         .stroke {
             -webkit-text-stroke: .5em var(--bg);
@@ -33,20 +23,15 @@ import Arrow from '@assets/arrow.svg';
         }
 
         .arrow {
-            transform: scaleX(-1) translateX(100%) rotate(150deg) ;
+            transform: scaleX(-1) translateX(100%) rotate(100deg) ;
             position: absolute;
             right: 0;
-            bottom: 50%;
-            z-index: -1;
+            top: -25%;
         }
-    }
-
-    p {
-        margin: 0;
     }
 </style>
 
-<div id="secondary" aria-live="polite">
+<Tearout id="secondary" aria-live="polite" style="flex: 3">
     <Section level="secondary">
         <p slot="leading" class="stroke">Use the navigation over here to explore the site.</p>
         <div class="arrow">
@@ -54,4 +39,4 @@ import Arrow from '@assets/arrow.svg';
         </div>
         <p slot="trailing" class="stroke">&copy; Donnie D'Amato. All rights reserved.</p>
     </Section>
-</div>
+</Tearout>

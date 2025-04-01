@@ -6,13 +6,15 @@ const rand = Math.random() * 17;
 ---
 
 <style>
+    .page {
+        background: var(--bg);
+    }
+
     .section {
         grid-area: 1 / 1 / -1 / -1;
         display: flex;
         flex-direction: column;
         padding: 32px;
-        height: 100%;
-        background: var(--bg);
         min-height: 100vh;
     }
 
@@ -42,7 +44,7 @@ const rand = Math.random() * 17;
         position: absolute;
         top: 0;
         right: 0;
-        z-index: -1;
+        z-index: 0;
         width: 150px;
         height: 150px;
         overflow: hidden;
@@ -60,10 +62,46 @@ const rand = Math.random() * 17;
             translate(20%, -20%)
             rotate(calc(var(--rand) * 67deg));
     }
+
+    .content :global(figure) {
+        background-color: #fff;
+        padding: 1rem;
+        box-shadow: 0 2px 2px 0 
+    color-mix(in oklch, #888, transparent 80%);
+        max-width: 100%;
+        margin: 0;
+        border-bottom: 1px solid 
+    color-mix(in oklch, #888, transparent 70%);
+        rotate: -3deg;
+        margin-block: 1.5lh;
+        transition: rotate .218s ease;
+    }
+
+    .content :global(figure:hover) {
+        rotate: 0deg;
+    }
+
+    .content :global(figcaption) {
+        text-align: center;
+        text-wrap: pretty;
+        font-family: "Permanent Marker", monspace;
+        color: black;
+        font-size: 1.3em;
+    }
+
+    .content :global(figure iframe) {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16/9;
+    }
+
+    .content :global(img) {
+        max-width: 100%;
+    }
 </style>
 
-<div>
-    <div class:list={['section', { rugged }]}>
+<div class="page">
+    <div class:list={['section']}>
         { color && <div class="scribble" style={{ '--rand': rand, '--color': color }}><span/></div> }
         <div class="leading">
             <slot name="leading"/>
