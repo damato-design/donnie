@@ -70,12 +70,11 @@ const primary = {
 		const $host = document.getElementById(target) as HTMLElement;
 		const $content = $host.firstElementChild;
 
-		const remove = allowMotion($host, $content);
-
 		fetch($elem.href).then((res) => res.text()).then((str) => {
+			$audio?.play();
+			const remove = allowMotion($host, $content);
 			$host.insertAdjacentHTML('afterbegin', str);
 			remove?.remove();
-			$audio?.play();
 		});
 	});
 </script>
