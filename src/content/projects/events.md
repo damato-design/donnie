@@ -4,6 +4,8 @@ link: https://ds.events
 date: 2023-09-19
 ---
 
+![ds.events](https://ds.events/og-image.png)
+
 The design systems practice has a worldwide audience looking for ways of connecting. While many platforms can help host events, they aren't often specific to any one group.
 
 > How might we help easily find the next gathering for folks interested in design systems?

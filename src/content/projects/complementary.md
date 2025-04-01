@@ -4,6 +4,8 @@ link: https://complementary.space
 date: 2022-11-15
 ---
 
+![complementary.space](https://complementary.space/og-image.jpg)
+
 Semantic tokens have been a helpful concept in the world of design systems. Their utility is clear when supporting dark mode and other branding needs. While the construction of these is well understood for style properties such as color and typography, other facets of design have eluded us for some time.
 
 > How might we support semantic spacing tokens?

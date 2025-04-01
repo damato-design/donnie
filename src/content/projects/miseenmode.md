@@ -4,6 +4,8 @@ link: https://mode.place
 date: 2023-11-02
 ---
 
+![mode.place](https://mode.place/og-image.png)
+
 One of the concepts that has been challenging in design systems is allowing for expressive fragments of a larger experience. For example, highlighting a premium product in an otherwise consistently styled pricing page experience. These moments are seemingly unsystematic and deviate based on marketing trends and needs.
 
 > How might we allow to create freedoms of expression while aligning with system expectations?
