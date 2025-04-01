@@ -60,6 +60,13 @@ import MotionOff from '@assets/motion-off.svg';
         localStorage.setItem(id, $checkbox.checked);
     });
 
+    function getPreference() {
+        if (typeof localStorage.getItem(id) === 'string') return localStorage.getItem(id) === 'true';
+        if (window.matchMedia('(prefers-reduced-motion: no-preference)')) return true;
+        if (window.matchMedia('(prefers-color-scheme: reduce)')) return false;
+        return $checkbox.checked;
+    }
+
     $checkbox.checked = localStorage.getItem(id) !== 'false';
 
 </script>

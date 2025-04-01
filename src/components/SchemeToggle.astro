@@ -64,7 +64,7 @@ import DarkMode from '@assets/dark-mode.svg';
         if (typeof localStorage.getItem(id) === 'string') return localStorage.getItem(id) === 'true' ? 'light' : 'dark';
         if (window.matchMedia('(prefers-color-scheme: light)')) return 'light';
         if (window.matchMedia('(prefers-color-scheme: dark)')) return 'dark';
-        $checkbox.checked ? 'light' : 'dark';
+        return $checkbox.checked ? 'light' : 'dark';
     }
 
     $checkbox.checked = localStorage.getItem(id) !== 'false';

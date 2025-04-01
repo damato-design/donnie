@@ -7,7 +7,6 @@
         overflow-y: auto;
         overflow-x: clip;
         background: var(--bg);
-
     }
 
     .host.tearout {
@@ -24,7 +23,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 100vh;
         position: absolute;
         border: 1px solid #eee;
         background: linear-gradient(10deg,
@@ -45,6 +44,7 @@
 		animation-duration: .6s;
         animation-timing-function: linear;
         animation-fill-mode: forwards;
+        max-height: 100vh;
     }
 
     @keyframes tear-vertical {
@@ -116,6 +116,7 @@
 
         .host.tearout > :global(:last-child)  {
             animation-name: reveal-horizontal;
+            max-height: auto;
         }
     }
 </style>

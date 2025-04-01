@@ -50,6 +50,18 @@ const primary = {
 <script>
 	const $audio = document.getElementById('audio-player');
 
+	function allowMotion($parent, $child) {
+		if (localStorage.getItem('motion-toggle') === 'false') return $child;
+
+		$parent.addEventListener('animationend', () => {
+			$child.remove();
+			$parent.classList.remove('tearout');
+		});
+		$parent.classList.add('tearout');
+
+		return { remove: Function.prototype }
+	}
+
 	document.addEventListener('click', (ev: Event) => {
 		const $elem = ev.target as HTMLAnchorElement;
 		if (!$elem || !$elem.dataset.target) return;
@@ -58,16 +70,11 @@ const primary = {
 		const $host = document.getElementById(target) as HTMLElement;
 		const $content = $host.firstElementChild;
 
-		// Check for motion
-		$host.addEventListener('animationend', () => {
-			$content.remove();
-			$host.classList.remove('tearout');
-		});
-		$host.classList.add('tearout');
+		const remove = allowMotion($host, $content);
 
 		fetch($elem.href).then((res) => res.text()).then((str) => {
 			$host.insertAdjacentHTML('afterbegin', str);
-			// if no motion, remove $content
+			remove?.remove();
 			$audio?.play();
 		});
 	});
