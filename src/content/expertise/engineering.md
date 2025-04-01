@@ -3,8 +3,6 @@ title: Engineering
 sort: 2
 ---
 
-## Engineering
-
 Cardigan YOLO roof party tote bag, vape mumblecore tumeric. Schlitz sustainable banh mi af typewriter vinyl helvetica. Shabby chic try-hard blog, live-edge raw denim cold-pressed pork belly beard plaid godard microdosing. Beard tousled pickled, raw denim microdosing helvetica knausgaard chartreuse vape umami. Raclette green juice quinoa PBR&B, grailed leggings poke tattooed.
 
 Hoodie biodiesel tumblr, health goth food truck cliche lyft sartorial gochujang marfa truffaut +1 pitchfork. Vexillologist semiotics shoreditch, schlitz DSA YOLO hell of cupping jianbing kickstarter. Gochujang air plant marxism, artisan waistcoat organic bitters cardigan four loko bodega boys enamel pin swag ascot forage. Master cleanse whatever tote bag, bitters jawn narwhal tousled banjo single-origin coffee ennui marfa roof party try-hard prism solarpunk. Lomo truffaut fingerstache selfies twee try-hard.

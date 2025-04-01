@@ -3,8 +3,6 @@ title: Design
 sort: 1
 ---
 
-## Design
-
 Cardigan YOLO roof party tote bag, vape mumblecore tumeric. Schlitz sustainable banh mi af typewriter vinyl helvetica. Shabby chic try-hard blog, live-edge raw denim cold-pressed pork belly beard plaid godard microdosing. Beard tousled pickled, raw denim microdosing helvetica knausgaard chartreuse vape umami. Raclette green juice quinoa PBR&B, grailed leggings poke tattooed.
 
 ![designtokens.fyi](https://designtokens.fyi/og-image.png)
