@@ -15,6 +15,12 @@ import Tearout from '@components/Tearout.astro';
         margin: 0;
     }
 
+    img {
+        opacity: .1;
+        max-width: 300px;
+        margin-left: auto;
+    }
+
     @media (max-width: 900px) {
 
         .stroke {
@@ -29,6 +35,10 @@ import Tearout from '@components/Tearout.astro';
             top: -25%;
             z-index: -1;
         }
+
+        img {
+            display: none;
+        }
     }
 </style>
 
@@ -38,6 +48,7 @@ import Tearout from '@components/Tearout.astro';
         <div class="arrow">
             <Arrow/>
         </div>
+        <img src="/stain.png"/>
         <p slot="trailing" class="stroke">&copy; Donnie D'Amato. All rights reserved.</p>
     </Section>
 </Tearout>
