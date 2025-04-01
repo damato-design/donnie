@@ -102,6 +102,19 @@ const rand = Math.random() * 17;
         max-width: 100%;
         border: 1px solid #eee;
     }
+
+    .content :global(blockquote) {
+        margin: 0;
+        padding-inline: .5em;
+        display: flow-root;
+        border-left: .25em solid #8888;
+        font-size: 1.2em;
+        background: color-mix(in oklch, var(--bg), var(--fg) 5%);
+    }
+
+    .content :global(blockquote p) {
+        margin: .5em;
+    }
 </style>
 
 <div class="page rugged">
