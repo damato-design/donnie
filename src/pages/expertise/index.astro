@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import Section from '@components/Section.astro';
+import List from '@components/List.astro';
+export const partial = true;
+
+const entries = await getCollection('expertise');
+const links = entries.sort((a, b) => a.data.sort - b.data.sort).reduce((acc, entry) => {
+    return Object.assign(acc, {[entry.data.title]: `/expertise/${entry.id}`})
+}, {});
+
+const color = '#e370ae';
+---
+
+<Section level="secondary" color={ color }>
+    <h2 slot="leading">expertise</h2>
+    <List list={ links } target="main" colors={[color]}/>
+    <div slot="trailing">
+        Looking for a more professional format? Check out <a href="https://resume.damato.design/donnie">my resume</a>.
+    </div>
+</Section>

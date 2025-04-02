@@ -1,1 +1,28 @@
-# [donnie.damato.design](https://donnie.damato.design)
+- home, logo (1)
+- expertise (1)
+  - design (2)
+  - engineering (2)
+  - education (2)
+  - resume (2 bottom)
+- projects (1)
+  - list all projects (2)
+    - title (3)
+    - description
+    - link
+    - date
+    - thumbnail
+  - blog (2 bottom)
+- media (1)
+  - list all media appearances (2)
+    - link (3)
+    - title
+    - description
+    - date
+    - thumbnail
+  - wireframe (2 bottom)
+- connect (1)
+  - repeated bento options (2)
+    - About (3)
+  - cal.com (2 bottom)
+  
+https://codepen.io/dannydjones/pen/jOrryKw

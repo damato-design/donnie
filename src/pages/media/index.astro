@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import Section from '@components/Section.astro';
+import List from '@components/List.astro';
+export const partial = true;
+
+const entries = await getCollection('media');
+const links = entries.sort((a, b) => b.data.date - a.data.date).reduce((acc, entry) => {
+    return Object.assign(acc, {[entry.data.title]: `/media/${entry.id}`})
+}, {});
+
+const color = '#d8f97a';
+---
+
+<Section level="secondary" color={ color }>
+    <h2 slot="leading">media</h2>
+    <List list={ links } target="main" colors={[color]}/>
+    <div slot="trailing">
+        Check out <a href="https://www.linkedin.com/in/fauxserious/recent-activity/events/">my live talk show</a> at 5pm ET every Tuesday.
+    </div>
+</Section>

@@ -1,0 +1,66 @@
+---
+import MotionOn from '@assets/motion-on.svg';
+import MotionOff from '@assets/motion-off.svg';
+---
+
+<style>
+    label {
+        cursor: pointer;
+        display: flex;
+    }
+
+    label:has(:focus-visible) {
+        outline: 5px auto Highlight;
+        outline: 5px auto -webkit-focus-ring-color;
+    }
+
+    input[type="checkbox"] {
+        position: absolute;
+        scale: 0;
+    }
+
+    input[type="checkbox"]:not(:checked) ~ :global(#motion-on),
+    input[type="checkbox"]:checked ~ :global(#motion-off) {
+        display: none;
+    }
+
+</style>
+
+<label for="motion-toggle" title="Motion Switch">
+    <input
+        type="checkbox"
+        id="motion-toggle"
+        aria-label="motion switch"
+        checked/>
+    <MotionOn/>
+    <MotionOff/>
+</label>
+
+<script>
+
+    const id = 'motion-toggle';
+    const $checkbox = document.getElementById(id);
+
+    const $audio = document.getElementById('audio-player');
+    const $audioCheckbox = document.getElementById('audio-toggle');
+
+    $checkbox.addEventListener('change', () => {
+        localStorage.setItem(id, $checkbox.checked);
+
+        if ($checkbox.checked) return;
+        // Mute the audio also
+        $audioCheckbox.checked = false;
+        localStorage.setItem('audio-toggle', false);
+        $audio.muted = true;
+    });
+
+    function getPreference() {
+        if (typeof localStorage.getItem(id) === 'string') return localStorage.getItem(id) === 'true';
+        if (window.matchMedia('(prefers-reduced-motion: no-preference)')) return true;
+        if (window.matchMedia('(prefers-color-scheme: reduce)')) return false;
+        return $checkbox.checked;
+    }
+
+    $checkbox.checked = getPreference();
+
+</script>

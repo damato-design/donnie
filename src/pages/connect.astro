@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import Section from '@components/Section.astro';
+import List from '@components/List.astro';
+import Scribble from '@assets/scribble.svg';
+export const partial = true;
+
+const entries = await getCollection('connect');
+const links = entries.reduce((acc, entry) => {
+    return Object.assign(acc, {[entry.data.title]: entry.data.link})
+}, {});
+
+const color = '#79c5f4';
+---
+
+<Section level="secondary" color={ color }>
+    <h2 slot="leading">connect</h2>
+    <List list={ links } colors={[color]}/>
+    <div slot="trailing">
+        Want to book time to chat? Check out <a href="https://cal.com/donnie-damato">my calendar</a>.
+    </div>
+</Section>

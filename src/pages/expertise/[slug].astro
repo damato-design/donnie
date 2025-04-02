@@ -1,0 +1,22 @@
+---
+import { getCollection, render } from 'astro:content';
+import Section from '@components/Section.astro';
+export const partial = true;
+
+export async function getStaticPaths() {
+    const entries = await getCollection('expertise');
+    return entries.map((entry) => {
+        return {
+            params: { slug: entry.id },
+            props: { entry },
+        }
+    });
+}
+
+const { Content } = await render(Astro.props.entry);
+---
+
+<Section>
+    <h2 slot="leading">{ Astro.props.entry.data.title }</h2>
+    <Content/>
+</Section>

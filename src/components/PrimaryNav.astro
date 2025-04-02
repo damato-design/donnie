@@ -1,0 +1,54 @@
+---
+import Section from "@components/Section.astro";
+import Logo from "@components/Logo.astro";
+import List from '@components/List.astro';
+import SchemeToggle from '@components/SchemeToggle.astro';
+import AudioToggle from '@components/AudioToggle.astro';
+import MotionToggle from '@components/MotionToggle.astro';
+import Help from '@assets/help.svg';
+import Tearout from '@components/Tearout.astro';
+
+const primary = {
+	Expertise: '/expertise',
+	Projects: '/projects',
+	Media: '/media',
+	Connect: '/connect'
+}
+
+const colors = [
+    '#e370ae',
+    '#f4dd66',
+    '#d8f97a',
+    '#79c5f4',
+];
+---
+
+<style>
+    a {
+        text-decoration: none;
+    }
+
+    .toggles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1vw;
+        align-items: center;
+    }
+</style>
+
+<Tearout id="primary" aria-live="polite" style="flex: 2; min-width: max-content;">
+    <Section level="primary">
+        <a slot="leading" href="/">
+            <Logo/>
+        </a>
+        <List list={ primary } target="secondary" colors={ colors } tabs/>
+        <div slot="trailing" class="toggles">
+            <SchemeToggle/>
+            <AudioToggle/>
+            <MotionToggle/>
+            <a href="/help" data-target="secondary" title="Help">
+                <Help/>
+            </a>
+        </div>
+    </Section>
+</Tearout>

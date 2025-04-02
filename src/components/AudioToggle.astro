@@ -1,0 +1,55 @@
+---
+import VolumeOn from '@assets/volume-on.svg';
+import VolumeOff from '@assets/volume-off.svg';
+---
+
+<style>
+    label {
+        cursor: pointer;
+        display: flex;
+    }
+
+    label:has(:focus-visible) {
+        outline: 5px auto Highlight;
+        outline: 5px auto -webkit-focus-ring-color;
+    }
+
+    input[type="checkbox"] {
+        position: absolute;
+        scale: 0;
+    }
+
+    input[type="checkbox"]:not(:checked) ~ :global(#volume-on),
+    input[type="checkbox"]:checked ~ :global(#volume-off) {
+        display: none;
+    }
+
+</style>
+
+<label for="audio-toggle" title="Volume Switch">
+    <input
+        type="checkbox"
+        id="audio-toggle"
+        aria-label="volume switch"
+        checked/>
+    <VolumeOn/>
+    <VolumeOff/>
+</label>
+
+<audio src="/paper-tear.mp3" preload="auto" id="audio-player"/>
+
+<script>
+
+    const id = 'audio-toggle';
+    const $audio = document.getElementById('audio-player');
+
+    const $checkbox = document.getElementById(id);
+    $checkbox.addEventListener('change', () => {
+        localStorage.setItem(id, $checkbox.checked);
+        $audio.muted = localStorage.getItem(id) === 'false';
+    });
+
+    $checkbox.checked = localStorage.getItem(id) !== 'false';
+    $audio.muted = localStorage.getItem(id) === 'false';
+
+</script>
