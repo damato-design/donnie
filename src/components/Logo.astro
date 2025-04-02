@@ -3,7 +3,7 @@ import Note from '@assets/note.svg';
 ---
 
 <style>
-    span {
+    .desk {
         font-size: .6em;
         text-transform: uppercase;
         font-weight: bold;
@@ -14,9 +14,17 @@ import Note from '@assets/note.svg';
         padding-block-end: 4px;
         margin-block-end: 16px;
     }
+
+    h1 {
+        display: flex;
+        flex-direction: column;
+    }
 </style>
 
 <div>
-    <span>From the desk of <Note/></span>
-    <h1>Donnie D'Amato</h1>
+    <span class="desk">From the desk of <Note/></span>
+    <h1>
+        <span>Donnie</span>
+        <span style="padding-inline-start: 1ch">D'Amato</span>
+    </h1>
 </div>
