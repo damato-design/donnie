@@ -114,9 +114,27 @@ const ogImage = new URL('og-image.png', Astro.url);
             text-wrap: balance;
         }
 
+        :where(h3) {
+            font-size: 2em;
+            margin-block: 0;
+        }
+
         a {
             color: inherit;
             text-underline-offset: .15em;
+        }
+
+        .sticker {
+            padding: .5rem;
+            font-size: 2.5rem;
+            user-select: none;
+            stroke: color-mix(in oklch, white, var(--bg) 82%);
+            stroke-width: 29%;
+            stroke-linejoin: round;
+            paint-order: stroke fill;
+            overflow: visible;
+            filter: drop-shadow(1px 1px 1px rgba(20, 20, 20, .2));
+            pointer-events: none;
         }
     </style>
 </head>

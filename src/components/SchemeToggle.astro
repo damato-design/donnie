@@ -6,27 +6,12 @@ import DarkMode from '@assets/dark-mode.svg';
 <style>
     label {
         cursor: pointer;
-        padding: .5rem;
-        font-size: 2em;
-        user-select: none;
         display: flex;
     }
 
     label:has(:focus-visible) {
         outline: 5px auto Highlight;
         outline: 5px auto -webkit-focus-ring-color;
-    }
-
-    label :global(svg) {
-        fill: #B672E8;
-        stroke: color-mix(in oklch, white, var(--bg) 82%);
-        stroke-width: 25%;
-        stroke-linejoin: round;
-        paint-order: stroke fill;
-        overflow: visible;
-        filter: drop-shadow(1px 1px 1px rgba(20, 20, 20, .2));
-        rotate: 10deg;
-        pointer-events: none;
     }
 
     input[type="checkbox"] {

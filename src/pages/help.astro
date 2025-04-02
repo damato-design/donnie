@@ -1,0 +1,28 @@
+---
+import Section from '@components/Section.astro';
+import Help from '@components/Help.astro';
+import LightMode from '@assets/light-mode.svg';
+import VolumeOn from '@assets/volume-on.svg';
+import MotionOn from '@assets/motion-on.svg';
+export const partial = true;
+---
+
+
+<Section level="secondary">
+    <h2 slot="leading">help</h2>
+    <Help>
+        <LightMode slot="icon"/>
+        <h3 slot="title">Scheme switch</h3>
+        <p>Switch between light and dark color schemes.</p>
+    </Help>
+    <Help>
+        <VolumeOn slot="icon"/>
+        <h3 slot="title">Volume switch</h3>
+        <p>Toggle the paper-ripping sound effects on and off.</p>
+    </Help>
+    <Help>
+        <MotionOn slot="icon"/>
+        <h3 slot="title">Motion switch</h3>
+        <p>Toggle the page-ripping animation on and off. </p>
+    </Help>
+</Section>
