@@ -18,8 +18,8 @@ import MotionOff from '@assets/motion-off.svg';
     }
 
     label :global(svg) {
-        fill:rgb(197, 197, 84);
-        stroke: color-mix(in oklch, white, var(--bg) 70%);
+        fill: #8E9A05;
+        stroke: color-mix(in oklch, white, var(--bg) 82%);
         stroke-width: 30%;
         stroke-linejoin: round;
         paint-order: stroke fill;
@@ -54,10 +54,19 @@ import MotionOff from '@assets/motion-off.svg';
 <script>
 
     const id = 'motion-toggle';
-
     const $checkbox = document.getElementById(id);
+
+    const $audio = document.getElementById('audio-player');
+    const $audioCheckbox = document.getElementById('audio-toggle');
+
     $checkbox.addEventListener('change', () => {
         localStorage.setItem(id, $checkbox.checked);
+
+        if ($checkbox.checked) return;
+        // Mute the audio also
+        $audioCheckbox.checked = false;
+        localStorage.setItem('audio-toggle', false);
+        $audio.muted = true;
     });
 
     function getPreference() {
@@ -67,6 +76,6 @@ import MotionOff from '@assets/motion-off.svg';
         return $checkbox.checked;
     }
 
-    $checkbox.checked = localStorage.getItem(id) !== 'false';
+    $checkbox.checked = getPreference();
 
 </script>
