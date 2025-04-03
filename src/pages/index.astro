@@ -71,6 +71,7 @@ const primary = {
 
 		fetch($elem.href).then((res) => res.text()).then((str) => {
 			$audio?.play();
+			$host.scrollIntoView({ behavior: 'smooth' });
 			const remove = allowMotion($host, $content);
 			$host.insertAdjacentHTML('afterbegin', str);
 			remove?.remove();
