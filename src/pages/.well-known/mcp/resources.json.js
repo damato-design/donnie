@@ -10,7 +10,7 @@ async function makeResource(category) {
         mimeType: 'text/markdown',
         markdown: post.body,
         ...post.data,
-        date: post.data.date.toISOString()
+        date: post?.data?.date?.toISOString()
     }));
 }
 
