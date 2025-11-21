@@ -5,8 +5,8 @@ async function makeResource(category) {
     const posts = await getCollection(category);
 
     return posts.map((post) => ({
-        name: post.slug,
-        uri: `https://donnie.damato.design/${category}/${post.slug}`,
+        name: post.id,
+        uri: `https://donnie.damato.design/${category}/${post.id}`,
         mimeType: 'text/markdown',
         markdown: post.body,
         ...post.data,
