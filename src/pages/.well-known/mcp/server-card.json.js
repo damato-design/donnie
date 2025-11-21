@@ -14,7 +14,8 @@ export const GET = async (req) => {
             {
                 name: `${name}-resources`,
                 uri,
-                mimeType: "application/json"
+                mimeType: "application/json",
+                type: 'resource_link'
             }
         ]
     };

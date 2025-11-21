@@ -8,6 +8,7 @@ async function makeResource(category) {
         name: post.id,
         uri: `https://donnie.damato.design/${category}/${post.id}`,
         mimeType: 'text/markdown',
+        type: 'resource_link',
         text: post.body,
         _meta: post.data
     }));
