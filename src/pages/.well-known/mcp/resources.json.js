@@ -17,8 +17,9 @@ async function makeResource(category) {
 export const GET = async () => {
   const expertise = await makeResource('expertise');
   const projects = await makeResource('projects');
-  const media = await getCollection('media');
-  const connect = await getCollection('connect');
+  const media = await makeResource('media');
+  const connect = await makeResource('connect');
+
   const body = {
     resources: [].concat(expertise, projects, media, connect)
   };
