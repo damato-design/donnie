@@ -19,8 +19,11 @@ export const GET = async () => {
   const projects = await makeResource('projects');
   const media = await getCollection('media');
   const connect = await getCollection('connect');
+  const body = {
+    resources: [].concat(expertise, projects, media, connect)
+  };
 
-  return new Response(JSON.stringify([].concat(expertise, projects, media, connect), null, 2), {
+  return new Response(JSON.stringify(body, null, 2), {
     status: 200,
     headers: {
       'Content-Type': 'application/json',
