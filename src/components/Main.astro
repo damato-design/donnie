@@ -1,18 +1,12 @@
 ---
+import { marked } from "marked";
 import Section from "@components/Section.astro";
 import Tearout from '@components/Tearout.astro';
+import intro from  '../intro.md?raw';
 ---
 
 <Tearout id="main" aria-live="polite" style="flex: 5">
     <Section>
-        <h2 slot="leading">Design Systems Architect</h2>
-        <p>Hey, I'm Donnie! 👋</p>
-        <p>I’m a Design Systems Architect with a passion for making design and code work beautifully together. With a background in user-experience design, front-end engineering, and higher education, I build systems that aren’t just component libraries—they’re strategic frameworks that help teams move faster and smarter.</p>
-        <p>Over the years, I’ve tackled everything from enterprise applications to accessibility-first design solutions, always keeping users and maintainability in mind. I love bridging the gap between designers and developers, turning chaos into cohesion with scalable, intuitive systems.</p>
-        <p>I also have a strong connection to higher education, where I’ve mentored, taught, and shaped curricula in UX and web technologies. Sharing knowledge is just as important to me as building great systems—because the best design systems don’t just scale products, they scale people too.</p>
-        <figure style="max-width: 260px;">
-            <img src="/donnie.webp" alt="Donnie"/>
-            <figcaption>Donnie</figcaption>
-        </figure>
+        <div set:html={ marked.parse(intro) }/>
     </Section>
 </Tearout>

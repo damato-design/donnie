@@ -9,7 +9,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.5.5"
+    "astro": "^5.5.5",
+    "marked": "^17.0.1",
+    "mdast-util-from-markdown": "^2.0.2",
+    "mdast-util-to-markdown": "^2.1.2",
+    "unist-builder": "^4.0.0"
   },
   "devDependencies": {
     "unist-util-visit": "^5.0.0"

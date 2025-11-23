@@ -1,6 +1,9 @@
 ---
-const { title = "Donnie D'Amato", description = "Design Systems Architect" } =
-    Astro.props;
+import metadata from "../metadata.json";
+const { 
+    title = metadata.title,
+    description = metadata.description,
+} = Astro.props;
 const ogImage = new URL("og-image.png", Astro.url);
 
 const schema = {
@@ -13,7 +16,7 @@ const schema = {
         "@type": "Person",
         name: "Donnie D'Amato",
         alternateName: "donniedamato",
-        description: "Design Systems Architect",
+        description,
         image: "http://donnie.damato.design/images/donnie.jpg",
         sameAs: [
             "https://twitter.com/donniedamato",
@@ -24,11 +27,6 @@ const schema = {
             "https://adplist.org/mentors/donnie-damato",
             "https://www.threads.net/@donniedamato",
         ],
-    },
-    hasPart: {
-        "@type": "DataCatalog",
-        name: "MCP resources",
-        url: `${Astro.url.origin}/.well-known/mcp/resources.json`,
     },
 };
 ---
@@ -53,7 +51,6 @@ const schema = {
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-    <link rel="alternate" type="application/json" href="/.well-known/mcp/resources.json">
     <meta name="msapplication-TileColor" content="#b91d47" />
     <meta name="theme-color" content="#ffffff" />
     <meta name="twitter:card" content="summary" />
