@@ -4,7 +4,7 @@ import { glob, file } from 'astro/loaders';
 const metadata = z.object({
   title: z.string(),
   link: z.string().url(),
-  date: z.date(),
+  date: z.date()
 });
 
 const expertise = defineCollection({
