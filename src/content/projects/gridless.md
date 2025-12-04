@@ -1,10 +1,10 @@
 ---
 title: Gridless Design
 link: https://gridless.design
+image: https://gridless.design/og-image.jpg
+caption: gridless.design
 date: 2021-07-15
 ---
-
-![gridless.design](https://gridless.design/og-image.jpg)
 
 Grids have been a foundational design tool for decades and perhaps much longer. It would seem ubiquitous to any design practice. However, the web was built as a different medium and it is inappropriate to consider it in the same way as more traditional forms of the past. The act of overlaying a grid onto existing alignment algorithms is arguably more trouble than the results are worth.
 

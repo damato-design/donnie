@@ -1,9 +1,7 @@
 ---
 import metadata from "../metadata.json";
-const { 
-    title = metadata.title,
-    description = metadata.description,
-} = Astro.props;
+const { title = metadata.title, description = metadata.description } =
+    Astro.props;
 const ogImage = new URL("og-image.png", Astro.url);
 
 const schema = {
@@ -142,6 +140,30 @@ const schema = {
             overflow: visible;
             filter: drop-shadow(1px 1px 1px rgba(20, 20, 20, 0.2));
             pointer-events: none;
+        }
+
+        figure {
+            background-color: #fff;
+            padding: 1rem;
+            box-shadow: 0 2px 2px 0 color-mix(in oklch, #888, transparent 80%);
+            max-width: 100%;
+            margin: 0;
+            border-bottom: 1px solid color-mix(in oklch, #888, transparent 70%);
+            rotate: -3deg;
+            margin-block: 1.5lh;
+            transition: rotate 0.218s ease;
+
+            &:hover {
+                rotate: 0deg;
+            }
+        }
+
+        figcaption {
+            text-align: center;
+            text-wrap: pretty;
+            font-family: "Permanent Marker", monospace;
+            color: black;
+            font-size: 1.3em;
         }
     </style>
 </head>

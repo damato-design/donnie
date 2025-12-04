@@ -1,0 +1,20 @@
+---
+const { link, image, caption } = Astro.props;
+---
+
+<style>
+    /** Styles don't work here */
+</style>
+
+<>
+    {
+        image && (
+            <figure>
+                <a href={link}>
+                    <img src={image} style="max-width: 100%; 1px solid #eee" />
+                    <figcaption>{caption}</figcaption>
+                </a>
+            </figure>
+        )
+    }
+</>

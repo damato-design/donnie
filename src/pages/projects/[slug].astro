@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Section from '@components/Section.astro';
+import Image from '@components/Image.astro'
 export const partial = true;
 
 export async function getStaticPaths() {
@@ -13,10 +14,13 @@ export async function getStaticPaths() {
     });
 }
 
-const { Content } = await render(Astro.props.entry);
+const { entry } = Astro.props;
+const { title, ...rest } = entry.data;
+const { Content } = await render(entry);
 ---
 
 <Section>
-    <h2 slot="leading">{ Astro.props.entry.data.title }</h2>
+    <h2 slot="leading">{ title }</h2>
+    <Image { ...rest } />
     <Content/>
 </Section>

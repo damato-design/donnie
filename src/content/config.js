@@ -4,6 +4,8 @@ import { glob, file } from 'astro/loaders';
 const metadata = z.object({
   title: z.string(),
   link: z.string().url(),
+  image: z.string().url().optional(),
+  caption: z.string().optional(),
   date: z.date()
 });
 

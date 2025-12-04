@@ -1,10 +1,10 @@
 ---
 title: DAMATO Design System
 link: https://system.damato.design
+image: https://system.damato.design/og-image.png
+caption: DAMATO Design System
 date: 2022-04-12
 ---
-
-![DAMATO Design System](https://system.damato.design/og-image.png)
 
 This was a personal project in design systems; to create a system without business influence. This was to strictly focus on what pieces can use similar design elements while providing the proper affordance for users to achieve their goals.
 

@@ -64,44 +64,6 @@ const rand = Math.random() * 17;
             rotate(calc(var(--rand) * 67deg));
     }
 
-    .content :global(figure) {
-        background-color: #fff;
-        padding: 1rem;
-        box-shadow: 0 2px 2px 0 
-    color-mix(in oklch, #888, transparent 80%);
-        max-width: 100%;
-        margin: 0;
-        border-bottom: 1px solid 
-    color-mix(in oklch, #888, transparent 70%);
-        rotate: -3deg;
-        margin-block: 1.5lh;
-        transition: rotate .218s ease;
-    }
-
-    .content :global(figure:hover) {
-        rotate: 0deg;
-    }
-
-    .content :global(figcaption) {
-        text-align: center;
-        text-wrap: pretty;
-        font-family: "Permanent Marker", monspace;
-        color: black;
-        font-size: 1.3em;
-    }
-
-    .content :global(figure iframe) {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 16/9;
-        border: 1px solid #eee;
-    }
-
-    .content :global(figure img) {
-        max-width: 100%;
-        border: 1px solid #eee;
-    }
-
     .content :global(blockquote) {
         margin: 0;
         padding-inline: .5em;
