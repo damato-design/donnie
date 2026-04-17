@@ -1,5 +1,6 @@
 ---
 title: Itemize
+summary: Led front-end development and UX improvements at an early-stage startup, rebuilding their web app and redesigning the data-entry experience.
 link: https://itemize.com
 date: 2015-05-15
 ---

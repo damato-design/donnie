@@ -1,5 +1,6 @@
 ---
 title: Galvanize
+summary: Volunteered to lead intro-to-coding meetups at Galvanize NYC, teaching HTML, CSS, and JavaScript to diverse audiences through real-world analogies.
 link: https://galvanize.com
 date: 2017-09-01
 ---

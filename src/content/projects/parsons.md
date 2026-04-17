@@ -1,5 +1,6 @@
 ---
 title: Parsons School of Design
+summary: Facilitated user research and interaction design courses at Parsons, guiding students through research studies, wireframes, and prototype development.
 link: https://newschool.edu/parsons
 date: 2020-01-30
 ---

@@ -1,5 +1,6 @@
 ---
 title: Mise en Mode
+summary: A design systems technique using nested modes and scoped semantic tokens to enable expressive design fragments within a consistent system.
 link: https://mode.place
 image: https://mode.place/og-image.png
 caption: mode.place

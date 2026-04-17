@@ -1,5 +1,6 @@
 ---
 title: designtokens.fyi
+summary: A community reference project defining and standardizing nearly three dozen design token terms to improve shared language across the design systems practice.
 link: https://designtokens.fyi
 image: https://designtokens.fyi/og-image.png
 caption: designtokens.fyi

@@ -3,6 +3,7 @@ import { glob, file } from 'astro/loaders';
 
 const metadata = z.object({
   title: z.string(),
+  summary: z.string().optional(),
   link: z.string().url(),
   image: z.string().url().optional(),
   caption: z.string().optional(),
@@ -13,6 +14,7 @@ const expertise = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/expertise' }),
   schema: z.object({
     title: z.string(),
+    summary: z.string().optional(),
     sort: z.number()
   })
 });

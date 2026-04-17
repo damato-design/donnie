@@ -1,5 +1,6 @@
 ---
 title: The Stand Up
+summary: A podcast conversation on building trustworthy products through design systems, prioritizing user needs and functionality over aesthetics.
 link: https://www.youtube.com/watch?v=V6kcv9BBmDg
 image: https://i3.ytimg.com/vi/V6kcv9BBmDg/maxresdefault.jpg
 caption: A Pretty UI Does Nothing

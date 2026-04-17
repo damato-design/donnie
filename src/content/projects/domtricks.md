@@ -1,5 +1,6 @@
 ---
 title: DOM-Tricks
+summary: A documentation-as-code project where each content page is generated directly from tested, JSDoc-annotated JavaScript source files.
 link: https://dom-tricks.com
 date: 2020-04-03
 ---

@@ -1,5 +1,6 @@
 ---
 title: NextUp
+summary: A tournament management platform that automated bracket progression and competitor notifications via SMS to reduce manual coordination at gaming events.
 link: https://nextup.me
 date: 2014-07-27
 ---

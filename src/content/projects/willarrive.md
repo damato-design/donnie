@@ -1,5 +1,6 @@
 ---
 title: willarrive.in
+summary: A minimal progressive web app that uses geolocation to instantly show when the next train arrives at the nearest station on a chosen line.
 link: https://willarrive.in
 date: 2016-03-22
 ---

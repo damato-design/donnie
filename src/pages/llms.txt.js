@@ -21,7 +21,7 @@ function collectionToSection(title, entries) {
       const label = entry.data?.title;
       const mdPath = new URL(`/${entry.collection}/${entry.id}.md`, origin);
       const date = entry.data?.date;
-      const description = entry.body ? mdastToPlainText(fromMarkdown(entry.body)) : '';
+      const description = entry.data?.summary ?? '';
 
       const dateStr = date
         ? new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(date)

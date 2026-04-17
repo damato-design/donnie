@@ -1,5 +1,6 @@
 ---
 title: Converge 2025, Creativity within Constraints
+summary: Converge 2025 talk arguing that constraints—including design systems—unlock richer, more focused creativity rather than limiting it.
 link: https://webinars.zeroheight.com/videos/2e30a1a5-7a29-4c2a-8c0b-7a14736874b9
 image: https://converge.zeroheight.com/images/thumbnail-donnie-damato.jpg
 caption: Creativity within Constraints

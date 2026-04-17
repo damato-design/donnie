@@ -1,5 +1,6 @@
 ---
 title: Compass
+summary: Built and grew Compass's design system from a prototype component library into a cross-organizational resource supporting design consistency and engineering teams.
 link: https://compass.com
 date: 2017-04-15
 ---
