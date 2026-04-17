@@ -27,13 +27,8 @@ function collectionToSection(title, entries) {
         ? new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(date)
         : null;
 
-      const suffix = dateStr && description
-        ? `: ${dateStr} \u2014 ${description}`
-        : dateStr
-          ? `: ${dateStr}`
-          : description
-            ? `: ${description}`
-            : '';
+      const parts = [dateStr, description].filter(Boolean).join(' \u2014 ');
+      const suffix = parts ? `: ${parts}` : '';
 
       return u('listItem', [
         u('paragraph', [
