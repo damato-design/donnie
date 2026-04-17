@@ -20,10 +20,20 @@ function collectionToSection(title, entries) {
     entries.map(entry => {
       const label = entry.data?.title;
       const mdPath = new URL(`/${entry.collection}/${entry.id}.md`, origin);
+      const date = entry.data?.date;
+      const description = entry.body ? mdastToPlainText(fromMarkdown(entry.body)) : '';
+
+      const dateStr = date
+        ? new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(date)
+        : null;
+
+      const parts = [dateStr, description].filter(Boolean).join(' \u2014 ');
+      const suffix = parts ? `: ${parts}` : '';
 
       return u('listItem', [
         u('paragraph', [
-          u('link', { url: mdPath }, [u('text', label)])
+          u('link', { url: mdPath }, [u('text', label)]),
+          ...(suffix ? [u('text', suffix)] : [])
         ])
       ]);
     })
