@@ -1,5 +1,6 @@
 ---
 title: Code & Pixels, Ep. 15
+summary: Episode 15 of the Code & Pixels podcast covering design systems and front-end development topics.
 link: https://youtu.be/3BOrvnyQAK0
 image: https://i3.ytimg.com/vi/3BOrvnyQAK0/maxresdefault.jpg
 caption: Code & Pixels

@@ -1,5 +1,6 @@
 ---
 title: Design
+summary: Creates scalable design systems that balance consistency with creativity, focusing on accessibility, usability, and cross-disciplinary alignment.
 sort: 1
 ---
 

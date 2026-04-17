@@ -1,5 +1,6 @@
 ---
 title: GoDaddy
+summary: Led GoDaddy's UXCore component library, introducing CSS Custom Properties-based theming and evolving the library toward composable, semantic token architecture.
 link: https://godaddy.com
 date: 2019-07-28
 ---

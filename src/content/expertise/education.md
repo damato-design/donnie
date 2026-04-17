@@ -1,5 +1,6 @@
 ---
 title: Education
+summary: Develops UX and front-end engineering curricula that bridge industry and academia through hands-on, real-world design systems education.
 sort: 3
 ---
 

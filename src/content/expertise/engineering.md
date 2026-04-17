@@ -1,5 +1,6 @@
 ---
 title: Engineering
+summary: Specializes in building scalable UI architectures, component libraries, and design system integrations that bridge design and front-end development.
 sort: 2
 ---
 

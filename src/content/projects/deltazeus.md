@@ -1,5 +1,6 @@
 ---
 title: deltazeus
+summary: A passive weather notification service that sends RSS feed updates only when the weather changes significantly from the previous day.
 link: https://deltazeus.com
 date: 2015-03-22
 ---
