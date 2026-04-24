@@ -1,80 +1,58 @@
 ---
-import Head from "@components/Head.astro";
-import PrimaryNav from "@components/PrimaryNav.astro";
-import SecondaryNav from "@components/SecondaryNav.astro";
-import Main from "@components/Main.astro";
-import Rugged from "@components/Rugged.astro";
-import List from '@components/List.astro';
+import Head from '../components/Head.astro';
+import { getCollection } from 'astro:content';
+import { marked } from 'marked';
+import introMd from '../intro.md?raw';
 
-const primary = {
-	Expertise: '/expertise',
-	Projects: '/projects',
-	Media: '/media',
-	Connect: '/connect'
-}
+const introHtml = marked(introMd);
+
+const expertise = (await getCollection('expertise')).sort((a, b) => a.data.sort - b.data.sort);
+const projects = (await getCollection('projects')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const media = (await getCollection('media')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
-<!doctype html>
-<html lang="en">
-  <Head {...Astro.props} />
-  <body>
-    <PrimaryNav/>
-	<SecondaryNav/>
-	<Main/>
-	<Rugged/>
-    <script async defer src="https://scripts.withcabin.com/hello.js"></script>
-  </body>
+<html>
+    <Head />
+    <body>
+        <style is:global>
+            html {
+                scroll-behavior: auto;
+            }
+        </style>
+        <main id="content">
+            <section>
+                <div set:html={introHtml} />
+            </section>
+
+            <section>
+                <h2>Expertise</h2>
+                {expertise.map((item) => (
+                    <article>
+                        <h3>{item.data.title}</h3>
+                        {item.data.summary && <p>{item.data.summary}</p>}
+                    </article>
+                ))}
+            </section>
+
+            <section>
+                <h2>Projects</h2>
+                {projects.map((item) => (
+                    <article>
+                        <h3><a href={item.data.link}>{item.data.title}</a></h3>
+                        {item.data.summary && <p>{item.data.summary}</p>}
+                    </article>
+                ))}
+            </section>
+
+            <section>
+                <h2>Media</h2>
+                {media.map((item) => (
+                    <article>
+                        <h3><a href={item.data.link}>{item.data.title}</a></h3>
+                        {item.data.summary && <p>{item.data.summary}</p>}
+                    </article>
+                ))}
+            </section>
+        </main>
+    </body>
 </html>
-
-<style>
-	body {
-		display: flex;
-		gap: 1px;
-		height: 100vh;
-		background-color: color-mix(in oklch, var(--bg), var(--fg) 20%);
-		overflow: hidden;
-	}
-	
-	@media (max-width: 900px) {
-		body {
-			flex-direction: column;
-			height: auto;
-			min-height: 100vh;
-			overflow: auto;
-		}
-	}
-
-</style>
-
-<script>
-	const $audio = document.getElementById('audio-player');
-
-	function allowMotion($parent, $child) {
-		if (localStorage.getItem('motion-toggle') === 'false') return $child;
-
-		$parent.addEventListener('animationend', () => {
-			$child.remove();
-			$parent.classList.remove('tearout');
-		});
-		$parent.classList.add('tearout');
-
-		return { remove: Function.prototype }
-	}
-
-	document.addEventListener('click', (ev: Event) => {
-		const $elem = ev.target as HTMLAnchorElement;
-		if (!$elem || !$elem.dataset.target) return;
-		ev.preventDefault();
-		const target = $elem.dataset.target as string;
-		const $host = document.getElementById(target) as HTMLElement;
-		const $content = $host.firstElementChild;
-
-		fetch($elem.href).then((res) => res.text()).then((str) => {
-			$audio?.play();
-			$host.scrollIntoView({ behavior: 'smooth' });
-			const remove = allowMotion($host, $content);
-			$host.insertAdjacentHTML('afterbegin', str);
-			remove?.remove();
-		});
-	});
-</script>
