@@ -19,6 +19,19 @@ const media = (await getCollection('media')).sort((a, b) => b.data.date.getTime(
 <html>
     <Head />
     <body>
+            <svg style="height: 0; width: 0; position: absolute;">
+        <filter id="realistic-gold" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur"/>
+            
+            <feSpecularLighting in="blur" surfaceScale="5" specularConstant="1.2" specularExponent="35" lighting-color="#fff7c2" result="specOut">
+            <fePointLight x="-5000" y="-10000" z="10000"/>
+            </feSpecularLighting>
+            
+            <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
+            <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+        </filter>
+        </svg>
+
             <main id="content">
                 <Hero/>
                 <p>

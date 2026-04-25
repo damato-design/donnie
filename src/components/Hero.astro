@@ -6,15 +6,11 @@ const introHtml = marked(introMd);
 const { cloned } = Astro.props;
 ---
 
-<section class={cloned ? 'cloned' : undefined}>
+<section style={{ overflow: cloned ? 'hidden' : 'auto' }}>
     <div set:html={introHtml} />
 </section>
 
 <style>
-    .cloned {
-        overflow: hidden;
-    }
-
     section {
         padding: 16px;
         height: 100vh;

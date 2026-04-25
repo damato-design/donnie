@@ -59,21 +59,30 @@ const schema = {
 
     <style is:global>
         @font-face {
-            font-family: "Penstand";
+            font-family: "Mother";
             font-style: normal;
             font-weight: 400;
             src:
-                local("Penstand"),
-                url("/Penstand.woff2") format("woff2");
+                local("Mother"),
+                url("/Mother-Regular.woff2") format("woff2");
         }
 
         @font-face {
-            font-family: "Permanent Marker";
+            font-family: "Daeling";
             font-style: normal;
             font-weight: 400;
             src:
-                local("Permanent Marker"),
-                url("/PermanentMarker-Regular.woff2") format("woff2");
+                local("Daeling"),
+                url("/Daeling-Regular.woff2") format("woff2");
+        }
+
+        @font-face {
+            font-family: "Kentish";
+            font-style: normal;
+            font-weight: 400;
+            src:
+                local("Kentish"),
+                url("/Kentish-Regular.woff2") format("woff2");
         }
 
         *,
@@ -84,88 +93,54 @@ const schema = {
 
         html {
             scroll-behavior: smooth;
-            scrollbar-gutter: stable;
         }
 
         body {
             margin: 0;
             overscroll-behavior-y: none;
+            text-rendering: optimizeLegibility;
             font-family: system-ui;
-            text-rendering: optimizeSpeed; /* Makes wrapping more predictable */
-            color: color-mix(in oklch, var(--fg), var(--bg) 5%);
-            font-size: 1.2em;
             line-height: 1.5;
-        }
-
-        body[data-scheme="light"] {
-            --bg: #fcfcfc;
-            --fg: #111;
-            --ac: ;
-        }
-
-        body[data-scheme="dark"] {
-            --bg: #222;
-            --fg: #fcfcfc;
-            --ac: ;
-        }
-
-        :where(h1, h2, h3) {
-            font-family: "Penstand", cursive;
-            font-weight: normal;
-            font-size: 3em;
-            margin: 0;
-            margin-bottom: 1rem;
-            line-height: 0.7;
-            text-indent: -1ch;
-            margin-inline-start: 1ch;
-            text-wrap: balance;
-        }
-
-        :where(h3) {
-            font-size: 2em;
-            margin-block: 0;
+            background-color: #002515;
+            background-attachment: fixed;
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg"><filter id="crush"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="5" stitchTiles="stitch" result="noise"/><feColorMatrix in="noise" type="saturate" values="0" result="destat"/><feComponentTransfer in="destat" result="contrast"><feFuncR type="linear" slope="2" intercept="-0.5"/><feFuncG type="linear" slope="2" intercept="-0.5"/><feFuncB type="linear" slope="2" intercept="-0.5"/></feComponentTransfer></filter><rect width="100%" height="100%" filter="url(%23crush)" opacity="0.4" fill="white"/></svg>');
+            background-blend-mode: overlay;
+            color: white;
         }
 
         a {
             color: inherit;
-            text-underline-offset: 0.15em;
         }
 
-        .sticker {
-            padding: 0.5rem;
-            font-size: 2.5rem;
-            user-select: none;
-            stroke: color-mix(in oklch, white, var(--bg) 82%);
-            stroke-width: 29%;
-            stroke-linejoin: round;
-            paint-order: stroke fill;
-            overflow: visible;
-            filter: drop-shadow(1px 1px 1px rgba(20, 20, 20, 0.2));
-            pointer-events: none;
-        }
-
-        figure {
-            background-color: #fff;
-            padding: 1rem;
-            box-shadow: 0 2px 2px 0 color-mix(in oklch, #888, transparent 80%);
-            max-width: 100%;
+        :where(h1, h2, h3) {
+            font-family: "Kentish";
+            font-weight: normal;
             margin: 0;
-            border-bottom: 1px solid color-mix(in oklch, #888, transparent 70%);
-            rotate: -3deg;
-            margin-block: 1.5lh;
-            transition: rotate 0.218s ease;
+            padding-block: 0.5ex;
+            background: linear-gradient(
+                110deg,
+                #bf953f 0%,
+                /* Rich warm gold */ #fcf6ba 20%,
+                /* Bright champagne */ #b38728 40%,
+                /* Honey gold mid-tone */ #fcf6ba 50%,
+                /* Central glint */ #bf953f 65%,
+                /* Warm gold */ #fcf6ba 85%,
+                /* Finishing highlight */ #aa771c 100% /* Soft bronze edge */
+            );
 
-            &:hover {
-                rotate: 0deg;
-            }
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: url(#realistic-gold)
+                drop-shadow(2px 3px 5px rgba(0, 0, 0, 0.4));
+
+            /* 3. The "Sheen" Layer */
+            /* A very faint, bright stroke gives the thin parts of Kentish a metallic edge */
+            -webkit-text-stroke: 0.3px rgba(255, 252, 224, 0.4);
         }
 
-        figcaption {
-            text-align: center;
-            text-wrap: pretty;
-            font-family: "Permanent Marker", monospace;
-            color: black;
-            font-size: 1.3em;
+        h2 {
+            font-size: 3.5rem;
         }
     </style>
 </head>
