@@ -1,11 +1,18 @@
 ---
-import Head from '@components/Head.astro';
-import Hero from '@components/Hero.astro';
-import { getCollection } from 'astro:content';
+import Head from "@components/Head.astro";
+import Hero from "@components/Hero.astro";
+import Navigation from "@components/Navigation.astro";
+import { getCollection } from "astro:content";
 
-const expertise = (await getCollection('expertise')).sort((a, b) => a.data.sort - b.data.sort);
-const projects = (await getCollection('projects')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
-const media = (await getCollection('media')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const expertise = (await getCollection("expertise")).sort(
+    (a, b) => a.data.sort - b.data.sort,
+);
+const projects = (await getCollection("projects")).sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+const media = (await getCollection("media")).sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
 ---
 
 <style>
@@ -14,69 +21,78 @@ const media = (await getCollection('media')).sort((a, b) => b.data.date.getTime(
         overscroll-behavior: none;
         scrollbar-gutter: stable;
     }
+
+    main {
+        max-width: 80ch;
+        margin: 0 auto;
+    }
 </style>
 
 <html>
     <Head />
     <body>
-            <svg style="height: 0; width: 0; position: absolute;">
-        <filter id="realistic-gold" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur"/>
-            
-            <feSpecularLighting in="blur" surfaceScale="5" specularConstant="1.2" specularExponent="35" lighting-color="#fff7c2" result="specOut">
-            <fePointLight x="-5000" y="-10000" z="10000"/>
-            </feSpecularLighting>
-            
-            <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
-            <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
-        </filter>
-        </svg>
+        <Navigation />
+        <main id="content">
+            <Hero navigation="Home" />
+            <p>
+                <a href="https://google.com">Contact me</a> for work inquiries, collaborations,
+                or just to say hi!
+            </p>
 
-            <main id="content">
-                <Hero/>
-                <p>
-                    <a href="https://google.com">Contact me</a> for work inquiries, collaborations, or just to say hi!
-                </p>
-                
-                <section>
-                    <h2>Expertise</h2>
-                    {expertise.map((item) => (
+            <section data-navigation="Expertise">
+                <h2>Expertise</h2>
+                {
+                    expertise.map((item) => (
                         <article>
                             <h3>{item.data.title}</h3>
                             {item.data.summary && <p>{item.data.summary}</p>}
                         </article>
-                    ))}
-                </section>
+                    ))
+                }
+            </section>
 
-                <section>
-                    <h2>Projects</h2>
-                    {projects.map((item) => (
+            <section data-navigation="Projects">
+                <h2>Projects</h2>
+                {
+                    projects.map((item) => (
                         <article>
-                            <h3><a href={item.data.link}>{item.data.title}</a></h3>
+                            <h3>
+                                <a href={item.data.link}>{item.data.title}</a>
+                            </h3>
                             {item.data.summary && <p>{item.data.summary}</p>}
                         </article>
-                    ))}
-                </section>
+                    ))
+                }
+            </section>
 
-                <section>
-                    <h2>Media</h2>
-                    {media.map((item) => (
+            <section data-navigation="Media">
+                <h2>Media</h2>
+                {
+                    media.map((item) => (
                         <article>
-                            <h3><a href={item.data.link}>{item.data.title}</a></h3>
+                            <h3>
+                                <a href={item.data.link}>{item.data.title}</a>
+                            </h3>
                             {item.data.summary && <p>{item.data.summary}</p>}
                         </article>
-                    ))}
-                </section>
-                <Hero cloned/>
-            </main>
-            <script>
-                window.addEventListener('scroll', () => {
+                    ))
+                }
+            </section>
+            <Hero cloned />
+        </main>
+        <script>
+            window.addEventListener(
+                "scroll",
+                () => {
                     const { scrollY, innerHeight } = window;
-                    const maxScroll = document.documentElement.scrollHeight - innerHeight;
+                    const maxScroll =
+                        document.documentElement.scrollHeight - innerHeight;
                     if (scrollY >= maxScroll) {
-                        window.scrollTo({ top: 0, behavior: 'instant' });
+                        window.scrollTo({ top: 0, behavior: "instant" });
                     }
-                }, { passive: true });
-            </script>
+                },
+                { passive: true },
+            );
+        </script>
     </body>
 </html>

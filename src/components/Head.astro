@@ -101,10 +101,8 @@ const schema = {
             inset: 0;
             background: radial-gradient(
                 circle farthest-corner at center,
-                transparent 20%,
-                rgba(0, 20, 10, 0.2) 50%,
-                rgba(0, 5, 2, 0.7) 90%,
-                rgba(0, 0, 0, 0.85) 100%
+                transparent,
+                rgba(0, 0, 0, 0.85) 150%
             );
             pointer-events: none;
         }
@@ -161,8 +159,6 @@ const schema = {
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            filter: url(#realistic-gold)
-                drop-shadow(2px 3px 5px rgba(0, 0, 0, 0.4));
             -webkit-text-stroke: 0.3px rgba(255, 252, 224, 0.4);
         }
 

@@ -3,10 +3,10 @@ import { marked } from 'marked';
 import introMd from '../intro.md?raw';
 
 const introHtml = marked(introMd);
-const { cloned } = Astro.props;
+const { cloned, navigation } = Astro.props;
 ---
 
-<section style={{ overflow: cloned ? 'hidden' : 'auto' }}>
+<section data-navigation={navigation} style={{ overflow: cloned ? 'hidden' : 'auto' }}>
     <div set:html={introHtml} />
 </section>
 

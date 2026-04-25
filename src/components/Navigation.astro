@@ -1,0 +1,120 @@
+<style>
+    @property --light {
+        syntax: "<color>";
+        inherits: false;
+        initial-value: rgb(65, 59, 27);
+    }
+
+    nav {
+        position: fixed;
+        inset: 0;
+        left: auto;
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        filter: drop-shadow(0 10px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        text-align: right;
+        font-family: "Kentish";
+        position: relative;
+        padding-block: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        corner-shape: bevel;
+        border-radius: 2rem;
+        border: 2px double gold;
+        background: linear-gradient(45deg, #2e0119, #250014);
+
+        a {
+            font-size: 0;
+            background:
+                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.85) 0%, transparent 10%),
+                radial-gradient(circle, white 0%, var(--light) 15%, #0a0500 38%, black 48%, transparent 49%);
+            display: block;
+            aspect-ratio: 1;
+            width: 3rem;
+            transition: --light .3s ease;
+            padding: 1rem;
+        }
+
+        a[aria-current] {
+            --light: gold;
+        }
+
+        a::before {
+            content: attr(data-label);
+            position: absolute;
+            font-size: 1rem;
+            right: 100%;
+            top: 2rem;
+            background: linear-gradient(to bottom, #000000, #241024);
+            border: 1px solid #3d0039;
+            transition: 0.3s ease;
+            transform-origin: top right;
+            text-decoration: none;
+            padding: 0.5rem 1em;
+            border-radius: 3px;
+            z-index: -1;
+        }
+
+        a:not([aria-current])::before {
+            rotate: -90deg;
+        }
+    }
+</style>
+
+<nav>
+    <ul></ul>
+</nav>
+
+<script>
+    const navList = document.querySelector("nav ul")!;
+    const sections = Array.from(
+        document.querySelectorAll<HTMLElement>("[data-navigation]"),
+    );
+
+    for (const section of sections) {
+        const label = section.dataset.navigation!;
+        const id = label.toLowerCase().replace(/\s+/g, "-");
+        section.id = id;
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="#${id}" data-label="${label}">${label}</a>`;
+        navList.appendChild(li);
+    }
+
+    const links = Array.from(navList.querySelectorAll<HTMLAnchorElement>("a"));
+    const visible = new Set<Element>();
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) {
+                    visible.add(entry.target);
+                } else {
+                    visible.delete(entry.target);
+                }
+            }
+            const active = sections.find((s) => visible.has(s)) ?? null;
+            for (const link of links) {
+                const id = link.getAttribute("href")!.slice(1);
+                if (active?.id === id) {
+                    link.setAttribute("aria-current", "location");
+                } else {
+                    link.removeAttribute("aria-current");
+                }
+            }
+        },
+        { rootMargin: "0px 0px -50% 0px", threshold: 0 },
+    );
+
+    for (const section of sections) {
+        observer.observe(section);
+    }
+</script>

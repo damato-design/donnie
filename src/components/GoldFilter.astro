@@ -1,0 +1,37 @@
+<style is:global>
+    :where(h1, h2, h3) {
+        filter: url(#realistic-gold) drop-shadow(2px 3px 5px rgba(0, 0, 0, 0.4));
+    }
+</style>
+
+<svg style="height: 0; width: 0; position: absolute;">
+    <filter id="realistic-gold" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur"
+        ></feGaussianBlur>
+
+        <feSpecularLighting
+            in="blur"
+            surfaceScale="5"
+            specularConstant="1.2"
+            specularExponent="35"
+            lighting-color="#fff7c2"
+            result="specOut"
+        >
+            <fePointLight x="-5000" y="-10000" z="10000"></fePointLight>
+        </feSpecularLighting>
+
+        <feComposite
+            in="specOut"
+            in2="SourceAlpha"
+            operator="in"
+            result="specOut"></feComposite>
+        <feComposite
+            in="SourceGraphic"
+            in2="specOut"
+            operator="arithmetic"
+            k1="0"
+            k2="1"
+            k3="1"
+            k4="0"></feComposite>
+    </filter>
+</svg>
