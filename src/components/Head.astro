@@ -84,12 +84,14 @@ const schema = {
 
         html {
             scroll-behavior: smooth;
+            scrollbar-gutter: stable;
         }
 
         body {
             margin: 0;
             overscroll-behavior-y: none;
             font-family: system-ui;
+            text-rendering: optimizeSpeed; /* Makes wrapping more predictable */
             color: color-mix(in oklch, var(--fg), var(--bg) 5%);
             font-size: 1.2em;
             line-height: 1.5;

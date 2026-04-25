@@ -1,0 +1,80 @@
+---
+---
+
+<div id="canvas-root">
+  <slot />
+</div>
+
+<style is:global>
+  html {
+    scroll-behavior: auto;
+    overscroll-behavior: none;
+    scrollbar-gutter: stable;
+  }
+
+  body::after {
+    content: '';
+    display: block;
+    height: 100vh;
+  }
+
+  ::view-transition-group(canvas-content) {
+    animation-duration: calc(infinity * 1s);
+  }
+
+  ::view-transition-new(canvas-content) {
+    animation: none;
+  }
+</style>
+
+<script>
+  if (typeof document.startViewTransition === 'function') {
+    const content = document.getElementById('canvas-root')!;
+    content.style.viewTransitionName = 'canvas-content';
+
+    const ghostStyle = document.createElement('style');
+    document.head.appendChild(ghostStyle);
+
+    function setTransforms(ghostOffset: number, contentOffset: number) {
+      ghostStyle.textContent = `
+        ::view-transition-old(canvas-content) { transform: translateY(${ghostOffset}px); }
+        ::view-transition-new(canvas-content) { transform: translateY(${contentOffset}px); }
+      `;
+    }
+
+    function updateGhost() {
+      const { scrollY, innerHeight: vh } = window;
+      const H = content.offsetHeight;
+      const maxScroll = document.documentElement.scrollHeight - vh; // H
+
+      // new mirrors real scroll position
+      const contentOffset = -scrollY;
+
+      // old slides up from below once real content starts leaving the bottom
+      const ghostOffset = scrollY > H - vh ? H - scrollY : H;
+
+      setTransforms(ghostOffset, contentOffset);
+
+      if (scrollY >= maxScroll) {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }
+    }
+
+    function capture() {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.startViewTransition(() => {});
+          updateGhost();
+        });
+      });
+    }
+
+    if (document.readyState === 'complete') {
+      capture();
+    } else {
+      window.addEventListener('load', capture);
+    }
+    window.addEventListener('scroll', updateGhost, { passive: true });
+    window.addEventListener('resize', capture);
+  }
+</script>

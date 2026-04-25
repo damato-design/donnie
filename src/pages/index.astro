@@ -1,5 +1,6 @@
 ---
-import Head from '../components/Head.astro';
+import Head from '@components/Head.astro';
+import Canvas from '@components/Canvas.astro';
 import { getCollection } from 'astro:content';
 import { marked } from 'marked';
 import introMd from '../intro.md?raw';
@@ -11,48 +12,55 @@ const projects = (await getCollection('projects')).sort((a, b) => b.data.date.ge
 const media = (await getCollection('media')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
+<style>
+    main {
+        padding: 16px;
+    }
+
+    section {
+        background: red;
+    }
+</style>
+
 <html>
     <Head />
     <body>
-        <style is:global>
-            html {
-                scroll-behavior: auto;
-            }
-        </style>
-        <main id="content">
-            <section>
-                <div set:html={introHtml} />
-            </section>
+        <Canvas>
+            <main id="content">
+                <section>
+                    <div set:html={introHtml} />
+                </section>
 
-            <section>
-                <h2>Expertise</h2>
-                {expertise.map((item) => (
-                    <article>
-                        <h3>{item.data.title}</h3>
-                        {item.data.summary && <p>{item.data.summary}</p>}
-                    </article>
-                ))}
-            </section>
+                <section>
+                    <h2>Expertise</h2>
+                    {expertise.map((item) => (
+                        <article>
+                            <h3>{item.data.title}</h3>
+                            {item.data.summary && <p>{item.data.summary}</p>}
+                        </article>
+                    ))}
+                </section>
 
-            <section>
-                <h2>Projects</h2>
-                {projects.map((item) => (
-                    <article>
-                        <h3><a href={item.data.link}>{item.data.title}</a></h3>
-                        {item.data.summary && <p>{item.data.summary}</p>}
-                    </article>
-                ))}
-            </section>
+                <section>
+                    <h2>Projects</h2>
+                    {projects.map((item) => (
+                        <article>
+                            <h3><a href={item.data.link}>{item.data.title}</a></h3>
+                            {item.data.summary && <p>{item.data.summary}</p>}
+                        </article>
+                    ))}
+                </section>
 
-            <section>
-                <h2>Media</h2>
-                {media.map((item) => (
-                    <article>
-                        <h3><a href={item.data.link}>{item.data.title}</a></h3>
-                        {item.data.summary && <p>{item.data.summary}</p>}
-                    </article>
-                ))}
-            </section>
-        </main>
+                <section>
+                    <h2>Media</h2>
+                    {media.map((item) => (
+                        <article>
+                            <h3><a href={item.data.link}>{item.data.title}</a></h3>
+                            {item.data.summary && <p>{item.data.summary}</p>}
+                        </article>
+                    ))}
+                </section>
+            </main>
+        </Canvas>
     </body>
 </html>
