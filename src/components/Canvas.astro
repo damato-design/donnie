@@ -18,6 +18,10 @@
     height: 100vh;
   }
 
+  #canvas-root {
+    transition: opacity 0.3s ease;
+  }
+
   ::view-transition-group(canvas-content) {
     animation-duration: calc(infinity * 1s);
     mix-blend-mode: normal;
@@ -25,7 +29,7 @@
 
   ::view-transition-image-pair(canvas-content) {
     isolation: isolate;
-    }
+  }
 
   ::view-transition-new(canvas-content) {
     animation: none;
@@ -77,7 +81,17 @@
       window.addEventListener('load', capture);
     }
     window.addEventListener('scroll', updateGhost, { passive: true });
-    window.addEventListener('resize', capture);
+    window.addEventListener('resize', () => {
+      content.style.opacity = '0';
+      requestAnimationFrame(() => {
+        requestIdleCallback(() => {
+          if (content.style.opacity !== '0') return;
+          content.style.opacity = '1';
+          window.scrollTo({ top: 0, behavior: 'instant' });
+          capture();
+        });
+      });
+    });
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === 'visible') {
         window.scrollTo({ top: 0, behavior: 'instant' });
