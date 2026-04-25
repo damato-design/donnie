@@ -67,10 +67,7 @@
 
     function capture() {
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          document.startViewTransition(() => {});
-          updateGhost();
-        });
+        document.startViewTransition(updateGhost);
       });
     }
 
