@@ -20,7 +20,12 @@
 
   ::view-transition-group(canvas-content) {
     animation-duration: calc(infinity * 1s);
+    mix-blend-mode: normal;
   }
+
+  ::view-transition-image-pair(canvas-content) {
+    isolation: isolate;
+    }
 
   ::view-transition-new(canvas-content) {
     animation: none;
@@ -76,5 +81,11 @@
     }
     window.addEventListener('scroll', updateGhost, { passive: true });
     window.addEventListener('resize', capture);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === 'visible') {
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        capture();
+      }
+    });
   }
 </script>
