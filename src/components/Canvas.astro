@@ -19,7 +19,7 @@
   }
 
   #canvas-root {
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s;
   }
 
   ::view-transition-group(canvas-content) {
@@ -82,10 +82,12 @@
     }
     window.addEventListener('scroll', updateGhost, { passive: true });
     window.addEventListener('resize', () => {
+      content.style.transition = 'none';
       content.style.opacity = '0';
       requestAnimationFrame(() => {
         requestIdleCallback(() => {
           if (content.style.opacity !== '0') return;
+          content.style.transition = '';
           content.style.opacity = '1';
           window.scrollTo({ top: 0, behavior: 'instant' });
           capture();
