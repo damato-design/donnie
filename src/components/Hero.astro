@@ -1,0 +1,22 @@
+---
+import { marked } from 'marked';
+import introMd from '../intro.md?raw';
+
+const introHtml = marked(introMd);
+const { cloned } = Astro.props;
+---
+
+<section class={cloned ? 'cloned' : undefined}>
+    <div set:html={introHtml} />
+</section>
+
+<style>
+    .cloned {
+        overflow: hidden;
+    }
+
+    section {
+        padding: 16px;
+        height: 100vh;
+    }
+</style>
