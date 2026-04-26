@@ -53,6 +53,7 @@ const { title, summary, link, image, caption, date } = Astro.props;
         grid-template-areas: "title date" "caption date";
         border: 1px solid var(--border);
         border-top: none;
+        text-align: center;
     }
 
     .title {
@@ -61,7 +62,6 @@ const { title, summary, link, image, caption, date } = Astro.props;
         justify-content: center;
         align-items: center;
         text-wrap: balance;
-        text-align: center;
         padding: .5em;
         background: oklch(from var(--base) calc(l - 0.7) c h);
         filter: brightness(1.2);
