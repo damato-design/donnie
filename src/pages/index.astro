@@ -22,8 +22,9 @@ const media = (await getCollection("media")).sort(
 <html>
     <Head />
     <body class="tuft-fabric">
-        <main id="content">
-            <Hero navigation="Donnie D'Amato" />
+        <Hero navigation="Donnie D'Amato" />
+        <main id="content" class="card-stock">
+            
             <p>
                 <a href="https://google.com">Contact me</a> for work inquiries, collaborations,
                 or just to say hi!
@@ -71,8 +72,8 @@ const media = (await getCollection("media")).sort(
                     ))
                 }
             </section>
-            <Hero cloned />
         </main>
+        <Hero cloned />
         <Navigation />
         <script>
             window.addEventListener(
