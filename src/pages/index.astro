@@ -5,7 +5,7 @@ import Navigation from "@components/Navigation.astro";
 import Badge from "@components/Badge.astro";
 import Card from '@components/Card.astro';
 import Date from '@components/Date.astro';
-import Sconce from "@components/Sconce.astro";
+import MediaCard from "@components/MediaCard.astro";
 import { getCollection } from "astro:content";
 
 const expertise = (await getCollection("expertise")).sort(
@@ -62,13 +62,7 @@ const media = (await getCollection("media")).sort(
                 <h2>Media</h2>
                 {
                     media.map((item) => (
-                        <article>
-                            <h3>
-                                <a href={item.data.link}>{item.data.title}</a>
-                            </h3>
-                            <img src={item.data.image}>
-                            {item.data.summary && <p>{item.data.summary}</p>}
-                        </article>
+                        <MediaCard { ...item.data }/>
                     ))
                 }
             </section>

@@ -1,0 +1,44 @@
+---
+const { isoDate } = Astro.props;
+
+function formatToMediaDate(isoString: string) {
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) throw new Error("Invalid Date");
+
+
+  /** Use Intl date formating to get the short month name, two digit day, and four digit year */
+
+  const fmt = (options: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat('en-US', options).format(date);
+
+  return {
+    month: fmt({ month: 'short' }),
+    day: fmt({ day: '2-digit' }),
+    year: fmt({ year: 'numeric' }),
+  };
+}
+
+
+const { month, day, year } = formatToMediaDate(isoDate);
+---
+
+<style>
+    .media-date {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: .5rem;
+    }
+
+    .day {
+      font-family: "Kentish";
+      font-size: 2em;
+    }
+</style>
+
+<time class="media-date" datetime={ isoDate } title={isoDate}>
+  <span class="month">{ month }</span>
+  <span class="day">{ day }</span>
+  <span class="year">{ year }</span>
+</time>
