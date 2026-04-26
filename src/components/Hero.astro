@@ -1,23 +1,28 @@
 ---
+import Edge from '@assets/side.svg';
 const { cloned, navigation } = Astro.props;
 ---
 
 <section data-navigation={navigation} style={{ 'overflow-y': cloned ? 'hidden' : 'visible' }}>
+    <Edge style="scale: -1"/>
     <div class="grid">
         <img src="/images/flowers.png">
         <h2>Experience Architect</h2>
     </div>
+    <Edge />
 </section>
 
 <style>
     section {
         padding: 16px;
         height: 100vh;
-        max-width: 860px;
+        max-width: 1060px;
         margin-inline: auto;
         display: flex;
         align-items: center;
+        gap: 1rem;
         justify-content: center;
+        color: var(--border);
     }
 
     .grid {
@@ -41,12 +46,14 @@ const { cloned, navigation } = Astro.props;
 
         h2 {
             z-index: 1;
-            font-size: 6rem;
+            font-size: 9vw;
             filter: drop-shadow(0 6px 1px #411d);
         }
 
         img {
             margin: -64px;
+            max-width: 100%;
+            width: auto;
             mix-blend-mode: luminosity; 
             filter: drop-shadow(0 40px black) brightness(.6);
         }

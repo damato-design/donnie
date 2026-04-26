@@ -5,6 +5,7 @@ import Navigation from "@components/Navigation.astro";
 import Badge from "@components/Badge.astro";
 import Card from '@components/Card.astro';
 import Date from '@components/Date.astro';
+import Sconce from "@components/Sconce.astro";
 import { getCollection } from "astro:content";
 
 const expertise = (await getCollection("expertise")).sort(
@@ -22,12 +23,11 @@ const media = (await getCollection("media")).sort(
     <Head />
     <body class="tuft-fabric">
         <main id="content">
-            <Hero navigation="Home" />
+            <Hero navigation="Donnie D'Amato" />
             <p>
                 <a href="https://google.com">Contact me</a> for work inquiries, collaborations,
                 or just to say hi!
             </p>
-
             <Badge>Design Systems</Badge>
             <section data-navigation="Expertise">
                 <h2>Expertise</h2>

@@ -2,7 +2,7 @@
     @property --light {
         syntax: "<color>";
         inherits: false;
-        initial-value: rgb(65, 59, 27);
+        initial-value: #222;
     }
 
     nav {
@@ -50,10 +50,11 @@
         }
 
         a {
+            --light: #444;
             font-size: 0;
             background:
-                radial-gradient(circle at 40% 40%, #fffd 0%, transparent 10%),
-                radial-gradient(circle, white 0%, var(--light) 15%, black 39%, black 40%, transparent 49%);
+                radial-gradient(circle at 40% 40%, #fffd 0%, transparent 15%),
+                radial-gradient(circle, var(--light) 5%, black 39%, black 40%, transparent 49%);
             display: block;
             aspect-ratio: 1;
             width: 3rem;
@@ -61,14 +62,19 @@
             padding: 1rem;
         }
 
+        a:hover {
+            --light: green;
+        }
+
         a[aria-current] {
-            --light: var(--gold);
+            --light: red;
         }
 
         a::before {
             content: attr(data-label);
             position: absolute;
             font-size: 1rem;
+            white-space: pre;
             right: 100%;
             top: 2rem;
             background: linear-gradient(to bottom, #000000, #241024);
