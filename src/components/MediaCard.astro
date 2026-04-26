@@ -6,54 +6,65 @@ const { title, summary, link, image, caption, date } = Astro.props;
 
 <style>
     .media-card {
-        max-width: 260px;
-        border: 3px double var(--border);
+        border: 6px double var(--border);
+        /* border-image: var(--shine) 1; */
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        padding: 12px;
+        background-image: linear-gradient(
+                -45deg,
+                oklch(from var(--base) calc(l - 0.4) c h),
+                oklch(from var(--base) calc(l - 0.6) c h)
+            );
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            margin: -12px;
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            corner-shape: notch;
+            pointer-events: none;
+        }
     }
 
     .header {
-        --region1: oklch(from var(--base) calc(l - .4) c h);
-        --region2: oklch(from var(--base) calc(l - .2) c h);
+        border: 1px solid var(--border);
+        aspect-ratio: 16/9;
+        border-top-left-radius: 100vw;
+        border-top-right-radius: 100vw;
         overflow: hidden;
-        display: grid;
-        aspect-ratio: 3;
-        padding: .5em;
-        align-items: center;
-        align-content: center;
-        border-bottom: 1px solid var(--border);
-        
-        & > * {
-            grid-area: 1 / 1 / -1 / -1;
-            isolation: isolate;
-        }
+        flex: 1;
 
         img {
-            mix-blend-mode: multiply;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            object-position: center center;
+            mix-blend-mode: normal;
         }
-    }
-
-    .title {
-        text-align: center;
-        font-family: "Kentish";
-        padding: .5em;
-        background: black;
-        justify-self: center;
-        border: 1px solid var(--border);
     }
 
     .footer {
         display: grid;
         grid-template-columns: 1fr auto;
-        grid-template-areas: "link date" "caption date";
-        border-top: 1px solid var(--border);
+        grid-template-areas: "title date" "caption date";
+        border: 1px solid var(--border);
+        border-top: none;
     }
 
-    .link {
-        grid-area: link;
-        border-bottom: 1px solid var(--border);
+    .title {
+        grid-area: title;
         display: flex;
         justify-content: center;
         align-items: center;
+        text-wrap: balance;
+        text-align: center;
         padding: .5em;
+        background: oklch(from var(--base) calc(l - 0.7) c h);
+        filter: brightness(1.2);
     }
 
     .caption {
@@ -62,24 +73,30 @@ const { title, summary, link, image, caption, date } = Astro.props;
         justify-content: center;
         align-items: center;
         padding: .5em;
+        background: oklch(from var(--base) calc(l - .4) c h);
+        border-top: 1px solid var(--border);
     }
 
     .date {
         grid-area: date;
         border-left: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        background-color: oklch(from var(--base) calc(l - .5) c h);
     }
 </style>
 
 <div class="media-card">
     <div class="header">
-        <img src={ image }>
-        <Overlay/>
-        <div class="title">{ title }</div>
+        <img src={image}>
     </div>
     <div class="footer">
-        <a class="link" href={ link }>{ new URL(link).hostname }</a>
+        <div class="title">
+            <h2>{ title }</h2>
+        </div>
         <div class="caption">{ caption }</div>
-        <div class="date">
+        <div class="date circles">
             <MediaDate isoDate={ date }/>
         </div>
     </div>

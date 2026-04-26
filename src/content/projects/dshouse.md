@@ -2,7 +2,6 @@
 title: DS House
 summary: A consultancy brand and platform hosting multiple projects, content, and communities centered on design systems practice.
 link: https://ds.house
-image: https://ds.house/og-image.png
 caption: ds.house
 date: 2022-10-15
 ---

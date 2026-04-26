@@ -5,6 +5,7 @@ import Navigation from "@components/Navigation.astro";
 import Badge from "@components/Badge.astro";
 import Card from '@components/Card.astro';
 import Date from '@components/Date.astro';
+import ContentGrid from "@components/ContentGrid.astro";
 import MediaCard from "@components/MediaCard.astro";
 import { getCollection } from "astro:content";
 
@@ -23,7 +24,7 @@ const media = (await getCollection("media")).sort(
     <Head />
     <body class="tuft-fabric">
         <Hero navigation="Donnie D'Amato" />
-        <main id="content" class="card-stock">
+        <main id="content">
             
             <p>
                 <a href="https://google.com">Contact me</a> for work inquiries, collaborations,
@@ -32,7 +33,8 @@ const media = (await getCollection("media")).sort(
             <Badge>Design Systems</Badge>
             <section data-navigation="Expertise">
                 <h2>Expertise</h2>
-                {
+                <ContentGrid>
+                    {
                     expertise.map((item) => (
                         <Card>
                             <h3>{item.data.title}</h3>
@@ -40,11 +42,13 @@ const media = (await getCollection("media")).sort(
                         </Card>
                     ))
                 }
+                </ContentGrid>
             </section>
 
             <section data-navigation="Projects">
                 <h2>Projects</h2>
-                {
+                <ContentGrid>
+                    {
                     projects.map((item) => (
                         <article>
                             <Date isoDate={item.data.date} />
@@ -56,15 +60,19 @@ const media = (await getCollection("media")).sort(
                         </article>
                     ))
                 }
+                </ContentGrid>
             </section>
 
             <section data-navigation="Media">
                 <h2>Media</h2>
+                <ContentGrid>
                 {
                     media.map((item) => (
                         <MediaCard { ...item.data }/>
                     ))
                 }
+                </ContentGrid>
+                
             </section>
         </main>
         <Hero cloned />

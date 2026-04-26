@@ -92,16 +92,16 @@ const schema = {
         }
 
         :root {
-            --base: #ff00c2;
+            --base: #00fff3;
             --gold: gold;
-            --border: oklch(from var(--gold) calc(l - .2) calc(c + .2) h);
+            --border: color-mix(in oklch, var(--gold), white 10%);
             --shine: linear-gradient(
                 110deg,
                 color-mix(in oklch, var(--gold), white 40%) 0%,
                 color-mix(in oklch, var(--gold), white 80%) 20%,
-                color-mix(in oklch, var(--gold), black 40%) 40%,
+                color-mix(in oklch, var(--gold), black 20%) 40%,
                 color-mix(in oklch, var(--gold), white 60%) 50%,
-                color-mix(in oklch, var(--gold), black 40%) 65%,
+                color-mix(in oklch, var(--gold), black 20%) 65%,
                 color-mix(in oklch, var(--gold), white 30%) 85%,
                 color-mix(in oklch, var(--gold), white 80%) 100%
             );
@@ -114,7 +114,7 @@ const schema = {
 
         html::after {
             /** Vignette */
-            content: "";
+            /* content: ""; */
             position: fixed;
             inset: 0;
             background: radial-gradient(
@@ -166,33 +166,40 @@ const schema = {
             --tuft-size: 100px;
             --attachment: fixed;
             --button: radial-gradient(
-                oklch(from var(--base) calc(l - .4) c h) 4%,
-                oklch(from var(--base) calc(l - .5) c h) 9%,
-                transparent 9%);
+                oklch(from var(--base) calc(l - 0.4) c h) 4%,
+                oklch(from var(--base) calc(l - 0.5) c h) 9%,
+                transparent 9%
+            );
             --bump: radial-gradient(
-                oklch(from var(--base) calc(l - .35) c h / .8) 20%,
-                transparent);
+                oklch(from var(--base) calc(l - 0.35) c h / 0.8) 20%,
+                transparent
+            );
             --shadow: radial-gradient(
-                oklch(from var(--base) calc(l - .6) c h) 35%,
-                transparent 60%);
+                oklch(from var(--base) calc(l - 0.6) c h) 35%,
+                transparent 60%
+            );
             --crease: transparent 49%, black 50%, transparent 70%;
             background:
                 var(--button) 0 0 var(--attachment),
-                var(--button) calc(var(--tuft-size) / 2) calc(var(--tuft-size) / 2) var(--attachment),
+                var(--button) calc(var(--tuft-size) / 2)
+                    calc(var(--tuft-size) / 2) var(--attachment),
                 var(--bump) calc(var(--tuft-size) / 2) 0 var(--attachment),
                 var(--bump) 0 calc(var(--tuft-size) / 2) var(--attachment),
                 var(--shadow) calc(var(--tuft-size) / 2) 0 var(--attachment),
-                var(--shadow) var(--tuft-size) calc(var(--tuft-size) / 2) var(--attachment),
+                var(--shadow) var(--tuft-size) calc(var(--tuft-size) / 2)
+                    var(--attachment),
                 linear-gradient(45deg, var(--crease)) 0 0 var(--attachment),
                 linear-gradient(-45deg, var(--crease)) 0 0 var(--attachment);
-            background-color: oklch(from var(--base) calc(l - .5) c h);
+            background-color: oklch(from var(--base) calc(l - 0.5) c h);
             background-size: var(--tuft-size) var(--tuft-size);
         }
 
         .card-stock {
-            background-image: linear-gradient(45deg, 
-                oklch(from var(--base) calc(l - .4) c h),
-                oklch(from var(--base) calc(l - .6) c h));
+            background-image: linear-gradient(
+                45deg,
+                oklch(from var(--base) calc(l - 0.4) c h),
+                oklch(from var(--base) calc(l - 0.6) c h)
+            );
             background-attachment: fixed;
 
             &::after {
@@ -203,7 +210,7 @@ const schema = {
                 height: 1.5rem;
                 --s: 10px;
                 --c1: transparent;
-                --c2: oklch(from var(--base) calc(l - .5) c h);
+                --c2: oklch(from var(--base) calc(l - 0.5) c h);
 
                 background:
                     radial-gradient(
@@ -213,8 +220,18 @@ const schema = {
                         var(--c2) 45% 60%,
                         #0000 61%
                     ),
-                    linear-gradient(45deg, transparent 46%, var(--c2) 0 54%, transparent 0),
-                    linear-gradient(-45deg, transparent 46%, var(--c2) 0 54%, transparent 0)
+                    linear-gradient(
+                        45deg,
+                        transparent 46%,
+                        var(--c2) 0 54%,
+                        transparent 0
+                    ),
+                    linear-gradient(
+                            -45deg,
+                            transparent 46%,
+                            var(--c2) 0 54%,
+                            transparent 0
+                        )
                         var(--c1);
                 background-size: var(--s) var(--s);
                 background-position: center;
@@ -228,6 +245,18 @@ const schema = {
                 -webkit-mask: var(--m);
                 mask: var(--m);
             }
+        }
+
+        .circles {
+            /* background-color: #e5e5f7; */
+            background-image:
+                repeating-radial-gradient(
+                    circle at 0 0,
+                    var(--border) 0,
+                    var(--border) 1px,
+                    transparent 1px,
+                    transparent 24px
+                );
         }
     </style>
 </head>
