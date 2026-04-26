@@ -12,7 +12,13 @@
         display: flex;
         align-items: center;
         padding: 1rem;
-        filter: drop-shadow(0 10px 4px rgba(0, 0, 0, 0.3));
+        filter: drop-shadow(0 10px 4px rgba(0, 0, 0, 0.3)) brightness(.6);
+        z-index: 1;
+        transition: filter .3s ease;
+    }
+
+    nav:has(ul:hover) {
+        filter: drop-shadow(0 10px 4px rgba(0, 0, 0, 0.3)) brightness(1);
     }
 
     ul {
@@ -27,16 +33,27 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        corner-shape: bevel;
-        border-radius: 2rem;
-        border: 2px double gold;
-        background: linear-gradient(45deg, #2e0119, #250014);
+        corner-shape: scoop;
+        border-radius: 1rem;
+        border: 3px double var(--border);
+        background: linear-gradient(45deg, 
+            oklch(from var(--base) calc(l - .4) c h),
+            oklch(from var(--base) calc(l - .6) c h));
+
+        &::after {
+            content: '';
+            pointer-events: none;
+            position: absolute;
+            inset: 1px;
+            border: 1px solid var(--border);
+            display: block;
+        }
 
         a {
             font-size: 0;
             background:
-                radial-gradient(circle at 40% 40%, rgba(255,255,255,0.85) 0%, transparent 10%),
-                radial-gradient(circle, white 0%, var(--light) 15%, #0a0500 38%, black 48%, transparent 49%);
+                radial-gradient(circle at 40% 40%, #fffd 0%, transparent 10%),
+                radial-gradient(circle, white 0%, var(--light) 15%, black 39%, black 40%, transparent 49%);
             display: block;
             aspect-ratio: 1;
             width: 3rem;
@@ -45,7 +62,7 @@
         }
 
         a[aria-current] {
-            --light: gold;
+            --light: var(--gold);
         }
 
         a::before {

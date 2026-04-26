@@ -2,6 +2,9 @@
 import Head from "@components/Head.astro";
 import Hero from "@components/Hero.astro";
 import Navigation from "@components/Navigation.astro";
+import Badge from "@components/Badge.astro";
+import Card from '@components/Card.astro';
+import Date from '@components/Date.astro';
 import { getCollection } from "astro:content";
 
 const expertise = (await getCollection("expertise")).sort(
@@ -15,23 +18,9 @@ const media = (await getCollection("media")).sort(
 );
 ---
 
-<style>
-    html {
-        scroll-behavior: auto;
-        overscroll-behavior: none;
-        scrollbar-gutter: stable;
-    }
-
-    main {
-        max-width: 80ch;
-        margin: 0 auto;
-    }
-</style>
-
 <html>
     <Head />
-    <body>
-        <Navigation />
+    <body class="tuft-fabric">
         <main id="content">
             <Hero navigation="Home" />
             <p>
@@ -39,14 +28,15 @@ const media = (await getCollection("media")).sort(
                 or just to say hi!
             </p>
 
+            <Badge>Design Systems</Badge>
             <section data-navigation="Expertise">
                 <h2>Expertise</h2>
                 {
                     expertise.map((item) => (
-                        <article>
+                        <Card>
                             <h3>{item.data.title}</h3>
                             {item.data.summary && <p>{item.data.summary}</p>}
-                        </article>
+                        </Card>
                     ))
                 }
             </section>
@@ -56,9 +46,11 @@ const media = (await getCollection("media")).sort(
                 {
                     projects.map((item) => (
                         <article>
+                            <Date isoDate={item.data.date} />
                             <h3>
                                 <a href={item.data.link}>{item.data.title}</a>
                             </h3>
+                            <img src={item.data.image}>
                             {item.data.summary && <p>{item.data.summary}</p>}
                         </article>
                     ))
@@ -73,6 +65,7 @@ const media = (await getCollection("media")).sort(
                             <h3>
                                 <a href={item.data.link}>{item.data.title}</a>
                             </h3>
+                            <img src={item.data.image}>
                             {item.data.summary && <p>{item.data.summary}</p>}
                         </article>
                     ))
@@ -80,6 +73,7 @@ const media = (await getCollection("media")).sort(
             </section>
             <Hero cloned />
         </main>
+        <Navigation />
         <script>
             window.addEventListener(
                 "scroll",

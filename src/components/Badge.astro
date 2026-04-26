@@ -1,0 +1,27 @@
+
+<style>
+    span {
+        padding: .5em;
+        display: inline-flex;
+        align-items: center;
+        line-height: 1;
+        corner-shape: scoop;
+        border-radius: 6px;
+        gap: .5ch;
+        border: 1px solid;
+        background-image: var(--shine);
+        color: color-mix(in oklch, var(--gold), black 70%);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: .8em;
+        font-family: Impact, system-ui, sans-serif;
+
+        &::before, &::after {
+            content: '✹';
+        }
+    }
+</style>
+
+<span>
+    <slot/>
+</span>

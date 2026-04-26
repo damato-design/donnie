@@ -91,47 +91,51 @@ const schema = {
             box-sizing: border-box;
         }
 
+        :root {
+            --base: #ff00c2;
+            --gold: gold;
+            --border: oklch(from var(--gold) calc(l - .2) calc(c + .2) h);
+            --shine: linear-gradient(
+                110deg,
+                color-mix(in oklch, var(--gold), white 40%) 0%,
+                color-mix(in oklch, var(--gold), white 80%) 20%,
+                color-mix(in oklch, var(--gold), black 40%) 40%,
+                color-mix(in oklch, var(--gold), white 60%) 50%,
+                color-mix(in oklch, var(--gold), black 40%) 65%,
+                color-mix(in oklch, var(--gold), white 30%) 85%,
+                color-mix(in oklch, var(--gold), white 80%) 100%
+            );
+        }
+
         html {
             scroll-behavior: smooth;
+            overscroll-behavior: none;
         }
 
         html::after {
+            /** Vignette */
             content: "";
             position: fixed;
             inset: 0;
             background: radial-gradient(
                 circle farthest-corner at center,
                 transparent,
-                rgba(0, 0, 0, 0.85) 150%
+                rgba(0, 0, 0, 0.85) 110%
             );
             pointer-events: none;
         }
 
         body {
-            --s: 100px; /* control the size*/
-            --c1: #2e0119;
-            --c2: #250014;
-
-            --_g:
-                #0000, #0004 5%, var(--c2) 6% 14%, var(--c1) 16% 24%,
-                var(--c2) 26% 34%, var(--c1) 36% 44%, var(--c2) 46% 54%,
-                var(--c1) 56% 64%, var(--c2) 66% 74%, var(--c1) 76% 84%,
-                var(--c2) 86% 94%, #0004 95%, #0000;
             margin: 0;
             overscroll-behavior-y: none;
             text-rendering: optimizeLegibility;
-            font-family: system-ui;
-            line-height: 1.5;
+            background-attachment: fixed;
+            font-family:
+                "Iowan Old Style", "Palatino Linotype", "URW Palladio L", P052,
+                serif;
+            line-height: 1.4;
             text-wrap: pretty;
-            background-color: #250014;
-            background-image:
-                    radial-gradient(100% 50% at 100% 0, var(--_g)),
-                    radial-gradient(100% 50% at 0 50%, var(--_g)),
-                    radial-gradient(100% 50% at 100% 100%, var(--_g));
-            background-blend-mode: color;
             color: white;
-
-            background-size: var(--s) calc(2 * var(--s));
         }
 
         a {
@@ -140,30 +144,87 @@ const schema = {
             text-underline-offset: 0.15em;
         }
 
+        img {
+            width: 100%;
+            filter: grayscale(1) contrast(1.5);
+            mix-blend-mode: screen;
+        }
+
         :where(h1, h2, h3) {
             font-family: "Kentish";
             font-weight: normal;
             text-wrap: balance;
             margin: 0;
             padding-block: 0.5ex;
-            background-image: linear-gradient(
-                110deg,
-                #bf953f 0%,
-                #fcf6ba 20%,
-                #b38728 40%,
-                #fcf6ba 50%,
-                #bf953f 65%,
-                #fcf6ba 85%,
-                #aa771c 100%
-            );
+            background-image: var(--shine);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            -webkit-text-stroke: 0.3px rgba(255, 252, 224, 0.4);
         }
 
-        h2 {
-            font-size: 3.5rem;
+        .tuft-fabric {
+            --tuft-size: 100px;
+            --attachment: fixed;
+            --button: radial-gradient(
+                oklch(from var(--base) calc(l - .4) c h) 4%,
+                oklch(from var(--base) calc(l - .5) c h) 9%,
+                transparent 9%);
+            --bump: radial-gradient(
+                oklch(from var(--base) calc(l - .35) c h / .8) 20%,
+                transparent);
+            --shadow: radial-gradient(
+                oklch(from var(--base) calc(l - .6) c h) 35%,
+                transparent 60%);
+            --crease: transparent 49%, black 50%, transparent 70%;
+            background:
+                var(--button) 0 0 var(--attachment),
+                var(--button) calc(var(--tuft-size) / 2) calc(var(--tuft-size) / 2) var(--attachment),
+                var(--bump) calc(var(--tuft-size) / 2) 0 var(--attachment),
+                var(--bump) 0 calc(var(--tuft-size) / 2) var(--attachment),
+                var(--shadow) calc(var(--tuft-size) / 2) 0 var(--attachment),
+                var(--shadow) var(--tuft-size) calc(var(--tuft-size) / 2) var(--attachment),
+                linear-gradient(45deg, var(--crease)) 0 0 var(--attachment),
+                linear-gradient(-45deg, var(--crease)) 0 0 var(--attachment);
+            background-color: oklch(from var(--base) calc(l - .5) c h);
+            background-size: var(--tuft-size) var(--tuft-size);
+        }
+
+        .card-stock {
+            background: oklch(from var(--base) calc(l - .5) c h);
+
+            &::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                top: auto;
+                height: 1.5rem;
+                --s: 10px;
+                --c1: transparent;
+                --c2: oklch(from var(--base) calc(l - .45) c h);
+
+                background:
+                    radial-gradient(
+                        var(--c1) 14%,
+                        var(--c2) 15% 30%,
+                        var(--c1) 31% 44%,
+                        var(--c2) 45% 60%,
+                        #0000 61%
+                    ),
+                    linear-gradient(45deg, transparent 46%, var(--c2) 0 54%, transparent 0),
+                    linear-gradient(-45deg, transparent 46%, var(--c2) 0 54%, transparent 0)
+                        var(--c1);
+                background-size: var(--s) var(--s);
+                background-position: center;
+                --m: conic-gradient(
+                        from 135deg at top,
+                        transparent,
+                        black 1deg 89deg,
+                        transparent 90deg
+                    )
+                    top / 20px 100% repeat-x;
+                -webkit-mask: var(--m);
+                mask: var(--m);
+            }
         }
     </style>
 </head>

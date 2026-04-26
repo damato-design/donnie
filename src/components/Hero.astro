@@ -1,18 +1,58 @@
 ---
-import { marked } from 'marked';
-import introMd from '../intro.md?raw';
-
-const introHtml = marked(introMd);
 const { cloned, navigation } = Astro.props;
 ---
 
-<section data-navigation={navigation} style={{ overflow: cloned ? 'hidden' : 'auto' }}>
-    <div set:html={introHtml} />
+<section data-navigation={navigation} style={{ 'overflow-y': cloned ? 'hidden' : 'visible' }}>
+    <div class="grid">
+        <img src="/images/flowers.png">
+        <h2>Experience Architect</h2>
+    </div>
 </section>
 
 <style>
     section {
         padding: 16px;
         height: 100vh;
+        max-width: 860px;
+        margin-inline: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .grid {
+        display: grid;
+        text-align: center;
+        justify-items: center;
+        align-items: center;
+        border: 3px double var(--border);
+        overflow: visible;
+
+        &::after {
+            content: '';
+            display: block;
+            border: 1px solid var(--border);
+            grid-area: 1 / 1 / -1 / -1;
+            height: calc(100% + 2rem);
+            width: calc(100% + 2rem);
+            border-radius: 2rem;;
+            corner-shape: notch;
+        }
+
+        h2 {
+            z-index: 1;
+            font-size: 6rem;
+            filter: drop-shadow(0 6px 1px #411d);
+        }
+
+        img {
+            margin: -64px;
+            mix-blend-mode: luminosity; 
+            filter: drop-shadow(0 40px black) brightness(.6);
+        }
+
+        & > * {
+            grid-area: 1 / 1 / -1 / -1;
+        }
     }
 </style>

@@ -1,0 +1,37 @@
+<style>
+    .sconce {
+        aspect-ratio: 1;
+        width: 3rem;
+        border: 1px solid white;
+        border-bottom: 1px solid transparent;
+        border-left: 1px solid transparent;
+        border-top-right-radius: 100%;
+        background:
+            radial-gradient(
+                farthest-corner at 0% 100%,
+                #250014 25%,
+                transparent 25%
+            ),
+            repeating-conic-gradient(at 0% 100%, #8f215c 0 2deg, #4e1e38 2deg 5deg);
+        background-clip: padding-box;
+        position: relative;
+        box-shadow: 16px -16px 24px -2px color-mix(in oklch, #fffd, #2e0119 50%);
+        rotate: -45deg;
+
+        &::after {
+            content: "";
+            background: inherit;
+            border-top-right-radius: 100%;
+            border-top: 1px solid white;
+            border-right: 1px solid white;
+            position: absolute;
+            inset: 0;
+            clip-path: polygon(100% 0, 100% 50%, 0 100%, 50% 0);
+            scale: 1.15;
+            transform-origin: bottom left;
+            filter: brightness(1.2);
+        }
+    }
+</style>
+
+<div class="sconce"></div>
