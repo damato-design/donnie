@@ -1,6 +1,7 @@
 ---
 import Gramophone from '@assets/gramophone.svg';
 import MediaDate from '@components/MediaDate.astro';
+import Corner from '@assets/corner.svg';
 const { title, link, image, caption, date } = Astro.props;
 ---
 
@@ -24,13 +25,21 @@ const { title, link, image, caption, date } = Astro.props;
             inset: 0;
             margin: -12px;
             border: 1px solid var(--border);
-            border-radius: 2rem;
+            border-radius: 33px;
             corner-shape: notch;
             pointer-events: none;
         }
     }
 
+    .corner {
+        width: 100px;
+        top: -5px;
+        position: absolute;
+        color: var(--border);
+    }
+
     .header {
+        isolation: isolate;
         border: 1px solid var(--border);
         aspect-ratio: 16/9;
         border-top-left-radius: 100vw;
@@ -40,6 +49,13 @@ const { title, link, image, caption, date } = Astro.props;
         display: flex;
         align-items: center;
         justify-content: center;
+        aspect-ratio: 1;
+        padding: 8px;
+        background-image: linear-gradient(
+                45deg,
+                oklch(from var(--base) calc(l - 0.4) c h),
+                oklch(from var(--base) calc(l - 0.6) c h)
+            );
         color: var(--border);
 
         img {
@@ -48,6 +64,7 @@ const { title, link, image, caption, date } = Astro.props;
             object-fit: cover;
             object-position: center center;
             mix-blend-mode: normal;
+            border-radius: inherit;
         }
     }
 
@@ -96,6 +113,8 @@ const { title, link, image, caption, date } = Astro.props;
 </style>
 
 <div class="media-card">
+    <Corner class="corner" style="rotate: 0deg; left: -5px;"/>
+    <Corner class="corner" style="rotate: 90deg; right: -5px;"/>
     <div class="header">
         { image ? <img src={image}> : <Gramophone/> }
     </div>

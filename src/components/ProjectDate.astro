@@ -32,6 +32,8 @@ function formatToRomanDate(isoString: string, separator = "✦") {
     date.getUTCDate()
   ];
 
+  return toRoman(parts[0]);
+
   return parts.map(toRoman).join(separator);
 }
 

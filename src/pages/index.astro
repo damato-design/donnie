@@ -4,8 +4,8 @@ import Hero from "@components/Hero.astro";
 import Navigation from "@components/Navigation.astro";
 import Badge from "@components/Badge.astro";
 import Card from '@components/Card.astro';
-import Date from '@components/Date.astro';
 import ContentGrid from "@components/ContentGrid.astro";
+import ProjectCard from "@components/ProjectCard.astro";
 import MediaCard from "@components/MediaCard.astro";
 import { getCollection } from "astro:content";
 
@@ -50,14 +50,7 @@ const media = (await getCollection("media")).sort(
                 <ContentGrid>
                     {
                     projects.map((item) => (
-                        <article>
-                            <Date isoDate={item.data.date} />
-                            <h3>
-                                <a href={item.data.link}>{item.data.title}</a>
-                            </h3>
-                            <img src={item.data.image}>
-                            {item.data.summary && <p>{item.data.summary}</p>}
-                        </article>
+                        <ProjectCard { ...item.data }/>
                     ))
                 }
                 </ContentGrid>
