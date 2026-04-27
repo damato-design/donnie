@@ -1,9 +1,9 @@
 ---
-title: Converge 2025, Creativity within Constraints
+title: Creativity within Constraints
 summary: Converge 2025 talk arguing that constraints—including design systems—unlock richer, more focused creativity rather than limiting it.
 link: https://webinars.zeroheight.com/videos/2e30a1a5-7a29-4c2a-8c0b-7a14736874b9
 image: https://assets.getcontrast.io/2025/11/20/663a414b-67c9-480b-9103-8ed4fb522070
-caption: Creativity within Constraints
+caption: Converge
 date: 2025-10-30
 ---
 

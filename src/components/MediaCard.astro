@@ -1,7 +1,7 @@
 ---
-import Overlay from '@assets/overlay.svg';
+import Gramophone from '@assets/gramophone.svg';
 import MediaDate from '@components/MediaDate.astro';
-const { title, summary, link, image, caption, date } = Astro.props;
+const { title, link, image, caption, date } = Astro.props;
 ---
 
 <style>
@@ -37,6 +37,10 @@ const { title, summary, link, image, caption, date } = Astro.props;
         border-top-right-radius: 100vw;
         overflow: hidden;
         flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--border);
 
         img {
             height: 100%;
@@ -75,6 +79,10 @@ const { title, summary, link, image, caption, date } = Astro.props;
         padding: .5em;
         background: oklch(from var(--base) calc(l - .4) c h);
         border-top: 1px solid var(--border);
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        font-size: .7em;
+        font-weight: 300;
     }
 
     .date {
@@ -89,7 +97,7 @@ const { title, summary, link, image, caption, date } = Astro.props;
 
 <div class="media-card">
     <div class="header">
-        <img src={image}>
+        { image ? <img src={image}> : <Gramophone/> }
     </div>
     <div class="footer">
         <div class="title">
