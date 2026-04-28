@@ -5,20 +5,39 @@ const { title, summary, link, image, caption, date } = Astro.props;
 
 <style>
     .project-card {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: oklch(from var(--base) calc(l - 0.6) c h);
-        overflow: hidden;
         padding: 8px;
-        position: relative;
         border: 3px double var(--border);
         border-radius: 11px;
         corner-shape: bevel;
+        position: relative;
+        display: flex;
+        background-color: oklch(from var(--base) calc(l - 0.6) c h);
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            margin: -12px;
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            corner-shape: notch;
+            pointer-events: none;
+        }
+    }
+
+    .content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        padding: 8px;
+        border: 1px solid var(--border);
         background-image: repeating-linear-gradient(
             -65deg,
-            oklch(from var(--border) calc(l - 0.4) c h),
-            oklch(from var(--border) calc(l - 0.4) c h) 1px,
+            oklch(from var(--border) calc(l - 0.3) c h),
+            oklch(from var(--border) calc(l - 0.3) c h) 1px,
             transparent 1px,
             transparent 10px
         );
@@ -73,14 +92,19 @@ const { title, summary, link, image, caption, date } = Astro.props;
 
     .title {
         background: oklch(from var(--base) calc(l - 0.65) c h);
-        padding: 0.5em;
+        padding: 8px;
         border: 1px solid var(--border);
         margin-bottom: -1px;
         text-align: right;
+        font-size: .9em;
     }
 
     .summary {
-        background: oklch(from var(--base) calc(l - 0.5) c h);
+        background-image: linear-gradient(
+                -15deg,
+                oklch(from var(--base) calc(l - 0.45) c h),
+                oklch(from var(--base) calc(l - 0.6) c h) 60%
+            );
         padding: 16px;
         border: 1px solid var(--border);
         margin-left: -1px;
@@ -89,24 +113,26 @@ const { title, summary, link, image, caption, date } = Astro.props;
     }
 
     .link {
-        background: oklch(from var(--base) calc(l - 0.55) c h);
+        background: oklch(from var(--base) calc(l - .4) c h);
         border: 1px solid var(--border);
-        padding: 0.5em;
+        padding: 8px 16px;
         text-align: center;
         text-transform: uppercase;
         font-weight: 300;
         letter-spacing: 2px;
         text-decoration: none;
-        font-size: 0.8em;
+        font-size: 0.7em;
     }
 </style>
 
 <div class="project-card">
-    <div class="lockup">
-        <div class="title">
-            <h2>{title}</h2>
+    <div class="content">
+        <div class="lockup">
+            <div class="title">
+                <h2>{title}</h2>
+            </div>
+            <a href={link} class="link">{new URL(link).hostname}</a>
         </div>
-        <a href={link} class="link">{new URL(link).hostname}</a>
+        <div class="summary">{summary}</div>
     </div>
-    <div class="summary">{summary}</div>
 </div>
