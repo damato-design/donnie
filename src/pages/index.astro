@@ -14,7 +14,7 @@ const expertise = (await getCollection("expertise")).sort(
 );
 const projects = (await getCollection("projects")).sort(
     (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-);
+).filter((item) => !item.data.draft);
 const media = (await getCollection("media")).sort(
     (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
@@ -47,7 +47,7 @@ const media = (await getCollection("media")).sort(
 
             <section data-navigation="Projects">
                 <h2>Projects</h2>
-                <ContentGrid>
+                <ContentGrid gridWidth="320px">
                     {
                     projects.map((item) => (
                         <ProjectCard { ...item.data }/>

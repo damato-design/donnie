@@ -4,25 +4,35 @@ const { cloned, navigation } = Astro.props;
 ---
 
 <section data-navigation={navigation} style={{ 'overflow-y': cloned ? 'hidden' : 'visible' }}>
-    <Edge style="scale: -1"/>
-    <div class="grid">
-        <img src="/images/flowers.png">
-        <h2>Experience Architect</h2>
+    <div class="max-width">
+        <Edge style="scale: -1"/>
+        <div class="grid">
+            <img src="/images/flowers.png">
+            <h2>Experience Architect</h2>
+        </div>
+        <Edge />
     </div>
-    <Edge />
 </section>
 
 <style>
     section {
-        padding: 16px;
+        padding: 0 16px;
         height: 100vh;
+        color: var(--border);
+        background: radial-gradient(
+                circle farthest-corner at center,
+                transparent,
+                oklch(from var(--base) calc(l - 0.8) c h) 80%
+            );
+    }
+
+    .max-width {
         max-width: 1060px;
         margin-inline: auto;
         display: flex;
         align-items: center;
         gap: 1rem;
         justify-content: center;
-        color: var(--border);
     }
 
     .grid {
@@ -55,7 +65,7 @@ const { cloned, navigation } = Astro.props;
             max-width: 100%;
             width: auto;
             mix-blend-mode: luminosity; 
-            filter: drop-shadow(0 40px black) brightness(.6);
+            filter: drop-shadow(0 40px oklch(from var(--base) calc(l - 0.72) c h)) brightness(.6);
         }
 
         & > * {

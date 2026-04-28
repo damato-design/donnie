@@ -6,84 +6,107 @@ const { title, summary, link, image, caption, date } = Astro.props;
 <style>
     .project-card {
         display: flex;
-        flex-direction: column;
         justify-content: center;
-        align-items: start;
-        border: 3px double var(--border);
+        align-items: center;
         background-color: oklch(from var(--base) calc(l - 0.6) c h);
-        --s: 20px;
-                --c1: oklch(from var(--base) calc(l - 0.6) c h);
-                --c2: oklch(from var(--base) calc(l - 0.55) c h);
+        overflow: hidden;
+        padding: 8px;
+        position: relative;
+        border: 3px double var(--border);
+        border-radius: 11px;
+        corner-shape: bevel;
+        background-image: repeating-linear-gradient(
+            -65deg,
+            oklch(from var(--border) calc(l - 0.4) c h),
+            oklch(from var(--border) calc(l - 0.4) c h) 1px,
+            transparent 1px,
+            transparent 10px
+        );
 
-                background:
-                    radial-gradient(
-                        var(--c1) 14%,
-                        var(--c2) 15% 30%,
-                        var(--c1) 31% 44%,
-                        var(--c2) 45% 60%,
-                        #0000 61%
-                    ),
-                    linear-gradient(
-                        45deg,
+        &::before {
+            content: "";
+            border: 1px solid var(--border);
+            box-shadow: 40px 40px oklch(from var(--base) calc(l - 0.72) c h);
+            aspect-ratio: 1;
+            display: block;
+            left: 0;
+            position: absolute;
+            rotate: -30deg;
+            translate: -50% 0;
+            height: 120%;
+            --s: 20px;
+            --c1: oklch(from var(--base) calc(l - 0.6) c h);
+            --c2: oklch(from var(--base) calc(l - 0.55) c h);
+
+            background:
+                radial-gradient(
+                    var(--c1) 14%,
+                    var(--c2) 15% 30%,
+                    var(--c1) 31% 44%,
+                    var(--c2) 45% 60%,
+                    #0000 61%
+                ),
+                linear-gradient(
+                    45deg,
+                    transparent 46%,
+                    var(--c2) 0 54%,
+                    transparent 0
+                ),
+                linear-gradient(
+                        -45deg,
                         transparent 46%,
                         var(--c2) 0 54%,
                         transparent 0
-                    ),
-                    linear-gradient(
-                            -45deg,
-                            transparent 46%,
-                            var(--c2) 0 54%,
-                            transparent 0
-                        )
-                        var(--c1);
-                background-size: var(--s) var(--s);
-        padding: 1rem;
-        position: relative;
-
-        &::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            margin: -12px;
-            border: 3px double var(--border);
-            border-radius: 2rem;
-            corner-shape: bevel;
-            pointer-events: none;
+                    )
+                    var(--c1);
+            background-size: var(--s) var(--s);
         }
+    }
+
+    .lockup {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+        isolation: isolate;
     }
 
     .title {
         background: oklch(from var(--base) calc(l - 0.65) c h);
-        padding: .5em;
+        padding: 0.5em;
         border: 1px solid var(--border);
+        margin-bottom: -1px;
+        text-align: right;
     }
 
     .summary {
         background: oklch(from var(--base) calc(l - 0.5) c h);
-        padding: .5em;
+        padding: 16px;
         border: 1px solid var(--border);
-        margin-top: -1px;
+        margin-left: -1px;
+        flex: 1 1 60%;
+        isolation: isolate;
     }
 
     .link {
-        margin-top: -1px;
         background: oklch(from var(--base) calc(l - 0.55) c h);
         border: 1px solid var(--border);
-        padding: .5em;
+        padding: 0.5em;
         text-align: center;
         text-transform: uppercase;
         font-weight: 300;
         letter-spacing: 2px;
         text-decoration: none;
-        font-size: .8em;
+        font-size: 0.8em;
     }
 </style>
 
 <div class="project-card">
-    <!-- <ProjectDate isoDate={ date }/> -->
-    <div class="title">
-        <h2>{ title }</h2>
+    <div class="lockup">
+        <div class="title">
+            <h2>{title}</h2>
+        </div>
+        <a href={link} class="link">{new URL(link).hostname}</a>
     </div>
-    <div class="summary">{ summary }</div>
-    <a href={ link } class="link">{ new URL(link).hostname }</a>
+    <div class="summary">{summary}</div>
 </div>

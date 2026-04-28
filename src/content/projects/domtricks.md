@@ -3,6 +3,7 @@ title: DOM-Tricks
 summary: A documentation-as-code project where each content page is generated directly from tested, JSDoc-annotated JavaScript source files.
 link: https://dom-tricks.com
 date: 2020-04-03
+draft: true
 ---
 
 Documentation is one of the least prioritized tasks in design and development. This is often because the exercise of documentation is more appropriate in another context from where the resources are created.

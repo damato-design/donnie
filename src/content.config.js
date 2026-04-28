@@ -8,7 +8,8 @@ const metadata = z.object({
   link: z.url(),
   image: z.url().optional(),
   caption: z.string().optional(),
-  date: z.date()
+  date: z.date(),
+  draft: z.boolean().optional()
 });
 
 const expertise = defineCollection({
