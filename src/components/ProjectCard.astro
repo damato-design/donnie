@@ -1,6 +1,18 @@
 ---
 import ProjectDate from "@components/ProjectDate.astro";
 const { title, summary, link, image, caption, date } = Astro.props;
+function parseDomainName(name: string) {
+    const { hostname } = new URL(name);
+    // Split by dots
+    const parts = hostname.split('.');
+    
+    // If it's just "localhost" or an IP, return as is
+    if (parts.length <= 2) return hostname;
+
+    // Standard logic: Keep the last two segments (e.g., domain.com)
+    // Note: This won't perfectly handle .co.uk without a library like 'psl'
+    return parts.slice(-2).join('.');
+}
 ---
 
 <style>
@@ -115,16 +127,12 @@ const { title, summary, link, image, caption, date } = Astro.props;
         isolation: isolate;
     }
 
-    .link {
+    .date {
         background: oklch(from var(--base) calc(l - .4) c h);
         border: 1px solid var(--border);
-        padding: 8px 16px;
+        padding: 4px;
         text-align: center;
-        text-transform: uppercase;
-        font-weight: 300;
-        letter-spacing: 2px;
         text-decoration: none;
-        font-size: 0.7em;
     }
 </style>
 
@@ -134,7 +142,10 @@ const { title, summary, link, image, caption, date } = Astro.props;
             <div class="title">
                 <h2>{title}</h2>
             </div>
-            <a href={link} class="link">{new URL(link).hostname}</a>
+            <div class="date">
+                <ProjectDate isoDate={date} />
+            </div>
+            <!-- <a href={link} class="link">{parseDomainName(link)}</a> -->
         </div>
         <div class="summary">{summary}</div>
     </div>

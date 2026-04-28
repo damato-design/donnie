@@ -32,7 +32,7 @@ function formatToRomanDate(isoString: string, separator = "✦") {
     date.getUTCDate()
   ];
 
-  return toRoman(parts[0]);
+  // return toRoman(parts[0]);
 
   return parts.map(toRoman).join(separator);
 }
@@ -41,7 +41,11 @@ function formatToRomanDate(isoString: string, separator = "✦") {
 
 <style>
     time {
-        font-size: .8em;
+        font-size: .6em;
+        font-family: Kentish;
+        letter-spacing: 2px;
+        transform: scaleY(.6);
+        display: block;
     }
 </style>
 
