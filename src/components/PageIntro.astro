@@ -1,0 +1,180 @@
+---
+const { image, tagline } = Astro.props;
+---
+
+<style>
+    .page-intro {
+        border-top: 1px solid oklch(from var(--border) calc(l - 0.2) c h);
+        border-bottom: 1px solid oklch(from var(--border) calc(l - 0.2) c h);
+        background-image:
+            url("/images/flowers.png"), url("/images/flowers.png");
+        background-blend-mode: soft-light;
+        background-size: cover;
+        background-position:
+            top center,
+            bottom center;
+        background-color: oklch(from var(--base) calc(l - 0.6) c h);
+        padding: 16px;
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            background-image: repeating-linear-gradient(
+                90deg,
+                oklch(from var(--border) calc(l - 0.3) c h),
+                oklch(from var(--border) calc(l - 0.3) c h) 1px,
+                transparent 1px,
+                transparent 10px
+            );
+            position: absolute;
+            width: 30%;
+            top: -50%;
+            bottom: -50%;
+            left: 50%;
+            transform: translateX(-100%) rotate(15deg);
+        }
+    }
+
+    .lockup {
+        display: flex;
+        isolation: isolate;
+    }
+
+    .image {
+        isolation: isolate;
+        border: 1px solid var(--border);
+        border-top-left-radius: 100vw;
+        border-top-right-radius: 100vw;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 2/3;
+        padding: 8px;
+        background-image: linear-gradient(
+            45deg,
+            oklch(from var(--base) calc(l - 0.4) c h),
+            oklch(from var(--base) calc(l - 0.6) c h)
+        );
+
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            object-position: center center;
+            mix-blend-mode: normal;
+            border-radius: inherit;
+        }
+    }
+
+    .content {
+        align-self: center;
+        border: 1px solid var(--border);
+        margin-inline-start: 1px;
+
+        .title {
+            background: linear-gradient(
+                105deg,
+                oklch(from var(--base) calc(l - 0.6) c h),
+                oklch(from var(--base) calc(l - 0.8) c h)
+            );
+            border-bottom: 3px double var(--border);
+            padding: 8px 16px;
+            font-size: 2em;
+            position: relative;
+            overflow: hidden;
+
+            h2 {
+                isolation: isolate;
+            }
+
+            &::before {
+                content: "";
+                border: 1px solid oklch(from var(--border) calc(l - 0.5) c h);
+                aspect-ratio: 1;
+                display: block;
+                right: 0;
+                position: absolute;
+                rotate: -45deg;
+                translate: 50% 0;
+                height: 120%;
+                --s: 20px;
+                --c1: oklch(from var(--base) calc(l - 0.6) c h);
+                --c2: oklch(from var(--base) calc(l - 0.55) c h);
+
+                background:
+                    radial-gradient(
+                        var(--c1) 14%,
+                        var(--c2) 15% 30%,
+                        var(--c1) 31% 44%,
+                        var(--c2) 45% 60%,
+                        #0000 61%
+                    ),
+                    linear-gradient(
+                        45deg,
+                        transparent 46%,
+                        var(--c2) 0 54%,
+                        transparent 0
+                    ),
+                    linear-gradient(
+                            -45deg,
+                            transparent 46%,
+                            var(--c2) 0 54%,
+                            transparent 0
+                        )
+                        var(--c1);
+                background-size: var(--s) var(--s);
+            }
+        }
+
+        .intro {
+            background-image: linear-gradient(
+                -15deg,
+                oklch(from var(--base) calc(l - 0.45) c h),
+                oklch(from var(--base) calc(l - 0.6) c h) 60%
+            );
+            padding: 16px;
+            font-size: 1.2em;
+            position: relative;
+
+            &::after {
+                content: "🟆";
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-image: linear-gradient(
+                    45deg,
+                    oklch(from var(--base) calc(l - 0.4) c h),
+                    oklch(from var(--base) calc(l - 0.6) c h)
+                );
+                color: var(--border);
+                aspect-ratio: 1;
+                position: absolute;
+                width: 60px;
+                border-radius: 100vw;
+                corner-shape: bevel;
+                border: 3px double var(--border);
+                top: -1.5px;
+                left: -1.5px;
+                transform: translate(-50%, -50%);
+            }
+        }
+    }
+</style>
+
+<section class="page-intro">
+    <div class="lockup max-width">
+        <div class="image">
+            <img src={image} />
+        </div>
+        <div class="content">
+            <div class="title">
+                <h2>{tagline}</h2>
+            </div>
+            <div class="intro">
+                <slot />
+            </div>
+        </div>
+    </div>
+</section>

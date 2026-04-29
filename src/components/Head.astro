@@ -146,9 +146,13 @@ const schema = {
             color: transparent;
         }
 
+        .max-width {
+            max-width: 860px;
+            margin-inline: auto;
+        }
+
         .tuft-fabric {
             --tuft-size: 100px;
-            --attachment: fixed;
             --button: radial-gradient(
                 oklch(from var(--base) calc(l - 0.4) c h) 4%,
                 oklch(from var(--base) calc(l - 0.5) c h) 9%,
@@ -164,16 +168,15 @@ const schema = {
             );
             --crease: transparent 49%, black 50%, transparent 70%;
             background:
-                var(--button) 0 0 var(--attachment),
+                var(--button) 0 0,
                 var(--button) calc(var(--tuft-size) / 2)
-                    calc(var(--tuft-size) / 2) var(--attachment),
-                var(--bump) calc(var(--tuft-size) / 2) 0 var(--attachment),
-                var(--bump) 0 calc(var(--tuft-size) / 2) var(--attachment),
-                var(--shadow) calc(var(--tuft-size) / 2) 0 var(--attachment),
-                var(--shadow) var(--tuft-size) calc(var(--tuft-size) / 2)
-                    var(--attachment),
-                linear-gradient(45deg, var(--crease)) 0 0 var(--attachment),
-                linear-gradient(-45deg, var(--crease)) 0 0 var(--attachment);
+                    calc(var(--tuft-size) / 2),
+                var(--bump) calc(var(--tuft-size) / 2) 0,
+                var(--bump) 0 calc(var(--tuft-size) / 2),
+                var(--shadow) calc(var(--tuft-size) / 2) 0,
+                var(--shadow) var(--tuft-size) calc(var(--tuft-size) / 2),
+                linear-gradient(45deg, var(--crease)) 0 0,
+                linear-gradient(-45deg, var(--crease)) 0 0;
             background-color: oklch(from var(--base) calc(l - 0.5) c h);
             background-size: var(--tuft-size) var(--tuft-size);
         }

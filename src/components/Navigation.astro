@@ -12,13 +12,13 @@
         display: flex;
         align-items: center;
         padding: 1rem;
-        filter: drop-shadow(0 10px 4px rgba(0, 0, 0, 0.3)) brightness(1);
+        filter: drop-shadow(0 10px 4px rgba(0, 0, 0, 0.3));
         z-index: 1;
         transition: filter .3s ease;
     }
 
-    nav:has(ul:hover) {
-        filter: drop-shadow(0 10px 4px rgba(0, 0, 0, 0.3)) brightness(1);
+    nav:has(ul:empty) {
+        display: none;
     }
 
     ul {

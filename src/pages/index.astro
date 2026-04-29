@@ -1,86 +1,16 @@
 ---
-import Head from "@components/Head.astro";
-import Hero from "@components/Hero.astro";
-import Navigation from "@components/Navigation.astro";
-import Badge from "@components/Badge.astro";
-import Card from '@components/Card.astro';
-import ContentGrid from "@components/ContentGrid.astro";
-import ProjectCard from "@components/ProjectCard.astro";
-import MediaCard from "@components/MediaCard.astro";
-import { getCollection } from "astro:content";
-
-const expertise = (await getCollection("expertise")).sort(
-    (a, b) => a.data.sort - b.data.sort,
-);
-const projects = (await getCollection("projects")).sort(
-    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-).filter((item) => !item.data.draft);
-const media = (await getCollection("media")).sort(
-    (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-);
+import Layout from '@layouts/Layout.astro';
+import Hero from '@components/Hero.astro';
+import PageIntro from '@components/PageIntro.astro';
+const tagline = 'Experience Architect';
 ---
 
-<html>
-    <Head />
-    <body class="tuft-fabric">
-        <Hero navigation="Donnie D'Amato" />
-        <main id="content">
-            
-            <p>
-                <a href="https://google.com">Contact me</a> for work inquiries, collaborations,
-                or just to say hi!
-            </p>
-            <Badge>Design Systems</Badge>
-            <section data-navigation="Expertise">
-                <h2>Expertise</h2>
-                <ContentGrid>
-                    {
-                    expertise.map((item) => (
-                        <Card>
-                            <h3>{item.data.title}</h3>
-                            {item.data.summary && <p>{item.data.summary}</p>}
-                        </Card>
-                    ))
-                }
-                </ContentGrid>
-            </section>
-
-            <section data-navigation="Projects">
-                <ContentGrid gridWidth="340px">
-                    {
-                    projects.map((item) => (
-                        <ProjectCard { ...item.data }/>
-                    ))
-                }
-                </ContentGrid>
-            </section>
-
-            <section data-navigation="Media">
-                <ContentGrid>
-                {
-                    media.map((item) => (
-                        <MediaCard { ...item.data }/>
-                    ))
-                }
-                </ContentGrid>
-                
-            </section>
-        </main>
-        <Hero cloned />
-        <Navigation />
-        <script>
-            window.addEventListener(
-                "scroll",
-                () => {
-                    const { scrollY, innerHeight } = window;
-                    const maxScroll =
-                        document.documentElement.scrollHeight - innerHeight;
-                    if (scrollY >= maxScroll) {
-                        window.scrollTo({ top: 0, behavior: "instant" });
-                    }
-                },
-                { passive: true },
-            );
-        </script>
-    </body>
-</html>
+<Layout>
+    <Hero>{ tagline }</Hero>
+    <PageIntro
+        image="/images/donnie.jpg"
+        tagline='Defining how experiences get built, taught, and shipped.'>
+        I'm Donnie D'Amato, an Experience Architect working at the intersection of design, engineering, and education. My work spans building systems at scale, writing about token architecture, and teaching the next generation of user-centric builders.
+    </PageIntro>
+    <Hero cloned>{ tagline }</Hero>
+</Layout>
