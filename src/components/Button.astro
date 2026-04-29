@@ -1,0 +1,14 @@
+---
+const { href, ...rest } = Astro.props;
+const TagName = href ? 'a' : 'button';
+---
+
+<style>
+    .button {
+
+    }
+</style>
+
+<TagName href={ href } { ...rest } class="button">
+    <slot/>
+</TagName>

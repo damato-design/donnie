@@ -2,15 +2,21 @@
 import Layout from '@layouts/Layout.astro';
 import Hero from '@components/Hero.astro';
 import PageIntro from '@components/PageIntro.astro';
-const tagline = 'Experience Architect';
+import Book from '@components/Book.astro';
+const heroTagline = 'Experience Architect';
 ---
 
 <Layout>
-    <Hero>{ tagline }</Hero>
+    <Hero>{ heroTagline }</Hero>
     <PageIntro
         image="/images/donnie.jpg"
         tagline='Defining how user experiences get built, taught, and shipped.'>
         I'm Donnie D'Amato, an Experience Architect leading the industry at the intersection of design, engineering, and education. My work spans building systems at scale, writing about token architecture, and teaching the next generation of user-centric builders.
     </PageIntro>
-    <Hero cloned>{ tagline }</Hero>
+    <Book
+        link='https://mode.place'
+        tagline='Let stakeholders express themselves'>
+        <strong>Mise en Mode</strong> is my book on design token architecture. A framework for expressing context through modes rather than endlessly growing your token system. It's been adopted by design systems practitioners across the industry as a new way to think about scale and intent.
+    </Book>
+    <Hero cloned>{ heroTagline }</Hero>
 </Layout>
