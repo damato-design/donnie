@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "WebFetch(domain:frontendmasters.com)",
+      "WebFetch(domain:codepen.io)"
     ]
   }
 }

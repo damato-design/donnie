@@ -134,12 +134,20 @@ const schema = {
             text-underline-offset: 0.15em;
         }
 
+        main {
+             background: linear-gradient(
+                195deg,
+                oklch(from var(--base) calc(l - 0.45) c h),
+                oklch(from var(--base) calc(l - 0.6) c h) 60%
+            );
+        }
+
         :where(h1, h2, h3) {
             font-family: "Kentish";
             font-weight: normal;
             text-wrap: balance;
             margin: 0;
-            padding-block: 0.5ex;
+            padding-block: 0.6ex;
             background-image: var(--shine);
             -webkit-background-clip: text;
             background-clip: text;

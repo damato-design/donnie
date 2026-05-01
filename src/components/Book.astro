@@ -1,20 +1,12 @@
 ---
-import MiseEnMode from '@assets/mise-en-mode.svg';
-import Fan from '@assets/fan.svg';
-import Badge from '@components/Badge.astro';
-import Button from '@components/Button.astro';
+import MiseEnMode from "@assets/mise-en-mode.svg";
+import Fan from "@assets/fan.svg";
+import Badge from "@components/Badge.astro";
+import Button from "@components/Button.astro";
 const { tagline, link } = Astro.props;
 ---
 
 <style>
-    .book-section {
-        background: linear-gradient(
-                195deg,
-                oklch(from var(--base) calc(l - 0.45) c h),
-                oklch(from var(--base) calc(l - 0.6) c h) 60%
-            );
-    }
-
     .lockup {
         display: flex;
         padding-block: 64px;
@@ -27,7 +19,7 @@ const { tagline, link } = Astro.props;
     }
 
     .book-callout {
-        aspect-ratio: .6;
+        aspect-ratio: 0.6;
         border-radius: 100% / 30%;
         corner-shape: bevel;
         border: 5px double var(--border);
@@ -38,39 +30,44 @@ const { tagline, link } = Astro.props;
         align-items: center;
         justify-content: center;
         filter: drop-shadow(
-                    12px 30px oklch(from var(--base) calc(l - 0.72) c h)
-                );
-        --s: 20px;
-                --c1: oklch(from var(--base) calc(l - 0.6) c h);
-                --c2: oklch(from var(--base) calc(l - 0.55) c h);
+            12px 30px oklch(from var(--base) calc(l - 0.72) c h)
+        );
+        --s: 123.5px; /* control the size*/
+        --c1: oklch(from var(--base) calc(l - 0.45) c h);
+        --c2: oklch(from var(--base) calc(l - 0.55) c h);
+        --c3: oklch(from var(--base) calc(l - 0.5) c h);
 
-                background:
-                    radial-gradient(
-                        var(--c1) 14%,
-                        var(--c2) 15% 30%,
-                        var(--c1) 31% 44%,
-                        var(--c2) 45% 60%,
-                        #0000 61%
-                    ),
-                    linear-gradient(
-                        45deg,
-                        transparent 46%,
-                        var(--c2) 0 54%,
-                        transparent 0
-                    ),
-                    linear-gradient(
-                            -45deg,
-                            transparent 46%,
-                            var(--c2) 0 54%,
-                            transparent 0
-                        )
-                        var(--c1);
-                background-size: var(--s) var(--s);
+        background:
+            conic-gradient(
+                    from 75deg,
+                    var(--c1) 15deg,
+                    var(--c2) 0 30deg,
+                    #0000 0 180deg,
+                    var(--c2) 0 195deg,
+                    var(--c1) 0 210deg,
+                    #0000 0
+                )
+                calc(var(--s) / 2) calc(0.5 * var(--s) / tan(30deg)),
+            conic-gradient(
+                var(--c1) 30deg,
+                var(--c3) 0 75deg,
+                var(--c1) 0 90deg,
+                var(--c2) 0 105deg,
+                var(--c3) 0 150deg,
+                var(--c2) 0 180deg,
+                var(--c3) 0 210deg,
+                var(--c1) 0 256deg,
+                var(--c2) 0 270deg,
+                var(--c1) 0 286deg,
+                var(--c2) 0 331deg,
+                var(--c3) 0
+            );
+        background-size: var(--s) calc(var(--s) / tan(30deg));
     }
 
     .fan {
         color: var(--border);
-        width: 50%
+        width: 50%;
     }
 
     .book-title {
@@ -82,7 +79,7 @@ const { tagline, link } = Astro.props;
         position: relative;
 
         &::after {
-            content: '';
+            content: "";
             position: absolute;
             inset: -8px;
             border: 1px solid var(--border);
@@ -93,19 +90,18 @@ const { tagline, link } = Astro.props;
 
     .book-subtitle {
         background: linear-gradient(
-                15deg,
-                oklch(from var(--base) calc(l - 0.5) c h),
-                oklch(from var(--base) calc(l - 0.6) c h) 60%
-            );
+            15deg,
+            oklch(from var(--base) calc(l - 0.5) c h),
+            oklch(from var(--base) calc(l - 0.6) c h) 60%
+        );
         margin: 0;
         margin-block-start: 32px;
         padding: 16px 8px;
-        font-size: .9em;
+        font-size: 0.9em;
         border-top: 1px solid var(--border);
         border-bottom: 1px solid var(--border);
         align-self: stretch;
     }
-
 </style>
 
 <section class="book-section" data-navigation="Mise en Mode">
@@ -121,12 +117,14 @@ const { tagline, link } = Astro.props;
             </div>
         </div>
         <div class="book-callout">
-            <Fan class="fan"/>
+            <Fan class="fan" />
             <div class="book-title">
-                <MiseEnMode/>
+                <MiseEnMode />
             </div>
-            <p class="book-subtitle">A new model for design systems and customization</p>
-            <Fan class="fan" style="rotate: 180deg"/>
+            <p class="book-subtitle">
+                A new model for design systems and customization
+            </p>
+            <Fan class="fan" style="rotate: 180deg" />
         </div>
     </div>
 </section>
