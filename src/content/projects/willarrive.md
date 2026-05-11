@@ -3,6 +3,7 @@ title: willarrive.in
 summary: A minimal progressive web app that uses geolocation to instantly show when the next train arrives at the nearest station on a chosen line.
 link: https://willarrive.in
 date: 2016-03-22
+draft: true
 ---
 
 Transit app experiences usually result in a lot of navigation. After all, it is an experience meant to navigate a person to a physical destination.

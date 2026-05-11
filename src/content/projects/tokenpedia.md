@@ -1,8 +1,8 @@
 ---
-title: designtokens.fyi
+title: Tokenpedia
 summary: A community reference project defining and standardizing nearly three dozen design token terms to improve shared language across the design systems practice.
-link: https://designtokens.fyi
-image: https://designtokens.fyi/og-image.png
+link: https://tokenpedia.ds.house
+image: https://tokenpedia.ds.house/og-image.png
 caption: designtokens.fyi
 date: 2025-02-28
 ---

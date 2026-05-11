@@ -3,6 +3,7 @@ title: Roxor Games
 summary: Served as a gameplay artist for In The Groove 3, creating step charts for nearly 70% of the game drawing on deep expertise in rhythm game design.
 link: https://roxorgames.com
 date: 2006-08-16
+draft: true
 ---
 
 After high school, I was heavily involved in the rhythm game community, specifically Dance Dance Revolution. I was internationally recognized not only for my performance on the arcade stage but also as a thought leader for quality gameplay.
