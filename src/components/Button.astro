@@ -1,0 +1,97 @@
+---
+import Arrow from "@assets/arrow.svg";
+const { href, ...rest } = Astro.props;
+const TagName = href ? "a" : "button";
+---
+
+<style>
+    .button {
+        text-decoration: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        transform: skewX(-15deg);
+        margin: 10px;
+        padding: 8px;
+        position: relative;
+        border: 3px double oklch(from var(--border) calc(l - 0.3) c h);
+        background-color: oklch(from var(--base) calc(l - 0.6) c h);
+            background-image: repeating-linear-gradient(
+                90deg,
+                oklch(from var(--border) calc(l - 0.4) c h),
+                oklch(from var(--border) calc(l - 0.4) c h) 1px,
+                transparent 1px,
+                transparent 4px
+            );
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            transform: skewX(30deg);
+            border: 3px double oklch(from var(--border) calc(l - 0.2) c h);
+            
+
+            --s: 10px;
+        --c1: oklch(from var(--base) calc(l - 0.4) c h);
+        --c2: oklch(from var(--base) calc(l - 0.5) c h);
+
+        background:
+            radial-gradient(
+                var(--c1) 14%,
+                var(--c2) 15% 30%,
+                var(--c1) 31% 44%,
+                var(--c2) 45% 60%,
+                #0000 61%
+            ),
+            linear-gradient(
+                45deg,
+                transparent 46%,
+                var(--c2) 0 54%,
+                transparent 0
+            ),
+            linear-gradient(
+                    -45deg,
+                    transparent 46%,
+                    var(--c2) 0 54%,
+                    transparent 0
+                )
+                var(--c1);
+        background-size: var(--s) var(--s);
+            
+        }
+    }
+
+
+    .label {
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: .8em;
+        display: flex;
+        gap: 1ch;
+        align-items: center;
+        transform: skewX(15deg);
+        letter-spacing: 2px;
+        background: oklch(from var(--base) calc(l - 0.6) c h);
+        padding: 4px 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px / 100%;
+        corner-shape: bevel;
+
+        &::before {
+            content:'🙝';
+            color: oklch(from var(--base) calc(l - 0.3) c h);
+        }
+
+        &::after {
+            content: '🙟';
+            color: oklch(from var(--base) calc(l - 0.3) c h);
+        }
+    }
+</style>
+
+<TagName href={href} {...rest} class="button">
+    <span class="label">
+        <slot />
+    </span>
+</TagName>

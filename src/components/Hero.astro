@@ -1,0 +1,109 @@
+---
+import Edge from "@assets/side.svg";
+const { cloned, navigation } = Astro.props;
+---
+
+<style>
+    section {
+        padding: 0 16px;
+        height: 100vh;
+        color: var(--border);
+        position: relative;
+        display: flex;
+        
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(
+                circle farthest-corner at center,
+                transparent,
+                oklch(from var(--base) calc(l - 0.8) c h) 80%
+            );
+        }
+    }
+
+    .lockup {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .grid {
+        display: grid;
+        text-align: center;
+        justify-items: center;
+        align-items: center;
+        border: 3px double var(--border);
+        overflow: visible;
+
+        &::after {
+            content: "";
+            display: block;
+            border: 1px solid var(--border);
+            grid-area: 1 / 1 / -1 / -1;
+            height: calc(100% + 2rem);
+            width: calc(100% + 2rem);
+            border-radius: 2rem;
+            corner-shape: notch;
+        }
+
+        h2 {
+            z-index: 1;
+            font-size: 7vw;
+            filter: drop-shadow(0 6px 1px #411d);
+            padding: 16px;
+        }
+
+        img {
+            margin: -64px;
+            max-width: 100%;
+            width: auto;
+            mix-blend-mode: luminosity;
+            filter: drop-shadow(
+                    0 40px oklch(from var(--base) calc(l - 0.72) c h)
+                )
+                brightness(0.6);
+        }
+
+        & > * {
+            grid-area: 1 / 1 / -1 / -1;
+        }
+    }
+</style>
+
+<section
+    data-navigation={navigation}
+    class="tuft-fabric"
+    style={{ "overflow-y": cloned ? "hidden" : "visible" }}
+>
+    <div class="lockup max-width">
+        <Edge style="scale: -1" />
+        <div class="grid">
+            <img src="/images/flowers.png" />
+            <h2>
+                <slot/>
+            </h2>
+        </div>
+        <Edge />
+    </div>
+</section>
+
+<script is:inline define:vars={{ cloned }}>
+    if (cloned) {
+        window.addEventListener(
+            "scroll",
+            () => {
+                const { scrollY, innerHeight } = window;
+                const maxScroll =
+                    document.documentElement.scrollHeight - innerHeight;
+                if (scrollY >= maxScroll) {
+                    window.scrollTo({ top: 0, behavior: "instant" });
+                }
+            },
+            { passive: true },
+        );
+    }
+</script>

@@ -2,9 +2,9 @@
 title: DS Events
 summary: A community-driven design systems event calendar offering iCal and RSS feeds with self-service event submission via GitHub pull requests.
 link: https://ds.events
-image: https://ds.events/og-image.png
 caption: ds.events
 date: 2023-09-19
+draft: true
 ---
 
 The design systems practice has a worldwide audience looking for ways of connecting. While many platforms can help host events, they aren't often specific to any one group.

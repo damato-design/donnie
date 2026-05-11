@@ -3,6 +3,7 @@ title: NextUp
 summary: A tournament management platform that automated bracket progression and competitor notifications via SMS to reduce manual coordination at gaming events.
 link: https://nextup.me
 date: 2014-07-27
+draft: true
 ---
 
 During my years after high school, I was very interested in competitive video gaming. I'd go to local tournaments fairly regularly and even some across state lines. Eventually, I'd become a well-known tournament organizer and host some of the first international gaming tournaments with significant prizes.

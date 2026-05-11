@@ -1,0 +1,130 @@
+---
+import Gramophone from '@assets/gramophone.svg';
+import MediaDate from '@components/MediaDate.astro';
+import Corner from '@assets/corner.svg';
+const { title, link, image, caption, date } = Astro.props;
+---
+
+<style>
+    .media-card {
+        border: 6px double var(--border);
+        /* border-image: var(--shine) 1; */
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        padding: 12px;
+        background-image: linear-gradient(
+                -45deg,
+                oklch(from var(--base) calc(l - 0.4) c h),
+                oklch(from var(--base) calc(l - 0.6) c h)
+            );
+
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            margin: -12px;
+            border: 1px solid var(--border);
+            border-radius: 33px;
+            corner-shape: notch;
+            pointer-events: none;
+        }
+    }
+
+    .corner {
+        width: 100px;
+        top: -5px;
+        position: absolute;
+        color: var(--border);
+    }
+
+    .header {
+        isolation: isolate;
+        border: 1px solid var(--border);
+        border-top-left-radius: 100vw;
+        border-top-right-radius: 100vw;
+        overflow: hidden;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 1;
+        padding: 8px;
+        background-image: linear-gradient(
+                45deg,
+                oklch(from var(--base) calc(l - 0.4) c h),
+                oklch(from var(--base) calc(l - 0.6) c h)
+            );
+        color: var(--border);
+
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            object-position: center center;
+            mix-blend-mode: normal;
+            border-radius: inherit;
+        }
+    }
+
+    .footer {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas: "title date" "caption date";
+        border: 1px solid var(--border);
+        border-top: none;
+        text-align: center;
+    }
+
+    .title {
+        grid-area: title;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-wrap: balance;
+        padding: .5em;
+        background: oklch(from var(--base) calc(l - 0.7) c h);
+        filter: brightness(1.2);
+        font-size: .9em;
+    }
+
+    .caption {
+        grid-area: caption;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: .5em;
+        background: oklch(from var(--base) calc(l - .4) c h);
+        border-top: 1px solid var(--border);
+        text-transform: uppercase;
+        letter-spacing: 5px;
+        font-size: .7em;
+        font-weight: 300;
+    }
+
+    .date {
+        grid-area: date;
+        border-left: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        background-color: oklch(from var(--base) calc(l - .5) c h);
+    }
+</style>
+
+<div class="media-card">
+    <Corner class="corner" style="rotate: 0deg; left: -5px;"/>
+    <Corner class="corner" style="rotate: 90deg; right: -5px;"/>
+    <div class="header">
+        { image ? <img src={image}> : <Gramophone/> }
+    </div>
+    <div class="footer">
+        <div class="title">
+            <h2>{ title }</h2>
+        </div>
+        <div class="caption">{ caption }</div>
+        <div class="date circles">
+            <MediaDate isoDate={ date }/>
+        </div>
+    </div>
+</div>

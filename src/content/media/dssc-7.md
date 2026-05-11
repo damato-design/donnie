@@ -1,5 +1,5 @@
 ---
-title: 'DSSC #7, Governance'
+title: Governance
 summary: Design Systems Social Club episode on governance structures and decision-making frameworks in design systems.
 link: https://www.youtube.com/watch?v=BrCtfoLeteo
 image: https://i.ytimg.com/vi/BrCtfoLeteo/maxresdefault.jpg
