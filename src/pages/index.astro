@@ -4,6 +4,7 @@ import Hero from '@components/Hero.astro';
 import PageIntro from '@components/PageIntro.astro';
 import Book from '@components/Book.astro';
 import ProjectCarousel from '@components/ProjectCarousel.astro';
+import Wireframe from '@components/Wireframe.astro';
 const heroTagline = 'Experience Architect';
 ---
 
@@ -21,6 +22,7 @@ const heroTagline = 'Experience Architect';
             <strong>Mise en Mode</strong> is my book on design token architecture. A framework for expressing context through modes rather than endlessly growing your token system. It's been adopted by design systems practitioners across the industry as a new way to think about scale and intent.
         </Book>
         <ProjectCarousel/>
+        <Wireframe/>
     </main>
     <Hero cloned>{ heroTagline }</Hero>
 </Layout>

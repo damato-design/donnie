@@ -14,11 +14,14 @@
         color: color-mix(in oklch, var(--gold), black 70%);
         text-transform: uppercase;
         letter-spacing: 5px;
+        text-indent: 5px;
         font-size: .8em;
         font-weight: 800;
 
         &::before, &::after {
             content: '✹';
+            letter-spacing: 0;
+            text-indent: 0;
         }
     }
 </style>

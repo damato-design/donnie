@@ -1,0 +1,113 @@
+---
+import Badge from '@components/Badge.astro'
+---
+
+<style>
+    .lockup {
+        display: flex;
+        padding-block: 64px;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        padding: 64px 16px;
+        max-width: 1000px;
+        margin-inline: auto;
+    }
+
+    .media {
+        display: grid;
+        border: 3px double var(--border);
+        padding: 8px;
+        margin-block-start: -20px;
+        flex-basis: 500px;
+        background-image: repeating-linear-gradient(
+            -135deg,
+            oklch(from var(--border) calc(l - 0.2) c h),
+            oklch(from var(--border) calc(l - 0.2) c h) 3px,
+            transparent 3px,
+            transparent 50px
+        );
+
+        & > * {
+            grid-area: 1 / 1 / -1 / -1;
+            justify-self: center;
+            background: linear-gradient(
+                195deg,
+                oklch(from var(--base) calc(l - 0.45) c h),
+                oklch(from var(--base) calc(l - 0.6) c h) 60%
+            );
+            border: 2px solid var(--border);
+            &:where(:not(video)) {
+                padding: 0 36px;
+                border-radius: 100vw;
+                corner-shape: bevel;
+                height: 60px;
+                display: flex;
+                align-items: center;
+            }
+        }
+
+        .header {
+            margin-top: -29px;
+            align-self: start;
+            font-size: 1.25em;
+        }
+
+        .footer { 
+            margin-bottom: -29px;
+            align-self: end;
+        }
+    }
+
+    video {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        object-position: center center;
+    }
+
+    .content {
+        flex-basis: 45ch;
+    }
+
+    .title {
+        font-size: 2em;
+    }
+</style>
+
+<section data-navigation="Wireframe">
+    <div class="lockup">
+        <div class="media">
+
+            <video
+                autoplay
+                loop
+                muted
+                playsinline
+                poster="https://wireframe.ds.house/og-image.png"
+            >
+                <source
+                    src="https://wireframe.ds.house/wireframe-sizzle.webm"
+                    type="video/webm"
+                />
+                <img
+                    src="https://wireframe.ds.house/og-image.png"
+                    alt="Wireframe Sizzle"
+                />
+            </video>
+            <div class="header">
+                <h2>Wireframe</h2>
+            </div>
+            <div class="footer">
+                <h2>LIVE</h2>
+            </div>
+        </div>
+        <div class="content">
+            <Badge>Host</Badge>
+            <div class="title">
+                <h2>Live talk show</h2>
+            </div>
+            <p>Wireframe is a live talk show about the place where design and engineering meet — and all the interesting problems that live there. Each episode brings a new guest into a conversation about how our industry actually works: the decisions, the tradeoffs, the things that don't make it into conference talks. New episodes air live on YouTube, with audio available wherever you listen to podcasts.</p>
+        </div>
+    </div>
+</section>
