@@ -1,8 +1,8 @@
 ---
 title: "UXDX Panel: The Future of Design Systems"
 summary: A UXDX 2026 panel discussion exploring where design systems are headed with leaders across the field.
-link: https://uxdx.com/session/the-future-of-design-systems/
-image: https://donnie.damato.design/images/uxdxvideoframe.png
+link: https://www.youtube.com/watch?v=2RPZwzFy_Vs
+image: https://i3.ytimg.com/vi/2RPZwzFy_Vs/mqdefault.jpg
 caption: "Panel: The Future of Design Systems"
 date: 2026-05-13
 ---
