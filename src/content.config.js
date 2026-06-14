@@ -1,11 +1,12 @@
-import { defineCollection, z } from 'astro:content';
+import { z } from 'astro/zod';
+import { defineCollection } from 'astro:content';
 import { glob, file } from 'astro/loaders';
 
 const metadata = z.object({
   title: z.string(),
   summary: z.string().optional(),
-  link: z.string().url(),
-  image: z.string().url().optional(),
+  link: z.url(),
+  image: z.url().optional(),
   caption: z.string().optional(),
   date: z.date(),
   draft: z.boolean().optional()
@@ -35,7 +36,7 @@ const connect = defineCollection({
   schema: z.object({
     id: z.number(),
     title: z.string(),
-    link: z.string().url(),
+    link: z.url(),
     icon: z.string()
   })
 });

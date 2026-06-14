@@ -1,0 +1,52 @@
+---
+const { isoDate } = Astro.props;
+
+/**
+ * Formats an ISO 8601 date using an object and .reduce()
+ */
+function formatToRomanDate(isoString: string, separator = "✦") {
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) throw new Error("Invalid Date");
+
+  const romanMap = {
+    M: 1000, CM: 900, D: 500, CD: 400,
+    C: 100, XC: 90, L: 50, XL: 40,
+    X: 10, IX: 9, V: 5, IV: 4, I: 1
+  };
+
+  const toRoman = (num: number) => {
+    // Object.entries returns [['M', 1000], ['CM', 900], ...]
+    return Object.entries(romanMap).reduce((acc, [numeral, value]) => {
+      const repeatCount = Math.floor(acc.remaining / value);
+      
+      return {
+        str: acc.str + numeral.repeat(repeatCount),
+        remaining: acc.remaining % value
+      };
+    }, { str: "", remaining: num }).str;
+  };
+
+  const parts = [
+    date.getUTCFullYear(),
+    date.getUTCMonth() + 1,
+    date.getUTCDate()
+  ];
+
+  // return toRoman(parts[0]);
+
+  return parts.map(toRoman).join(separator);
+}
+
+---
+
+<style>
+    time {
+        font-size: .6em;
+        font-family: Kentish;
+        letter-spacing: 2px;
+        transform: scaleY(.6);
+        display: block;
+    }
+</style>
+
+<time datetime={ isoDate } title={isoDate}>{ formatToRomanDate(isoDate) }</time>

@@ -1,0 +1,62 @@
+---
+const { isoDate } = Astro.props;
+
+function formatToMediaDate(isoString: string) {
+  const date = new Date(isoString);
+  if (isNaN(date.getTime())) throw new Error("Invalid Date");
+
+
+  /** Use Intl date formating to get the short month name, two digit day, and four digit year */
+
+  const fmt = (options: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat('en-US', options).format(date);
+
+  return {
+    month: fmt({ month: 'short' }),
+    day: fmt({ day: '2-digit' }),
+    year: fmt({ year: 'numeric' }),
+  };
+}
+
+
+const { month, day, year } = formatToMediaDate(isoDate);
+---
+
+<style>
+    .media-date {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: .25rem .5rem;
+      background: oklch(from var(--base) calc(l - .45) c h);
+      border: 1px solid var(--border);
+      font-weight: 700;
+    }
+
+    .month, .year {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .day {
+      font-family: "Kentish";
+      font-size: 2em;
+      color: var(--gold);
+      display: flex;
+      font-weight: normal;
+      align-items: center;
+      gap: 2px;
+
+      &::before, &::after {
+        content: '✦';
+        font-size: .25em;
+      }
+    }
+</style>
+
+<time class="media-date" datetime={ isoDate } title={isoDate}>
+  <span class="month">{ month }</span>
+  <span class="day">{ day }</span>
+  <span class="year">{ year }</span>
+</time>

@@ -59,21 +59,21 @@ const schema = {
 
     <style is:global>
         @font-face {
-            font-family: "Penstand";
+            font-family: "Raleway";
             font-style: normal;
-            font-weight: 400;
+            font-weight: 1 999;
             src:
-                local("Penstand"),
-                url("/Penstand.woff2") format("woff2");
+                local("Raleway"),
+                url("/Raleway.ttf") format("truetype");
         }
 
         @font-face {
-            font-family: "Permanent Marker";
+            font-family: "Kentish";
             font-style: normal;
             font-weight: 400;
             src:
-                local("Permanent Marker"),
-                url("/PermanentMarker-Regular.woff2") format("woff2");
+                local("Kentish"),
+                url("/Kentish-Regular.woff2") format("woff2");
         }
 
         *,
@@ -82,88 +82,176 @@ const schema = {
             box-sizing: border-box;
         }
 
+        :root {
+            --base: #ff00dc; /** #ff00dc  #00fff3*/
+            --gold: gold;
+            --border: color-mix(in oklch, var(--gold), white 10%);
+            --shine: linear-gradient(
+                110deg,
+                color-mix(in oklch, var(--gold), white 40%) 0%,
+                color-mix(in oklch, var(--gold), white 80%) 20%,
+                color-mix(in oklch, var(--gold), black 20%) 40%,
+                color-mix(in oklch, var(--gold), white 60%) 50%,
+                color-mix(in oklch, var(--gold), black 20%) 65%,
+                color-mix(in oklch, var(--gold), white 30%) 85%,
+                color-mix(in oklch, var(--gold), white 80%) 100%
+            );
+        }
+
         html {
             scroll-behavior: smooth;
+            overscroll-behavior: none;
+        }
+
+        html::after {
+            /** Vignette */
+            /* content: ""; */
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(
+                circle farthest-corner at center,
+                transparent,
+                rgba(0, 0, 0, 0.85) 110%
+            );
+            pointer-events: none;
         }
 
         body {
             margin: 0;
             overscroll-behavior-y: none;
-            font-family: system-ui;
-            color: color-mix(in oklch, var(--fg), var(--bg) 5%);
-            font-size: 1.2em;
-            line-height: 1.5;
-        }
-
-        body[data-scheme="light"] {
-            --bg: #fcfcfc;
-            --fg: #111;
-            --ac: ;
-        }
-
-        body[data-scheme="dark"] {
-            --bg: #222;
-            --fg: #fcfcfc;
-            --ac: ;
-        }
-
-        :where(h1, h2, h3) {
-            font-family: "Penstand", cursive;
-            font-weight: normal;
-            font-size: 3em;
-            margin: 0;
-            margin-bottom: 1rem;
-            line-height: 0.7;
-            text-indent: -1ch;
-            margin-inline-start: 1ch;
-            text-wrap: balance;
-        }
-
-        :where(h3) {
-            font-size: 2em;
-            margin-block: 0;
+            text-rendering: optimizeLegibility;
+            background-attachment: fixed;
+            font-family: Raleway, sans-serif;
+            font-weight: 500;
+            line-height: 1.4;
+            text-wrap: pretty;
+            color: white;
         }
 
         a {
             color: inherit;
+            text-decoration-thickness: 1px;
             text-underline-offset: 0.15em;
         }
 
-        .sticker {
-            padding: 0.5rem;
-            font-size: 2.5rem;
-            user-select: none;
-            stroke: color-mix(in oklch, white, var(--bg) 82%);
-            stroke-width: 29%;
-            stroke-linejoin: round;
-            paint-order: stroke fill;
-            overflow: visible;
-            filter: drop-shadow(1px 1px 1px rgba(20, 20, 20, 0.2));
-            pointer-events: none;
+        main {
+             background: linear-gradient(
+                195deg,
+                oklch(from var(--base) calc(l - 0.45) c h),
+                oklch(from var(--base) calc(l - 0.6) c h) 60%
+            );
         }
 
-        figure {
-            background-color: #fff;
-            padding: 1rem;
-            box-shadow: 0 2px 2px 0 color-mix(in oklch, #888, transparent 80%);
-            max-width: 100%;
+        :where(h1, h2, h3) {
+            font-family: "Kentish";
+            font-weight: normal;
+            text-wrap: balance;
             margin: 0;
-            border-bottom: 1px solid color-mix(in oklch, #888, transparent 70%);
-            rotate: -3deg;
-            margin-block: 1.5lh;
-            transition: rotate 0.218s ease;
+            padding-block: 0.6ex;
+            background-image: var(--shine);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
 
-            &:hover {
-                rotate: 0deg;
+        .max-width {
+            max-width: 860px;
+            margin-inline: auto;
+        }
+
+        .tuft-fabric {
+            --tuft-size: 100px;
+            --button: radial-gradient(
+                oklch(from var(--base) calc(l - 0.4) c h) 4%,
+                oklch(from var(--base) calc(l - 0.5) c h) 9%,
+                transparent 9%
+            );
+            --bump: radial-gradient(
+                oklch(from var(--base) calc(l - 0.35) c h / 0.8) 20%,
+                transparent
+            );
+            --shadow: radial-gradient(
+                oklch(from var(--base) calc(l - 0.6) c h) 35%,
+                transparent 60%
+            );
+            --crease: transparent 49%, black 50%, transparent 70%;
+            background:
+                var(--button) 0 0,
+                var(--button) calc(var(--tuft-size) / 2)
+                    calc(var(--tuft-size) / 2),
+                var(--bump) calc(var(--tuft-size) / 2) 0,
+                var(--bump) 0 calc(var(--tuft-size) / 2),
+                var(--shadow) calc(var(--tuft-size) / 2) 0,
+                var(--shadow) var(--tuft-size) calc(var(--tuft-size) / 2),
+                linear-gradient(45deg, var(--crease)) 0 0,
+                linear-gradient(-45deg, var(--crease)) 0 0;
+            background-color: oklch(from var(--base) calc(l - 0.5) c h);
+            background-size: var(--tuft-size) var(--tuft-size);
+        }
+
+        .card-stock {
+            background-image: linear-gradient(
+                45deg,
+                oklch(from var(--base) calc(l - 0.4) c h),
+                oklch(from var(--base) calc(l - 0.6) c h)
+            );
+            background-attachment: fixed;
+
+            &::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                top: auto;
+                height: 1.5rem;
+                --s: 10px;
+                --c1: transparent;
+                --c2: oklch(from var(--base) calc(l - 0.5) c h);
+
+                background:
+                    radial-gradient(
+                        var(--c1) 14%,
+                        var(--c2) 15% 30%,
+                        var(--c1) 31% 44%,
+                        var(--c2) 45% 60%,
+                        #0000 61%
+                    ),
+                    linear-gradient(
+                        45deg,
+                        transparent 46%,
+                        var(--c2) 0 54%,
+                        transparent 0
+                    ),
+                    linear-gradient(
+                            -45deg,
+                            transparent 46%,
+                            var(--c2) 0 54%,
+                            transparent 0
+                        )
+                        var(--c1);
+                background-size: var(--s) var(--s);
+                background-position: center;
+                --m: conic-gradient(
+                        from 135deg at top,
+                        transparent,
+                        black 1deg 89deg,
+                        transparent 90deg
+                    )
+                    top / 20px 100% repeat-x;
+                -webkit-mask: var(--m);
+                mask: var(--m);
             }
         }
 
-        figcaption {
-            text-align: center;
-            text-wrap: pretty;
-            font-family: "Permanent Marker", monospace;
-            color: black;
-            font-size: 1.3em;
+        .circles {
+            /* background-color: #e5e5f7; */
+            background-image:
+                repeating-radial-gradient(
+                    circle at 0 0,
+                    var(--border) 0,
+                    var(--border) 1px,
+                    transparent 1px,
+                    transparent 24px
+                );
         }
     </style>
 </head>

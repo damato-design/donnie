@@ -1,9 +1,9 @@
 ---
-title: Tokenpedia
+title: tokenpedia
 summary: A community reference project defining and standardizing nearly three dozen design token terms to improve shared language across the design systems practice.
 link: https://tokenpedia.ds.house
 image: https://tokenpedia.ds.house/og-image.png
-caption: designtokens.fyi
+caption: tokenpedia
 date: 2025-02-28
 ---
 

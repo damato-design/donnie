@@ -1,0 +1,143 @@
+<style>
+    @property --light {
+        syntax: "<color>";
+        inherits: false;
+        initial-value: #222;
+    }
+
+    nav {
+        position: fixed;
+        inset: 0;
+        left: auto;
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        filter: drop-shadow(0 10px 4px rgba(0, 0, 0, 0.3));
+        z-index: 1;
+        transition: filter .3s ease;
+    }
+
+    nav:has(ul:empty) {
+        display: none;
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        text-align: right;
+        font-family: "Kentish";
+        position: relative;
+        padding-block: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        corner-shape: scoop;
+        border-radius: 1rem;
+        border: 3px double var(--border);
+        background-image: linear-gradient(45deg, 
+            oklch(from var(--base) calc(l - .4) c h),
+            oklch(from var(--base) calc(l - .6) c h));
+
+        &::after {
+            content: '';
+            pointer-events: none;
+            position: absolute;
+            inset: 1px;
+            border: 1px solid var(--border);
+            display: block;
+        }
+
+        a {
+            --light: #444;
+            font-size: 0;
+            background:
+                radial-gradient(circle at 40% 40%, #fffd 0%, transparent 15%),
+                radial-gradient(circle, var(--light) 5%, black 39%, black 40%, transparent 49%);
+            display: block;
+            aspect-ratio: 1;
+            width: 3rem;
+            transition: --light .3s ease;
+            padding: 1rem;
+        }
+
+        a:hover {
+            --light: green;
+        }
+
+        a[aria-current] {
+            --light: red;
+        }
+
+        a::before {
+            content: attr(data-label);
+            position: absolute;
+            font-size: 1rem;
+            white-space: pre;
+            right: 100%;
+            top: 2rem;
+            background: linear-gradient(to bottom, #000000, #241024);
+            border: 1px solid #3d0039;
+            transition: 0.3s ease;
+            transform-origin: top right;
+            text-decoration: none;
+            padding: 0.5rem 1em;
+            border-radius: 3px;
+            z-index: -1;
+        }
+
+        a:not([aria-current])::before {
+            rotate: -90deg;
+        }
+    }
+</style>
+
+<nav>
+    <ul></ul>
+</nav>
+
+<script>
+    const navList = document.querySelector("nav ul")!;
+    const sections = Array.from(
+        document.querySelectorAll<HTMLElement>("[data-navigation]"),
+    );
+
+    for (const section of sections) {
+        const label = section.dataset.navigation!;
+        const id = label.toLowerCase().replace(/\s+/g, "-");
+        section.id = id;
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="#${id}" data-label="${label}">${label}</a>`;
+        navList.appendChild(li);
+    }
+
+    const links = Array.from(navList.querySelectorAll<HTMLAnchorElement>("a"));
+    const visible = new Set<Element>();
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            for (const entry of entries) {
+                if (entry.isIntersecting) {
+                    visible.add(entry.target);
+                } else {
+                    visible.delete(entry.target);
+                }
+            }
+            const active = sections.find((s) => visible.has(s)) ?? null;
+            for (const link of links) {
+                const id = link.getAttribute("href")!.slice(1);
+                if (active?.id === id) {
+                    link.setAttribute("aria-current", "location");
+                } else {
+                    link.removeAttribute("aria-current");
+                }
+            }
+        },
+        { rootMargin: "0px 0px -50% 0px", threshold: 0 },
+    );
+
+    for (const section of sections) {
+        observer.observe(section);
+    }
+</script>

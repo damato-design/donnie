@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCard from '@components/ProjectCard.astro';
+
+const projects = (await getCollection('projects'))
+  .filter(p => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const count = projects.length;
+---
+
+<style>
+  .project-carousel {
+    padding-block: 32px;
+    overflow: hidden;
+  }
+
+  .project-carousel .track {
+    --s: 360px;
+    --d: 240s;
+    --outset: 1;
+
+    display: grid;
+    grid-template-columns: repeat(var(--count), minmax(var(--s), 1fr));
+  }
+
+  .project-carousel .track:hover .slide {
+    animation-play-state: paused;
+  }
+
+  .project-carousel .slide {
+    display: flex;
+    animation: marquee var(--d) calc((var(--d) / var(--count)) * (var(--i) - var(--count))) infinite linear;
+    translate: calc(((var(--count) - var(--i)) + var(--outset)) * 100%) 0%;
+  }
+
+  @keyframes marquee {
+    to { translate: calc((var(--i) + var(--outset)) * -100%) 0%; }
+  }
+</style>
+
+<section class="project-carousel" data-navigation="Projects">
+  <div class="track" style={`--count: ${count};`}>
+    {projects.map((project, i) => (
+      <div class="slide" style={`--i: ${i};`}>
+        <ProjectCard {...project.data} />
+      </div>
+    ))}
+  </div>
+</section>

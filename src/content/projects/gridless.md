@@ -2,7 +2,6 @@
 title: Gridless Design
 summary: An educational resource challenging traditional grid-based design in favor of leveraging native web layout algorithms for responsive design.
 link: https://gridless.design
-image: https://gridless.design/og-image.jpg
 caption: gridless.design
 date: 2021-07-15
 ---

@@ -2,7 +2,6 @@
 title: DAMATO Design System
 summary: A personal design system exploring novel token naming conventions, color scales, and component architecture without business constraints.
 link: https://system.damato.design
-image: https://system.damato.design/og-image.png
 caption: DAMATO Design System
 date: 2022-04-12
 ---
