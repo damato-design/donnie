@@ -1,5 +1,5 @@
 ---
-title: NYIT
+title: New York Institute of Technology
 summary: Taught live event production courses at NYIT, guiding students through preproduction, streaming, and building a brand and audience for live shows.
 link: https://nyit.edu
 date: 2014-05-23
