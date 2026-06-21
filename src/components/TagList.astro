@@ -1,0 +1,70 @@
+---
+/**
+ * TagList Component
+ *
+ * Renders a horizontal, wrapping list of tags as shared Label primitives, so
+ * tags match every other badge. Centralizes the `tags.map(...)` markup repeated
+ * across the cards.
+ *
+ * When `max` is set and there are more items than `max`, the overflow collapses
+ * into a "+N" label. Renders nothing when `items` is empty.
+ *
+ * Only the list layout is styled here; the label look comes from Label.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <TagList items={tags} />
+ * <TagList items={techStack} max={4} slot="tags" />
+ * ```
+ */
+
+import Label from './Label.astro';
+
+interface Props {
+  /** Tag labels to display */
+  items: string[];
+  /** Optional cap; items beyond this collapse into a "+N" pill */
+  max?: number;
+  /** Additional CSS classes to apply to the list wrapper */
+  class?: string;
+}
+
+const { items, max, class: className } = Astro.props;
+
+const visible = typeof max === 'number' ? items.slice(0, max) : items;
+const overflow = typeof max === 'number' ? Math.max(items.length - max, 0) : 0;
+---
+
+{items.length > 0 && (
+  <div class:list={['tags-list', className]}>
+    {visible.map((item, i) => (
+      <Fragment>
+        {i > 0 && <span class="tags-sep" aria-hidden="true">·</span>}
+        <Label>{item}</Label>
+      </Fragment>
+    ))}
+    {overflow > 0 && (
+      <Fragment>
+        <span class="tags-sep" aria-hidden="true">·</span>
+        <Label>+{overflow}</Label>
+      </Fragment>
+    )}
+  </div>
+)}
+
+<style>
+  .tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .tags-sep {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+  }
+</style>

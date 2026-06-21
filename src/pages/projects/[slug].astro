@@ -39,6 +39,8 @@ import ScrollToTop from '../../components/ScrollToTop.astro';
 import BackLink from '../../components/BackLink.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
 import ImpactMetrics from '../../components/ImpactMetrics.astro';
+import Section from '../../components/Section.astro';
+import Label from '../../components/Label.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import { calculateReadingTime, formatReadingTime } from '../../utils/readingTime';
 
@@ -95,9 +97,9 @@ const {
 
 // Status display configuration
 const statusConfig = {
-  completed: { label: 'Completed', class: 'status--completed' },
-  ongoing: { label: 'Ongoing', class: 'status--ongoing' },
-  archived: { label: 'Archived', class: 'status--archived' },
+  completed: { label: 'Completed', color: 'neutral' as const },
+  ongoing: { label: 'Ongoing', color: 'green' as const },
+  archived: { label: 'Archived', color: 'neutral' as const },
 };
 const statusInfo = statusConfig[status || 'completed'];
 
@@ -145,9 +147,7 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     <header class="case-study-header">
       <div class="header-badges">
         {status && status !== 'completed' && (
-          <span class:list={['status-badge', statusInfo.class]}>
-            {statusInfo.label}
-          </span>
+          <Label color={statusInfo.color} uppercase>{statusInfo.label}</Label>
         )}
       </div>
       <h1>{title}</h1>
@@ -174,36 +174,31 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     </header>
 
     <!-- Overview Section -->
-    <section class="case-study-section">
-      <h2>Overview</h2>
+    <Section title="Overview" class="case-study-section">
       <p>{overview}</p>
-    </section>
+    </Section>
 
     <!-- Problem Section -->
-    <section class="case-study-section">
-      <h2>Problem</h2>
+    <Section title="Problem" class="case-study-section">
       <p>{problem}</p>
-    </section>
+    </Section>
 
     <!-- Constraints Section -->
-    <section class="case-study-section">
-      <h2>Constraints</h2>
+    <Section title="Constraints" class="case-study-section">
       <ul class="constraints-list">
         {constraints.map((constraint) => (
           <li>{constraint}</li>
         ))}
       </ul>
-    </section>
+    </Section>
 
     <!-- Approach Section -->
-    <section class="case-study-section">
-      <h2>Approach</h2>
+    <Section title="Approach" class="case-study-section">
       <p>{approach}</p>
-    </section>
+    </Section>
 
     <!-- Key Decisions Section -->
-    <section class="case-study-section">
-      <h2>Key Decisions</h2>
+    <Section title="Key Decisions" class="case-study-section">
       <div class="decisions-list">
         {keyDecisions.map((decision) => (
           <div class="decision-item">
@@ -225,39 +220,35 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
           </div>
         ))}
       </div>
-    </section>
+    </Section>
 
     <!-- Tech Stack Section -->
-    <section class="case-study-section">
-      <h2>Tech Stack</h2>
+    <Section title="Tech Stack" class="case-study-section">
       <ul class="tech-stack-list">
         {techStack.map((tech) => (
           <li>{tech}</li>
         ))}
       </ul>
-    </section>
+    </Section>
 
     <!-- Result/Impact Section -->
-    <section class="case-study-section">
-      <h2>Result & Impact</h2>
-      
+    <Section title="Result & Impact" class="case-study-section">
       {/* Display metrics with visualization */}
       {impact.metrics && impact.metrics.length > 0 && (
         <ImpactMetrics metrics={impact.metrics} />
       )}
-      
+
       <p class="impact-qualitative">{impact.qualitative}</p>
-    </section>
+    </Section>
 
     <!-- Learnings Section -->
-    <section class="case-study-section">
-      <h2>Learnings</h2>
+    <Section title="Learnings" class="case-study-section">
       <ul class="learnings-list">
         {learnings.map((learning) => (
           <li>{learning}</li>
         ))}
       </ul>
-    </section>
+    </Section>
 
     <!-- Additional MDX Content (if any) -->
     {Content && (
@@ -298,26 +289,6 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       display: none;
     }
 
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      font-size: 0.6875rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 0.3rem 0.625rem;
-      border-radius: 4px;
-    }
-
-    .status--ongoing {
-      background: rgba(34, 197, 94, 0.15);
-      color: #22c55e;
-    }
-
-    .status--archived {
-      background: rgba(115, 115, 115, 0.15);
-      color: var(--color-text-muted);
-    }
 
     .case-study-header h1 {
       font-size: 2.5rem;
@@ -346,18 +317,18 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       color: var(--color-text-secondary);
     }
 
-    .case-study-section {
+    :global(.case-study-section) {
       margin-bottom: 3rem;
     }
 
-    .case-study-section h2 {
+    :global(.case-study-section h2) {
       font-size: 1.75rem;
       margin-bottom: 1.25rem;
       font-weight: 700;
       letter-spacing: -0.01em;
     }
 
-    .case-study-section p {
+    :global(.case-study-section) p {
       font-size: 1.125rem;
       line-height: 1.7;
       color: var(--color-text-secondary);
@@ -466,30 +437,5 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       color: var(--color-text-secondary);
     }
 
-    @media (max-width: 768px) {
-      .case-study {
-        padding: 1.5rem 1rem;
-      }
-
-      .case-study-header h1 {
-        font-size: 2rem;
-      }
-
-      .outcome-summary {
-        font-size: 1.125rem;
-      }
-
-      .case-study-section h2 {
-        font-size: 1.5rem;
-      }
-
-      .case-study-section p {
-        font-size: 1rem;
-      }
-
-      .decision-item {
-        padding: 1.25rem;
-      }
-    }
   </style>
 </BaseLayout>

@@ -62,27 +62,24 @@ const shouldRender = filteredHeadings.length >= 3;
 
 {shouldRender && (
   <nav class="table-of-contents" aria-label="Table of contents">
-    <button 
-      class="toc-toggle" 
-      type="button"
-      aria-expanded="false"
-      aria-controls="toc-list"
-    >
-      <span class="toc-title">Table of Contents</span>
-      <span class="toc-count">{filteredHeadings.length} sections</span>
-      <svg class="toc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="6 9 12 15 18 9"></polyline>
-      </svg>
-    </button>
-    <ul class="toc-list" id="toc-list">
-      {filteredHeadings.map((heading) => (
-        <li class={`toc-item toc-depth-${heading.depth}`}>
-          <a href={`#${heading.slug}`} class="toc-link">
-            {heading.text}
-          </a>
-        </li>
-      ))}
-    </ul>
+    <details class="toc-details">
+      <summary class="toc-toggle">
+        <span class="toc-title">Table of Contents</span>
+        <span class="toc-count">{filteredHeadings.length} sections</span>
+        <svg class="toc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </summary>
+      <ul class="toc-list">
+        {filteredHeadings.map((heading) => (
+          <li class={`toc-item toc-depth-${heading.depth}`}>
+            <a href={`#${heading.slug}`} class="toc-link">
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
   </nav>
 )}
 
@@ -100,10 +97,6 @@ const shouldRender = filteredHeadings.length >= 3;
     align-items: center;
     width: 100%;
     padding: 1rem 1.25rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    text-align: left;
     color: var(--color-text);
     transition: background 0.2s ease;
   }
@@ -138,7 +131,7 @@ const shouldRender = filteredHeadings.length >= 3;
     flex-shrink: 0;
   }
 
-  .toc-toggle[aria-expanded="true"] .toc-icon {
+  .toc-details[open] .toc-icon {
     transform: rotate(180deg);
   }
 
@@ -146,11 +139,6 @@ const shouldRender = filteredHeadings.length >= 3;
     list-style: none;
     padding: 0 1.25rem 1rem;
     margin: 0;
-    display: none;
-  }
-
-  .toc-list.is-open {
-    display: block;
   }
 
   .toc-item {
@@ -178,36 +166,11 @@ const shouldRender = filteredHeadings.length >= 3;
     color: var(--color-text);
   }
 
-  @media (max-width: 640px) {
-    .toc-toggle {
-      padding: 0.875rem 1rem;
-    }
-
-    .toc-list {
-      padding: 0 1rem 0.875rem;
-    }
-
-    .toc-link {
-      font-size: 0.875rem;
-    }
-  }
 </style>
 
 <script>
   function initTOC() {
-    const toggle = document.querySelector('.toc-toggle');
-    const list = document.querySelector('.toc-list');
-    
-    if (!toggle || !list) return;
-
-    // Toggle expand/collapse
-    toggle.addEventListener('click', () => {
-      const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!isExpanded));
-      list.classList.toggle('is-open');
-    });
-
-    // Smooth scroll for TOC links
+    // Open/close is handled natively by <details>; only smooth scrolling needs JS.
     const tocLinks = document.querySelectorAll('.toc-link');
     tocLinks.forEach(link => {
       link.addEventListener('click', (e) => {

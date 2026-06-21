@@ -17,6 +17,7 @@
  */
 
 import { getCollection } from 'astro:content';
+import { formatMonthShortYear } from '../utils/formatDate';
 
 interface Props {
   /** Array of project slugs to display */
@@ -49,16 +50,6 @@ const decisions = relatedDecisions
   .filter((d): d is NonNullable<typeof d> => d !== undefined);
 
 const hasRelated = projects.length > 0 || decisions.length > 0;
-
-/**
- * Formats a date to "Month Year" format
- */
-function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short'
-  }).format(date);
-}
 ---
 
 {hasRelated && (
@@ -101,7 +92,7 @@ function formatDate(date: Date): string {
             {decisions.map((decision) => (
               <li>
                 <a href={`/decisions/${decision.id}`} class="related-item">
-                  <span class="related-item-meta">{formatDate(decision.data.date)}</span>
+                  <span class="related-item-meta">{formatMonthShortYear(decision.data.date)}</span>
                   <span class="related-item-title">{decision.data.title}</span>
                 </a>
               </li>
@@ -191,14 +182,4 @@ function formatDate(date: Date): string {
     line-height: 1.4;
   }
 
-  @media (max-width: 640px) {
-    .related-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    .related-item {
-      padding: 0.875rem 1rem;
-    }
-  }
 </style>

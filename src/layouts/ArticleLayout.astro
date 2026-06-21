@@ -264,34 +264,5 @@ import BaseLayout from './BaseLayout.astro';
       color: var(--color-text-secondary);
     }
 
-    @media (max-width: 768px) {
-      .article-layout {
-        padding: var(--space-xl) var(--space-md);
-      }
-
-      .article-layout :global(.article-header h1) {
-        font-size: var(--font-size-4xl);
-      }
-
-      .article-layout :global(.article-content) {
-        font-size: var(--font-size-base);
-      }
-
-      .article-layout :global(.article-content h2) {
-        font-size: var(--font-size-3xl);
-      }
-
-      .article-layout :global(.article-content h3) {
-        font-size: var(--font-size-2xl);
-      }
-
-      .article-layout :global(.article-content h4) {
-        font-size: var(--font-size-xl);
-      }
-
-      .article-layout :global(.article-content pre) {
-        padding: var(--space-md);
-      }
-    }
   </style>
 </BaseLayout>

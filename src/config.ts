@@ -102,20 +102,17 @@ export const siteConfig = {
    * Only configured (non-empty) links will be displayed.
    */
   social: {
-    /** GitHub profile URL */
-    github: getEnv('SOCIAL_GITHUB', ''),
-    
     /** LinkedIn profile URL */
     linkedin: getEnv('SOCIAL_LINKEDIN', ''),
     
-    /** Twitter/X profile URL */
-    twitter: getEnv('SOCIAL_TWITTER', ''),
-    
-    /** Mastodon profile URL */
-    mastodon: getEnv('SOCIAL_MASTODON', ''),
-    
     /** Bluesky profile URL */
     bluesky: getEnv('SOCIAL_BLUESKY', ''),
+
+    /** GitHub profile URL */
+    github: getEnv('SOCIAL_GITHUB', ''),
+
+     /** Mastodon profile URL */
+    mastodon: getEnv('SOCIAL_MASTODON', ''),
   },
   
   /**

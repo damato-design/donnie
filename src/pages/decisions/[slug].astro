@@ -28,8 +28,11 @@ import SEO from '../../components/SEO.astro';
 import ScrollToTop from '../../components/ScrollToTop.astro';
 import BackLink from '../../components/BackLink.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
+import Section from '../../components/Section.astro';
+import Label from '../../components/Label.astro';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
+import { formatLongDate } from '../../utils/formatDate';
 
 /**
  * Generates static paths for all decision entries
@@ -57,17 +60,7 @@ interface Props {
 const { decision } = Astro.props;
 const { Content } = await render(decision);
 
-/**
- * Formats the decision date for display
- * 
- * Uses US English locale with full date format.
- * Example output: "January 15, 2024"
- */
-const formattedDate = new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
-}).format(decision.data.date);
+const formattedDate = formatLongDate(decision.data.date);
 ---
 
 <BaseLayout>
@@ -90,24 +83,21 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
         {decision.data.tags && decision.data.tags.length > 0 && (
           <div class="decision-tags">
             {decision.data.tags.map((tag) => (
-              <span class="tag">{tag}</span>
+              <Label>{tag}</Label>
             ))}
           </div>
         )}
       </header>
 
-      <section class="decision-section">
-        <h2 class="section-label">Context</h2>
+      <Section title="Context" class="decision-section" headingClass="section-label">
         <p class="section-content">{decision.data.context}</p>
-      </section>
+      </Section>
 
-      <section class="decision-section decision-made">
-        <h2 class="section-label">Decision</h2>
+      <Section title="Decision" class="decision-section decision-made" headingClass="section-label">
         <p class="section-content highlight">{decision.data.decision}</p>
-      </section>
+      </Section>
 
-      <section class="decision-section">
-        <h2 class="section-label">Alternatives Considered</h2>
+      <Section title="Alternatives Considered" class="decision-section" headingClass="section-label">
         <div class="alternatives-list">
           {decision.data.alternatives.map((alt) => (
             <div class="alternative-item">
@@ -137,12 +127,11 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
             </div>
           ))}
         </div>
-      </section>
+      </Section>
 
-      <section class="decision-section">
-        <h2 class="section-label">Reasoning</h2>
+      <Section title="Reasoning" class="decision-section" headingClass="section-label">
         <p class="section-content">{decision.data.reasoning}</p>
-      </section>
+      </Section>
 
       {decision.body && decision.body.trim().length > 0 && (
         <section class="decision-body prose">
@@ -199,20 +188,11 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
       gap: 0.5rem;
     }
 
-    .tag {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.75rem;
-      background: var(--color-bg-secondary);
-      border: 1px solid var(--color-border);
-      border-radius: 4px;
-      color: var(--color-text-secondary);
-    }
-
-    .decision-section {
+    .decision-content :global(.decision-section) {
       padding-bottom: 1.5rem;
     }
 
-    .section-label {
+    .decision-content :global(.section-label) {
       font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
@@ -367,22 +347,5 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
       background: none;
     }
 
-    @media (max-width: 768px) {
-      .decision-page {
-        padding: 1.5rem 1rem;
-      }
-
-      .decision-title {
-        font-size: 1.5rem;
-      }
-
-      .alternative-details {
-        grid-template-columns: 1fr;
-      }
-
-      .section-content {
-        font-size: 1rem;
-      }
-    }
   </style>
 </BaseLayout>

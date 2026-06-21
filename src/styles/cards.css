@@ -1,0 +1,160 @@
+/* ============================================
+   CARD SYSTEM
+
+   Single home for all card styles. The card components (BaseCard and the
+   specialized cards built on it) carry no scoped <style> of their own; their
+   structure and props live in the components, all styling lives here.
+
+   Classes are namespaced with `card-` to stay collision-safe as global rules.
+   ============================================ */
+
+/* --- Card list (stacks cards on listing pages) --- */
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.card-list--compact {
+  gap: 1.5rem;
+}
+
+/* --- Card container (BaseCard) --- */
+.card {
+  display: block;
+  position: relative;
+  padding: 1.5rem 1.75rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.card-meta {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.card-title {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.625rem;
+  line-height: 1.4;
+}
+
+.card-description {
+  display: block;
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* --- Badge row (ProjectCard: Featured + status) --- */
+.card-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-badges:empty {
+  display: none;
+}
+
+/* --- TalkCard content --- */
+.card-talk-featured {
+  margin-bottom: 0.75rem;
+}
+
+.card-talk-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-talk-date {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.card-talk-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.card-talk-description {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.card-talk-event {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.card-talk-event-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.card-talk-event-link:hover {
+  color: var(--color-accent);
+}
+
+.card-talk-external-icon {
+  opacity: 0.6;
+}
+
+.card-talk-location,
+.card-talk-duration {
+  color: var(--color-text-muted);
+}
+
+.card-talk-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.card-talk-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.card-talk-link:hover {
+  opacity: 0.8;
+}
+
+.card-talk-link svg {
+  flex-shrink: 0;
+}

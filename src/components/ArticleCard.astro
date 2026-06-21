@@ -21,7 +21,8 @@
  */
 
 import BaseCard from './BaseCard.astro';
-import ForwardLink from './ForwardLink.astro';
+import TagList from './TagList.astro';
+import { formatLongDate } from '../utils/formatDate';
 
 interface Props {
   /** Article title (displayed as card heading) */
@@ -41,37 +42,12 @@ interface Props {
 }
 
 const { title, slug, description, publishDate, tags = [] } = Astro.props;
-
-/**
- * Formats a date object into a human-readable string
- * 
- * Uses US English locale with long month format.
- * Example output: "January 15, 2024"
- * 
- * @param date - The date to format
- * @returns Formatted date string in "Month Day, Year" format
- */
-function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }).format(date);
-}
 ---
 
-<BaseCard href={`/writing/${slug}`} class="article-card">
-  <Fragment slot="meta">{formatDate(publishDate)}</Fragment>
+<BaseCard href={`/writing/${slug}`} ctaText="Read article" class="article-card">
+  <Fragment slot="meta">{formatLongDate(publishDate)}</Fragment>
   <Fragment slot="title">{title}</Fragment>
   <Fragment slot="description">{description}</Fragment>
-  
-  {tags.length > 0 && (
-    <div slot="tags" class="tags-list">
-      {tags.map((tag) => (
-        <span class="tag">{tag}</span>
-      ))}
-    </div>
-  )}
-  
-  <ForwardLink text="Read article" />
+
+  <TagList slot="tags" items={tags} />
 </BaseCard>

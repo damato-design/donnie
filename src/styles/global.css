@@ -9,18 +9,10 @@
   --color-text-secondary: #a3a3a3;
   --color-text-muted: #737373;
   --color-border: #262626;
-  --color-border-subtle: #1f1f1f;
   --color-accent: #3b82f6;
   --color-accent-hover: #60a5fa;
-  --color-accent-muted: rgba(59, 130, 246, 0.15);
   --color-accent-glow: rgba(59, 130, 246, 0.25);
-  
-  /* Gradient Colors */
-  --gradient-text: linear-gradient(135deg, #e5e5e5 0%, #a3a3a3 100%);
-  --gradient-accent: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-  --gradient-card: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
-  --gradient-border: linear-gradient(135deg, rgba(59, 130, 246, 0.5) 0%, rgba(139, 92, 246, 0.5) 100%);
-  
+
   /* Spacing System */
   --space-xs: 0.25rem;    /* 4px */
   --space-sm: 0.5rem;     /* 8px */
@@ -29,8 +21,7 @@
   --space-xl: 2rem;       /* 32px */
   --space-2xl: 3rem;      /* 48px */
   --space-3xl: 4rem;      /* 64px */
-  --space-4xl: 6rem;      /* 96px */
-  
+
   /* Typography Scale */
   --font-size-xs: 0.75rem;    /* 12px */
   --font-size-sm: 0.875rem;   /* 14px */
@@ -48,7 +39,6 @@
   --line-height-relaxed: 1.75;
   
   /* Font Weights */
-  --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
@@ -58,18 +48,12 @@
   --max-width-content: 1200px;
   --border-radius-sm: 0.25rem;
   --border-radius-md: 0.5rem;
-  --border-radius-lg: 1rem;
-  
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
-  --shadow-glow: 0 0 30px var(--color-accent-glow);
-  
+
   /* Transitions */
   --transition-fast: 150ms ease;
-  --transition-base: 200ms ease;
-  --transition-slow: 300ms ease;
+
+  /* Enable animating to/from intrinsic sizes (e.g. height: auto) */
+  interpolate-size: allow-keywords;
 }
 
 /* Light Mode Colors */
@@ -81,20 +65,9 @@
   --color-text-secondary: #525252;
   --color-text-muted: #a3a3a3;
   --color-border: #e5e5e5;
-  --color-border-subtle: #f0f0f0;
   --color-accent: #2563eb;
   --color-accent-hover: #1d4ed8;
-  --color-accent-muted: rgba(37, 99, 235, 0.1);
   --color-accent-glow: rgba(37, 99, 235, 0.15);
-  
-  /* Light mode gradients */
-  --gradient-text: linear-gradient(135deg, #171717 0%, #525252 100%);
-  --gradient-card: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
-  
-  /* Light mode shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 /* CSS Reset and Base Styles */
@@ -149,6 +122,28 @@ img {
 ul,
 ol {
   list-style-position: inside;
+}
+
+/* Disclosure (native <details>/<summary>)
+   Animates open/close by transitioning ::details-content from height 0 to its
+   intrinsic height (enabled by interpolate-size: allow-keywords above). */
+summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+details::details-content {
+  height: 0;
+  overflow: clip;
+  transition: height 0.5s ease, content-visibility 0.5s ease allow-discrete;
+}
+
+details[open]::details-content {
+  height: auto;
 }
 
 /* Code */

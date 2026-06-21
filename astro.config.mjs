@@ -100,11 +100,10 @@ export default defineConfig({
       SITE_AUTHOR_LOCATION: envField.string({ context: 'client', access: 'public', default: 'New York, NY' }),
       
       // Social media links (empty string = hidden)
-      SOCIAL_GITHUB: envField.string({ context: 'client', access: 'public', default: 'https://github.com/fauxserious' }),
       SOCIAL_LINKEDIN: envField.string({ context: 'client', access: 'public', default: 'https://linkedin.com/in/fauxserious' }),
-      SOCIAL_TWITTER: envField.string({ context: 'client', access: 'public', default: '' }),
-      SOCIAL_MASTODON: envField.string({ context: 'client', access: 'public', default: 'https://mastodon.social/@donniedamato' }),
       SOCIAL_BLUESKY: envField.string({ context: 'client', access: 'public', default: 'https://bsky.app/profile/donnie.damato.design' }),
+      SOCIAL_GITHUB: envField.string({ context: 'client', access: 'public', default: 'https://github.com/fauxserious' }),
+      SOCIAL_MASTODON: envField.string({ context: 'client', access: 'public', default: 'https://mastodon.social/@donniedamato' }),
     },
   },
   

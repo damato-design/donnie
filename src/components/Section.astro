@@ -1,0 +1,46 @@
+---
+/**
+ * Section Component
+ *
+ * Structural wrapper for a titled content section: a `<section>` with a heading
+ * followed by slotted content. Standardizes the markup repeated across the case
+ * study page (`.case-study-section`) and the decision page (`.decision-section`
+ * + `.section-label`).
+ *
+ * The two pages style their sections differently (a large `<h2>` heading vs. a
+ * small uppercase label), so styling stays with the caller: pass `class` for the
+ * section and `headingClass` for the heading. Those classes are applied here, so
+ * the caller's rules targeting them must be global (see usage in the pages).
+ *
+ * @component
+ *
+ * @slot default - The section body content
+ *
+ * @example
+ * ```astro
+ * <Section title="Overview" class="case-study-section">
+ *   <p>{overview}</p>
+ * </Section>
+ *
+ * <Section title="Context" class="decision-section" headingClass="section-label">
+ *   <p class="section-content">{context}</p>
+ * </Section>
+ * ```
+ */
+
+interface Props {
+  /** Heading text */
+  title: string;
+  /** Class(es) for the <section> wrapper */
+  class?: string;
+  /** Class(es) for the heading element */
+  headingClass?: string;
+}
+
+const { title, class: className, headingClass } = Astro.props;
+---
+
+<section class:list={[className]}>
+  <h2 class:list={[headingClass]}>{title}</h2>
+  <slot />
+</section>

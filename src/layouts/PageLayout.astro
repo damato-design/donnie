@@ -108,18 +108,5 @@ const { pageTitle, pageIntro } = Astro.props;
       /* Content from slot will inherit typography styles */
     }
 
-    @media (max-width: 768px) {
-      .page-layout {
-        padding: var(--space-xl) var(--space-md);
-      }
-
-      .page-header h1 {
-        font-size: var(--font-size-4xl);
-      }
-
-      .page-intro {
-        font-size: var(--font-size-lg);
-      }
-    }
   </style>
 </BaseLayout>

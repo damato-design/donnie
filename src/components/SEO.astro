@@ -81,11 +81,6 @@ const ogImage = image || defaultImage;
 
 // Ensure image is absolute URL
 const absoluteImageURL = ogImage.startsWith('http') ? ogImage : `${siteURL}${ogImage.replace(/^\//, '')}`;
-
-// Get Twitter handle from config (extract username from URL)
-const twitterHandle = siteConfig.social.twitter 
-  ? `@${siteConfig.social.twitter.split('/').pop()}`
-  : undefined;
 ---
 
 <!-- Page Title -->
@@ -124,5 +119,3 @@ const twitterHandle = siteConfig.social.twitter
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={absoluteImageURL} />
-{twitterHandle && <meta name="twitter:site" content={twitterHandle} />}
-{twitterHandle && <meta name="twitter:creator" content={twitterHandle} />}

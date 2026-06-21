@@ -22,7 +22,8 @@
  */
 
 import BaseCard from './BaseCard.astro';
-import ForwardLink from './ForwardLink.astro';
+import TagList from './TagList.astro';
+import { formatMonthYear } from '../utils/formatDate';
 
 interface Props {
   /** Decision title (displayed as card heading) */
@@ -47,22 +48,6 @@ interface Props {
 const { title, slug, context, date, tags = [], maxContextLength = 180 } = Astro.props;
 
 /**
- * Formats a date object to show month and year only
- * 
- * Uses US English locale with long month format.
- * Example output: "March 2024"
- * 
- * @param date - The date to format
- * @returns Formatted date string in "Month Year" format
- */
-function formatDate(date: Date): string {
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'long'
-  }).format(date);
-}
-
-/**
  * Truncates text to a maximum length with ellipsis
  * 
  * If text is shorter than maxLength, returns original text unchanged.
@@ -80,18 +65,10 @@ function truncate(text: string, maxLength: number): string {
 const truncatedContext = truncate(context, maxContextLength);
 ---
 
-<BaseCard href={`/decisions/${slug}`} class="decision-card">
-  <Fragment slot="meta">{formatDate(date)}</Fragment>
+<BaseCard href={`/decisions/${slug}`} ctaText="Read decision" class="decision-card">
+  <Fragment slot="meta">{formatMonthYear(date)}</Fragment>
   <Fragment slot="title">{title}</Fragment>
   <Fragment slot="description">{truncatedContext}</Fragment>
-  
-  {tags.length > 0 && (
-    <div slot="tags" class="tags-list">
-      {tags.map((tag) => (
-        <span class="tag">{tag}</span>
-      ))}
-    </div>
-  )}
-  
-  <ForwardLink text="Read decision" />
+
+  <TagList slot="tags" items={tags} />
 </BaseCard>

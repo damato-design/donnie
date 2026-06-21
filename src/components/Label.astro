@@ -1,0 +1,83 @@
+---
+/**
+ * Label Component
+ *
+ * The single, shared primitive for all small labels: tags, type labels, the
+ * "Featured" label, and project status.
+ *
+ * This is deliberately NOT a chip/button: no background, border, or rounded box.
+ * Those make a non-interactive label look clickable ("Schrödinger's button").
+ * It communicates purely through typographic hierarchy: color, weight, and case.
+ * See https://blog.damato.design/posts/chip-away/
+ *
+ * Variations are props, not separate components:
+ * - `color` tints the text (neutral by default).
+ * - `uppercase` switches to the emphasized treatment (smaller, bold, tracked).
+ *
+ * Content is slotted, so a label can include a leading icon (e.g. the Featured star).
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <Label>react</Label>
+ * <Label color="accent" uppercase>Conference</Label>
+ * ```
+ */
+
+interface Props {
+  /** Text tint */
+  color?: 'neutral' | 'accent' | 'green' | 'purple' | 'amber' | 'pink';
+  /** Emphasized treatment (uppercase, bolder, smaller) */
+  uppercase?: boolean;
+  /** Additional CSS classes */
+  class?: string;
+}
+
+const { color = 'neutral', uppercase = false, class: className } = Astro.props;
+---
+
+<span class:list={['label', `label--${color}`, uppercase && 'label--uppercase', className]}>
+  <slot />
+</span>
+
+<style>
+  .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  .label svg {
+    flex-shrink: 0;
+  }
+
+  .label--uppercase {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .label--accent {
+    color: var(--color-accent);
+  }
+
+  .label--green {
+    color: #10b981;
+  }
+
+  .label--purple {
+    color: #8b5cf6;
+  }
+
+  .label--amber {
+    color: #f59e0b;
+  }
+
+  .label--pink {
+    color: #ec4899;
+  }
+</style>

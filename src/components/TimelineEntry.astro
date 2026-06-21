@@ -41,6 +41,10 @@
  * ```
  */
 
+import Label from './Label.astro';
+import TagList from './TagList.astro';
+import { formatMonthYear } from '../utils/formatDate';
+
 interface Props {
   /** Date of the timeline event (formatted as "Month Year") */
   date: Date;
@@ -63,38 +67,31 @@ interface Props {
 
 const { date, title, type, description, skills, hasContent = false } = Astro.props;
 
-/**
- * Formats the date to show month and year only
- * 
- * Uses US English locale with long month format.
- * Example output: "January 2024"
- */
-const formattedDate = new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: 'long'
-}).format(date);
+const formattedDate = formatMonthYear(date);
 
 /**
  * Human-readable labels for timeline entry types
- * 
+ *
  * Maps internal type values to display labels shown in the badge.
  * Each type has a distinct color in the UI:
  * - milestone: accent color (achievements, launches)
  * - learning: green (education, skill development)
- * - transition: orange (job changes, career moves)
+ * - transition: amber (job changes, career moves)
  */
-const typeLabels = {
+const typeLabels: Record<Props['type'], string> = {
   milestone: 'Milestone',
   learning: 'Learning',
   transition: 'Transition'
 };
 
 /**
- * Generates a unique ID for ARIA accessibility
- * 
- * Uses timestamp to ensure uniqueness for expand/collapse functionality.
+ * Maps each entry type to a Label color.
  */
-const entryId = `journey-${date.getTime()}`;
+const typeColors: Record<Props['type'], 'accent' | 'green' | 'amber'> = {
+  milestone: 'accent',
+  learning: 'green',
+  transition: 'amber'
+};
 ---
 
 <article class="timeline-entry">
@@ -108,9 +105,7 @@ const entryId = `journey-${date.getTime()}`;
       <time class="timeline-date" datetime={date.toISOString()}>
         {formattedDate}
       </time>
-      <span class="timeline-type" data-type={type}>
-        {typeLabels[type]}
-      </span>
+      <Label color={typeColors[type]} uppercase>{typeLabels[type]}</Label>
     </div>
     
     <h3 class="timeline-title">{title}</h3>
@@ -120,34 +115,22 @@ const entryId = `journey-${date.getTime()}`;
     {skills && skills.length > 0 && (
       <div class="timeline-skills">
         <span class="skills-label">Skills:</span>
-        <ul class="skills-list">
-          {skills.map((skill) => (
-            <li class="skill-tag">{skill}</li>
-          ))}
-        </ul>
+        <TagList items={skills} />
       </div>
     )}
 
     {hasContent && (
-      <>
-        <button 
-          class="expand-toggle" 
-          aria-expanded="false" 
-          aria-controls={entryId}
-          type="button"
-        >
-          <span class="expand-text">Read more</span>
+      <details class="timeline-disclosure">
+        <summary class="expand-toggle">
+          <span class="expand-text"></span>
           <svg class="expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="6 9 12 15 18 9"></polyline>
           </svg>
-        </button>
-        
-        <div id={entryId} class="timeline-body" aria-hidden="true">
-          <div class="timeline-body-content prose">
-            <slot />
-          </div>
+        </summary>
+        <div class="timeline-body-content prose">
+          <slot />
         </div>
-      </>
+      </details>
     )}
   </div>
 </article>
@@ -219,32 +202,6 @@ const entryId = `journey-${date.getTime()}`;
     font-weight: 500;
   }
 
-  .timeline-type {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-  }
-
-  .timeline-type[data-type="milestone"] {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
-  }
-
-  .timeline-type[data-type="learning"] {
-    color: #10b981;
-    border-color: #10b981;
-  }
-
-  .timeline-type[data-type="transition"] {
-    color: #f59e0b;
-    border-color: #f59e0b;
-  }
-
   .timeline-title {
     font-size: 1.25rem;
     font-weight: 600;
@@ -272,28 +229,6 @@ const entryId = `journey-${date.getTime()}`;
     margin-bottom: 0.5rem;
   }
 
-  .skills-list {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 0.5rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .skill-tag {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: 0.25rem;
-    color: var(--color-text-secondary);
-    font-weight: 500;
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-
   .expand-toggle {
     display: inline-flex;
     align-items: center;
@@ -317,36 +252,16 @@ const entryId = `journey-${date.getTime()}`;
     transition: transform 0.2s ease;
   }
 
-  .expand-toggle[aria-expanded="true"] .expand-icon {
-    transform: rotate(180deg);
+  .expand-text::before {
+    content: "Read more";
   }
 
-  .expand-toggle[aria-expanded="true"] .expand-text::before {
+  .timeline-disclosure[open] .expand-text::before {
     content: "Show less";
   }
 
-  .expand-toggle[aria-expanded="true"] .expand-text {
-    font-size: 0;
-  }
-
-  .expand-toggle[aria-expanded="true"] .expand-text::before {
-    font-size: 0.875rem;
-  }
-
-  .timeline-body {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.3s ease;
-    overflow: hidden;
-  }
-
-  .timeline-body[aria-hidden="false"] {
-    grid-template-rows: 1fr;
-  }
-
-  .timeline-body-content {
-    min-height: 0;
-    overflow: hidden;
+  .timeline-disclosure[open] .expand-icon {
+    transform: rotate(180deg);
   }
 
   .timeline-body-content.prose {
@@ -390,55 +305,4 @@ const entryId = `journey-${date.getTime()}`;
     font-weight: 600;
   }
 
-  @media (max-width: 768px) {
-    .timeline-entry {
-      grid-template-columns: 1.5rem 1fr;
-      gap: 1rem;
-    }
-
-    .timeline-dot {
-      width: 0.75rem;
-      height: 0.75rem;
-      border-width: 2px;
-    }
-
-    .timeline-title {
-      font-size: 1.125rem;
-    }
-
-    .timeline-description {
-      font-size: 0.875rem;
-    }
-
-    .timeline-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-  }
 </style>
-
-<script>
-  function initExpandToggles() {
-    const toggles = document.querySelectorAll('.expand-toggle');
-    
-    toggles.forEach(toggle => {
-      toggle.addEventListener('click', () => {
-        const expanded = toggle.getAttribute('aria-expanded') === 'true';
-        const targetId = toggle.getAttribute('aria-controls');
-        const target = document.getElementById(targetId!);
-        
-        if (target) {
-          toggle.setAttribute('aria-expanded', String(!expanded));
-          target.setAttribute('aria-hidden', String(expanded));
-        }
-      });
-    });
-  }
-
-  // Initialize on page load
-  initExpandToggles();
-
-  // Re-initialize after Astro page transitions
-  document.addEventListener('astro:after-swap', initExpandToggles);
-</script>

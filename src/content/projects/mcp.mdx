@@ -1,0 +1,59 @@
+---
+title: "D'Amato Design MCP Server"
+role: "Creator"
+year: 2026
+outcomeSummary: "A remote Model Context Protocol server that exposes my portfolio, writing, and design system documentation to AI assistants, so tools like Claude and Cursor answer from my actual content instead of stale training data."
+overview: "mcp.damato.design is a Model Context Protocol (MCP) server that turns the damato.design ecosystem (expertise, projects, media, blog, and design system docs) into structured, queryable resources for AI clients."
+problem: "AI assistants answer questions about a person or a design system from whatever they happened to train on, which is often outdated, incomplete, or simply invented. I wanted AI tools to reason over my real, current content instead of guessing."
+constraints:
+  - "Had to work across many MCP clients (Claude Desktop, Cursor, Cline, Windsurf, Zed, Continue)"
+  - "Content lives across several subdomains and should stay the single source of truth"
+  - "Remote and zero-install for consumers, with no per-client custom code"
+approach: "I built a remote HTTP MCP server that dynamically pulls each subdomain's llms.txt and exposes its entries as MCP resources under a {subdomain}://{category}/{slug} URI scheme. Clients connect over a single URL via mcp-remote, the server caches fetched content for performance, and it publishes a standard server card for discovery."
+keyDecisions:
+  - decision: "Source content from each site's llms.txt rather than a separate database"
+    reasoning: "The published sites stay the single source of truth, so the server never drifts from what is live and needs no separate content pipeline."
+    alternatives:
+      - "Maintain a separate content store or CMS for the server"
+      - "Hardcode resources in the server"
+  - decision: "Expose a small, predictable surface (list_resources, get_resource, get_llms_txt) over a semantic URI scheme"
+    reasoning: "A bounded, well-named surface is easy for an AI to navigate, mirroring how I think about bounded, semantic token systems."
+    alternatives:
+      - "A single catch-all tool"
+      - "Many narrow per-category tools"
+  - decision: "Serve remotely over HTTP instead of a local stdio server"
+    reasoning: "Consumers connect with one URL and no install or build step, and improvements ship server-side."
+    alternatives:
+      - "Distribute a local stdio server users run themselves"
+techStack:
+  - "TypeScript"
+  - "Node.js"
+  - "Model Context Protocol (MCP)"
+  - "MCP TypeScript SDK"
+  - "JSON-RPC over HTTP"
+  - "llms.txt"
+impact:
+  metrics:
+    - label: "Clients supported"
+      value: "Claude Desktop, Cursor, Cline, Windsurf, Zed, Continue, and any MCP client"
+    - label: "Content surface"
+      value: "Expertise, projects, media, blog posts, and design system docs across subdomains"
+  qualitative: "AI assistants can now answer questions about my work and design systems thinking from my actual, current content, and the same llms.txt sources power both the websites and the server, so there is nothing extra to keep in sync."
+learnings:
+  - "Treating published llms.txt as the source of truth keeps an AI integration honest and low-maintenance"
+  - "A bounded, well-named resource and tool surface matters as much for AI consumers as for human ones"
+  - "Hands-on MCP work is the fastest way to understand where generative tools actually fit around a design system"
+featured: true
+status: ongoing
+order: 2
+relatedProjects:
+  - "tokenpedia"
+  - "damatods"
+  - "miseenmode"
+---
+
+Most AI tools answer questions about a person or a system from training data that is stale or simply made up. mcp.damato.design fixes that for my own corner of the web: it is a Model Context Protocol server that turns the damato.design ecosystem into resources an AI client can list and read directly.
+
+Resources follow a `{subdomain}://{category}/{slug}` scheme, for example `donnie://projects/miseenmode` or `blog://posts/truly-semantic`, and are fetched from each site's `llms.txt` so the live sites remain the single source of truth. The server exposes three tools, `list_resources`, `get_resource`, and `get_llms_txt`, plus an `ask-damato` prompt for explicitly querying my content when several servers are connected.
+
+It runs remotely, so connecting is a single URL with no install: point any MCP client (Claude Desktop, Cursor, Cline, Windsurf, Zed, Continue) at `https://mcp.damato.design/`. Source is on [GitHub](https://github.com/damato-design/mcp).
