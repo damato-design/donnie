@@ -61,7 +61,8 @@ const socialLinks = Object.entries(siteConfig.social)
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--color-border);
+    background: var(--color-bg-elevated);
+    border-top: 1px solid currentColor;
     padding: 2rem 1.5rem;
     margin-top: auto;
   }
@@ -83,13 +84,8 @@ const socialLinks = Object.entries(siteConfig.social)
 
   .footer-social a {
     font-size: 0.8125rem;
-    color: var(--color-text-muted);
     text-decoration: none;
     transition: color 0.2s ease;
-  }
-
-  .footer-social a:hover {
-    color: var(--color-text);
   }
 
   .separator {

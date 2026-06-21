@@ -7,9 +7,6 @@ h3,
 h4,
 h5,
 h6 {
-  
-  line-height: var(--line-height-tight);
-  color: var(--color-text);
   margin-top: 0;
   margin-bottom: var(--space-md);
   font-family: "BBH Hegarty", sans-serif;
@@ -18,8 +15,11 @@ h6 {
 
 h1 {
   font-size: var(--font-size-5xl);
-  
-  margin-bottom: var(--space-lg);
+  filter: url('#longshadow');
+  transform: skewY(-4deg) translate(-.25em, -.25em);
+  color: var(--color-bg-elevated);
+  line-height: 1.2;
+  margin-bottom: 3rem;
 }
 
 h2 {
@@ -48,11 +48,6 @@ h6 {
    same rules are not duplicated across the article and case-study pages. */
 
 /* Paragraphs */
-p {
-  margin-bottom: var(--space-lg);
-  line-height: var(--line-height-relaxed);
-  color: var(--color-text-secondary);
-}
 
 p:last-child {
   margin-bottom: 0;
@@ -61,8 +56,7 @@ p:last-child {
 /* Lead Paragraph */
 .lead {
   font-size: var(--font-size-xl);
-  line-height: var(--line-height-relaxed);
-  color: var(--color-text);
+  
   margin-bottom: var(--space-xl);
 }
 
@@ -71,7 +65,6 @@ ul,
 ol {
   margin-bottom: var(--space-lg);
   padding-left: var(--space-xl);
-  color: var(--color-text-secondary);
 }
 
 ul {
@@ -84,7 +77,7 @@ ol {
 
 li {
   margin-bottom: var(--space-sm);
-  line-height: var(--line-height-relaxed);
+  
 }
 
 li:last-child {
@@ -102,11 +95,10 @@ ol ul {
 
 /* Blockquotes */
 blockquote {
-  border-left: 4px solid var(--color-border);
+  border-left: 4px solid currentColor;
   padding-left: var(--space-lg);
   margin: var(--space-xl) 0;
   font-style: italic;
-  color: var(--color-text-secondary);
 }
 
 blockquote p {
@@ -116,26 +108,13 @@ blockquote p {
 /* Horizontal Rule */
 hr {
   border: none;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid currentColor;
   margin: var(--space-3xl) 0;
-}
-
-/* Strong and Emphasis */
-strong,
-b {
-  
-  color: var(--color-text);
 }
 
 em,
 i {
   font-style: italic;
-}
-
-/* Small Text */
-small {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
 }
 
 /* Tables */
@@ -149,30 +128,9 @@ th,
 td {
   padding: var(--space-sm) var(--space-md);
   text-align: left;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid currentColor;
 }
 
-th {
-  
-  color: var(--color-text);
-}
-
-td {
-  color: var(--color-text-secondary);
-}
-
-/* Typography Utilities */
-.text-muted {
-  color: var(--color-text-muted);
-}
-
-.text-secondary {
-  color: var(--color-text-secondary);
-}
-
-.text-primary {
-  color: var(--color-text);
-}
 
 .text-center {
   text-align: center;

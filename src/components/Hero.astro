@@ -112,7 +112,7 @@ const ext = (external?: boolean) =>
 <style>
   .hero {
     padding: 4rem 0 5rem;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid currentColor;
     margin-bottom: 4rem;
   }
 
@@ -157,10 +157,8 @@ const ext = (external?: boolean) =>
     padding: 0.75rem 1.5rem;
     background: var(--color-text);
     color: var(--color-bg);
-    
     font-size: 0.9375rem;
     text-decoration: none;
-    border-radius: 6px;
     transition: opacity 0.2s ease;
   }
 
@@ -173,16 +171,10 @@ const ext = (external?: boolean) =>
     padding: 0.75rem 1.5rem;
     background: transparent;
     color: var(--color-text);
-    
     font-size: 0.9375rem;
     text-decoration: none;
-    border: 1px solid var(--color-border);
-    border-radius: 6px;
+    border: 1px solid currentColor;
     transition: border-color 0.2s ease;
-  }
-
-  .btn-secondary:hover {
-    border-color: var(--color-text-secondary);
   }
 
   /* Right column: stacks slotted content (e.g. multiple <HeroCard>) vertically */

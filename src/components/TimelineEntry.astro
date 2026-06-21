@@ -182,7 +182,7 @@ const typeColors: Record<Props['type'], 'accent' | 'green' | 'amber'> = {
   .timeline-line {
     width: 2px;
     flex-grow: 1;
-    background: var(--color-border);
+    background: currentColor;
     margin-top: 0.5rem;
   }
 
@@ -195,12 +195,6 @@ const typeColors: Record<Props['type'], 'accent' | 'green' | 'amber'> = {
     align-items: center;
     gap: 1rem;
     margin-bottom: 0.5rem;
-  }
-
-  .timeline-date {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    
   }
 
   .timeline-skills {
@@ -249,7 +243,7 @@ const typeColors: Record<Props['type'], 'accent' | 'green' | 'amber'> = {
 
   .timeline-body-content.prose {
     padding-top: 1.5rem;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid currentColor;
     margin-top: 1rem;
   }
 

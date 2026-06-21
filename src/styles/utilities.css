@@ -19,7 +19,6 @@
    ============================================ */
 
 .empty-state {
-  color: var(--color-text-secondary);
   font-style: italic;
   font-size: 1.125rem;
 }

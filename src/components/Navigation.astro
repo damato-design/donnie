@@ -67,9 +67,6 @@ const isActive = (href: string) => {
       ))}
     </ul>
   </div>
-  <div class="nav-end">
-    <ThemeToggle />
-  </div>
 </nav>
 
 <script>
@@ -104,8 +101,8 @@ const isActive = (href: string) => {
   .site-nav {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--color-border);
-    background: var(--color-bg);
+    border-bottom: 1px solid currentColor;
+    background: var(--color-bg-elevated);
     padding: var(--space-md) 0;
     margin-bottom: var(--space-md);
   }
@@ -140,43 +137,10 @@ const isActive = (href: string) => {
   }
 
   .nav-link {
-    color: var(--color-text-secondary);
     font-size: 0.8125rem;
-    
     text-transform: uppercase;
-    
     text-decoration: none;
     transition: color 0.2s ease;
     white-space: nowrap;
   }
-
-  .nav-link:hover {
-    color: var(--color-text);
-  }
-
-  .nav-link--active {
-    color: var(--color-text);
-  }
-
-  .nav-end {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    padding: 0 0.75rem;
-    border-left: 1px solid var(--color-border);
-    background: var(--color-bg);
-    position: relative;
-  }
-
-  .nav-end::before {
-    content: '';
-    position: absolute;
-    left: -24px;
-    top: 0;
-    bottom: 0;
-    width: 24px;
-    background: linear-gradient(to right, transparent, var(--color-bg));
-    pointer-events: none;
-  }
-
 </style>

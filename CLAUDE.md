@@ -77,7 +77,7 @@ update both sides when renaming/deleting.
   `uses.astro`, `contact.astro`, `404.astro`, `robots.txt.ts`.
 - `src/layouts/` — `BaseLayout`, `PageLayout`, `ArticleLayout`, `CaseStudyLayout`.
 - `src/styles/` — `global.css`, `typography.css`, `utilities.css` (CSS custom-property
-  design tokens like `--color-text`, `--color-bg-secondary`, `--space-*`). Most component
+  design tokens like `--color-text`, `--color-bg-elevated`, `--space-*`). Most component
   styles are scoped `<style>` blocks inside `.astro` files.
 - Key components: `SEO.astro`, `StructuredData.astro` (JSON-LD, fully config-driven),
   `Navigation.astro`, `Testimonials.astro`, `TalkCard`, `ArticleCard`, `ProjectCard`,

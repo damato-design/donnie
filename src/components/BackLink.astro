@@ -41,7 +41,7 @@ const { href, text } = Astro.props;
   .back-link-container {
     margin-top: 3rem;
     padding-top: 2rem;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid currentColor;
   }
 
   .back-link {
@@ -49,14 +49,8 @@ const { href, text } = Astro.props;
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9375rem;
-    
-    color: var(--color-text-muted);
     text-decoration: none;
     transition: color 0.2s ease;
-  }
-
-  .back-link:hover {
-    color: var(--color-text);
   }
 
   .back-icon {

@@ -2,16 +2,10 @@
 
 :root {
   /* Color System - Dark Mode Default */
-  --color-bg: #0a0a0a;
-  --color-bg-secondary: #111111;
-  --color-bg-elevated: #1a1a1a;
-  --color-text: #e5e5e5;
-  --color-text-secondary: #a3a3a3;
-  --color-text-muted: #737373;
+  --color-bg: #f7f7f7;
+  --color-bg-elevated: oklch(from var(--color-bg) calc(l + .05) c h);
   --color-border: #262626;
   --color-accent: #3b82f6;
-  --color-accent-hover: #60a5fa;
-  --color-accent-glow: rgba(59, 130, 246, 0.25);
 
   /* Spacing System */
   --space-xs: 0.25rem;    /* 4px */
@@ -33,11 +27,6 @@
   --font-size-4xl: 2.25rem;   /* 36px */
   --font-size-5xl: 3rem;      /* 48px */
   
-  /* Line Heights */
-  --line-height-tight: 1.25;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
-  
   /* Font Weights */
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -46,8 +35,6 @@
   /* Layout */
   --max-width-prose: 65ch;
   --max-width-content: 1200px;
-  --border-radius-sm: 0.25rem;
-  --border-radius-md: 0.5rem;
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -56,28 +43,12 @@
   interpolate-size: allow-keywords;
 }
 
-/* Light Mode Colors */
-[data-theme="light"] {
-  --color-bg: #ffffff;
-  --color-bg-secondary: #f5f5f5;
-  --color-bg-elevated: #fafafa;
-  --color-text: #171717;
-  --color-text-secondary: #525252;
-  --color-text-muted: #a3a3a3;
-  --color-border: #e5e5e5;
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
-  --color-accent-glow: rgba(37, 99, 235, 0.15);
-}
-
 /* CSS Reset and Base Styles */
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
@@ -87,14 +58,14 @@ html {
 }
 
 body {
+  margin: 0;
   background-color: var(--color-bg);
-  color: var(--color-text);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
+  color: contrast-color(var(--color-bg));
   min-height: 100vh;
   font-family: "LINE Seed JP", sans-serif;
-  /* background-image: radial-gradient(circle, contrast-color(var(--color-bg)) 1px, transparent 1px); */
-  background-size: 12px 12px;
+  line-height: 1.4;
+  background-image: radial-gradient(circle, contrast-color(var(--color-bg)) .5px, transparent .5px);
+  background-size: 6px 6px;
 }
 
 /* Links */
@@ -102,10 +73,6 @@ a {
   color: var(--color-accent);
   text-decoration: none;
   transition: color 0.2s ease;
-}
-
-a:hover {
-  color: var(--color-accent-hover);
 }
 
 a:focus-visible {
@@ -152,15 +119,13 @@ details[open]::details-content {
 code {
   font-family: ui-monospace, 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, 'Courier New', monospace;
   font-size: 0.9em;
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-elevated);
   padding: 0.125rem 0.25rem;
-  border-radius: var(--border-radius-sm);
 }
 
 pre {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-elevated);
   padding: var(--space-md);
-  border-radius: var(--border-radius-md);
   overflow-x: auto;
 }
 

@@ -42,10 +42,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-bg-secondary);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
-    color: var(--color-text-secondary);
+    background: var(--color-bg-elevated);
+    border: 1px solid currentColor;
     cursor: pointer;
     opacity: 0;
     visibility: hidden;
@@ -58,12 +56,6 @@
       color 0.2s ease,
       border-color 0.2s ease;
     z-index: 50;
-  }
-
-  .scroll-to-top:hover {
-    background: var(--color-bg-elevated);
-    color: var(--color-text);
-    border-color: var(--color-text-muted);
   }
 
   .scroll-to-top:focus-visible {

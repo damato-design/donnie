@@ -11,14 +11,13 @@ Edit CSS custom properties in `src/styles/global.css`:
 ```css
 :root {
   --color-bg: #0a0a0a;
-  --color-bg-secondary: #111111;
+  --color-bg-elevated: #111111;
   --color-bg-elevated: #1a1a1a;
   --color-text: #e5e5e5;
-  --color-text-secondary: #a3a3a3;
+  --color-text-muted: #a3a3a3;
   --color-text-muted: #737373;
   --color-border: #262626;
   --color-accent: #3b82f6;
-  --color-accent-hover: #60a5fa;
 }
 ```
 
@@ -27,14 +26,13 @@ Edit CSS custom properties in `src/styles/global.css`:
 ```css
 [data-theme="light"] {
   --color-bg: #ffffff;
-  --color-bg-secondary: #f5f5f5;
+  --color-bg-elevated: #f5f5f5;
   --color-bg-elevated: #fafafa;
   --color-text: #171717;
-  --color-text-secondary: #525252;
+  --color-text-muted: #525252;
   --color-text-muted: #a3a3a3;
   --color-border: #e5e5e5;
   --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
 }
 ```
 
@@ -44,17 +42,11 @@ Update these variables for both modes:
 
 ```css
 :root {
-  --color-accent: #10b981;
-  --color-accent-hover: #34d399;
-  --color-accent-muted: rgba(16, 185, 129, 0.15);
-  --color-accent-glow: rgba(16, 185, 129, 0.25);
+
 }
 
 [data-theme="light"] {
-  --color-accent: #059669;
-  --color-accent-hover: #047857;
-  --color-accent-muted: rgba(5, 150, 105, 0.1);
-  --color-accent-glow: rgba(5, 150, 105, 0.15);
+
 }
 ```
 
@@ -71,11 +63,6 @@ Update these variables for both modes:
   --font-size-2xl: 1.5rem;    /* 24px */
   --font-size-3xl: 1.875rem;  /* 30px */
   --font-size-4xl: 2.25rem;   /* 36px */
-  
-  /* Line Heights */
-  --line-height-tight: 1.25;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.75;
 }
 ```
 
@@ -116,10 +103,6 @@ Import in `src/layouts/BaseLayout.astro`:
 :root {
   --max-width-prose: 65ch;      /* Reading content */
   --max-width-content: 1200px;  /* Page content */
-  
-  --border-radius-sm: 0.25rem;
-  --border-radius-md: 0.5rem;
-  --border-radius-lg: 1rem;
 }
 ```
 

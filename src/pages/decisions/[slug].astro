@@ -174,7 +174,6 @@ const formattedDate = formatLongDate(decision.data.date);
     .decision-date {
       display: block;
       font-size: 0.875rem;
-      color: var(--color-text-muted);
       margin-bottom: 0.75rem;
     }
 
@@ -190,9 +189,8 @@ const formattedDate = formatLongDate(decision.data.date);
 
     .decision-callout {
       padding: 1rem 1.25rem;
-      background: var(--color-bg-secondary);
+      background: var(--color-bg-elevated);
       border-left: 3px solid var(--color-accent);
-      border-radius: 0 6px 6px 0;
     }
 
     .alternatives-list {
@@ -203,9 +201,8 @@ const formattedDate = formatLongDate(decision.data.date);
 
     .alternative-item {
       padding: 1.25rem;
-      background: var(--color-bg-secondary);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
+      background: var(--color-bg-elevated);
+      border: 1px solid currentColor;
     }
 
     .alternative-details {
@@ -233,8 +230,7 @@ const formattedDate = formatLongDate(decision.data.date);
       padding: 0;
       margin: 0;
       font-size: 0.875rem;
-      line-height: 1.6;
-      color: var(--color-text-secondary);
+      
     }
 
     .detail-list li {
@@ -247,7 +243,6 @@ const formattedDate = formatLongDate(decision.data.date);
       content: "•";
       position: absolute;
       left: 0;
-      color: var(--color-text-muted);
     }
 
     .decision-body {
@@ -257,15 +252,13 @@ const formattedDate = formatLongDate(decision.data.date);
     .decision-body.prose :global(code) {
       font-size: 0.9em;
       padding: 0.2em 0.4em;
-      background: var(--color-bg-secondary);
-      border-radius: 4px;
+      background: var(--color-bg-elevated);
     }
 
     .decision-body.prose :global(pre) {
       padding: 1.25rem;
-      background: var(--color-bg-secondary);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
+      background: var(--color-bg-elevated);
+      border: 1px solid currentColor;
       overflow-x: auto;
       margin-bottom: 1.5rem;
     }

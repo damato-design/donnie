@@ -92,8 +92,7 @@ const recentDecisions = allDecisions
   <main class="home-page">
     <!-- CASE-FIRST HERO -->
     <Hero
-      title="I don't just ship component libraries."
-      emphasis="I build the strategic frameworks, and the shared language, that help teams move faster and smarter."
+      title="Experience Architect"
       subtitle="Design systems where design and code work beautifully together."
       meta={`${siteConfig.author.name} · ${siteConfig.author.title}`}
       primary={{ label: 'Explore Case Studies', href: '/projects' }}
@@ -181,12 +180,8 @@ const recentDecisions = allDecisions
     .btn-primary {
       display: inline-block;
       padding: 0.75rem 1.5rem;
-      background: var(--color-text);
-      color: var(--color-bg);
-      
       font-size: 0.9375rem;
       text-decoration: none;
-      border-radius: 6px;
       transition: opacity 0.2s ease;
     }
 
@@ -198,17 +193,10 @@ const recentDecisions = allDecisions
       display: inline-block;
       padding: 0.75rem 1.5rem;
       background: transparent;
-      color: var(--color-text);
-      
       font-size: 0.9375rem;
       text-decoration: none;
-      border: 1px solid var(--color-border);
-      border-radius: 6px;
+      border: 1px solid currentColor;
       transition: border-color 0.2s ease;
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--color-text-secondary);
     }
 
     .introduction {
@@ -231,12 +219,12 @@ const recentDecisions = allDecisions
       display: flex;
       flex-direction: column;
       gap: 0;
-      border-top: 1px solid var(--color-border);
+      border-top: 1px solid currentColor;
     }
 
     .decision-item {
       padding: 1.5rem 0;
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: 1px solid currentColor;
     }
 
     .decision-item:last-child {
@@ -258,7 +246,7 @@ const recentDecisions = allDecisions
 
     .cta {
       padding: 3rem 0;
-      border-top: 1px solid var(--color-border);
+      border-top: 1px solid currentColor;
     }
 
     .cta-text {

@@ -280,7 +280,7 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     .case-study-header {
       margin-bottom: 3rem;
       padding-bottom: 2rem;
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: 1px solid currentColor;
     }
 
     .header-badges {
@@ -297,7 +297,6 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       align-items: center;
       gap: 0.75rem;
       font-size: 0.9375rem;
-      color: var(--color-text-secondary);
       margin-bottom: 1.5rem;
     }
 
@@ -320,11 +319,10 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     .tech-stack-list li,
     .learnings-list li {
       font-size: 1.0625rem;
-      line-height: 1.7;
+      
       padding: 0.5rem 0;
       padding-left: 1.5rem;
       position: relative;
-      color: var(--color-text-secondary);
     }
 
     .constraints-list li::before,
@@ -344,9 +342,8 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
 
     .decision-item {
       padding: 1.5rem;
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      background: var(--color-bg-secondary);
+      border: 1px solid currentColor;
+      background: var(--color-bg-elevated);
     }
 
     .decision-reasoning,
@@ -358,7 +355,6 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     .decision-alternatives strong {
       display: block;
       font-size: 0.9375rem;
-      color: var(--color-text-muted);
       margin-bottom: 0.5rem;
       text-transform: uppercase;
       
@@ -372,11 +368,10 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
 
     .decision-alternatives li {
       font-size: 1.0625rem;
-      line-height: 1.6;
+      
       padding: 0.25rem 0;
       padding-left: 1.25rem;
       position: relative;
-      color: var(--color-text-secondary);
     }
 
     .decision-alternatives li::before {
@@ -389,8 +384,7 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     .case-study-content {
       margin-top: 3rem;
       font-size: 1.0625rem;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
+      
     }
 
   </style>

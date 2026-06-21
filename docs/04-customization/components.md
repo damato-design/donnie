@@ -131,18 +131,11 @@ const { title, description, variant = 'default' } = Astro.props;
 <style>
   .component {
     padding: var(--space-lg);
-    background: var(--color-bg-secondary);
-    border-radius: var(--border-radius-md);
+    background: var(--color-bg-elevated);
   }
   
   .component.compact {
     padding: var(--space-md);
-  }
-  
-  @media (max-width: 640px) {
-    .component {
-      padding: var(--space-md);
-    }
   }
 </style>
 ```
@@ -154,10 +147,9 @@ Always use theme variables for consistency:
 ```css
 /* ✅ Good */
 .card {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-elevated);
   color: var(--color-text);
   padding: var(--space-lg);
-  border-radius: var(--border-radius-md);
   transition: var(--transition-base);
 }
 

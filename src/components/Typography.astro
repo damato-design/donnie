@@ -72,6 +72,8 @@ const {
 } = Astro.props;
 
 const Tag = tagName as any;
+const blockElements = ['p', 'h2', 'h3', 'h4', 'h5', 'h6', 'li'];
+const shouldWrap = blockElements.includes(Tag);
 ---
 
 <Tag
@@ -83,9 +85,17 @@ const Tag = tagName as any;
   ]}
   data-size={size}
   {...rest}
-><slot /></Tag>
+>
+    {shouldWrap ? <span class="inline"><slot /></span> : <slot />}
+</Tag>
 
 <style>
+  .inline {
+    background: var(--color-bg-elevated);
+    padding: .1lh .5em;
+    box-decoration-break: clone;
+  }
+
   /* Decoupled size scale: set only when `size` is passed, otherwise the element
      keeps its default size from the global stylesheet. */
   [data-size="xs"]   { font-size: var(--font-size-xs); }
@@ -126,11 +136,6 @@ const Tag = tagName as any;
     text-decoration-thickness: 1px;
     text-underline-offset: 2px;
     transition: all 0.2s ease;
-  }
-
-  a.t-prose:hover {
-    color: var(--color-accent-hover);
-    text-decoration-thickness: 2px;
   }
 
   code.t-prose {

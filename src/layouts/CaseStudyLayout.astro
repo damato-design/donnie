@@ -87,7 +87,7 @@ import BaseLayout from './BaseLayout.astro';
     .case-study-layout :global(.case-study-header) {
       margin-bottom: var(--space-3xl);
       padding-bottom: var(--space-2xl);
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: 1px solid currentColor;
     }
 
     .case-study-layout :global(.case-study-header h1) {
@@ -95,7 +95,7 @@ import BaseLayout from './BaseLayout.astro';
       margin-bottom: var(--space-md);
       
       
-      line-height: var(--line-height-tight);
+      
     }
 
     .case-study-layout :global(.case-study-meta) {
@@ -103,7 +103,6 @@ import BaseLayout from './BaseLayout.astro';
       align-items: center;
       gap: var(--space-sm);
       font-size: var(--font-size-sm);
-      color: var(--color-text-secondary);
       margin-bottom: var(--space-lg);
     }
 
@@ -113,9 +112,8 @@ import BaseLayout from './BaseLayout.astro';
 
     .case-study-layout :global(.outcome-summary) {
       font-size: var(--font-size-xl);
-      line-height: var(--line-height-relaxed);
-      color: var(--color-accent);
       
+      color: var(--color-accent);
     }
 
     .case-study-layout :global(.case-study-section) {
@@ -124,15 +122,7 @@ import BaseLayout from './BaseLayout.astro';
 
     .case-study-layout :global(.case-study-section h2) {
       font-size: var(--font-size-4xl);
-      margin-bottom: var(--space-lg);
-      
-      
-    }
-
-    .case-study-layout :global(.case-study-section p) {
-      font-size: var(--font-size-lg);
-      line-height: var(--line-height-relaxed);
-      color: var(--color-text);
+      margin-bottom: var(--space-lg); 
     }
 
     .case-study-layout :global(.constraints-list),
@@ -146,11 +136,10 @@ import BaseLayout from './BaseLayout.astro';
     .case-study-layout :global(.tech-stack-list li),
     .case-study-layout :global(.learnings-list li) {
       font-size: var(--font-size-base);
-      line-height: var(--line-height-relaxed);
+      
       padding: var(--space-sm) 0;
       padding-left: var(--space-lg);
       position: relative;
-      color: var(--color-text-secondary);
     }
 
     .case-study-layout :global(.constraints-list li::before),
@@ -170,16 +159,13 @@ import BaseLayout from './BaseLayout.astro';
 
     .case-study-layout :global(.decision-item) {
       padding: var(--space-lg);
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-md);
-      background: var(--color-bg-secondary);
+      border: 1px solid currentColor;
+      background: var(--color-bg-elevated);
     }
 
     .case-study-layout :global(.decision-title) {
       font-size: var(--font-size-xl);
-      
       margin-bottom: var(--space-md);
-      color: var(--color-text);
     }
 
     .case-study-layout :global(.decision-reasoning),
@@ -191,7 +177,6 @@ import BaseLayout from './BaseLayout.astro';
     .case-study-layout :global(.decision-alternatives strong) {
       display: block;
       font-size: var(--font-size-sm);
-      color: var(--color-text-muted);
       margin-bottom: var(--space-sm);
       text-transform: uppercase;
       
@@ -200,7 +185,6 @@ import BaseLayout from './BaseLayout.astro';
     .case-study-layout :global(.decision-reasoning p) {
       font-size: var(--font-size-base);
       margin-top: var(--space-sm);
-      color: var(--color-text-secondary);
     }
 
     .case-study-layout :global(.decision-alternatives ul) {
@@ -211,11 +195,10 @@ import BaseLayout from './BaseLayout.astro';
 
     .case-study-layout :global(.decision-alternatives li) {
       font-size: var(--font-size-base);
-      line-height: var(--line-height-relaxed);
+      
       padding: var(--space-xs) 0;
       padding-left: var(--space-md);
       position: relative;
-      color: var(--color-text-secondary);
     }
 
     .case-study-layout :global(.decision-alternatives li::before) {
@@ -232,8 +215,7 @@ import BaseLayout from './BaseLayout.astro';
       margin-bottom: var(--space-2xl);
       padding: var(--space-2xl);
       background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-md);
+      border: 1px solid currentColor;
     }
 
     .case-study-layout :global(.metric-item) {
@@ -245,24 +227,23 @@ import BaseLayout from './BaseLayout.astro';
       
       color: var(--color-accent);
       margin-bottom: var(--space-sm);
-      line-height: var(--line-height-tight);
+      
     }
 
     .case-study-layout :global(.metric-label) {
       font-size: var(--font-size-sm);
-      color: var(--color-text-secondary);
-      line-height: var(--line-height-normal);
+      
     }
 
     .case-study-layout :global(.impact-qualitative) {
       font-size: var(--font-size-lg);
-      line-height: var(--line-height-relaxed);
+      
     }
 
     .case-study-layout :global(.case-study-content) {
       margin-top: var(--space-3xl);
       font-size: var(--font-size-base);
-      line-height: var(--line-height-relaxed);
+      
     }
 
   </style>

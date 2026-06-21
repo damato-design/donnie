@@ -24,9 +24,8 @@
   display: block;
   position: relative;
   padding: 1.5rem 1.75rem;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
+  background: var(--color-bg-elevated);
+  border: 1px solid;
 }
 
 .card-meta {
@@ -70,7 +69,6 @@
 
 .card-talk-event {
   font-size: 0.9375rem;
-  color: var(--color-text-secondary);
   margin-bottom: 1rem;
   display: flex;
   flex-wrap: wrap;
@@ -79,7 +77,6 @@
 }
 
 .card-talk-event-link {
-  color: var(--color-text-secondary);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -100,7 +97,7 @@
   gap: 1rem;
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid currentColor;
 }
 
 .card-talk-link {

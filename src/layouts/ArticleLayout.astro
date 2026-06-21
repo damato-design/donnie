@@ -74,7 +74,7 @@ import BaseLayout from './BaseLayout.astro';
     .article-layout :global(.article-header) {
       margin-bottom: var(--space-3xl);
       padding-bottom: var(--space-2xl);
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: 1px solid currentColor;
     }
 
     .article-layout :global(.article-header h1) {
@@ -82,7 +82,7 @@ import BaseLayout from './BaseLayout.astro';
       margin-bottom: var(--space-md);
       
       
-      line-height: var(--line-height-tight);
+      
     }
 
     .article-layout :global(.article-meta) {
@@ -90,7 +90,6 @@ import BaseLayout from './BaseLayout.astro';
       align-items: center;
       gap: var(--space-sm);
       font-size: var(--font-size-sm);
-      color: var(--color-text-secondary);
       margin-bottom: var(--space-md);
     }
 
@@ -108,25 +107,14 @@ import BaseLayout from './BaseLayout.astro';
     .article-layout :global(.tag) {
       font-size: var(--font-size-xs);
       padding: var(--space-xs) var(--space-sm);
-      background: var(--color-bg-secondary);
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-sm);
-      color: var(--color-text-secondary);
-    }
-
-    .article-layout :global(.article-content) {
-      font-size: var(--font-size-lg);
-      line-height: var(--line-height-relaxed);
-      color: var(--color-text);
+      background: var(--color-bg-elevated);
+      border: 1px solid currentColor;
     }
 
     .article-layout :global(.article-content h2) {
       font-size: var(--font-size-4xl);
       margin-top: var(--space-3xl);
       margin-bottom: var(--space-md);
-      
-      
-      line-height: var(--line-height-tight);
     }
 
     .article-layout :global(.article-content h3) {
@@ -135,7 +123,7 @@ import BaseLayout from './BaseLayout.astro';
       margin-bottom: var(--space-sm);
       
       
-      line-height: var(--line-height-tight);
+      
     }
 
     .article-layout :global(.article-content h4) {
@@ -143,12 +131,11 @@ import BaseLayout from './BaseLayout.astro';
       margin-top: var(--space-xl);
       margin-bottom: var(--space-sm);
       
-      line-height: var(--line-height-normal);
+      
     }
 
     .article-layout :global(.article-content p) {
       margin-bottom: var(--space-lg);
-      color: var(--color-text-secondary);
     }
 
     .article-layout :global(.article-content ul),
@@ -159,8 +146,7 @@ import BaseLayout from './BaseLayout.astro';
 
     .article-layout :global(.article-content li) {
       margin-bottom: var(--space-sm);
-      line-height: var(--line-height-relaxed);
-      color: var(--color-text-secondary);
+      
     }
 
     .article-layout :global(.article-content blockquote) {
@@ -169,7 +155,6 @@ import BaseLayout from './BaseLayout.astro';
       border-left: 4px solid var(--color-accent);
       background: rgba(255, 255, 255, 0.02);
       font-style: italic;
-      color: var(--color-text-secondary);
     }
 
     .article-layout :global(.article-content blockquote p) {
@@ -185,16 +170,13 @@ import BaseLayout from './BaseLayout.astro';
       font-size: 0.9em;
       background: rgba(255, 255, 255, 0.05);
       padding: 0.2em 0.4em;
-      border-radius: var(--border-radius-sm);
-      color: var(--color-text);
     }
 
     .article-layout :global(.article-content pre) {
       margin: var(--space-2xl) 0;
       padding: var(--space-lg);
       background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--color-border);
-      border-radius: var(--border-radius-md);
+      border: 1px solid currentColor;
       overflow-x: auto;
     }
 
@@ -202,7 +184,7 @@ import BaseLayout from './BaseLayout.astro';
       background: none;
       padding: 0;
       font-size: var(--font-size-sm);
-      line-height: var(--line-height-relaxed);
+      
     }
 
     .article-layout :global(.article-content a) {
@@ -213,28 +195,16 @@ import BaseLayout from './BaseLayout.astro';
       transition: all 0.2s ease;
     }
 
-    .article-layout :global(.article-content a:hover) {
-      color: var(--color-accent-hover);
-      text-decoration-thickness: 2px;
-    }
-
     .article-layout :global(.article-content img) {
       max-width: 100%;
       height: auto;
-      border-radius: var(--border-radius-md);
       margin: var(--space-2xl) 0;
     }
 
     .article-layout :global(.article-content hr) {
       margin: var(--space-3xl) 0;
       border: none;
-      border-top: 1px solid var(--color-border);
-    }
-
-    .article-layout :global(.article-content strong),
-    .article-layout :global(.article-content b) {
-      
-      color: var(--color-text);
+      border-top: 1px solid currentColor;
     }
 
     .article-layout :global(.article-content em),
@@ -252,16 +222,7 @@ import BaseLayout from './BaseLayout.astro';
     .article-layout :global(.article-content td) {
       padding: var(--space-sm) var(--space-md);
       text-align: left;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .article-layout :global(.article-content th) {
-      
-      color: var(--color-text);
-    }
-
-    .article-layout :global(.article-content td) {
-      color: var(--color-text-secondary);
+      border-bottom: 1px solid currentColor;
     }
 
   </style>
