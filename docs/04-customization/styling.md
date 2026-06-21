@@ -139,27 +139,6 @@ The theme uses consistent breakpoints:
 | Card padding | 2rem | - | 1.25rem |
 | Heading sizes | Full scale | Reduced ~20% | - |
 
-## Theme Toggle
-
-The theme toggle supports manual selection and system preference detection.
-
-**Theme Persistence:**
-- User preference saved to `localStorage`
-- Falls back to system preference
-- Prevents flash of wrong theme on load
-
-**Customizing default theme:**
-
-Edit `src/components/ThemeToggle.astro`:
-
-```javascript
-// Force dark as default
-const theme = stored || 'dark';
-
-// Force light as default
-const theme = stored || 'light';
-```
-
 ## Reading Time
 
 Automatic reading time estimation uses 200 WPM (optimized for technical content).

@@ -47,18 +47,7 @@ const pageTitle = '404 - Page Not Found';
         --color-accent-hover: #2563eb;
       }
 
-      [data-theme="light"] {
-        --color-bg: #ffffff;
-        --color-text: #171717;
-        --color-text-muted: #525252;
-        --color-text-muted: #737373;
-        --color-accent: #2563eb;
-        --color-accent-hover: #1d4ed8;
-      }
-
       * {
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
       }
 
@@ -129,15 +118,6 @@ const pageTitle = '404 - Page Not Found';
       }
 
     </style>
-
-    <!-- Theme initialization script -->
-    <script is:inline>
-      (function() {
-        const stored = localStorage.getItem('theme');
-        const theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        document.documentElement.setAttribute('data-theme', theme);
-      })();
-    </script>
   </head>
   <body>
     <div class="container">

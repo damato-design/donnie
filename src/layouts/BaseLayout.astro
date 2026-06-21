@@ -75,19 +75,6 @@ import "../styles/cards.css";
 
     <ClientRouter />
 
-    <!-- Prevent flash of wrong theme -->
-    <script is:inline>
-      (function () {
-        const stored = localStorage.getItem("theme");
-        const theme =
-          stored ||
-          (window.matchMedia("(prefers-color-scheme: light)").matches
-            ? "light"
-            : "dark");
-        document.documentElement.setAttribute("data-theme", theme);
-      })();
-    </script>
-
     <!-- Preserve theme during View Transitions -->
     <script is:inline>
       document.addEventListener("astro:before-swap", (e) => {

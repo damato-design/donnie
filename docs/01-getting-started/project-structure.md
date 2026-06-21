@@ -54,7 +54,6 @@ Overview of the codebase organization.
 |-----------|---------|
 | `Navigation.astro` | Site navigation |
 | `Footer.astro` | Site footer |
-| `ThemeToggle.astro` | Dark/light mode toggle |
 | `ProjectCard.astro` | Case study cards |
 | `ArticleCard.astro` | Blog post cards |
 | `SEO.astro` | Meta tags |

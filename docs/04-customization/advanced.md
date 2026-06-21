@@ -131,34 +131,6 @@ nav: [
 ],
 ```
 
-## Theme Toggle Customization
-
-Location: `src/components/ThemeToggle.astro`
-
-**Change default theme:**
-
-```javascript
-// Default: respects system preference
-const theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-
-// Force dark as default
-const theme = stored || 'dark';
-```
-
-**Add a third theme (e.g., sepia):**
-
-1. Add CSS variables in `src/styles/global.css`:
-
-```css
-[data-theme="sepia"] {
-  --color-bg: #f4ecd8;
-  --color-text: #5c4b37;
-  /* ... other variables */
-}
-```
-
-2. Update ThemeToggle to cycle through three themes.
-
 ## SEO & Structured Data
 
 The theme includes JSON-LD structured data in `src/components/StructuredData.astro`.
