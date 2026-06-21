@@ -31,6 +31,8 @@ import { getCollection, getEntry, render } from 'astro:content';
 import { getReadingTime } from '../../utils/readingTime';
 import { formatLongDate } from '../../utils/formatDate';
 import Label from '../../components/Label.astro';
+import Typography from '../../components/Typography.astro';
+import { mdxComponents } from '../../components/mdxComponents';
 
 /**
  * Generates static paths for all published articles
@@ -111,16 +113,16 @@ const readingTime = getReadingTime(article.body || '');
   <main class="article">
     <!-- Article Header -->
     <header class="article-header">
-      <h1>{title}</h1>
+      <Typography tagName="h1" size="4xl">{title}</Typography>
       <div class="article-meta">
         <time class="publish-date" datetime={publishDate.toISOString()}>
           {formatLongDate(publishDate)}
         </time>
-        <span class="meta-separator">·</span>
-        <span class="reading-time">{readingTime}</span>
+        <Typography tagName="span" class="meta-separator">·</Typography>
+        <Typography tagName="span" class="reading-time">{readingTime}</Typography>
         {updatedDate && (
           <>
-            <span class="meta-separator">·</span>
+            <Typography tagName="span" class="meta-separator">·</Typography>
             <time class="updated-date" datetime={updatedDate.toISOString()}>
               Updated {formatLongDate(updatedDate)}
             </time>
@@ -141,7 +143,7 @@ const readingTime = getReadingTime(article.body || '');
 
     <!-- Article Content -->
     <article class="article-content">
-      <Content />
+      <Content components={mdxComponents} />
     </article>
 
     <BackLink href="/writing" text="All articles" />
@@ -160,14 +162,6 @@ const readingTime = getReadingTime(article.body || '');
       margin-bottom: 3rem;
       padding-bottom: 2rem;
       border-bottom: 1px solid var(--color-border);
-    }
-
-    .article-header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      
-      
-      line-height: 1.2;
     }
 
     .article-meta {
@@ -196,52 +190,9 @@ const readingTime = getReadingTime(article.body || '');
       color: var(--color-text);
     }
 
-    .article-content :global(h2) {
-      font-size: 1.75rem;
-      margin-top: 2.5rem;
-      margin-bottom: 1rem;
-      
-      
-      line-height: 1.3;
-      color: var(--color-text);
-    }
-
-    .article-content :global(h3) {
-      font-size: 1.375rem;
-      margin-top: 2rem;
-      margin-bottom: 0.75rem;
-      
-      
-      line-height: 1.4;
-      color: var(--color-text);
-    }
-
-    .article-content :global(h4) {
-      font-size: 1.125rem;
-      margin-top: 1.5rem;
-      margin-bottom: 0.5rem;
-      
-      line-height: 1.5;
-      color: var(--color-text);
-    }
-
-    .article-content :global(p) {
-      margin-bottom: 1.5rem;
-      color: var(--color-text-secondary);
-    }
-
-    .article-content :global(ul),
-    .article-content :global(ol) {
-      margin-bottom: 1.5rem;
-      padding-left: 1.5rem;
-      color: var(--color-text-secondary);
-    }
-
-    .article-content :global(li) {
-      margin-bottom: 0.5rem;
-      line-height: 1.7;
-    }
-
+    /* Text typography (headings, paragraphs, lists, links, ...) comes from the
+       global base in typography.css plus <Typography prose> via mdxComponents.
+       Only content-presentation with no global equivalent stays here. */
     .article-content :global(blockquote) {
       margin: 2rem 0;
       padding: 1rem 1.5rem;
@@ -249,15 +200,6 @@ const readingTime = getReadingTime(article.body || '');
       background: var(--color-bg-secondary);
       font-style: italic;
       color: var(--color-text-secondary);
-    }
-
-    .article-content :global(code) {
-      font-family: ui-monospace, 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, 'Courier New', monospace;
-      font-size: 0.9em;
-      background: var(--color-bg-secondary);
-      padding: 0.2em 0.4em;
-      border-radius: 3px;
-      color: var(--color-text);
     }
 
     .article-content :global(pre) {
@@ -276,31 +218,11 @@ const readingTime = getReadingTime(article.body || '');
       line-height: 1.6;
     }
 
-    .article-content :global(a) {
-      color: var(--color-accent);
-      text-decoration: underline;
-    }
-
-    .article-content :global(a:hover) {
-      color: var(--color-accent-hover);
-    }
-
     .article-content :global(img) {
       max-width: 100%;
       height: auto;
       border-radius: 8px;
       margin: 2rem 0;
-    }
-
-    .article-content :global(hr) {
-      margin: 3rem 0;
-      border: none;
-      border-top: 1px solid var(--color-border);
-    }
-
-    .article-content :global(strong) {
-      color: var(--color-text);
-      
     }
 
   </style>

@@ -17,6 +17,7 @@
  * ```
  */
 import { siteConfig } from '../config';
+import Typography from './Typography.astro';
 
 /**
  * Gets the current year for copyright display
@@ -41,7 +42,7 @@ const socialLinks = Object.entries(siteConfig.social)
 
 <footer class="site-footer">
   <div class="footer-container">
-    <span class="copyright">© {currentYear} {siteConfig.author.name}</span>
+    <Typography tagName="span" size="sm" variant="muted">© {currentYear} {siteConfig.author.name}</Typography>
     
     {socialLinks.length > 0 && (
       <div class="footer-social">
@@ -50,7 +51,7 @@ const socialLinks = Object.entries(siteConfig.social)
             <a href={link.url} target="_blank" rel="noopener noreferrer">
               {link.platform}
             </a>
-            {index < socialLinks.length - 1 && <span class="separator">·</span>}
+            {index < socialLinks.length - 1 && <Typography tagName="span" variant="muted" class="separator">·</Typography>}
           </>
         ))}
       </div>
@@ -74,11 +75,6 @@ const socialLinks = Object.entries(siteConfig.social)
     gap: 1rem;
   }
 
-  .copyright {
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-  }
-
   .footer-social {
     display: flex;
     align-items: center;
@@ -97,7 +93,6 @@ const socialLinks = Object.entries(siteConfig.social)
   }
 
   .separator {
-    color: var(--color-text-muted);
     opacity: 0.5;
     user-select: none;
   }

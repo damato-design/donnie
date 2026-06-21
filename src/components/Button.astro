@@ -1,0 +1,128 @@
+---
+/**
+ * Button
+ *
+ * The action-button primitive, and the single home for button styling. Use it
+ * for buttons and for links that *look* like buttons (CTAs, pagination
+ * prev/next, etc.). Inline text links should stay plain `<a>` and not use this.
+ *
+ * Element rendered:
+ * - `href` (and not disabled)  -> `<a>`
+ * - `href` + `disabled`        -> `<span aria-disabled>` (non-navigable)
+ * - no `href`                  -> `<button type=...>`
+ *
+ * Content is slotted, so an icon + label compose naturally (the button is a
+ * flex row). Visual variants are `primary` (filled) and `secondary` (outline);
+ * `sm` tightens padding/size for compact controls like pagination.
+ *
+ * @component
+ * @slot default - Button label / icon content.
+ *
+ * @example
+ * ```astro
+ * <Button href="/projects" variant="primary">View My Work</Button>
+ * <Button href="https://cal.com/x" variant="secondary" external>Book a call</Button>
+ * <Button variant="secondary" size="sm" disabled aria-label="Previous page">…</Button>
+ * ```
+ */
+
+interface Props {
+  /** Destination. Provided -> renders a link; omitted -> renders a <button>. */
+  href?: string;
+  /** Visual style. */
+  variant?: 'primary' | 'secondary';
+  /** Compact sizing (e.g. pagination controls). */
+  size?: 'md' | 'sm';
+  /** Open link in a new tab. */
+  external?: boolean;
+  /** Disabled state (non-interactive). */
+  disabled?: boolean;
+  /** Button type when rendered as <button>. */
+  type?: 'button' | 'submit' | 'reset';
+  /** Extra class(es). */
+  class?: string;
+  /** Any other valid attributes (aria-label, id, ...). */
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  external = false,
+  disabled = false,
+  type = 'button',
+  class: className,
+  ...rest
+} = Astro.props;
+
+const Tag = !href ? 'button' : disabled ? 'span' : 'a';
+
+const tagAttrs =
+  Tag === 'a'
+    ? { href, ...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {}) }
+    : Tag === 'button'
+      ? { type, disabled }
+      : { 'aria-disabled': 'true' };
+---
+
+<Tag
+  class:list={[
+    'btn',
+    `btn--${variant}`,
+    { 'btn--sm': size === 'sm', 'btn--disabled': disabled },
+    className,
+  ]}
+  {...tagAttrs}
+  {...rest}
+><slot /></Tag>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: opacity 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .btn--sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .btn--primary {
+    background: var(--color-text);
+    color: var(--color-bg);
+    border-color: var(--color-text);
+  }
+
+  .btn--primary:hover:not(.btn--disabled) {
+    opacity: 0.85;
+  }
+
+  .btn--secondary {
+    background: transparent;
+    color: var(--color-text);
+    border-color: var(--color-border);
+  }
+
+  .btn--secondary:hover:not(.btn--disabled) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .btn--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+</style>

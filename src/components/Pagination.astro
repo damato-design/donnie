@@ -26,6 +26,8 @@
  * ```
  */
 
+import Typography from './Typography.astro';
+
 interface Props {
   /** Current active page number (1-indexed) */
   currentPage: number;
@@ -95,21 +97,21 @@ function getPageUrl(page: number): string {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
-        <span>Previous</span>
+        <Typography tagName="span">Previous</Typography>
       </a>
     ) : (
       <span class="pagination-btn pagination-prev disabled" aria-disabled="true">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"></polyline>
         </svg>
-        <span>Previous</span>
+        <Typography tagName="span">Previous</Typography>
       </span>
     )}
 
     <div class="pagination-numbers">
       {pageNumbers.map((page) => (
         page === '...' ? (
-          <span class="pagination-ellipsis">...</span>
+          <Typography tagName="span" variant="secondary" class="pagination-ellipsis">...</Typography>
         ) : (
           <a 
             href={getPageUrl(page as number)} 
@@ -124,14 +126,14 @@ function getPageUrl(page: number): string {
 
     {currentPage < totalPages ? (
       <a href={getPageUrl(currentPage + 1)} class="pagination-btn pagination-next" aria-label="Next page">
-        <span>Next</span>
+        <Typography tagName="span">Next</Typography>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
       </a>
     ) : (
       <span class="pagination-btn pagination-next disabled" aria-disabled="true">
-        <span>Next</span>
+        <Typography tagName="span">Next</Typography>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
@@ -210,7 +212,6 @@ function getPageUrl(page: number): string {
     justify-content: center;
     min-width: 2.25rem;
     height: 2.25rem;
-    color: var(--color-text-secondary);
   }
 
 </style>

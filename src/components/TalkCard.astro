@@ -34,6 +34,7 @@ import BaseCard from './BaseCard.astro';
 import FeaturedBadge from './FeaturedBadge.astro';
 import Label from './Label.astro';
 import TagList from './TagList.astro';
+import Typography from './Typography.astro';
 import { formatMonthYear } from '../utils/formatDate';
 
 interface Props {
@@ -125,12 +126,12 @@ const typeColors: Record<Props['type'], 'accent' | 'green' | 'purple' | 'amber' 
 
   <div class="card-talk-meta">
     <Label color={typeColors[type]} uppercase>{typeLabels[type]}</Label>
-    <span class="card-talk-date">{formattedDate}</span>
+    <Typography tagName="span" size="xs" variant="muted">{formattedDate}</Typography>
   </div>
 
-  <h3>{title}</h3>
+  <Typography tagName="h3">{title}</Typography>
 
-  <p>{description}</p>
+  <Typography tagName="p">{description}</Typography>
 
   <div class="card-talk-event">
     {eventUrl ? (
@@ -143,10 +144,10 @@ const typeColors: Record<Props['type'], 'accent' | 'green' | 'purple' | 'amber' 
         </svg>
       </a>
     ) : (
-      <span>{event}</span>
+      <Typography tagName="span">{event}</Typography>
     )}
-    <span class="card-talk-location">· {location}</span>
-    {duration && <span class="card-talk-duration">· {duration}</span>}
+    <Typography tagName="span" variant="muted">· {location}</Typography>
+    {duration && <Typography tagName="span" variant="muted">· {duration}</Typography>}
   </div>
 
   <TagList items={topics} />

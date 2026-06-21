@@ -43,6 +43,7 @@
 
 import Label from './Label.astro';
 import TagList from './TagList.astro';
+import Typography from './Typography.astro';
 import { formatMonthYear } from '../utils/formatDate';
 
 interface Props {
@@ -108,13 +109,13 @@ const typeColors: Record<Props['type'], 'accent' | 'green' | 'amber'> = {
       <Label color={typeColors[type]} uppercase>{typeLabels[type]}</Label>
     </div>
     
-    <h3 class="timeline-title">{title}</h3>
-    
-    <p class="timeline-description">{description}</p>
+    <Typography tagName="h3" size="xl">{title}</Typography>
+
+    <Typography tagName="p" variant="primary">{description}</Typography>
     
     {skills && skills.length > 0 && (
       <div class="timeline-skills">
-        <span class="skills-label">Skills:</span>
+        <Typography tagName="span" size="sm" variant="secondary" class="skills-label">Skills:</Typography>
         <TagList items={skills} />
       </div>
     )}
@@ -202,29 +203,11 @@ const typeColors: Record<Props['type'], 'accent' | 'green' | 'amber'> = {
     
   }
 
-  .timeline-title {
-    font-size: 1.25rem;
-    
-    margin-bottom: 0.5rem;
-    color: var(--color-text);
-    line-height: 1.25;
-  }
-
-  .timeline-description {
-    font-size: 1rem;
-    line-height: 1.75;
-    color: var(--color-text);
-    margin-bottom: 1rem;
-  }
-
   .timeline-skills {
     margin-top: 1rem;
   }
 
   .skills-label {
-    font-size: 0.875rem;
-    
-    color: var(--color-text-secondary);
     display: block;
     margin-bottom: 0.5rem;
   }
@@ -268,41 +251,6 @@ const typeColors: Record<Props['type'], 'accent' | 'green' | 'amber'> = {
     padding-top: 1.5rem;
     border-top: 1px solid var(--color-border);
     margin-top: 1rem;
-  }
-
-  .timeline-body-content.prose :global(h2) {
-    font-size: 1.125rem;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .timeline-body-content.prose :global(h2:first-child) {
-    margin-top: 0;
-  }
-
-  .timeline-body-content.prose :global(p) {
-    font-size: 0.9375rem;
-    line-height: 1.7;
-    color: var(--color-text-secondary);
-    margin-bottom: 1rem;
-  }
-
-  .timeline-body-content.prose :global(ul),
-  .timeline-body-content.prose :global(ol) {
-    font-size: 0.9375rem;
-    line-height: 1.7;
-    color: var(--color-text-secondary);
-    margin-bottom: 1rem;
-    padding-left: 1.5rem;
-  }
-
-  .timeline-body-content.prose :global(li) {
-    margin-bottom: 0.5rem;
-  }
-
-  .timeline-body-content.prose :global(strong) {
-    color: var(--color-text);
-    
   }
 
 </style>

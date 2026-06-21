@@ -41,6 +41,8 @@ import RelatedContent from '../../components/RelatedContent.astro';
 import ImpactMetrics from '../../components/ImpactMetrics.astro';
 import Section from '../../components/Section.astro';
 import Label from '../../components/Label.astro';
+import Typography from '../../components/Typography.astro';
+import { mdxComponents } from '../../components/mdxComponents';
 import { getCollection, getEntry, render } from 'astro:content';
 import { calculateReadingTime, formatReadingTime } from '../../utils/readingTime';
 
@@ -150,41 +152,41 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
           <Label color={statusInfo.color} uppercase>{statusInfo.label}</Label>
         )}
       </div>
-      <h1>{title}</h1>
+      <Typography tagName="h1" size="4xl">{title}</Typography>
       <div class="case-study-meta">
-        <span class="meta-item">{role}</span>
-        <span class="meta-separator">·</span>
-        <span class="meta-item">{year}</span>
+        <Typography tagName="span">{role}</Typography>
+        <Typography tagName="span" class="meta-separator">·</Typography>
+        <Typography tagName="span">{year}</Typography>
         {duration && (
           <>
-            <span class="meta-separator">·</span>
-            <span class="meta-item">{duration}</span>
+            <Typography tagName="span" class="meta-separator">·</Typography>
+            <Typography tagName="span">{duration}</Typography>
           </>
         )}
         {teamSize && (
           <>
-            <span class="meta-separator">·</span>
-            <span class="meta-item">{teamSize} {teamSize === 1 ? 'person' : 'people'}</span>
+            <Typography tagName="span" class="meta-separator">·</Typography>
+            <Typography tagName="span">{teamSize} {teamSize === 1 ? 'person' : 'people'}</Typography>
           </>
         )}
-        <span class="meta-separator">·</span>
-        <span class="meta-item">{readingTime}</span>
+        <Typography tagName="span" class="meta-separator">·</Typography>
+        <Typography tagName="span">{readingTime}</Typography>
       </div>
-      <p class="outcome-summary">{outcomeSummary}</p>
+      <Typography tagName="p" size="lg" variant="secondary">{outcomeSummary}</Typography>
     </header>
 
     <!-- Overview Section -->
-    <Section title="Overview" class="case-study-section">
-      <p>{overview}</p>
+    <Section title="Overview" class="case-study-section" size="2xl">
+      <Typography tagName="p" prose size="lg">{overview}</Typography>
     </Section>
 
     <!-- Problem Section -->
-    <Section title="Problem" class="case-study-section">
-      <p>{problem}</p>
+    <Section title="Problem" class="case-study-section" size="2xl">
+      <Typography tagName="p" prose size="lg">{problem}</Typography>
     </Section>
 
     <!-- Constraints Section -->
-    <Section title="Constraints" class="case-study-section">
+    <Section title="Constraints" class="case-study-section" size="2xl">
       <ul class="constraints-list">
         {constraints.map((constraint) => (
           <li>{constraint}</li>
@@ -193,19 +195,19 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     </Section>
 
     <!-- Approach Section -->
-    <Section title="Approach" class="case-study-section">
-      <p>{approach}</p>
+    <Section title="Approach" class="case-study-section" size="2xl">
+      <Typography tagName="p" prose size="lg">{approach}</Typography>
     </Section>
 
     <!-- Key Decisions Section -->
-    <Section title="Key Decisions" class="case-study-section">
+    <Section title="Key Decisions" class="case-study-section" size="2xl">
       <div class="decisions-list">
         {keyDecisions.map((decision) => (
           <div class="decision-item">
-            <h3 class="decision-title">{decision.decision}</h3>
+            <Typography tagName="h3" size="xl" variant="primary">{decision.decision}</Typography>
             <div class="decision-reasoning">
               <strong>Reasoning:</strong>
-              <p>{decision.reasoning}</p>
+              <Typography tagName="p">{decision.reasoning}</Typography>
             </div>
             {decision.alternatives && decision.alternatives.length > 0 && (
               <div class="decision-alternatives">
@@ -223,7 +225,7 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     </Section>
 
     <!-- Tech Stack Section -->
-    <Section title="Tech Stack" class="case-study-section">
+    <Section title="Tech Stack" class="case-study-section" size="2xl">
       <ul class="tech-stack-list">
         {techStack.map((tech) => (
           <li>{tech}</li>
@@ -232,17 +234,17 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     </Section>
 
     <!-- Result/Impact Section -->
-    <Section title="Result & Impact" class="case-study-section">
+    <Section title="Result & Impact" class="case-study-section" size="2xl">
       {/* Display metrics with visualization */}
       {impact.metrics && impact.metrics.length > 0 && (
         <ImpactMetrics metrics={impact.metrics} />
       )}
 
-      <p class="impact-qualitative">{impact.qualitative}</p>
+      <Typography tagName="p" size="lg" variant="secondary">{impact.qualitative}</Typography>
     </Section>
 
     <!-- Learnings Section -->
-    <Section title="Learnings" class="case-study-section">
+    <Section title="Learnings" class="case-study-section" size="2xl">
       <ul class="learnings-list">
         {learnings.map((learning) => (
           <li>{learning}</li>
@@ -253,7 +255,7 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     <!-- Additional MDX Content (if any) -->
     {Content && (
       <section class="case-study-content">
-        <Content />
+        <Content components={mdxComponents} />
       </section>
     )}
 
@@ -290,14 +292,6 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     }
 
 
-    .case-study-header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      
-      
-      line-height: 1.2;
-    }
-
     .case-study-meta {
       display: flex;
       align-items: center;
@@ -311,27 +305,8 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       opacity: 0.5;
     }
 
-    .outcome-summary {
-      font-size: 1.125rem;
-      line-height: 1.6;
-      color: var(--color-text-secondary);
-    }
-
     :global(.case-study-section) {
       margin-bottom: 3rem;
-    }
-
-    :global(.case-study-section h2) {
-      font-size: 1.75rem;
-      margin-bottom: 1.25rem;
-      
-      
-    }
-
-    :global(.case-study-section) p {
-      font-size: 1.125rem;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
     }
 
     .constraints-list,
@@ -374,13 +349,6 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       background: var(--color-bg-secondary);
     }
 
-    .decision-title {
-      font-size: 1.25rem;
-      
-      margin-bottom: 1rem;
-      color: var(--color-text);
-    }
-
     .decision-reasoning,
     .decision-alternatives {
       margin-top: 1rem;
@@ -394,12 +362,6 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       margin-bottom: 0.5rem;
       text-transform: uppercase;
       
-    }
-
-    .decision-reasoning p {
-      font-size: 1.0625rem;
-      margin-top: 0.5rem;
-      color: var(--color-text-secondary);
     }
 
     .decision-alternatives ul {
@@ -422,12 +384,6 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       position: absolute;
       left: 0;
       color: var(--color-accent);
-    }
-
-    .impact-qualitative {
-      font-size: 1.125rem;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
     }
 
     .case-study-content {

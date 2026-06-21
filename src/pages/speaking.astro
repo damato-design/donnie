@@ -32,6 +32,7 @@ import SEO from '../components/SEO.astro';
 import TalkCard from '../components/TalkCard.astro';
 import PageStats from '../components/PageStats.astro';
 import Hero from '../components/Hero.astro';
+import Typography from '../components/Typography.astro';
 import HeroCard from '../components/HeroCard.astro';
 import { getCollection } from 'astro:content';
 import { pagesConfig } from '../pages.config';
@@ -117,8 +118,8 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
     </Hero>
 
     <header class="page-header">
-      <h1>{pagesConfig.speaking.heading}</h1>
-      <p>{pagesConfig.speaking.intro}</p>
+      <Typography tagName="h1">{pagesConfig.speaking.heading}</Typography>
+      <Typography tagName="p" variant="secondary">{pagesConfig.speaking.intro}</Typography>
       <PageStats text={`${totalTalks} talks · ${conferenceCount} conferences`} />
     </header>
 
@@ -126,7 +127,7 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
       <div class="talks-by-year">
         {years.map((year) => (
           <section class="year-section">
-            <h2>{year}</h2>
+            <Typography tagName="h2">{year}</Typography>
             <div class="talks-list">
               {talksByYear[year].map((talk) => (
                 <TalkCard
@@ -149,7 +150,7 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
         ))}
       </div>
     ) : (
-      <p class="empty-state">No speaking engagements yet.</p>
+      <Typography tagName="p" class="empty-state">No speaking engagements yet.</Typography>
     )}
   </main>
 

@@ -30,6 +30,7 @@ import ArticleCard from '../../components/ArticleCard.astro';
 import PageStats from '../../components/PageStats.astro';
 import Hero from '../../components/Hero.astro';
 import HeroCard from '../../components/HeroCard.astro';
+import Typography from '../../components/Typography.astro';
 import { getCollection } from 'astro:content';
 import { pagesConfig } from '../../pages.config';
 import type { GetStaticPaths } from 'astro';
@@ -131,8 +132,8 @@ const pageTitle = currentPage === 1
     )}
 
     <header class="page-header">
-      <h1>{pagesConfig.writing.heading}</h1>
-      <p>{pagesConfig.writing.intro}</p>
+      <Typography tagName="h1">{pagesConfig.writing.heading}</Typography>
+      <Typography tagName="p" variant="secondary">{pagesConfig.writing.intro}</Typography>
       <PageStats text={totalPages > 1
         ? `Showing ${(currentPage - 1) * postsPerPage + 1}–${Math.min(currentPage * postsPerPage, totalArticles)} of ${totalArticles} articles`
         : `${totalArticles} articles`
@@ -152,7 +153,7 @@ const pageTitle = currentPage === 1
         ))}
       </div>
     ) : (
-      <p class="empty-state">No articles published yet.</p>
+      <Typography tagName="p" class="empty-state">No articles published yet.</Typography>
     )}
 
     <Pagination 

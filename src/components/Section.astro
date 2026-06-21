@@ -7,10 +7,9 @@
  * study page (`.case-study-section`) and the decision page (`.decision-section`
  * + `.section-label`).
  *
- * The two pages style their sections differently (a large `<h2>` heading vs. a
- * small uppercase label), so styling stays with the caller: pass `class` for the
- * section and `headingClass` for the heading. Those classes are applied here, so
- * the caller's rules targeting them must be global (see usage in the pages).
+ * The heading renders through <Typography>; callers control its appearance with
+ * the `size` and `variant` props (e.g. a large case-study heading vs. a small
+ * muted decision eyebrow) rather than with their own scoped CSS.
  *
  * @component
  *
@@ -19,26 +18,33 @@
  * @example
  * ```astro
  * <Section title="Overview" class="case-study-section">
- *   <p>{overview}</p>
+ *   <Typography tagName="p" prose>{overview}</Typography>
  * </Section>
  *
- * <Section title="Context" class="decision-section" headingClass="section-label">
- *   <p class="section-content">{context}</p>
+ * <Section title="Context" class="decision-section" size="xs" variant="muted">
+ *   <Typography tagName="p">{context}</Typography>
  * </Section>
  * ```
  */
+
+import Typography from './Typography.astro';
+import type { TypographySize } from './Typography.astro';
 
 interface Props {
   /** Heading text */
   title: string;
   /** Class(es) for the <section> wrapper */
   class?: string;
+  /** Heading size, decoupled from the h2 element. */
+  size?: TypographySize;
+  /** Heading colour/emphasis variant. */
+  variant?: 'lead' | 'muted' | 'secondary' | 'primary';
 }
 
-const { title, class: className } = Astro.props;
+const { title, class: className, size, variant } = Astro.props;
 ---
 
 <section class:list={[className]}>
-  <h2>{title}</h2>
+  <Typography tagName="h2" size={size} variant={variant}>{title}</Typography>
   <slot />
 </section>

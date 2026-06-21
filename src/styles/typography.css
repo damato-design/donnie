@@ -43,24 +43,9 @@ h6 {
   font-size: var(--font-size-lg);
 }
 
-/* Prose context - margin-top for article/content flow */
-.prose h2 {
-  margin-top: var(--space-3xl);
-  margin-bottom: var(--space-lg);
-}
-
-.prose h3 {
-  margin-top: var(--space-2xl);
-}
-
-.prose h4 {
-  margin-top: var(--space-xl);
-}
-
-.prose h5,
-.prose h6 {
-  margin-top: var(--space-lg);
-}
+/* Prose-context flow spacing (heading top-margins) and content links now live
+   in the Typography component (`<Typography prose>` / mdxComponents), so the
+   same rules are not duplicated across the article and case-study pages. */
 
 /* Paragraphs */
 p {
@@ -151,29 +136,6 @@ i {
 small {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
-}
-
-/* Links in Content */
-.prose a {
-  color: var(--color-accent);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 2px;
-  transition: all 0.2s ease;
-}
-
-.prose a:hover {
-  color: var(--color-accent-hover);
-  text-decoration-thickness: 2px;
-}
-
-/* Code in Typography */
-.prose code {
-  font-size: var(--font-size-sm);
-}
-
-.prose pre {
-  margin: var(--space-xl) 0;
 }
 
 /* Tables */

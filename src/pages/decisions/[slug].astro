@@ -30,6 +30,8 @@ import BackLink from '../../components/BackLink.astro';
 import RelatedContent from '../../components/RelatedContent.astro';
 import Section from '../../components/Section.astro';
 import Label from '../../components/Label.astro';
+import Typography from '../../components/Typography.astro';
+import { mdxComponents } from '../../components/mdxComponents';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 import { formatLongDate } from '../../utils/formatDate';
@@ -78,8 +80,8 @@ const formattedDate = formatLongDate(decision.data.date);
           {formattedDate}
         </time>
         
-        <h1 class="decision-title">{decision.data.title}</h1>
-        
+        <Typography tagName="h1" size="3xl">{decision.data.title}</Typography>
+
         {decision.data.tags && decision.data.tags.length > 0 && (
           <div class="decision-tags">
             {decision.data.tags.map((tag) => (
@@ -89,23 +91,25 @@ const formattedDate = formatLongDate(decision.data.date);
         )}
       </header>
 
-      <Section title="Context" class="decision-section" headingClass="section-label">
-        <p class="section-content">{decision.data.context}</p>
+      <Section title="Context" class="decision-section" size="xs" variant="muted">
+        <Typography tagName="p">{decision.data.context}</Typography>
       </Section>
 
-      <Section title="Decision" class="decision-section decision-made" headingClass="section-label">
-        <p class="section-content highlight">{decision.data.decision}</p>
+      <Section title="Decision" class="decision-section decision-made" size="xs" variant="muted">
+        <div class="decision-callout">
+          <Typography tagName="p" variant="primary">{decision.data.decision}</Typography>
+        </div>
       </Section>
 
-      <Section title="Alternatives Considered" class="decision-section" headingClass="section-label">
+      <Section title="Alternatives Considered" class="decision-section" size="xs" variant="muted">
         <div class="alternatives-list">
           {decision.data.alternatives.map((alt) => (
             <div class="alternative-item">
-              <h3 class="alternative-option">{alt.option}</h3>
+              <Typography tagName="h3" size="base" variant="primary">{alt.option}</Typography>
               <div class="alternative-details">
                 {alt.pros && alt.pros.length > 0 && (
                   <div class="pros-cons">
-                    <span class="detail-label pros-label">Pros</span>
+                    <Typography tagName="span" size="xs" class="detail-label pros-label">Pros</Typography>
                     <ul class="detail-list">
                       {alt.pros.map((pro) => (
                         <li>{pro}</li>
@@ -115,7 +119,7 @@ const formattedDate = formatLongDate(decision.data.date);
                 )}
                 {alt.cons && alt.cons.length > 0 && (
                   <div class="pros-cons">
-                    <span class="detail-label cons-label">Cons</span>
+                    <Typography tagName="span" size="xs" class="detail-label cons-label">Cons</Typography>
                     <ul class="detail-list">
                       {alt.cons.map((con) => (
                         <li>{con}</li>
@@ -129,13 +133,13 @@ const formattedDate = formatLongDate(decision.data.date);
         </div>
       </Section>
 
-      <Section title="Reasoning" class="decision-section" headingClass="section-label">
-        <p class="section-content">{decision.data.reasoning}</p>
+      <Section title="Reasoning" class="decision-section" size="xs" variant="muted">
+        <Typography tagName="p">{decision.data.reasoning}</Typography>
       </Section>
 
       {decision.body && decision.body.trim().length > 0 && (
         <section class="decision-body prose">
-          <Content />
+          <Content components={mdxComponents} />
         </section>
       )}
 
@@ -174,14 +178,6 @@ const formattedDate = formatLongDate(decision.data.date);
       margin-bottom: 0.75rem;
     }
 
-    .decision-title {
-      font-size: 2rem;
-      
-      line-height: 1.3;
-      
-      margin-bottom: 1rem;
-    }
-
     .decision-tags {
       display: flex;
       flex-wrap: wrap;
@@ -192,24 +188,7 @@ const formattedDate = formatLongDate(decision.data.date);
       padding-bottom: 1.5rem;
     }
 
-    .decision-content :global(.section-label) {
-      font-size: 0.75rem;
-      
-      text-transform: uppercase;
-      
-      color: var(--color-text-muted);
-      margin-bottom: 0.75rem;
-    }
-
-    .section-content {
-      font-size: 1.0625rem;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-    }
-
-    .section-content.highlight {
-      color: var(--color-text);
-      
+    .decision-callout {
       padding: 1rem 1.25rem;
       background: var(--color-bg-secondary);
       border-left: 3px solid var(--color-accent);
@@ -229,13 +208,6 @@ const formattedDate = formatLongDate(decision.data.date);
       border-radius: 8px;
     }
 
-    .alternative-option {
-      font-size: 1rem;
-      
-      color: var(--color-text);
-      margin-bottom: 1rem;
-    }
-
     .alternative-details {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -246,13 +218,6 @@ const formattedDate = formatLongDate(decision.data.date);
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-    }
-
-    .detail-label {
-      font-size: 0.6875rem;
-      
-      text-transform: uppercase;
-      
     }
 
     .pros-label {
@@ -287,43 +252,6 @@ const formattedDate = formatLongDate(decision.data.date);
 
     .decision-body {
       padding-top: 1rem;
-    }
-
-    .decision-body.prose :global(h2) {
-      font-size: 1.25rem;
-      
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      color: var(--color-text);
-    }
-
-    .decision-body.prose :global(h2:first-child) {
-      margin-top: 0;
-    }
-
-    .decision-body.prose :global(p) {
-      font-size: 1.0625rem;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      margin-bottom: 1.25rem;
-    }
-
-    .decision-body.prose :global(ul),
-    .decision-body.prose :global(ol) {
-      font-size: 1.0625rem;
-      line-height: 1.7;
-      color: var(--color-text-secondary);
-      margin-bottom: 1.25rem;
-      padding-left: 1.5rem;
-    }
-
-    .decision-body.prose :global(li) {
-      margin-bottom: 0.5rem;
-    }
-
-    .decision-body.prose :global(strong) {
-      color: var(--color-text);
-      
     }
 
     .decision-body.prose :global(code) {

@@ -26,6 +26,8 @@
  * ```
  */
 
+import Typography from './Typography.astro';
+
 /** A call-to-action button */
 export interface HeroCTA {
   label: string;
@@ -77,15 +79,15 @@ const ext = (external?: boolean) =>
 <section class:list={['hero', { 'hero--compact': compact, 'hero--no-divider': !divider }]}>
   <div class:list={['hero-grid', { 'hero-grid--single': !hasAside }]}>
     <div class="hero-left">
-      <h2>
+      <Typography tagName={`h${headingLevel}`}>
         {title}
         {emphasis && (
           <Fragment><em>{emphasis}</em></Fragment>
         )}
-      </h2>
+      </Typography>
 
-      {subtitle && <p class="hero-sub">{subtitle}</p>}
-      {meta && <p class="hero-meta">{meta}</p>}
+      {subtitle && <Typography tagName="p" size="lg" variant="secondary">{subtitle}</Typography>}
+      {meta && <Typography tagName="p" size="sm" variant="muted">{meta}</Typography>}
 
       {(primary || secondary) && (
         <div class="hero-cta">
@@ -142,19 +144,6 @@ const ext = (external?: boolean) =>
   .hero-grid--single .hero-left {
     padding-right: 0;
     max-width: 640px;
-  }
-
-  .hero-sub {
-    font-size: 1.125rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-  }
-
-  .hero-meta {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    margin-bottom: 2rem;
   }
 
   .hero-cta {

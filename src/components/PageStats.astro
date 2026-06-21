@@ -16,6 +16,8 @@
  * ```
  */
 
+import Typography from './Typography.astro';
+
 interface Props {
   /** Statistics text to display (e.g., "12 articles", "Showing 1-10 of 45") */
   text: string;
@@ -24,12 +26,4 @@ interface Props {
 const { text } = Astro.props;
 ---
 
-<p class="page-stats">{text}</p>
-
-<style>
-  .page-stats {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    margin-top: 1rem;
-  }
-</style>
+<Typography tagName="p" size="sm" variant="muted">{text}</Typography>

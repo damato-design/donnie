@@ -41,6 +41,8 @@ interface Props {
   headings: Heading[];
 }
 
+import Typography from './Typography.astro';
+
 const { headings } = Astro.props;
 
 /**
@@ -64,8 +66,8 @@ const shouldRender = filteredHeadings.length >= 3;
   <nav class="table-of-contents" aria-label="Table of contents">
     <details class="toc-details">
       <summary class="toc-toggle">
-        <span class="toc-title">Table of Contents</span>
-        <span class="toc-count">{filteredHeadings.length} sections</span>
+        <Typography tagName="span" size="xs" variant="secondary">Table of Contents</Typography>
+        <Typography tagName="span" size="xs" variant="muted" class="toc-count">{filteredHeadings.length} sections</Typography>
         <svg class="toc-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
@@ -110,18 +112,8 @@ const shouldRender = filteredHeadings.length >= 3;
     outline-offset: -2px;
   }
 
-  .toc-title {
-    font-size: 0.75rem;
-    
-    text-transform: uppercase;
-    
-    color: var(--color-text-secondary);
-  }
-
   .toc-count {
     margin-left: auto;
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
     padding-right: 0.5rem;
   }
 

@@ -23,6 +23,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import SEO from '../../components/SEO.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import PageStats from '../../components/PageStats.astro';
+import Typography from '../../components/Typography.astro';
 import { getCollection } from 'astro:content';
 import { pagesConfig } from '../../pages.config';
 
@@ -75,8 +76,8 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
 
   <main class="page-container">
     <header class="page-header">
-      <h1>{pagesConfig.projects.heading}</h1>
-      <p>{pagesConfig.projects.intro}</p>
+      <Typography tagName="h1">{pagesConfig.projects.heading}</Typography>
+      <Typography tagName="p" variant="secondary">{pagesConfig.projects.intro}</Typography>
       <PageStats text={`${totalProjects} projects · ${featuredCount} featured`} />
     </header>
 
@@ -96,7 +97,7 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
         ))}
       </div>
     ) : (
-      <p class="empty-state">No projects available yet.</p>
+      <Typography tagName="p" class="empty-state">No projects available yet.</Typography>
     )}
   </main>
 </BaseLayout>

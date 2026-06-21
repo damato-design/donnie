@@ -28,6 +28,7 @@
  */
 
 import { getCollection } from 'astro:content';
+import Typography from './Typography.astro';
 
 interface Props {
   /** Maximum number of testimonials to display (default: 3) */
@@ -59,11 +60,11 @@ const featuredTestimonials = allTestimonials
 
 {featuredTestimonials.length > 0 && (
   <section class="testimonials">
-    {showTitle && <h2 class="testimonials-title">{title}</h2>}
+    {showTitle && <Typography tagName="h2" size="xl">{title}</Typography>}
     <div class="testimonials-list">
       {featuredTestimonials.map((testimonial) => (
         <blockquote class="testimonial">
-          <p class="testimonial-quote">"{testimonial.data.quote}"</p>
+          <Typography tagName="p" size="lg" variant="primary">"{testimonial.data.quote}"</Typography>
           <footer class="testimonial-attribution">
             <cite class="testimonial-author">
               {testimonial.data.linkedin ? (
@@ -77,9 +78,9 @@ const featuredTestimonials = allTestimonials
               ) : (
                 testimonial.data.name
               )}
-              <span class="author-role">, {testimonial.data.role} at {testimonial.data.company}</span>
+              <Typography tagName="span" variant="secondary">, {testimonial.data.role} at {testimonial.data.company}</Typography>
             </cite>
-            <span class="testimonial-relationship">{testimonial.data.relationship}</span>
+            <Typography tagName="span" size="sm" variant="muted">{testimonial.data.relationship}</Typography>
           </footer>
         </blockquote>
       ))}
@@ -90,13 +91,6 @@ const featuredTestimonials = allTestimonials
 <style>
   .testimonials {
     margin-bottom: 5rem;
-  }
-
-  .testimonials-title {
-    font-size: 1.25rem;
-    
-    margin-bottom: 2rem;
-    
   }
 
   .testimonials-list {
@@ -110,14 +104,6 @@ const featuredTestimonials = allTestimonials
     margin: 0;
     padding: 0;
     border: none;
-  }
-
-  .testimonial-quote {
-    font-size: 1.125rem;
-    line-height: 1.7;
-    color: var(--color-text);
-    font-style: italic;
-    margin-bottom: 1rem;
   }
 
   .testimonial-attribution {
@@ -157,15 +143,6 @@ const featuredTestimonials = allTestimonials
 
   .author-link:hover .linkedin-icon {
     opacity: 1;
-  }
-
-  .author-role {
-    color: var(--color-text-secondary);
-  }
-
-  .testimonial-relationship {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
   }
 
 </style>

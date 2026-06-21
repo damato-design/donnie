@@ -34,6 +34,7 @@
  */
 
 import ForwardLink from './ForwardLink.astro';
+import Typography from './Typography.astro';
 
 interface Props {
   /** Destination for the card's forward link. Omit for a CTA-less shell. */
@@ -54,9 +55,9 @@ const showCta = href && ctaText;
 
 <article class:list={['card', className]}>
   <slot name="badge" />
-  {hasMeta && <span class="card-meta"><slot name="meta" /></span>}
-  {hasTitle && <span class="card-title"><slot name="title" /></span>}
-  {hasDescription && <span class="card-description"><slot name="description" /></span>}
+  {hasMeta && <Typography tagName="span" size="xs" variant="muted" class="card-meta"><slot name="meta" /></Typography>}
+  {hasTitle && <Typography tagName="span" size="lg" variant="primary" class="card-title"><slot name="title" /></Typography>}
+  {hasDescription && <Typography tagName="span" size="sm" variant="secondary" class="card-description"><slot name="description" /></Typography>}
   <slot name="tags" />
   <slot />
   {showCta && <ForwardLink href={href} text={ctaText} />}

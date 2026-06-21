@@ -93,6 +93,8 @@ body {
   line-height: var(--line-height-normal);
   min-height: 100vh;
   font-family: "LINE Seed JP", sans-serif;
+  /* background-image: radial-gradient(circle, contrast-color(var(--color-bg)) 1px, transparent 1px); */
+  background-size: 12px 12px;
 }
 
 /* Links */

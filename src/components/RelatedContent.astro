@@ -18,6 +18,7 @@
 
 import { getCollection } from 'astro:content';
 import { formatMonthShortYear } from '../utils/formatDate';
+import Typography from './Typography.astro';
 
 interface Props {
   /** Array of project slugs to display */
@@ -54,23 +55,23 @@ const hasRelated = projects.length > 0 || decisions.length > 0;
 
 {hasRelated && (
   <aside class="related-content">
-    <h2>{title}</h2>
-    
+    <Typography tagName="h2">{title}</Typography>
+
     <div class="related-grid">
       {projects.length > 0 && (
         <div class="related-section">
-          <h3 class="related-section-title">
+          <Typography tagName="h3" size="xs" variant="muted">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
             </svg>
             Case Studies
-          </h3>
+          </Typography>
           <ul class="related-list">
             {projects.map((project) => (
               <li>
                 <a href={`/projects/${project.id}`} class="related-item">
-                  <span class="related-item-meta">{project.data.role} · {project.data.year}</span>
-                  <span class="related-item-title">{project.data.title}</span>
+                  <Typography tagName="span" size="xs" variant="muted" class="related-item-meta">{project.data.role} · {project.data.year}</Typography>
+                  <Typography tagName="span" size="sm" variant="primary" class="related-item-title">{project.data.title}</Typography>
                 </a>
               </li>
             ))}
@@ -80,20 +81,20 @@ const hasRelated = projects.length > 0 || decisions.length > 0;
       
       {decisions.length > 0 && (
         <div class="related-section">
-          <h3 class="related-section-title">
+          <Typography tagName="h3" size="xs" variant="muted">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
               <line x1="12" y1="17" x2="12.01" y2="17"></line>
             </svg>
             Decisions
-          </h3>
+          </Typography>
           <ul class="related-list">
             {decisions.map((decision) => (
               <li>
                 <a href={`/decisions/${decision.id}`} class="related-item">
-                  <span class="related-item-meta">{formatMonthShortYear(decision.data.date)}</span>
-                  <span class="related-item-title">{decision.data.title}</span>
+                  <Typography tagName="span" size="xs" variant="muted" class="related-item-meta">{formatMonthShortYear(decision.data.date)}</Typography>
+                  <Typography tagName="span" size="sm" variant="primary" class="related-item-title">{decision.data.title}</Typography>
                 </a>
               </li>
             ))}
@@ -115,22 +116,6 @@ const hasRelated = projects.length > 0 || decisions.length > 0;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
-  }
-
-  .related-section-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    
-    text-transform: uppercase;
-    
-    color: var(--color-text-muted);
-    margin-bottom: 1rem;
-  }
-
-  .related-section-title svg {
-    opacity: 0.7;
   }
 
   .related-list {
@@ -159,20 +144,11 @@ const hasRelated = projects.length > 0 || decisions.length > 0;
 
   .related-item-meta {
     display: block;
-    font-size: 0.6875rem;
-    
-    text-transform: uppercase;
-    
-    color: var(--color-text-muted);
     margin-bottom: 0.25rem;
   }
 
   .related-item-title {
     display: block;
-    font-size: 0.9375rem;
-    
-    color: var(--color-text);
-    line-height: 1.4;
   }
 
 </style>

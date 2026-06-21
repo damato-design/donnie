@@ -51,6 +51,7 @@
  */
 
 import BaseLayout from './BaseLayout.astro';
+import Typography from '../components/Typography.astro';
 
 interface Props {
   /** Optional page heading displayed in the header */
@@ -68,8 +69,8 @@ const { pageTitle, pageIntro } = Astro.props;
   <div class="page-layout">
     {(pageTitle || pageIntro) && (
       <header class="page-header">
-        {pageTitle && <h1>{pageTitle}</h1>}
-        {pageIntro && <p>{pageIntro}</p>}
+        {pageTitle && <Typography tagName="h1">{pageTitle}</Typography>}
+        {pageIntro && <Typography tagName="p" variant="secondary">{pageIntro}</Typography>}
       </header>
     )}
     

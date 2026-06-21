@@ -24,6 +24,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SEO from '../components/SEO.astro';
 import Hero from '../components/Hero.astro';
+import Typography from '../components/Typography.astro';
 import { siteConfig } from '../config';
 import { pagesConfig } from '../pages.config';
 
@@ -64,26 +65,26 @@ const socialLinks = Object.entries(siteConfig.social)
 
     <!-- Zone 2: Primary Intent -->
     <section class="primary-zone">
-      <h1>{pagesConfig.contact.heading}</h1>
+      <Typography tagName="h1" size="lg" variant="muted">{pagesConfig.contact.heading}</Typography>
       <a href={`mailto:${siteConfig.author.email}`} class="email-link">
         {siteConfig.author.email}
       </a>
-      <p class="context">
+      <Typography tagName="p" variant="muted">
         I read every email. Expect a reply within a few days.
-      </p>
+      </Typography>
     </section>
 
     <!-- Zone 3: Secondary (Social) -->
     {socialLinks.length > 0 && (
       <section class="secondary-zone">
-        <h2>Elsewhere</h2>
+        <Typography tagName="h2" size="sm" variant="muted">Elsewhere</Typography>
         <div class="social-links">
           {socialLinks.map((link, index) => (
             <>
               <a href={link.url} target="_blank" rel="noopener noreferrer">
                 {link.platform}
               </a>
-              {index < socialLinks.length - 1 && <span class="separator">·</span>}
+              {index < socialLinks.length - 1 && <Typography tagName="span" variant="muted" class="separator">·</Typography>}
             </>
           ))}
         </div>
@@ -102,14 +103,6 @@ const socialLinks = Object.entries(siteConfig.social)
       margin-bottom: 3rem;
     }
 
-    .primary-zone h1 {
-      font-size: 1.125rem;
-      
-      color: var(--color-text-muted);
-      margin-bottom: 1.5rem;
-      
-    }
-
     .email-link {
       display: block;
       font-size: clamp(1.75rem, 5vw, 2.5rem);
@@ -125,24 +118,9 @@ const socialLinks = Object.entries(siteConfig.social)
       color: var(--color-text-secondary);
     }
 
-    .context {
-      font-size: 1rem;
-      color: var(--color-text-muted);
-      line-height: 1.6;
-    }
-
     .secondary-zone {
       padding-top: 3rem;
       border-top: 1px solid var(--color-border);
-    }
-
-    .secondary-zone h2 {
-      font-size: 0.8125rem;
-      
-      text-transform: uppercase;
-      
-      color: var(--color-text-muted);
-      margin-bottom: 1rem;
     }
 
     .social-links {
@@ -164,7 +142,6 @@ const socialLinks = Object.entries(siteConfig.social)
     }
 
     .separator {
-      color: var(--color-text-muted);
       user-select: none;
     }
 
