@@ -33,14 +33,12 @@ interface Props {
   title: string;
   /** Class(es) for the <section> wrapper */
   class?: string;
-  /** Class(es) for the heading element */
-  headingClass?: string;
 }
 
-const { title, class: className, headingClass } = Astro.props;
+const { title, class: className } = Astro.props;
 ---
 
 <section class:list={[className]}>
-  <h2 class:list={[headingClass]}>{title}</h2>
+  <h2>{title}</h2>
   <slot />
 </section>

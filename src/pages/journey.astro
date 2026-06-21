@@ -77,10 +77,8 @@ const entriesWithContent = await Promise.all(
 
   <main class="page-container">
     <header class="page-header">
-      <h1 class="page-title">{pagesConfig.journey.heading}</h1>
-      <p class="page-intro">
-        {pagesConfig.journey.intro}
-      </p>
+      <h1>{pagesConfig.journey.heading}</h1>
+      <p>{pagesConfig.journey.intro}</p>
     </header>
 
     {entriesWithContent.length > 0 ? (

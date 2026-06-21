@@ -131,10 +131,8 @@ const pageTitle = currentPage === 1
     )}
 
     <header class="page-header">
-      <h1 class="page-title">{pagesConfig.writing.heading}</h1>
-      <p class="page-intro">
-        {pagesConfig.writing.intro}
-      </p>
+      <h1>{pagesConfig.writing.heading}</h1>
+      <p>{pagesConfig.writing.intro}</p>
       <PageStats text={totalPages > 1
         ? `Showing ${(currentPage - 1) * postsPerPage + 1}–${Math.min(currentPage * postsPerPage, totalArticles)} of ${totalArticles} articles`
         : `${totalArticles} articles`

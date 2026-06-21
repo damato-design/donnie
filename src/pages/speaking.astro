@@ -117,10 +117,8 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
     </Hero>
 
     <header class="page-header">
-      <h1 class="page-title">{pagesConfig.speaking.heading}</h1>
-      <p class="page-intro">
-        {pagesConfig.speaking.intro}
-      </p>
+      <h1>{pagesConfig.speaking.heading}</h1>
+      <p>{pagesConfig.speaking.intro}</p>
       <PageStats text={`${totalTalks} talks · ${conferenceCount} conferences`} />
     </header>
 
@@ -128,7 +126,7 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
       <div class="talks-by-year">
         {years.map((year) => (
           <section class="year-section">
-            <h2 class="year-heading">{year}</h2>
+            <h2>{year}</h2>
             <div class="talks-list">
               {talksByYear[year].map((talk) => (
                 <TalkCard
@@ -166,15 +164,6 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-    }
-
-    .year-heading {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--color-text);
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid var(--color-border);
-      margin: 0;
     }
 
     .talks-list {

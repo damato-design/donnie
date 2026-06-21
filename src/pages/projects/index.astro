@@ -75,10 +75,8 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
 
   <main class="page-container">
     <header class="page-header">
-      <h1 class="page-title">{pagesConfig.projects.heading}</h1>
-      <p class="page-intro">
-        {pagesConfig.projects.intro}
-      </p>
+      <h1>{pagesConfig.projects.heading}</h1>
+      <p>{pagesConfig.projects.intro}</p>
       <PageStats text={`${totalProjects} projects · ${featuredCount} featured`} />
     </header>
 

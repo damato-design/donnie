@@ -91,10 +91,8 @@ const categoryOrder: Array<'tools' | 'stack' | 'environment'> = ['tools', 'stack
 
   <main class="page-container">
     <header class="page-header">
-      <h1 class="page-title">{pagesConfig.uses.heading}</h1>
-      <p class="page-intro">
-        {pagesConfig.uses.intro}
-      </p>
+      <h1>{pagesConfig.uses.heading}</h1>
+      <p>{pagesConfig.uses.intro}</p>
     </header>
 
     {categoryOrder.map((categoryKey) => {
@@ -157,7 +155,7 @@ const categoryOrder: Array<'tools' | 'stack' | 'environment'> = ['tools', 'stack
       font-size: 1.75rem;
       margin-bottom: 0.5rem;
       font-weight: 600;
-      letter-spacing: -0.01em;
+      
     }
 
     .category-description {
@@ -176,7 +174,7 @@ const categoryOrder: Array<'tools' | 'stack' | 'environment'> = ['tools', 'stack
       font-size: 1.25rem;
       margin-bottom: 0.5rem;
       font-weight: 600;
-      letter-spacing: -0.01em;
+      
     }
 
     .item-name a {
