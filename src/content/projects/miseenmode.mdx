@@ -1,0 +1,57 @@
+---
+title: "Mise en Mode"
+role: "Creator & Speaker"
+year: 2023
+outcomeSummary: "A design systems technique using nested modes and scoped semantic tokens to enable expressive design fragments within a consistent system."
+overview: "Mise en Mode (Fr. 'placement in mode') is a technique for creating expressive, scoped exceptions inside an otherwise consistent design system, first published at Clarity 2023."
+problem: "Design systems struggle to allow expressive fragments of a larger experience, like highlighting a premium product on an otherwise uniform pricing page. These moments feel unsystematic and deviate based on marketing trends and needs, putting expression at odds with consistency."
+constraints:
+  - "Must preserve overall system consistency while allowing local deviation"
+  - "Should reuse the existing semantic token layer, not introduce a parallel one"
+  - "Needs to be understandable to both designers and engineers"
+approach: "Parts of an experience are visually 'boxed,' creating a new scope expected to receive a new expression. Within that scope we supply new values to existing semantic tokens, a mini-theme that only affects components inside the box, while everything outside keeps the common values. This shifts semantic responsibility from tokens to nested modes."
+keyDecisions:
+  - decision: "Scope expression with nested modes instead of new tokens"
+    reasoning: "Reusing existing semantic tokens under a scoped mode keeps the system coherent while still allowing local expression, avoiding token sprawl."
+    alternatives:
+      - "Create dedicated tokens for every expressive moment"
+      - "One-off component variants"
+  - decision: "Publish the technique openly as a presentation/site"
+    reasoning: "The idea matures faster as shared community vocabulary than as internal-only practice."
+    alternatives:
+      - "Keep it as an internal pattern"
+techStack:
+  - "Design Tokens"
+  - "Semantic tokens"
+  - "CSS Custom Properties"
+  - "Theming / Modes"
+impact:
+  metrics:
+    - label: "First published"
+      value: "Clarity 2023, the original design systems conference"
+    - label: "Format"
+      value: "Site doubles as a full-screen slideshow presentation"
+  qualitative: "Mise en Mode gave the community a concrete model for reconciling expression with consistency, and seeded the terminology work that became Tokenpedia."
+learnings:
+  - "Moving semantic responsibility from tokens to scopes resolves the expression-vs-consistency tension"
+  - "Framing matters: a memorable name carries a technique further"
+featured: true
+status: completed
+order: 4
+relatedProjects:
+  - "tokenpedia"
+  - "godaddy"
+relatedDecisions:
+  - "modes-over-themes"
+  - "semantic-intent-tokens"
+---
+
+One of the concepts that has been challenging in design systems is allowing for expressive fragments of a larger experience. For example, highlighting a premium product in an otherwise consistently styled pricing page experience. These moments are seemingly unsystematic and deviate based on marketing trends and needs.
+
+> How might we allow to create freedoms of expression while aligning with system expectations?
+
+Mise en mode (Fr. "placement in mode") is a way of framing an interface; quite literally. Parts of an experience are visually boxed, creating a new scope that is expected to receive a new expression. To receive a new expression, we provide new values to existing semantic tokens. In the case of a new highlighting color, we provide that new color as a separate mini-theme which will only affect the components within a smaller scope of the page; the place for this new expression. The experience outside the scope can receive the more common values for these same tokens.
+
+The technique was first published during Clarity 2023, the original Design Systems conference. When the site is launched as full-screen, it becomes a slideshow presentation.
+
+Explore the technique at [mode.place](https://mode.place).

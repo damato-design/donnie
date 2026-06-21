@@ -1,0 +1,39 @@
+---
+title: "Avoid z-index Escalation in the System"
+date: 2023-12-11
+context: "Stacking conflicts tempt teams into an arms race of ever-larger z-index values, 'my thing is more important than your thing', until the numbers are meaningless and overlays fight each other unpredictably."
+decision: "Treat reaching for a higher z-index as a smell. Prefer source order, scoped stacking contexts, and a small named set of layers over ad-hoc numeric escalation."
+alternatives:
+  - option: "Bump z-index whenever something needs to sit on top"
+    pros:
+      - "Immediate fix for the symptom"
+    cons:
+      - "Numbers escalate without bound"
+      - "No shared meaning, every value is a guess"
+      - "Overlays compete unpredictably"
+  - option: "A single global z-index scale everyone references"
+    pros:
+      - "Some shared order"
+    cons:
+      - "Still encourages thinking in magnitudes"
+      - "Global coupling between unrelated components"
+  - option: "Source order + scoped stacking contexts + a few named layers"
+    pros:
+      - "Removes the numbers war"
+      - "Stacking becomes local and predictable"
+      - "Few, intentional layers (e.g. base, overlay, modal)"
+    cons:
+      - "Requires understanding stacking contexts"
+      - "Occasionally needs markup reordering"
+reasoning: "z-index escalation is a symptom of missing structure. Establishing stacking contexts and a small, named set of layers makes overlay behavior predictable and keeps the system from devolving into a meaningless numbers war."
+tags:
+  - "css"
+  - "layout"
+  - "best-practices"
+relatedDecisions:
+  - "gridless-layout"
+---
+
+## Why it mattered
+
+When everything is `z-index: 9999`, nothing is. Designing the stacking model up front, rather than reacting with bigger numbers, keeps overlays sane as a system grows.

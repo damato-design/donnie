@@ -1,0 +1,41 @@
+---
+title: "Shift the Component Library Toward Composable Primitives"
+date: 2021-06-14
+context: "UXCore had grown through a contributor model, accumulating many components with questionable or duplicated use across the organization. The catalog was large, inconsistent, and expensive to maintain."
+decision: "Steer the library away from an ever-growing catalog of bespoke components toward a smaller set of highly composable primitives that teams combine into richer experiences."
+alternatives:
+  - option: "Keep accepting contributed components"
+    pros:
+      - "Low friction for contributing teams"
+      - "Covers many specific use cases out of the box"
+    cons:
+      - "Duplication and one-off components"
+      - "Inconsistent quality and maintenance burden"
+  - option: "Freeze the library and let teams fork"
+    pros:
+      - "Stops the growth immediately"
+    cons:
+      - "Fragmentation across the org"
+      - "Loses the value of a shared system"
+  - option: "Composable primitives teams combine themselves"
+    pros:
+      - "Fewer, higher-quality building blocks"
+      - "Scales to more experiences than a fixed catalog"
+      - "Lower long-term maintenance"
+    cons:
+      - "Requires deprecating popular components"
+      - "Shifts some assembly work to consumers"
+reasoning: "A small set of composable pieces covers more ground than a sprawling catalog of single-purpose components, and it dramatically lowers maintenance. Deprecation is real design system work; curating down is as valuable as adding."
+tags:
+  - "components"
+  - "architecture"
+  - "deprecation"
+relatedProjects:
+  - "godaddy"
+relatedDecisions:
+  - "semantic-intent-tokens"
+---
+
+## Why it mattered
+
+Composability turned the library from a thing you pick from into a thing you build with. It's slower-burning work, much of it ongoing, but it's how a component library stays maintainable as the organization scales.

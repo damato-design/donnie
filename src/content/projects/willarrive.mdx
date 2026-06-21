@@ -1,0 +1,44 @@
+---
+title: "willarrive.in"
+role: "Creator"
+year: 2016
+outcomeSummary: "A minimal progressive web app that uses geolocation to instantly show when the next train arrives at the nearest station on a chosen line."
+overview: "willarrive.in is a deliberately minimal transit PWA: open it and, with at most one or two taps, see when the next train arrives at your nearest station."
+problem: "Transit apps usually involve a lot of navigation, ironic for tools whose whole job is to get you somewhere. Each extra tap is friction when you just want to know when the next train comes."
+constraints:
+  - "Minimize taps to surface accurate transit info"
+  - "Real-time accuracy using MTA data"
+  - "Lightweight enough to install as a PWA"
+approach: "Users save a train-line page as a PWA. Launching it checks geolocation to find the closest stop on the chosen line, then shows the relative time to the next train (e.g. 'next train in 7 minutes'). The only other interaction is switching direction, so at most two taps, often just one."
+keyDecisions:
+  - decision: "Render line branding via subdomain redirects + Lambda functions"
+    reasoning: "Mapping each line to a URL/subdomain let a single system serve per-line branding without bespoke builds."
+    alternatives:
+      - "A single app with in-app line selection"
+  - decision: "Use the native Geolocation API to pick the nearest stop"
+    reasoning: "Automatically choosing the closest stop removes a manual selection step."
+    alternatives:
+      - "Manual station selection"
+techStack:
+  - "Progressive Web App"
+  - "Geolocation API"
+  - "AWS Lambda"
+  - "MTA real-time data"
+impact:
+  metrics:
+    - label: "Interaction cost"
+      value: "At most two taps to see the next train, often one"
+  qualitative: "willarrive.in demonstrated how far you can cut interaction cost by combining geolocation, real-time data, and a PWA shell into a single-purpose tool."
+learnings:
+  - "Aggressively cutting interaction cost can redefine a familiar experience"
+featured: false
+status: archived
+---
+
+Transit app experiences usually result in a lot of navigation. After all, it is an experience meant to navigate a person to a physical destination.
+
+> How might we reduce the number of taps but continue to present accurate transit information.
+
+The site allows the user to save a train line web page as a progressive web app to their device. Tapping the icon launches a very minimal interface, first checking for their geographic position to determine the closest stop on the line chosen. Once identified, the relative time of the next train is presented (ie., the next train is in 7 minutes). The only other tap would be to change the direction as most platforms allow for a train line to go in two directions. As a result, the user will tap at most twice to learn when the next train will come to their station, and in many cases only once.
+
+The site makes heavy use of subdomain redirecting and Lambda functions to render train line branding based on the requested URL. The native JavaScript Geoposition API is used to capture the user's location and train times are provided by the MTA in real-time.

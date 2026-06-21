@@ -1,0 +1,39 @@
+---
+title: "Use Git + Markdown + Pull Requests Instead of a Custom CMS"
+date: 2023-09-19
+context: "Several Design Systems House community sites needed members to submit and update content, with moderation before publishing. A traditional approach would mean user accounts, roles, and a custom backend, significant build and maintenance overhead for small community projects."
+decision: "Store content as Markdown with frontmatter and accept submissions as GitHub pull requests reviewed by a small team, deployed via Netlify with preview builds."
+alternatives:
+  - option: "Custom CMS with accounts and role-based access control"
+    pros:
+      - "Familiar editing UI for non-technical users"
+      - "Fine-grained permissions"
+    cons:
+      - "Significant build and ongoing maintenance"
+      - "Auth, roles, and moderation all custom-built"
+  - option: "Form-to-database backend"
+    pros:
+      - "Simple submission UX"
+    cons:
+      - "Still needs moderation tooling and storage"
+      - "No free preview or version history"
+  - option: "Git + Markdown + pull requests"
+    pros:
+      - "Moderation and version history for free via PR review"
+      - "Deploy previews verify final presentation"
+      - "No custom RBAC to build or maintain"
+    cons:
+      - "Submission requires a GitHub account / PR flow"
+      - "Less approachable for fully non-technical contributors"
+reasoning: "GitHub pull requests already provide review, history, and deploy previews. Leaning on that workflow eliminated an entire category of custom backend (auth, roles, moderation) while keeping these projects viable for a small team."
+tags:
+  - "content"
+  - "tooling"
+  - "open-source"
+relatedProjects:
+  - "dshouse"
+---
+
+## Why it mattered
+
+A surprising amount of "we need a backend" turns out to be "we need review, history, and previews", all of which Git and a static host provide. This content model underpins much of the Design Systems House ecosystem.

@@ -1,0 +1,40 @@
+---
+title: "Favor the Browser's Native Layout Over a Curated Grid"
+date: 2021-07-15
+context: "Designers from traditional backgrounds reach for fixed grids on the web. But overlaying a curated grid onto the browser's own alignment algorithms fights the medium and produces brittle, less accessible layouts."
+decision: "Adopt a 'gridless' approach, let content dictate container size and lean on native layout (flexbox, grid, intrinsic sizing) instead of imposing a rigid column grid."
+alternatives:
+  - option: "Standard 12-column grid system"
+    pros:
+      - "Familiar to print and product designers"
+      - "Predictable visual rhythm"
+    cons:
+      - "Fights the browser's layout engine"
+      - "Brittle across viewports and user preferences"
+  - option: "Framework grid utilities"
+    pros:
+      - "Quick to apply"
+      - "Well-documented"
+    cons:
+      - "Encodes the same rigid assumptions"
+      - "Often more markup than the platform needs"
+  - option: "Content-out, gridless layout"
+    pros:
+      - "Resilient and responsive by default"
+      - "Respects user preferences"
+      - "Less markup, works with the medium"
+    cons:
+      - "Requires unlearning grid-first habits"
+      - "Less immediately familiar to traditional designers"
+reasoning: "The web is a different medium from print. Letting content and the browser's algorithms drive layout produces more resilient, accessible, preference-respecting compositions than imposing a curated grid. On the web, user preferences come first."
+tags:
+  - "css"
+  - "layout"
+  - "responsive"
+relatedProjects:
+  - "gridless"
+---
+
+## Why it mattered
+
+Gridless isn't anti-structure, it's pro-medium. Working with the browser instead of against it is the through-line from this decision to how I think about layout everywhere.

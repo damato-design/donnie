@@ -1,0 +1,43 @@
+---
+title: "deltazeus"
+role: "Creator"
+year: 2015
+outcomeSummary: "A passive weather notification service that sends RSS feed updates only when the weather changes significantly from the previous day."
+overview: "deltazeus reframed checking the weather from an active ritual into a passive one, an RSS feed that only updates when tomorrow's weather differs meaningfully from today's."
+problem: "People check the weather every day to prepare, but most days are similar to the last. That makes the daily check largely redundant, what if the weather notified you only when it actually changed?"
+constraints:
+  - "Keep third-party API (DarkSky) costs low"
+  - "Avoid requiring any app download or account"
+  - "Mostly server-side with a minimal web presence"
+approach: "Onboarding asked for a location (postal code or geolocation) and returned an RSS feed users could subscribe to with any service. The feed only updated when measurements differed significantly from the prior day. To control costs, feeds only refreshed while actively subscribed, incoming requests decided whether to add, update, or deprecate a feed."
+keyDecisions:
+  - decision: "Deliver updates via RSS instead of a dedicated app"
+    reasoning: "RSS made the delivery channel flexible and required no download or account."
+    alternatives:
+      - "A native push-notification app"
+      - "Email-only delivery"
+  - decision: "Only refresh feeds that are actively requested"
+    reasoning: "Tying refreshes to active subscriptions kept DarkSky API usage and costs low."
+    alternatives:
+      - "Refresh all feeds on a fixed schedule"
+techStack:
+  - "Server-side rendering"
+  - "RSS"
+  - "DarkSky API"
+  - "Geolocation"
+impact:
+  qualitative: "The original service is retired (DarkSky was deprecated), but the passive-notification concept it explored was soon echoed by social platforms like Facebook and Google Plus."
+learnings:
+  - "Passive, change-driven notifications can beat active daily checking"
+  - "Usage-driven refresh is a simple lever for controlling API cost"
+featured: false
+status: archived
+---
+
+It's common for people to check the weather regularly. This ritual is how we prepare for taking on the day. However, what if instead of this being an active experience, it could be instead a passive one? What if the weather could notify you when it changed significantly?
+
+The onboarding experience would ask for a location marker, either postal code or geo-location, and return an RSS feed that you could use any number of services to subscribe for updates. This made the method of receiving updates flexible and did not require any additional app or download. The feed would only update if the difference between the weather measurements were significantly different between yesterday and today. If the weather was similar between yesterday and today, you wouldn't receive any updates and can prepare for today just like yesterday.
+
+To keep costs low for requesting data from the DarkSky API, updates would only occur for any given feed if it was actively subscribed. This was achieved by checking incoming requests and determining if a feed should be added or updated, or a lack of requests to deprecate a feed.
+
+Most of the work for the system was done server-side with a very minimal web homepage. Additional care was taken to custom style the feeds if they were visited directly. While the original system is no longer operating at this time due to the deprecation of DarkSky, the concept was adopted by social platforms such as Facebook and Google Plus soon after the initial launch of the project.

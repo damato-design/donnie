@@ -1,0 +1,45 @@
+---
+title: "Use Semantic 'Intent' Tokens Instead of Exposing Primitives"
+date: 2020-04-09
+context: "Runtime theming made an unbounded value space possible. Without structure, teams would wire components directly to raw primitive values (hex codes, pixel values), recreating the sprawl we were trying to escape."
+decision: "Introduce a small, bounded set of semantic 'Intent' tokens, named by purpose, priority, and property, as the only theming API consumers touch."
+alternatives:
+  - option: "Expose primitive tokens directly to consumers"
+    pros:
+      - "Maximum flexibility"
+      - "Nothing to learn beyond the values"
+    cons:
+      - "No shared meaning, every team reinvents semantics"
+      - "Theming becomes find-and-replace across hex codes"
+      - "Impossible to retheme safely"
+  - option: "Per-component theming APIs"
+    pros:
+      - "Tailored to each component"
+    cons:
+      - "Inconsistent across the library"
+      - "Explodes the surface area to maintain"
+  - option: "A bounded set of semantic Intent tokens"
+    pros:
+      - "Shared, predictable vocabulary for designers and engineers"
+      - "Retheming swaps a handful of values"
+      - "Keeps the token surface small (~33 intents)"
+    cons:
+      - "Requires up-front naming agreement"
+      - "Occasional pressure to add 'just one more' token"
+reasoning: "Naming tokens by intent (action, surface, text), priority (primary, secondary, auxiliary), and property keeps the system predictable and bounded. A small, semantic vocabulary co-designed with design counterparts scales far better than letting hundreds of one-off values proliferate."
+tags:
+  - "design-tokens"
+  - "semantic-tokens"
+  - "naming"
+relatedProjects:
+  - "godaddy"
+  - "damatods"
+  - "tokenpedia"
+relatedDecisions:
+  - "css-custom-properties-over-generated-css"
+  - "modes-over-themes"
+---
+
+## Why it mattered
+
+Intents gave designers and engineers one shared language for theming. Constraining the surface to roughly three dozen semantic tokens is what made the system legible, and is the same instinct that later produced Tokenpedia's push for shared vocabulary.

@@ -1,25 +1,14 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
+    "strict": true,
     "strictNullChecks": true,
-    "allowJs": true,
-    "baseUrl": ".",
-    "paths": {
-      "@assets/*": [
-        "src/assets/*"
-      ],
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@content/*": [
-        "src/content/*"
-      ],
-      "@layouts/*": [
-        "src/layouts/*"
-      ],
-      "@pages/*": [
-        "src/pages/*"
-      ]
-    }
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
   }
 }
