@@ -1,19 +1,21 @@
 ---
 /**
  * ScrollToTop Component
- * 
- * Floating button that appears in the bottom-right corner when the user scrolls down
- * past a threshold (300px). Clicking the button smoothly scrolls back to the top of
- * the page. The button fades in/out with a slide animation for a polished UX.
- * 
- * Features:
- * - Auto-shows/hides based on scroll position
- * - Smooth scroll animation
- * - Accessible with keyboard focus and ARIA labels
- * - Works with Astro View Transitions
- * 
+ *
+ * Floating control in the bottom-right corner that returns the user to the top
+ * of the page. It is a plain anchor to the `#top` landmark (the site header):
+ *
+ * - The scroll itself is the browser's native anchor jump, smoothed by
+ *   `scroll-behavior: smooth` (global.css, gated behind `prefers-reduced-motion`).
+ * - Show/hide past a 300px scroll threshold is a CSS scroll-driven animation
+ *   (`animation-timeline: scroll()` + `animation-range`), so there is no
+ *   JavaScript: no scroll listener, and nothing to re-init after View Transitions.
+ *
+ * Browsers without scroll-driven animations (`@supports` fallback) simply show
+ * the control at all times.
+ *
  * @component
- * 
+ *
  * @example
  * ```astro
  * <ScrollToTop />
@@ -25,6 +27,7 @@ import Button from '@components/Button.astro';
 
 <Button
   variant="secondary"
+  href="#top"
   id="scroll-to-top"
   aria-label="Scroll to top"
   title="Scroll to top"
@@ -36,8 +39,10 @@ import Button from '@components/Button.astro';
 
 <style>
   /* Icon-only FAB: reshapes the Button primitive into a fixed, square control.
-     The id selector wins specificity over the .btn base rules. */
-  button#scroll-to-top {
+     The id selector wins specificity over the .btn base rules.
+     Base state is always-visible; the @supports block below hides it until the
+     reader has scrolled, so unsupported browsers degrade to a static control. */
+  #scroll-to-top {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
@@ -45,65 +50,40 @@ import Button from '@components/Button.astro';
     height: 44px;
     padding: 0;
     background: var(--color-bg-elevated);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
     transition:
-      opacity 0.2s ease,
-      visibility 0.2s ease,
-      transform 0.2s ease,
       background 0.2s ease,
       color 0.2s ease,
       border-color 0.2s ease;
     z-index: 50;
   }
 
-  button#scroll-to-top:focus-visible {
+  #scroll-to-top:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
 
-  button#scroll-to-top.is-visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+  /* Reveal once the document has scrolled past 300px, fading in over the next
+     60px. `both` fill keeps the control hidden before the range and visible
+     after it. visibility:hidden in the start frame keeps it out of the tab
+     order while off-screen. */
+  @keyframes reveal-scroll-top {
+    from {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
   }
 
+  @supports (animation-timeline: scroll()) {
+    #scroll-to-top {
+      animation: reveal-scroll-top linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 300px 360px;
+    }
+  }
 </style>
-
-<script>
-  function initScrollToTop() {
-    const button = document.querySelector('#scroll-to-top');
-    if (!button) return;
-
-    const SCROLL_THRESHOLD = 300;
-
-    function toggleVisibility() {
-      if (!button) return;
-      if (window.scrollY > SCROLL_THRESHOLD) {
-        button.classList.add('is-visible');
-      } else {
-        button.classList.remove('is-visible');
-      }
-    }
-
-    function scrollToTop() {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
-
-    window.addEventListener('scroll', toggleVisibility, { passive: true });
-    button.addEventListener('click', scrollToTop);
-
-    // Initial check
-    toggleVisibility();
-  }
-
-  // Run on initial load
-  initScrollToTop();
-
-  // Re-run on Astro page transitions
-  document.addEventListener('astro:after-swap', initScrollToTop);
-</script>

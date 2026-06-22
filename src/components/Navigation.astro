@@ -7,8 +7,8 @@
  * at the right edge with a gradient fade effect.
  * 
  * Navigation items are configured in src/config.ts and automatically include a "Home"
- * link at the beginning. Active page highlighting is handled both server-side and
- * client-side for View Transitions support.
+ * link at the beginning. Active page highlighting is determined server-side from
+ * Astro.url.pathname.
  * 
  * @component
  * 
@@ -68,41 +68,12 @@ const isActive = (href: string) => {
   </div>
 </nav>
 
-<script>
-  function updateActiveNav() {
-    const currentPath = window.location.pathname;
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    navLinks.forEach((link) => {
-      const href = link.getAttribute('href');
-      let isActive = false;
-      
-      if (href === '/') {
-        isActive = currentPath === '/';
-      } else if (href) {
-        isActive = currentPath.startsWith(href);
-      }
-      
-      link.classList.toggle('nav-link--active', isActive);
-      if (isActive) {
-        link.setAttribute('aria-current', 'page');
-      } else {
-        link.removeAttribute('aria-current');
-      }
-    });
-  }
-
-  // Run on initial load and after each navigation
-  document.addEventListener('astro:page-load', updateActiveNav);
-</script>
-
 <style>
   .site-nav {
     display: flex;
     align-items: center;
     border-bottom: 1px solid currentColor;
     background: var(--color-bg-elevated);
-    padding: var(--space-md) 0;
   }
 
   .nav-scroll {
@@ -122,23 +93,25 @@ const isActive = (href: string) => {
     display: flex;
     flex-wrap: nowrap;
     justify-content: center;
-    gap: 2rem;
     list-style: none;
     margin: 0;
-    padding: 0.5rem 1.5rem;
+    padding: 0;
+    letter-spacing: 2px;
     min-width: max-content;
   }
 
   .nav-item {
-    margin: 0;
     flex-shrink: 0;
   }
 
   .nav-link {
-    font-size: 0.8125rem;
-    text-transform: uppercase;
-    
-    transition: color 0.2s ease;
+    display: inline-flex;
     white-space: nowrap;
+    padding: 16px;
+
+    &[aria-current="page"] {
+      background: contrast-color(var(--color-bg));
+      color: var(--color-bg);
+    }
   }
 </style>

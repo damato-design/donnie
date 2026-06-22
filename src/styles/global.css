@@ -54,6 +54,14 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Smooth in-page anchor scrolling (e.g. the scroll-to-top control), opt-out for
+   users who prefer reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 body {
   margin: 0;
   background-color: var(--color-bg);
@@ -67,7 +75,8 @@ body {
 
 /* Links */
 a {
-  color: var(--color-accent);
+  color: currentColor;
+  text-underline-offset: .15em;
 }
 
 a:focus-visible {
@@ -120,13 +129,4 @@ pre {
 pre code {
   background-color: transparent;
   padding: 0;
-}
-
-/* Utility Classes */
-.container {
-  max-width: var(--max-width-content);
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--space-lg);
-  padding-right: var(--space-lg);
 }
