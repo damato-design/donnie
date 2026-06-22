@@ -33,19 +33,17 @@ content while keeping the theme's structure, design, and tooling.
 
 ## Architecture
 
-### Identity is config-driven (4 mirrored sources)
-Author name, title, bio, email, location, social links, and site metadata come from
-**environment variables**, read in `src/config.ts` (`siteConfig`) via `import.meta.env`.
+### Identity is config-driven (single source, no env)
+Author name, title, bio, email, location, social links, and site metadata are **plain
+literals** in `src/config.ts` (`siteConfig`). There are no `.env` files and no `import.meta.env`
+lookups; edit `siteConfig` directly to change identity. `siteConfig` flows into SEO,
+`StructuredData.astro`, `Navigation.astro`, the contact page, etc. Nav lives in `siteConfig.nav`.
 
-The **same values are defined in four places** and must be kept in sync when changed:
-1. `.env` — the actual build-time source (git-ignored). **This is what renders.**
-2. `.env.example` — documented template.
-3. `src/config.ts` — `getEnv(KEY, fallback)` fallbacks.
-4. `astro.config.mjs` — `env.schema` `default:` values (Astro typed env).
-
-Changing identity (e.g. email) means editing `.env` for it to take effect, plus the other
-three for a clean fresh-clone fallback. `siteConfig` flows into SEO, `StructuredData.astro`,
-`Navigation.astro`, the contact page, etc. Nav lives in `siteConfig.nav`.
+The **site URL is not in `siteConfig`** — it comes from Astro's built-in `Astro.site`, set by
+`site:` in `astro.config.mjs` (the single source). Build any URL variant with
+`new URL('/path', Astro.site)` (in API routes, the same value arrives as `context.site`).
+`Astro.url` is the current page URL (used for canonical/OG tags). Don't reintroduce a
+`siteConfig.url` or manual trailing-slash juggling.
 
 Static page titles/headings/intros live in `src/pages.config.ts` (`pagesConfig`).
 

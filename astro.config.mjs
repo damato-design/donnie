@@ -19,18 +19,9 @@
  * @see https://astro.build/config
  */
 
-import { defineConfig, envField } from 'astro/config';
-import { loadEnv } from 'vite';
+import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-
-/**
- * Load environment variables from .env file
- * 
- * Uses Vite's loadEnv to read environment variables at build time.
- * Falls back to 'production' if NODE_ENV is not set.
- */
-const { SITE_URL } = loadEnv(process.env.NODE_ENV || 'production', process.cwd(), '');
 
 /**
  * Astro configuration object
@@ -61,52 +52,18 @@ export default defineConfig({
   
   /**
    * Site URL
-   * 
-   * Base URL for the site, loaded from SITE_URL environment variable.
+   *
+   * Base URL for the site, exposed at runtime as `Astro.site`.
    * Required for:
    * - Sitemap generation
    * - Canonical URLs
    * - Open Graph tags
    * - RSS feeds
-   * 
-   * Set SITE_URL in your .env file (e.g., https://example.com)
+   *
+   * Build URL variants with `new URL('/path', Astro.site)`.
    */
-  site: SITE_URL || 'https://donnie.damato.design',
-  
-  /**
-   * Environment variables schema (Astro v5+)
-   * 
-   * Defines type-safe environment variables with validation and defaults.
-   * All variables are client-side accessible and public.
-   * 
-   * Categories:
-   * - Site: URL, language, title, description
-   * - Author: Name, title, bio, email, location
-   * - Social: GitHub, LinkedIn, Twitter, Mastodon, Bluesky
-   */
-  env: {
-    schema: {
-      // Site configuration
-      SITE_URL: envField.string({ context: 'client', access: 'public', default: 'https://donnie.damato.design' }),
-      SITE_LANGUAGE: envField.string({ context: 'client', access: 'public', default: 'en' }),
-      SITE_TITLE: envField.string({ context: 'client', access: 'public', default: "Donnie D'Amato" }),
-      SITE_DESCRIPTION: envField.string({ context: 'client', access: 'public', default: 'Design Systems Architect based in New York, author of Mise en Mode, and international speaker bridging design and engineering with scalable, token-driven systems.' }),
+  site: 'https://donnie.damato.design',
 
-      // Author information
-      SITE_AUTHOR_NAME: envField.string({ context: 'client', access: 'public', default: "Donnie D'Amato" }),
-      SITE_AUTHOR_TITLE: envField.string({ context: 'client', access: 'public', default: 'Design Systems Architect' }),
-      SITE_AUTHOR_BIO: envField.string({ context: 'client', access: 'public', default: 'Design Systems Architect based in New York and author of Mise en Mode. I began as an artist making creative interactions and, after two decades of writing code, found my purpose: to build great systems and pass the knowledge on to others.' }),
-      SITE_AUTHOR_EMAIL: envField.string({ context: 'client', access: 'public', default: 'donnie@damato.design' }),
-      SITE_AUTHOR_LOCATION: envField.string({ context: 'client', access: 'public', default: 'New York, NY' }),
-      
-      // Social media links (empty string = hidden)
-      SOCIAL_LINKEDIN: envField.string({ context: 'client', access: 'public', default: 'https://linkedin.com/in/fauxserious' }),
-      SOCIAL_BLUESKY: envField.string({ context: 'client', access: 'public', default: 'https://bsky.app/profile/donnie.damato.design' }),
-      SOCIAL_GITHUB: envField.string({ context: 'client', access: 'public', default: 'https://github.com/fauxserious' }),
-      SOCIAL_MASTODON: envField.string({ context: 'client', access: 'public', default: 'https://mastodon.social/@donniedamato' }),
-    },
-  },
-  
   /**
    * Image optimization configuration
    * 

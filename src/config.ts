@@ -1,118 +1,93 @@
 /**
  * Site Configuration
- * 
- * Centralized configuration for the entire site, loaded from environment variables.
- * This approach keeps sensitive data and site-specific values out of the codebase
- * while providing type-safe access throughout the application.
- * 
- * Setup:
- * 1. Copy .env.example to .env
- * 2. Customize values for your site
- * 3. Import and use siteConfig throughout the application
- * 
+ *
+ * Centralized configuration for the entire site, defined as plain literals.
+ * Edit the values here to change identity, metadata, social links, or navigation.
+ *
+ * The site URL is intentionally NOT stored here: it comes from Astro's built-in
+ * `Astro.site` (set by `site:` in astro.config.mjs), and any variant is built with
+ * `new URL('/path', Astro.site)`.
+ *
  * Configuration Sections:
- * - Site metadata (URL, language, title, description)
+ * - Site metadata (language, title, description)
  * - Author information (name, title, bio, email, location)
- * - Social links (GitHub, LinkedIn, Twitter, Mastodon, Bluesky)
+ * - Social links (GitHub, LinkedIn, Mastodon, Bluesky)
  * - Navigation structure
- * 
+ *
  * @module config
  */
 
 /**
- * Helper function to get environment variable with fallback
- * 
- * Safely retrieves environment variables with a default fallback value.
- * Uses nullish coalescing to handle undefined values.
- * 
- * @param key - Environment variable key (e.g., 'SITE_URL')
- * @param fallback - Default value if environment variable is not set
- * @returns Environment variable value or fallback
- */
-const getEnv = (key: string, fallback: string = ''): string => {
-  return import.meta.env[key] ?? fallback;
-};
-
-/**
  * Site configuration object
- * 
- * Centralized configuration loaded from environment variables with sensible defaults.
- * All values are loaded at build time and are type-safe throughout the application.
- * 
+ *
+ * Centralized, type-safe configuration used throughout the application.
+ *
  * @constant
  */
 export const siteConfig = {
   /**
-   * Site URL (required for sitemap, canonical URLs, OG tags)
-   * 
-   * Should be the full production URL without trailing slash.
-   * Example: 'https://example.com'
-   */
-  url: getEnv('SITE_URL', 'https://donnie.damato.design'),
-  
-  /**
    * Site language (ISO 639-1 code)
-   * 
+   *
    * Two-letter language code for HTML lang attribute and SEO.
    * Examples: 'en', 'id', 'es', 'fr'
    */
-  language: getEnv('SITE_LANGUAGE', 'en'),
-  
+  language: 'en',
+
   /**
    * Site title
-   * 
+   *
    * Used as fallback when page-specific title is not provided.
    */
-  title: getEnv('SITE_TITLE', "Donnie D'Amato"),
-  
+  title: "Donnie D'Amato",
+
   /**
    * Site description
-   * 
+   *
    * Default meta description for SEO and social sharing.
    */
-  description: getEnv('SITE_DESCRIPTION', 'Design Systems Architect based in New York, author of Mise en Mode, and international speaker bridging design and engineering with scalable, token-driven systems.'),
-  
+  description: 'Design Systems Architect based in New York, author of Mise en Mode, and international speaker bridging design and engineering with scalable, token-driven systems.',
+
   /**
    * Author information
-   * 
+   *
    * Personal details used throughout the site for attribution,
    * contact information, and structured data.
    */
   author: {
     /** Full name */
-    name: getEnv('SITE_AUTHOR_NAME', "Donnie D'Amato"),
+    name: "Donnie D'Amato",
 
     /** Professional title or role */
-    title: getEnv('SITE_AUTHOR_TITLE', 'Design Systems Architect'),
+    title: 'Design Systems Architect',
 
     /** Short biography or professional summary */
-    bio: getEnv('SITE_AUTHOR_BIO', 'Design Systems Architect based in New York and author of Mise en Mode. I began as an artist making creative interactions and, after two decades of writing code, found my purpose: to build great systems and pass the knowledge on to others.'),
+    bio: 'Design Systems Architect based in New York and author of Mise en Mode. I began as an artist making creative interactions and, after two decades of writing code, found my purpose: to build great systems and pass the knowledge on to others.',
 
     /** Contact email address */
-    email: getEnv('SITE_AUTHOR_EMAIL', 'donnie@damato.design'),
+    email: 'donnie@damato.design',
 
     /** Location (optional, empty string to hide) */
-    location: getEnv('SITE_AUTHOR_LOCATION', 'New York, NY'),
+    location: 'New York, NY',
   },
-  
+
   /**
    * Social media links
-   * 
+   *
    * Set to empty string to hide a specific platform.
    * Only configured (non-empty) links will be displayed.
    */
   social: {
     /** LinkedIn profile URL */
-    linkedin: getEnv('SOCIAL_LINKEDIN', ''),
-    
+    linkedin: 'https://linkedin.com/in/fauxserious',
+
     /** Bluesky profile URL */
-    bluesky: getEnv('SOCIAL_BLUESKY', ''),
+    bluesky: 'https://bsky.app/profile/donnie.damato.design',
 
     /** GitHub profile URL */
-    github: getEnv('SOCIAL_GITHUB', ''),
+    github: 'https://github.com/fauxserious',
 
      /** Mastodon profile URL */
-    mastodon: getEnv('SOCIAL_MASTODON', ''),
+    mastodon: 'https://mastodon.social/@donniedamato',
   },
   
   /**

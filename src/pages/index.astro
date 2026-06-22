@@ -51,6 +51,7 @@ import { getCollection } from 'astro:content';
 import { formatMonthYear } from '@utils/formatDate';
 import { truncate } from '@utils/cards';
 import { siteConfig } from '../config';
+import portrait from '../assets/donnie.png';
 
 /**
  * Queries recent decisions for preview section
@@ -84,7 +85,7 @@ const recentDecisions = allDecisions
         <Button href="/projects" variant="primary">Explore Case Studies</Button>
         <Button href="/decisions" variant="secondary">How I Make Decisions</Button>
       </ButtonGroup>
-      <Media slot="aside" src="/donnie.png" alt={`Portrait of ${siteConfig.author.name}`} />
+      <Media slot="aside" src={portrait.src} alt={`Portrait of ${siteConfig.author.name}`} />
     </Hero>
 
     <!-- Introduction -->

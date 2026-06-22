@@ -18,8 +18,8 @@ interface Props {
 
 const { type, data = {} } = Astro.props;
 
-// Get site URL from config
-const siteURL = siteConfig.url.endsWith('/') ? siteConfig.url.slice(0, -1) : siteConfig.url;
+// Site root from Astro (`site:` in astro.config.mjs); always defined.
+const siteURL = Astro.site!;
 
 // Build social links array from config
 const socialLinks = Object.values(siteConfig.social).filter(Boolean);
@@ -37,19 +37,21 @@ function generateStructuredData(type: string, data: Record<string, any>) {
         '@type': 'WebSite',
         name: data.name || siteConfig.title,
         description: data.description || siteConfig.description,
-        url: data.url || siteURL,
+        url: data.url || siteURL.href,
         inLanguage: siteConfig.language,
         author: {
           '@type': 'Person',
           name: siteConfig.author.name,
           jobTitle: siteConfig.author.title,
-          url: siteURL,
+          url: siteURL.href,
         },
         potentialAction: {
           '@type': 'SearchAction',
           target: {
             '@type': 'EntryPoint',
-            urlTemplate: `${siteURL}/writing?q={search_term_string}`,
+            // Built by concatenation, not `new URL`, so the {search_term_string}
+            // placeholder is not percent-encoded. siteURL.href ends with '/'.
+            urlTemplate: `${siteURL.href}writing?q={search_term_string}`,
           },
           'query-input': 'required name=search_term_string',
         },
@@ -80,15 +82,15 @@ function generateStructuredData(type: string, data: Record<string, any>) {
         author: {
           '@type': 'Person',
           name: data.authorName || siteConfig.author.name,
-          url: siteURL,
+          url: siteURL.href,
         },
         datePublished: data.publishDate?.toISOString(),
         dateModified: data.updatedDate?.toISOString() || data.publishDate?.toISOString(),
-        image: data.image || `${siteURL}/og-image.png`,
+        image: data.image || new URL('/og/writing.png', siteURL).href,
         publisher: {
           '@type': 'Person',
           name: siteConfig.author.name,
-          url: siteURL,
+          url: siteURL.href,
         },
         mainEntityOfPage: {
           '@type': 'WebPage',
@@ -105,7 +107,7 @@ function generateStructuredData(type: string, data: Record<string, any>) {
         name: data.name || siteConfig.author.name,
         jobTitle: data.jobTitle || siteConfig.author.title,
         description: data.description || siteConfig.author.bio,
-        url: data.url || siteURL,
+        url: data.url || siteURL.href,
         sameAs: data.socialLinks || socialLinks,
         email: data.email || siteConfig.author.email,
         image: data.image,
@@ -120,7 +122,7 @@ function generateStructuredData(type: string, data: Record<string, any>) {
           '@type': 'ListItem',
           position: index + 1,
           name: item.name,
-          item: item.url.startsWith('http') ? item.url : `${siteURL}${item.url}`,
+          item: item.url.startsWith('http') ? item.url : new URL(item.url, siteURL).href,
         })),
       };
     

@@ -72,15 +72,18 @@ const fullTitle = noSuffix ? title : (title ? `${title} | ${siteConfig.author.na
 // Get the current URL from Astro
 const currentURL = canonicalURL || Astro.url.href;
 
-// Get site URL from config
-const siteURL = siteConfig.url.endsWith('/') ? siteConfig.url : `${siteConfig.url}/`;
+// Map the current path to its top-level OG image. Deeper pages (e.g.
+// /projects/foo) reuse their section's image; everything else falls back to
+// the home card. These slugs must match `getStaticPaths` in
+// src/pages/og/[page].png.ts.
+const topLevelOg = ['projects', 'decisions', 'journey', 'writing', 'speaking', 'contact'];
+const ogSegment = Astro.url.pathname.replace(/^\/+/, '').split('/')[0];
+const ogSlug = topLevelOg.includes(ogSegment) ? ogSegment : 'home';
 
-// Default image if none provided
-const defaultImage = `${siteURL}og-image.png`;
-const ogImage = image || defaultImage;
-
-// Ensure image is absolute URL
-const absoluteImageURL = ogImage.startsWith('http') ? ogImage : `${siteURL}${ogImage.replace(/^\//, '')}`;
+// Resolve the OG image against the site root. `new URL` ignores the base when
+// the provided image is already an absolute URL, so this covers both cases.
+const ogImage = image || `/og/${ogSlug}.png`;
+const absoluteImageURL = new URL(ogImage, currentURL).href;
 ---
 
 <!-- Page Title -->
