@@ -1,9 +1,10 @@
 /* ============================================
    CARD SYSTEM
 
-   Single home for all card styles. The card components (BaseCard and the
-   specialized cards built on it) carry no scoped <style> of their own; their
-   structure and props live in the components, all styling lives here.
+   Single home for all card styles. The Card component is slot-driven and carries
+   no scoped <style> of its own; its structure lives in the component, all styling
+   lives here. Call sites compose a card by filling Card's slots (badge, meta,
+   title, description, tags, default, cta).
 
    Classes are namespaced with `card-` to stay collision-safe as global rules.
    ============================================ */
@@ -19,13 +20,25 @@
   gap: 1.5rem;
 }
 
-/* --- Card container (BaseCard) --- */
+/* --- Card container --- */
 .card {
   display: block;
   position: relative;
   padding: 1.5rem 1.75rem;
   background: var(--color-bg-elevated);
   border: 1px solid;
+}
+
+/* --- Card CTA (CardCta, slotted into `cta`) ---
+   The CTA renders via the Button primitive; slide its arrow on card hover. These
+   live here (not scoped to CardCta) so the `.card:hover` ancestor selector can
+   reach the arrow across the slot boundary. */
+.card-cta-arrow {
+  transition: transform 0.2s ease;
+}
+
+.card:hover .card-cta-arrow {
+  transform: translateX(3px);
 }
 
 .card-meta {
@@ -55,7 +68,7 @@
   display: none;
 }
 
-/* --- TalkCard content --- */
+/* --- Talk content (slotted into a Card's badge + default slots) --- */
 .card-talk-featured {
   margin-bottom: 0.75rem;
 }
@@ -69,7 +82,6 @@
 
 .card-talk-event {
   font-size: 0.9375rem;
-  margin-bottom: 1rem;
   display: flex;
   flex-wrap: wrap;
   align-items: center;

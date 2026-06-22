@@ -41,10 +41,12 @@
  * ```
  */
 
+import Card from '@components/Card.astro';
 import Label from '@components/Label.astro';
 import TagList from '@components/TagList.astro';
 import Typography from '@components/Typography.astro';
 import { formatMonthYear } from '@utils/formatDate';
+import { timelineTypeLabels, timelineTypeColors } from '@utils/cards';
 
 interface Props {
   /** Date of the timeline event (formatted as "Month Year") */
@@ -69,30 +71,6 @@ interface Props {
 const { date, title, type, description, skills, hasContent = false } = Astro.props;
 
 const formattedDate = formatMonthYear(date);
-
-/**
- * Human-readable labels for timeline entry types
- *
- * Maps internal type values to display labels shown in the badge.
- * Each type has a distinct color in the UI:
- * - milestone: accent color (achievements, launches)
- * - learning: green (education, skill development)
- * - transition: amber (job changes, career moves)
- */
-const typeLabels: Record<Props['type'], string> = {
-  milestone: 'Milestone',
-  learning: 'Learning',
-  transition: 'Transition'
-};
-
-/**
- * Maps each entry type to a Label color.
- */
-const typeColors: Record<Props['type'], 'accent' | 'green' | 'amber'> = {
-  milestone: 'accent',
-  learning: 'green',
-  transition: 'amber'
-};
 ---
 
 <article class="timeline-entry">
@@ -102,37 +80,38 @@ const typeColors: Record<Props['type'], 'accent' | 'green' | 'amber'> = {
   </div>
   
   <div class="timeline-content">
-    <div class="timeline-header">
-      <time class="timeline-date" datetime={date.toISOString()}>
-        {formattedDate}
-      </time>
-      <Label color={typeColors[type]} uppercase>{typeLabels[type]}</Label>
-    </div>
-    
-    <Typography tagName="h3" size="xl">{title}</Typography>
-
-    <Typography tagName="p" variant="primary">{description}</Typography>
-    
-    {skills && skills.length > 0 && (
-      <div class="timeline-skills">
-        <Typography tagName="span" size="sm" variant="secondary" class="skills-label">Skills:</Typography>
-        <TagList items={skills} />
+    <Card>
+      <div slot="badge" class="timeline-header">
+        <time class="timeline-date" datetime={date.toISOString()}>
+          {formattedDate}
+        </time>
+        <Label color={timelineTypeColors[type]} uppercase>{timelineTypeLabels[type]}</Label>
       </div>
-    )}
 
-    {hasContent && (
-      <details class="timeline-disclosure">
-        <summary class="expand-toggle">
-          <span class="expand-text"></span>
-          <svg class="expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="6 9 12 15 18 9"></polyline>
-          </svg>
-        </summary>
-        <div class="timeline-body-content prose">
-          <slot />
+      <Fragment slot="title">{title}</Fragment>
+      <Fragment slot="description">{description}</Fragment>
+
+      {skills && skills.length > 0 && (
+        <div slot="tags" class="timeline-skills">
+          <Typography tagName="span" size="sm" variant="secondary" class="skills-label">Skills:</Typography>
+          <TagList items={skills} />
         </div>
-      </details>
-    )}
+      )}
+
+      {hasContent && (
+        <details class="timeline-disclosure">
+          <summary class="expand-toggle">
+            <span class="expand-text"></span>
+            <svg class="expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </summary>
+          <div class="timeline-body-content prose">
+            <slot />
+          </div>
+        </details>
+      )}
+    </Card>
   </div>
 </article>
 

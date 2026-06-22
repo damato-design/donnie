@@ -54,8 +54,7 @@ Overview of the codebase organization.
 |-----------|---------|
 | `Navigation.astro` | Site navigation |
 | `Footer.astro` | Site footer |
-| `ProjectCard.astro` | Case study cards |
-| `ArticleCard.astro` | Blog post cards |
+| `Card.astro` | Unified, slot-driven card (projects, decisions, writing, speaking, journey) |
 | `SEO.astro` | Meta tags |
 | `StructuredData.astro` | JSON-LD schema |
 

@@ -10,7 +10,7 @@
  * - Queries all projects from content collection
  * - Smart sorting: custom order → year (descending)
  * - Displays project and featured count statistics
- * - Uses ProjectCard component for consistent presentation
+ * - Uses the shared Card component for consistent presentation
  * - SEO optimization
  * - Empty state handling
  * 
@@ -21,10 +21,15 @@
 
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
-import ProjectCard from '@components/ProjectCard.astro';
+import Card from '@components/Card.astro';
+import CardCta from '@components/CardCta.astro';
+import FeaturedBadge from '@components/FeaturedBadge.astro';
+import Label from '@components/Label.astro';
+import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
+import { statusConfig } from '@utils/cards';
 import { pagesConfig } from '../../pages.config';
 
 /**
@@ -84,16 +89,22 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
     {sortedProjects.length > 0 ? (
       <div class="card-list">
         {sortedProjects.map((project) => (
-          <ProjectCard
-            title={project.data.title}
-            slug={project.id}
-            outcomeSummary={project.data.outcomeSummary}
-            role={project.data.role}
-            year={project.data.year}
-            techStack={project.data.techStack}
-            featured={project.data.featured}
-            status={project.data.status}
-          />
+          <Card>
+            <div slot="badge" class="card-badges">
+              {project.data.featured && <FeaturedBadge />}
+              {project.data.status !== 'completed' && (
+                <Label color={statusConfig[project.data.status].color} uppercase>{statusConfig[project.data.status].label}</Label>
+              )}
+            </div>
+
+            <Fragment slot="meta">{project.data.role} · {project.data.year}</Fragment>
+            <Fragment slot="title">{project.data.title}</Fragment>
+            <Fragment slot="description">{project.data.outcomeSummary}</Fragment>
+
+            <TagList slot="tags" items={project.data.techStack} max={4} />
+
+            <CardCta slot="cta" href={`/projects/${project.id}`} text="View case study" />
+          </Card>
         ))}
       </div>
     ) : (

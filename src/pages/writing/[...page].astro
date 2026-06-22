@@ -26,13 +26,16 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import Pagination from '@components/Pagination.astro';
-import ArticleCard from '@components/ArticleCard.astro';
+import Card from '@components/Card.astro';
+import CardCta from '@components/CardCta.astro';
+import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
 import Hero from '@components/Hero.astro';
-import HeroCard from '@components/HeroCard.astro';
+import HeroPlaceholder from '@components/HeroPlaceholder.astro';
 import Typography from '@components/Typography.astro';
 import Button from '@components/Button.astro';
 import { getCollection } from 'astro:content';
+import { formatLongDate } from '@utils/formatDate';
 import { pagesConfig } from '../../pages.config';
 import type { GetStaticPaths } from 'astro';
 
@@ -117,14 +120,7 @@ const pageTitle = currentPage === 1
         <div class="hero-cta">
           <Button href="https://mode.place" variant="primary" external>Read the book</Button>
         </div>
-        <HeroCard
-          slot="aside"
-          label="Book"
-          title="Mise en Mode"
-          description="An intent-based approach to design tokens, available in hardcover and EPUB."
-          href="https://mode.place"
-          external
-        />
+        <HeroPlaceholder slot="aside" />
       </Hero>
     )}
 
@@ -140,13 +136,15 @@ const pageTitle = currentPage === 1
     {articles.length > 0 ? (
       <div class="card-list">
         {articles.map((article) => (
-          <ArticleCard
-            title={article.data.title}
-            href={article.data.url}
-            description={article.data.description}
-            publishDate={article.data.publishDate}
-            tags={article.data.tags}
-          />
+          <Card>
+            <Fragment slot="meta">{formatLongDate(article.data.publishDate)}</Fragment>
+            <Fragment slot="title">{article.data.title}</Fragment>
+            <Fragment slot="description">{article.data.description}</Fragment>
+
+            <TagList slot="tags" items={article.data.tags ?? []} />
+
+            <CardCta slot="cta" href={article.data.url} text="Read on blog" external />
+          </Card>
         ))}
       </div>
     ) : (

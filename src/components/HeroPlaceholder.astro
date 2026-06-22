@@ -1,0 +1,41 @@
+---
+/**
+ * HeroPlaceholder
+ *
+ * Temporary stand-in for the Hero `aside` slot. It replaces the removed
+ * HeroCard so the hero keeps its two-column layout until the real replacement
+ * content is built. Delete this component once that lands.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <HeroPlaceholder slot="aside" />
+ * ```
+ */
+
+import Typography from '@components/Typography.astro';
+
+interface Props {
+  /** Optional label describing what will live here */
+  label?: string;
+}
+
+const { label = 'Coming soon' } = Astro.props;
+---
+
+<div class="hero-placeholder" aria-hidden="true">
+  <Typography tagName="span" size="xs" variant="muted">{label}</Typography>
+</div>
+
+<style>
+  .hero-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 8rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px dashed currentColor;
+    opacity: 0.4;
+  }
+</style>

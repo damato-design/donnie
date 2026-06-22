@@ -80,22 +80,39 @@ update both sides when renaming/deleting.
   design tokens like `--color-text`, `--color-bg-elevated`, `--space-*`). Most component
   styles are scoped `<style>` blocks inside `.astro` files.
 - Key components: `SEO.astro`, `StructuredData.astro` (JSON-LD, fully config-driven),
-  `Navigation.astro`, `Testimonials.astro`, `TalkCard`, `ArticleCard`, `ProjectCard`,
-  `DecisionCard`, `Pagination`, `PageStats`, `ForwardLink`, and the **Hero pattern** below.
+  `Navigation.astro`, `Testimonials.astro`, the unified **`Card` pattern** below,
+  `Pagination`, `PageStats`, `ForwardLink`, and the **Hero pattern** below.
 
-### Hero / HeroCard pattern (`src/components/Hero.astro`, `HeroCard.astro`)
-Reusable two-column promo banner: left = value statement (`title`, `emphasis`, `subtitle`,
-`meta`, `primary`/`secondary` CTAs); right = **the `aside` slot** (arbitrary content). When
-the slot is empty the hero is single-column. Props also include `headingLevel` (1 or 2),
-`compact`, `divider`.
+### Card pattern (`src/components/Card.astro`, `CardCta.astro`)
+There is **one** card component. It is slot-driven and has no per-type variants: a call
+site composes a card by filling slots — `badge` (top label row, rendered raw), `meta`
+(eyebrow, wrapped in a muted span so it must be inline text), `title`, `description`, `tags`
+(a `TagList`), the default slot (bespoke content), and an optional `cta`. The card itself is
+**not** a link; the only interactive element is whatever goes in the `cta` slot (typically
+`<CardCta href text />`, the standard forward button). Per-type formatting/maps (date format,
+context truncation, talk/timeline type→label/colour, project status) live in
+`src/utils/cards.ts` + `src/utils/formatDate.ts` and are applied at the call site.
 
-- The right column has **no `cards` prop** — pass `<HeroCard slot="aside" … />` (or any
-  markup). `.hero-right` is a flex column, so multiple slotted items stack with gap.
-- `HeroCard` is its own component because **slotted content does not inherit Hero's scoped
-  CSS** — the card must carry its own styles.
-- Used on: home (featured-project cards), writing (Mise en Mode book), speaking (Wireframe),
-  contact (single-column, Cal.com CTA, no card).
-- On secondary pages the hero is placed **first** and uses `headingLevel={2}` so the page's
+- All card styles are global in `src/styles/cards.css` (imported once in `BaseLayout`);
+  the component carries no scoped styles. Slotted bespoke markup (talk event line +
+  slides/video links via `card-talk-*`, timeline header/skills/disclosure) is styled by the
+  call site's own CSS (global for talks, scoped in `TimelineEntry` for the timeline).
+- Used directly on: projects, decisions, writing (listings) and speaking; `TimelineEntry`
+  renders a `Card` for its content area inside the dot/line rail on `/journey`.
+- Block content (a flex row with `<time>`/labels) must go in the `badge` or default slot,
+  **not** `meta` (which is wrapped in an inline span).
+
+### Hero pattern (`src/components/Hero.astro`)
+Reusable two-column promo banner: left = value statement (default slot); right = **the
+`aside` slot** (arbitrary content). When the slot is empty the hero is single-column. Props
+are `compact` and `divider`.
+
+- `.hero-right` is a flex column, so multiple slotted items stack with gap.
+- The former `HeroCard` has been **removed**; a temporary `HeroPlaceholder` fills the aside
+  on home, writing, and speaking until the real replacement content is built.
+- Used on: home, writing (Mise en Mode book promo copy), speaking (Wireframe promo copy),
+  contact (single-column, Cal.com CTA).
+- On secondary pages the hero is placed **first** and its heading is an `h2` so the page's
   real `<h1>` (its header) stays the single document h1.
 
 ## Content & editorial conventions

@@ -2,54 +2,51 @@
 
 Guide for modifying and creating components.
 
-## Card Components
+## Card Component
 
-All cards extend `BaseCard.astro` for consistent styling.
+There is a single, slot-driven `Card.astro`. Call sites compose each kind of card by
+filling its slots; there are no per-type card components. Styling is global in
+`src/styles/cards.css`, and per-type formatting lives in `src/utils/cards.ts`.
 
-| Card | Location | Purpose |
-|------|----------|---------|
-| ProjectCard | `src/components/ProjectCard.astro` | Case study cards |
-| ArticleCard | `src/components/ArticleCard.astro` | Blog post cards |
-| DecisionCard | `src/components/DecisionCard.astro` | Decision log cards |
-| TalkCard | `src/components/TalkCard.astro` | Speaking cards |
+| Slot | Purpose |
+|------|---------|
+| `badge` | Top label row (rendered raw — use for block content like a type label + date) |
+| `meta` | Eyebrow line (wrapped in an inline span — text only) |
+| `title` | Card heading |
+| `description` | Summary text |
+| `tags` | A `TagList` |
+| default | Bespoke content (e.g. a talk's event line + slides/video links) |
+| `cta` | Optional call-to-action — typically `<CardCta href text />` |
 
-### Modifying ProjectCard
+Cards used directly on: projects, decisions, writing, and speaking listings. `TimelineEntry`
+renders a `Card` for its content inside the timeline rail.
 
-**Change displayed tech stack count:**
-
-```astro
-// Default shows 4 technologies
-const displayTech = techStack.slice(0, 4);
-
-// Change to show 6
-const displayTech = techStack.slice(0, 6);
-```
-
-**Add a new visual element:**
+### Example: a project card
 
 ```astro
-<BaseCard href={`/projects/${slug}`} class="project-card">
-  {featured && (
-    <span slot="badge" class="featured-badge">...</span>
-  )}
-  
-  <!-- Add company logo -->
-  {company && (
-    <img src={`/logos/${company}.svg`} alt={company} class="company-logo" />
-  )}
-  
+<Card>
+  <div slot="badge" class="card-badges">
+    {featured && <FeaturedBadge />}
+    {status !== 'completed' && (
+      <Label color={statusConfig[status].color} uppercase>{statusConfig[status].label}</Label>
+    )}
+  </div>
+
   <Fragment slot="meta">{role} · {year}</Fragment>
-  ...
-</BaseCard>
+  <Fragment slot="title">{title}</Fragment>
+  <Fragment slot="description">{outcomeSummary}</Fragment>
 
-<style>
-  .company-logo {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 0.5rem;
-  }
-</style>
+  <TagList slot="tags" items={techStack} max={4} />
+
+  <CardCta slot="cta" href={`/projects/${slug}`} text="View case study" />
+</Card>
 ```
+
+**Change displayed tech stack count:** adjust the `max` prop on `TagList` (e.g. `max={6}`).
+
+**Add a new visual element:** put it in the default slot (between `tags` and `cta`), or in
+`badge` for something above the title. Block-level markup must not go in the `meta` slot
+(it is wrapped in an inline span).
 
 ## Adding New Fields to Content
 
@@ -87,13 +84,13 @@ interface Props {
 const { title, role, company, teamSize } = Astro.props;
 ---
 
-<BaseCard>
+<Card>
   <Fragment slot="meta">
     {role} · {year}
     {company && ` · ${company}`}
     {teamSize && ` · ${teamSize} engineers`}
   </Fragment>
-</BaseCard>
+</Card>
 ```
 
 ### Step 3: Update Content Files

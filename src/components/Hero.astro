@@ -9,8 +9,9 @@
  * When the `aside` slot is empty the hero collapses to a single column.
  *
  * Author the left column with the editorial primitives (<Typography>, <Button>)
- * and the right column with one or more <HeroCard slot="aside"> for the common
- * promo/snapshot card; the right column stacks its children vertically.
+ * and the right column with whatever supporting content fits; the right column
+ * stacks its children vertically. (A temporary <HeroPlaceholder slot="aside" />
+ * currently fills the right column on pages awaiting their real aside content.)
  *
  * Used as the homepage banner and as a promotional banner on secondary pages
  * (e.g. promoting the Mise en Mode book, the Wireframe show, or Cal.com booking).
@@ -24,7 +25,7 @@
  * ```astro
  * <Hero compact>
  *   <Typography tagName="h2">Now in print: <em>Mise en Mode</em></Typography>
- *   <HeroCard slot="aside" label="Book" title="Mise en Mode" href="https://mode.place" external />
+ *   <HeroPlaceholder slot="aside" />
  * </Hero>
  * ```
  */
@@ -102,7 +103,7 @@ const hasAside = Astro.slots.has('aside');
     margin-top: 1.5rem;
   }
 
-  /* Right column: stacks slotted content (e.g. multiple <HeroCard>) vertically */
+  /* Right column: stacks slotted content vertically */
   .hero-right {
     padding-top: 0.5rem;
     display: flex;

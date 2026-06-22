@@ -10,7 +10,7 @@
  * - Queries all decisions from content collection
  * - Sorts by date (descending - newest first)
  * - Displays decision count statistics
- * - Uses DecisionCard component for consistent presentation
+ * - Uses the shared Card component for consistent presentation
  * - SEO optimization
  * - Empty state handling
  * 
@@ -21,10 +21,14 @@
 
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
-import DecisionCard from '@components/DecisionCard.astro';
+import Card from '@components/Card.astro';
+import CardCta from '@components/CardCta.astro';
+import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
+import { formatMonthYear } from '@utils/formatDate';
+import { truncate } from '@utils/cards';
 import { pagesConfig } from '../../pages.config';
 
 /**
@@ -66,13 +70,15 @@ const totalDecisions = sortedDecisions.length;
     {sortedDecisions.length > 0 ? (
       <div class="card-list card-list--compact">
         {sortedDecisions.map((decision) => (
-          <DecisionCard
-            title={decision.data.title}
-            slug={decision.id}
-            context={decision.data.context}
-            date={decision.data.date}
-            tags={decision.data.tags}
-          />
+          <Card>
+            <Fragment slot="meta">{formatMonthYear(decision.data.date)}</Fragment>
+            <Fragment slot="title">{decision.data.title}</Fragment>
+            <Fragment slot="description">{truncate(decision.data.context, 180)}</Fragment>
+
+            <TagList slot="tags" items={decision.data.tags ?? []} />
+
+            <CardCta slot="cta" href={`/decisions/${decision.id}`} text="Read decision" />
+          </Card>
         ))}
       </div>
     ) : (

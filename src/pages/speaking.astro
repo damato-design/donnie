@@ -29,13 +29,18 @@
 
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
-import TalkCard from '@components/TalkCard.astro';
+import Card from '@components/Card.astro';
+import FeaturedBadge from '@components/FeaturedBadge.astro';
+import Label from '@components/Label.astro';
+import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
 import Hero from '@components/Hero.astro';
+import HeroPlaceholder from '@components/HeroPlaceholder.astro';
 import Typography from '@components/Typography.astro';
-import HeroCard from '@components/HeroCard.astro';
 import Button from '@components/Button.astro';
 import { getCollection } from 'astro:content';
+import { formatMonthYear } from '@utils/formatDate';
+import { talkTypeLabels, talkTypeColors } from '@utils/cards';
 import { pagesConfig } from '../pages.config';
 
 /**
@@ -106,14 +111,7 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
       <div class="hero-cta">
         <Button href="https://wireframe.ds.house" variant="primary" external>Watch Wireframe</Button>
       </div>
-      <HeroCard
-        slot="aside"
-        label="Live Show"
-        title="Wireframe"
-        description="Weekdays at 5pm ET on YouTube, plus short clips and an audio podcast."
-        href="https://wireframe.ds.house"
-        external
-      />
+      <HeroPlaceholder slot="aside" />
     </Hero>
 
     <header class="page-header">
@@ -129,20 +127,64 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
             <Typography tagName="h2">{year}</Typography>
             <div class="talks-list">
               {talksByYear[year].map((talk) => (
-                <TalkCard
-                  title={talk.data.title}
-                  description={talk.data.description}
-                  event={talk.data.event}
-                  eventUrl={talk.data.eventUrl}
-                  date={talk.data.date}
-                  location={talk.data.location}
-                  type={talk.data.type}
-                  slides={talk.data.slides}
-                  video={talk.data.video}
-                  duration={talk.data.duration}
-                  topics={talk.data.topics}
-                  featured={talk.data.featured}
-                />
+                <Card>
+                  <Fragment slot="badge">
+                    {talk.data.featured && (
+                      <div class="card-talk-featured">
+                        <FeaturedBadge />
+                      </div>
+                    )}
+                    <div class="card-talk-meta">
+                      <Label color={talkTypeColors[talk.data.type]} uppercase>{talkTypeLabels[talk.data.type]}</Label>
+                      <Typography tagName="span" size="xs" variant="muted">{formatMonthYear(talk.data.date)}</Typography>
+                    </div>
+                  </Fragment>
+
+                  <Fragment slot="title">{talk.data.title}</Fragment>
+                  <Fragment slot="description">{talk.data.description}</Fragment>
+
+                  <TagList slot="tags" items={talk.data.topics ?? []} />
+
+                  <div class="card-talk-event">
+                    {talk.data.eventUrl ? (
+                      <a href={talk.data.eventUrl} target="_blank" rel="noopener noreferrer" class="card-talk-event-link">
+                        {talk.data.event}
+                        <svg class="card-talk-external-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                          <polyline points="15 3 21 3 21 9"></polyline>
+                          <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                      </a>
+                    ) : (
+                      <Typography tagName="span">{talk.data.event}</Typography>
+                    )}
+                    <Typography tagName="span" variant="muted">· {talk.data.location}</Typography>
+                    {talk.data.duration && <Typography tagName="span" variant="muted">· {talk.data.duration}</Typography>}
+                  </div>
+
+                  {(talk.data.slides || talk.data.video) && (
+                    <div class="card-talk-links">
+                      {talk.data.slides && (
+                        <a href={talk.data.slides} target="_blank" rel="noopener noreferrer" class="card-talk-link">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                          </svg>
+                          Slides
+                        </a>
+                      )}
+                      {talk.data.video && (
+                        <a href={talk.data.video} target="_blank" rel="noopener noreferrer" class="card-talk-link">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                          </svg>
+                          Video
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </Card>
               ))}
             </div>
           </section>
