@@ -42,31 +42,13 @@ interface Props {
   tagName?: keyof astroHTML.JSX.IntrinsicElements;
   /** Visual size, decoupled from the element. Omit to use the element default. */
   size?: TypographySize;
-  /** Semantic colour/emphasis variant (composes the global utility classes). */
-  variant?: 'lead' | 'secondary' | 'primary';
-  /** Text alignment helper. */
-  align?: 'center' | 'right';
-  /** Apply prose flow context: heading top-margins and underlined accent links. */
-  prose?: boolean;
-  /** Extra class(es), merged with the component's own. */
-  class?: string;
   /** Any other valid attributes for the chosen element (href, datetime, id, ...). */
   [key: string]: unknown;
 }
 
-const variantClass = {
-  lead: 'lead',
-  secondary: 'text-secondary',
-  primary: 'text-primary',
-} as const;
-
 const {
   tagName = 'p',
   size,
-  variant,
-  align,
-  prose,
-  class: className,
   ...rest
 } = Astro.props;
 
@@ -76,12 +58,6 @@ const shouldWrap = blockElements.includes(Tag);
 ---
 
 <Tag
-  class:list={[
-    className,
-    variant && variantClass[variant],
-    align && `text-${align}`,
-    { 't-prose': prose },
-  ]}
   data-size={size}
   {...rest}
 >
@@ -91,8 +67,15 @@ const shouldWrap = blockElements.includes(Tag);
 <style>
   .inline {
     background: var(--color-bg-elevated);
-    padding: .1lh .5em;
+    padding: .25lh .5em;
+    line-height: 1.7;
     box-decoration-break: clone;
+  }
+
+  h2:has(.inline) {
+    margin: 0;
+    padding-block: 1rem;
+    filter: url(#longshadow);
   }
 
   /* Decoupled size scale: set only when `size` is passed, otherwise the element
@@ -125,6 +108,11 @@ const shouldWrap = blockElements.includes(Tag);
   h5.t-prose,
   h6.t-prose {
     margin-top: var(--space-lg);
+  }
+
+  :where(p, li) {
+    text-wrap: pretty;
+    max-width: 45ch;
   }
 
   /* Prose links read as content links (underlined accent), unlike the bare

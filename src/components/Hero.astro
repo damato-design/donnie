@@ -23,92 +23,46 @@
  *
  * @example
  * ```astro
- * <Hero compact>
+ * <Hero>
  *   <Typography tagName="h2">Now in print: <em>Mise en Mode</em></Typography>
  *   <HeroPlaceholder slot="aside" />
  * </Hero>
  * ```
  */
 
-interface Props {
-  /** Reduce vertical padding (for use below a page header) */
-  compact?: boolean;
-  /** Show the bottom divider/border (default true) */
-  divider?: boolean;
-}
-
-const { compact = false, divider = true } = Astro.props;
+interface Props {}
 
 /** Whether custom right-column content was provided */
-const hasAside = Astro.slots.has('aside');
+const hasAside = Astro.slots.has("aside");
 ---
 
-<section class:list={['hero', { 'hero--compact': compact, 'hero--no-divider': !divider }]}>
-  <div class:list={['hero-grid', { 'hero-grid--single': !hasAside }]}>
-    <div class="hero-left">
-      <slot />
-    </div>
-
-    {hasAside && (
-      <div class="hero-right">
+<section class="hero">
+  {
+    hasAside && (
+      <div class="hero-media">
         <slot name="aside" />
       </div>
-    )}
+    )
+  }
+
+  <div class="hero-content">
+    <slot />
   </div>
 </section>
 
 <style>
   .hero {
-    padding: 4rem 0 5rem;
+    padding: 3rem 0;
     border-bottom: 1px solid currentColor;
     margin-bottom: 4rem;
-  }
-
-  .hero--compact {
-    padding: 0.5rem 0 2.5rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .hero--no-divider {
-    border-bottom: none;
-    margin-bottom: 2rem;
-  }
-
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: start;
-  }
-
-  .hero-grid--single {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-left {
-    padding-right: 2rem;
-  }
-
-  .hero-grid--single .hero-left {
-    padding-right: 0;
-    max-width: 640px;
-  }
-
-  /* Call-authored CTA row in the left column. `:global` reaches across the slot
-     boundary, since slotted markup is owned by the parent, not this component. */
-  .hero-left :global(.hero-cta) {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 1.5rem;
+    flex-flow: row-reverse wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
   }
 
-  /* Right column: stacks slotted content vertically */
-  .hero-right {
-    padding-top: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  .hero-content {
+    flex-basis: 40ch;
   }
-
 </style>

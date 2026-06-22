@@ -105,7 +105,7 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
   />
 
   <main class="page-container">
-    <Hero compact>
+    <Hero>
       <Typography tagName="h2">Catch me live on <em>Wireframe</em></Typography>
       <Typography tagName="p" size="lg" variant="secondary">A weekday live show: candid design talk, new approaches, and the occasional spicy hot take with guests from the community.</Typography>
       <div class="hero-cta">
@@ -121,11 +121,11 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
     </header>
 
     {years.length > 0 ? (
-      <div class="talks-by-year">
+      <div>
         {years.map((year) => (
-          <section class="year-section">
+          <section>
             <Typography tagName="h2">{year}</Typography>
-            <div class="talks-list">
+            <div>
               {talksByYear[year].map((talk) => (
                 <Card>
                   <Fragment slot="badge">
@@ -182,25 +182,4 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
       <Typography tagName="p" class="empty-state">No speaking engagements yet.</Typography>
     )}
   </main>
-
-  <style>
-    .talks-by-year {
-      display: flex;
-      flex-direction: column;
-      gap: 3rem;
-    }
-
-    .year-section {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .talks-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-  </style>
 </BaseLayout>

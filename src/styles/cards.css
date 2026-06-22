@@ -25,8 +25,10 @@
 
 /* --- Card container --- */
 .card {
-  display: block;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 8px;
   padding: 1.5rem 1.75rem;
   background: var(--color-bg-elevated);
   border: 1px solid;

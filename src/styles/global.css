@@ -37,9 +37,6 @@
   --max-width-prose: 65ch;
   --max-width-content: 1200px;
 
-  /* Transitions */
-  --transition-fast: 150ms ease;
-
   /* Enable animating to/from intrinsic sizes (e.g. height: auto) */
   interpolate-size: allow-keywords;
 }
@@ -53,7 +50,6 @@
 }
 
 html {
-  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -72,13 +68,10 @@ body {
 /* Links */
 a {
   color: var(--color-accent);
-  text-decoration: none;
-  transition: color 0.2s ease;
 }
 
 a:focus-visible {
   outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
 }
 
 /* Images */
@@ -86,12 +79,6 @@ img {
   max-width: 100%;
   height: auto;
   display: block;
-}
-
-/* Lists */
-ul,
-ol {
-  list-style-position: inside;
 }
 
 /* Disclosure (native <details>/<summary>)
@@ -144,22 +131,6 @@ pre code {
   padding-right: var(--space-lg);
 }
 
-.prose {
-  max-width: var(--max-width-prose);
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
 /* Page layout utilities (shared across listing/content pages) */
 .page-container {
   max-width: 800px;
@@ -169,10 +140,4 @@ pre code {
 
 .page-header {
   margin-bottom: 3rem;
-}
-
-/* Empty-state message shown when a collection has no entries */
-.empty-state {
-  font-style: italic;
-  font-size: 1.125rem;
 }
