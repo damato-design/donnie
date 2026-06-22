@@ -2,23 +2,12 @@
 /**
  * Typography
  *
- * Polymorphic editorial text primitive. Renders any element via `tagName` while
- * applying the site's editorial typography, and lets visual size be chosen
- * independently of the semantic element via the `size` prop.
+ * Minimal editorial text primitive. Renders the chosen element via `tagName` and
+ * applies the site's editorial highlight (`.inline`) to block-level text. It is
+ * deliberately prop-free beyond `tagName`: no `class`, no attribute pass-through.
  *
- * Design notes:
- * - The *base* element styles (heading scale, paragraph rhythm, lists,
- *   blockquotes, tables, ...) live in the always-loaded global stylesheet
- *   (`src/styles/typography.css`) so bare HTML and MDX both render correctly.
- *   This component owns the pieces that only make sense as an API: the
- *   decoupled `size` scale and the *prose-context* rules (flow spacing on
- *   headings, underlined accent links) that were previously duplicated across
- *   the article/case-study pages.
- * - Use it at the lowest level: each text element is its own <Typography>. For
- *   `<li><a>…</a></li>`, the `<a>` is the component, not the `<li>`.
- * - For MDX/markdown prose you cannot hand-wrap elements; route them through the
- *   shared map in `mdxComponents.ts` via `<Content components={...} />`, which
- *   renders each element as a <Typography prose> at any nesting depth.
+ * If an element needs a class, an attribute (href, id, aria-*, ...), or any other
+ * hook, author it as a plain HTML element instead of routing it through here.
  *
  * @component
  *
@@ -26,31 +15,25 @@
  *
  * @example
  * ```astro
- * <Typography tagName="h2" size="4xl">Section title</Typography>
- * <Typography tagName="h3" size="xl">Looks like an h3, ranks like an h3</Typography>
- * <Typography tagName="p" prose size="lg">Lead-in paragraph.</Typography>
- * <Typography tagName="span" size="sm">caption</Typography>
+ * <Typography tagName="h2">Section title</Typography>
+ * <Typography tagName="p">A paragraph.</Typography>
+ * <Typography tagName="span">caption</Typography>
  * ```
  */
 
 interface Props {
   /** The underlying HTML element. Defaults to `p`. */
   tagName?: keyof astroHTML.JSX.IntrinsicElements;
-  /** Any other valid attributes for the chosen element (href, datetime, id, ...). */
-  [key: string]: unknown;
 }
 
-const {
-  tagName = 'p',
-  ...rest
-} = Astro.props;
+const { tagName = 'p' } = Astro.props;
 
 const Tag = tagName as any;
 const blockElements = ['p', 'h2', 'h3', 'h4', 'h5', 'h6', 'li'];
 const shouldWrap = blockElements.includes(Tag);
 ---
 
-<Tag {...rest}>
+<Tag>
     {shouldWrap ? <span class="inline"><slot /></span> : <slot />}
 </Tag>
 
@@ -68,42 +51,8 @@ const shouldWrap = blockElements.includes(Tag);
     filter: url(#longshadow);
   }
 
-  /* Prose flow context: top spacing between sections (headings have no
-     top-margin by default so they stay usable in UI). */
-  h2.t-prose {
-    margin-top: var(--space-3xl);
-    margin-bottom: var(--space-lg);
-  }
-
-  h3.t-prose {
-    margin-top: var(--space-2xl);
-  }
-
-  h4.t-prose {
-    margin-top: var(--space-xl);
-  }
-
-  h5.t-prose,
-  h6.t-prose {
-    margin-top: var(--space-lg);
-  }
-
   :where(p, li) {
     text-wrap: pretty;
     max-width: 45ch;
-  }
-
-  /* Prose links read as content links (underlined accent), unlike the bare
-     navigation/button anchors styled globally. */
-  a.t-prose {
-    color: var(--color-accent);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
-    transition: all 0.2s ease;
-  }
-
-  code.t-prose {
-    font-size: var(--font-size-sm);
   }
 </style>

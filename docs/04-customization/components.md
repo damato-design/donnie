@@ -16,7 +16,7 @@ filling its slots; there are no per-type card components. Styling is global in
 | `description` | Summary text |
 | `tags` | A `TagList` |
 | default | Bespoke content (e.g. a talk's event line + slides/video links) |
-| `cta` | Optional call-to-action — typically `<CardCta href text />` |
+| `cta` | Optional call-to-action — typically a `<ButtonGroup>` holding a forward `<Button>` |
 
 Cards used directly on: projects, decisions, writing, and speaking listings. `TimelineEntry`
 renders a `Card` for its content inside the timeline rail.
@@ -38,7 +38,9 @@ renders a `Card` for its content inside the timeline rail.
 
   <TagList slot="tags" items={techStack} max={4} />
 
-  <CardCta slot="cta" href={`/projects/${slug}`} text="View case study" />
+  <ButtonGroup slot="cta">
+    <Button href={`/projects/${slug}`} variant="secondary" size="sm" arrow>View case study</Button>
+  </ButtonGroup>
 </Card>
 ```
 

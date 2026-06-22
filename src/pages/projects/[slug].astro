@@ -152,41 +152,41 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
           <Label color={statusInfo.color} uppercase>{statusInfo.label}</Label>
         )}
       </div>
-      <Typography tagName="h1" size="4xl">{title}</Typography>
+      <Typography tagName="h1">{title}</Typography>
       <div class="case-study-meta">
         <Typography tagName="span">{role}</Typography>
-        <Typography tagName="span" class="meta-separator">·</Typography>
+        <span class="meta-separator">·</span>
         <Typography tagName="span">{year}</Typography>
         {duration && (
           <>
-            <Typography tagName="span" class="meta-separator">·</Typography>
+            <span class="meta-separator">·</span>
             <Typography tagName="span">{duration}</Typography>
           </>
         )}
         {teamSize && (
           <>
-            <Typography tagName="span" class="meta-separator">·</Typography>
+            <span class="meta-separator">·</span>
             <Typography tagName="span">{teamSize} {teamSize === 1 ? 'person' : 'people'}</Typography>
           </>
         )}
-        <Typography tagName="span" class="meta-separator">·</Typography>
+        <span class="meta-separator">·</span>
         <Typography tagName="span">{readingTime}</Typography>
       </div>
-      <Typography tagName="p" size="lg" variant="secondary">{outcomeSummary}</Typography>
+      <Typography tagName="p">{outcomeSummary}</Typography>
     </header>
 
     <!-- Overview Section -->
-    <Section title="Overview" class="case-study-section" size="2xl">
-      <Typography tagName="p" prose size="lg">{overview}</Typography>
+    <Section title="Overview">
+      <Typography tagName="p">{overview}</Typography>
     </Section>
 
     <!-- Problem Section -->
-    <Section title="Problem" class="case-study-section" size="2xl">
-      <Typography tagName="p" prose size="lg">{problem}</Typography>
+    <Section title="Problem">
+      <Typography tagName="p">{problem}</Typography>
     </Section>
 
     <!-- Constraints Section -->
-    <Section title="Constraints" class="case-study-section" size="2xl">
+    <Section title="Constraints">
       <ul class="constraints-list">
         {constraints.map((constraint) => (
           <li>{constraint}</li>
@@ -195,16 +195,16 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     </Section>
 
     <!-- Approach Section -->
-    <Section title="Approach" class="case-study-section" size="2xl">
-      <Typography tagName="p" prose size="lg">{approach}</Typography>
+    <Section title="Approach">
+      <Typography tagName="p">{approach}</Typography>
     </Section>
 
     <!-- Key Decisions Section -->
-    <Section title="Key Decisions" class="case-study-section" size="2xl">
+    <Section title="Key Decisions">
       <ul class="decisions-list">
         {keyDecisions.map((decision) => (
           <li class="decision-item">
-            <Typography tagName="h3" size="xl" variant="primary">{decision.decision}</Typography>
+            <Typography tagName="h3">{decision.decision}</Typography>
             <div class="decision-reasoning">
               <strong>Reasoning:</strong>
               <Typography tagName="p">{decision.reasoning}</Typography>
@@ -225,7 +225,7 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     </Section>
 
     <!-- Tech Stack Section -->
-    <Section title="Tech Stack" class="case-study-section" size="2xl">
+    <Section title="Tech Stack">
       <ul class="tech-stack-list">
         {techStack.map((tech) => (
           <li>{tech}</li>
@@ -234,17 +234,17 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     </Section>
 
     <!-- Result/Impact Section -->
-    <Section title="Result & Impact" class="case-study-section" size="2xl">
+    <Section title="Result & Impact">
       {/* Display metrics with visualization */}
       {impact.metrics && impact.metrics.length > 0 && (
         <ImpactMetrics metrics={impact.metrics} />
       )}
 
-      <Typography tagName="p" size="lg" variant="secondary">{impact.qualitative}</Typography>
+      <Typography tagName="p">{impact.qualitative}</Typography>
     </Section>
 
     <!-- Learnings Section -->
-    <Section title="Learnings" class="case-study-section" size="2xl">
+    <Section title="Learnings">
       <ul class="learnings-list">
         {learnings.map((learning) => (
           <li>{learning}</li>
@@ -304,7 +304,7 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       opacity: 0.5;
     }
 
-    :global(.case-study-section) {
+    .case-study :global(.section) {
       margin-bottom: 3rem;
     }
 

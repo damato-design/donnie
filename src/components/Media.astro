@@ -1,0 +1,80 @@
+---
+/**
+ * Media
+ *
+ * Renders the right element for a given `src` by inspecting its file
+ * extension: an image (`<img>`), a video (`<video>`), or audio (`<audio>`).
+ * This keeps call sites declarative, they pass a `src` and an `alt`/label and
+ * don't have to know which element a particular file needs.
+ *
+ * `src` is a plain string path (e.g. a `/`-rooted public asset or an absolute
+ * URL), not an imported `ImageMetadata`, so this does NOT run files through
+ * Astro's build-time image optimization. Use `astro:assets` `<Image>` directly
+ * when you need responsive/optimized imported images.
+ *
+ * Video and audio default to showing native `controls`; pass `controls={false}`
+ * to opt out. Any other valid attribute (loading, width, height, autoplay,
+ * loop, muted, poster, ...) is forwarded to the rendered element.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <Media src="/assets/cover.png" alt="Book cover" />
+ * <Media src="/media/talk.mp4" alt="Conference talk" poster="/media/talk.jpg" />
+ * <Media src="/media/episode.mp3" alt="Podcast episode" />
+ * ```
+ */
+
+interface Props {
+  /** Path or URL to the media file. The extension selects the element. */
+  src: string;
+  /** Text alternative (img `alt`) / accessible label (aria-label for a/v). */
+  alt?: string;
+  /** Show native controls on video/audio (default: true; ignored for images). */
+  controls?: boolean;
+  /** Any other valid attribute, forwarded to the rendered element. */
+  [key: string]: unknown;
+}
+
+const { src, alt = '', controls = true, ...rest } = Astro.props;
+
+const ext = src.split(/[?#]/)[0].split('.').pop()?.toLowerCase() ?? '';
+
+const VIDEO = ['mp4', 'webm', 'ogv', 'mov', 'm4v'];
+const AUDIO = ['mp3', 'wav', 'ogg', 'oga', 'm4a', 'aac', 'flac'];
+
+const kind = VIDEO.includes(ext) ? 'video' : AUDIO.includes(ext) ? 'audio' : 'image';
+---
+
+{
+  kind === 'image' && (
+    <img class="media" src={src} alt={alt} {...rest} />
+  )
+}
+{
+  kind === 'video' && (
+    <video class="media" src={src} controls={controls} aria-label={alt || undefined} {...rest} />
+  )
+}
+{
+  kind === 'audio' && (
+    <audio class="media" src={src} controls={controls} aria-label={alt || undefined} {...rest} />
+  )
+}
+
+<style>
+  .media {
+    display: block;
+    max-width: 100%;
+  }
+
+  img.media,
+  video.media {
+    height: auto;
+  }
+
+  audio.media {
+    width: 100%;
+  }
+</style>

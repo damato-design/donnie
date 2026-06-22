@@ -14,11 +14,11 @@ h6 {
 h1 {
   font-size: var(--font-size-5xl);
   filter: url('#longshadow');
-  transform: skewY(-4deg) translate(-.25em, -.25em);
+  transform: scale(2) skewY(-4deg) translate(25%, 0);
   color: var(--color-bg-elevated);
-  line-height: 1.2;
-  padding-block: 16px;
-  margin-block: 0 16px;
+  line-height: 1;
+  padding-block: 56px;
+  margin-block: 0;
 }
 
 h2 {

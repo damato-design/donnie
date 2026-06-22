@@ -110,7 +110,7 @@ function getPageUrl(page: number): string {
       {pageNumbers.map((page) => (
         <li>
           {page === '...' ? (
-            <Typography tagName="span" variant="secondary" class="pagination-ellipsis">...</Typography>
+            <span class="pagination-ellipsis">...</span>
           ) : (
             <a
               href={getPageUrl(page as number)}

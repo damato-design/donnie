@@ -13,7 +13,8 @@
  *
  * Content is slotted, so an icon + label compose naturally (the button is a
  * flex row). Visual variants are `primary` (filled) and `secondary` (outline);
- * `sm` tightens padding/size for compact controls like pagination.
+ * `sm` tightens padding/size for compact controls like pagination. Set `arrow`
+ * to append the standard trailing forward arrow (e.g. card CTAs).
  *
  * @component
  * @slot default - Button label / icon content.
@@ -22,9 +23,12 @@
  * ```astro
  * <Button href="/projects" variant="primary">View My Work</Button>
  * <Button href="https://cal.com/x" variant="secondary" external>Book a call</Button>
+ * <Button href="/projects/x" variant="secondary" size="sm" arrow>View case study</Button>
  * <Button variant="secondary" size="sm" disabled aria-label="Previous page">…</Button>
  * ```
  */
+
+import ArrowIcon from '@components/ArrowIcon.astro';
 
 interface Props {
   /** Destination. Provided -> renders a link; omitted -> renders a <button>. */
@@ -37,10 +41,10 @@ interface Props {
   external?: boolean;
   /** Disabled state (non-interactive). */
   disabled?: boolean;
+  /** Append the standard trailing forward arrow after the label. */
+  arrow?: boolean;
   /** Button type when rendered as <button>. */
   type?: 'button' | 'submit' | 'reset';
-  /** Extra class(es). */
-  class?: string;
   /** Any other valid attributes (aria-label, id, ...). */
   [key: string]: unknown;
 }
@@ -51,8 +55,8 @@ const {
   size = 'md',
   external = false,
   disabled = false,
+  arrow = false,
   type = 'button',
-  class: className,
   ...rest
 } = Astro.props;
 
@@ -71,11 +75,10 @@ const tagAttrs =
     'btn',
     `btn--${variant}`,
     { 'btn--sm': size === 'sm', 'btn--disabled': disabled },
-    className,
   ]}
   {...tagAttrs}
   {...rest}
-><slot /></Tag>
+><slot />{arrow && <ArrowIcon />}</Tag>
 
 <style>
   .btn {

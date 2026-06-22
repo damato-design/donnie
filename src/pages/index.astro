@@ -39,10 +39,16 @@ import StructuredData from '@components/StructuredData.astro';
 import ForwardLink from '@components/ForwardLink.astro';
 import Testimonials from '@components/Testimonials.astro';
 import Hero from '@components/Hero.astro';
-import HeroPlaceholder from '@components/HeroPlaceholder.astro';
+import Media from '@components/Media.astro';
+import Card from '@components/Card.astro';
+import CardList from '@components/CardList.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
+import TagList from '@components/TagList.astro';
 import Button from '@components/Button.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
+import { formatMonthYear } from '@utils/formatDate';
+import { truncate } from '@utils/cards';
 import { siteConfig } from '../config';
 
 /**
@@ -73,22 +79,21 @@ const recentDecisions = allDecisions
   <main class="home-page">
     <!-- CASE-FIRST HERO -->
     <Hero>
-      <Typography tagName="h1">Experience Architect</Typography>
-      <Typography tagName="p" size="lg" variant="secondary">Design systems where design and code work beautifully together.</Typography>
-      <Typography tagName="p" size="sm">{`${siteConfig.author.name} · ${siteConfig.author.title}`}</Typography>
-      <div class="hero-cta">
+      <Typography tagName="h1">Donnie <br/> D'Amato</Typography>
+      <Typography>Design systems where design and code work beautifully together.</Typography>
+      <ButtonGroup>
         <Button href="/projects" variant="primary">Explore Case Studies</Button>
         <Button href="/decisions" variant="secondary">How I Make Decisions</Button>
-      </div>
-      <HeroPlaceholder slot="aside" />
+      </ButtonGroup>
+      <Media slot="aside" src="/donnie.png" alt={`Portrait of ${siteConfig.author.name}`} />
     </Hero>
 
     <!-- Introduction -->
     <section class="introduction">
-      <Typography tagName="p" size="lg" variant="primary">
+      <Typography tagName="p">
         Hey, I'm {siteConfig.author.name}, a {siteConfig.author.title.toLowerCase()} with a background in UX design, front-end engineering, and higher education. I build systems that aren't just component libraries, they're strategic frameworks that turn chaos into cohesion.
       </Typography>
-      <Typography tagName="p" size="lg" variant="secondary">
+      <Typography tagName="p">
         Every major decision is documented, because the best design systems don't just scale products, they scale people too.
       </Typography>
       <ForwardLink href="/journey" text="Read my journey" />
@@ -97,27 +102,27 @@ const recentDecisions = allDecisions
     <!-- Recent Decisions -->
     <section class="recent-decisions">
       <div class="section-header">
-        <Typography tagName="h2" size="xl">Recent Decisions</Typography>
+        <Typography tagName="h2">Recent Decisions</Typography>
         <ForwardLink href="/decisions" text="View all" />
       </div>
       
-      {recentDecisions.length > 0 ? (
-        <ul class="decisions-list">
-          {recentDecisions.map((decision) => {
-            const date = new Date(decision.data.date);
-            const formattedDate = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-            return (
-              <li class="decision-item">
-                <Typography tagName="span" size="xs" class="decision-date">{formattedDate}</Typography>
-                <Typography tagName="h3" size="lg" variant="primary">{decision.data.title}</Typography>
-                <Typography tagName="p" size="sm">{decision.data.context}</Typography>
-              </li>
-            );
-          })}
-        </ul>
-      ) : (
-        <Typography tagName="p">No decisions documented yet.</Typography>
-      )}
+      <CardList compact empty="No decisions documented yet.">
+        {recentDecisions.map((decision) => (
+          <li>
+            <Card>
+              <Fragment slot="meta">{formatMonthYear(decision.data.date)}</Fragment>
+              <Fragment slot="title">{decision.data.title}</Fragment>
+              <Fragment slot="description">{truncate(decision.data.context, 180)}</Fragment>
+
+              <TagList slot="tags" items={decision.data.tags ?? []} />
+
+              <ButtonGroup slot="cta">
+                <Button href={`/decisions/${decision.id}`} variant="secondary" size="sm" arrow>Read decision</Button>
+              </ButtonGroup>
+            </Card>
+          </li>
+        ))}
+      </CardList>
     </section>
 
     <!-- Testimonials -->
@@ -125,22 +130,22 @@ const recentDecisions = allDecisions
 
     <!-- What I Think About -->
     <section class="thinking">
-      <Typography tagName="h2" size="xl">Problems I Enjoy Solving</Typography>
-      <Typography tagName="p" class="thinking-list">
+      <Typography tagName="h2">Problems I Enjoy Solving</Typography>
+      <Typography>
         Allowing expression without breaking consistency · Giving designers and engineers the same language · Theming at scale across brands, locales, and accessibility needs · Bounded, semantic token systems over sprawling primitives · Working with the web's native layout instead of against it · Standardizing the vocabulary of design tokens · Bridging the gap between design and code · Scaling people, not just products
       </Typography>
     </section>
 
     <!-- CTA -->
     <section class="cta">
-      <Typography tagName="h2" size="2xl">Let's Work Together</Typography>
-      <Typography tagName="p" class="cta-text">
+      <Typography tagName="h2">Let's Work Together</Typography>
+      <Typography>
         Looking for design systems leadership, theming and token architecture, or someone who documents their thinking and shares it openly? Let's talk.
       </Typography>
-      <div class="cta-buttons">
+      <ButtonGroup>
         <Button href="/projects" variant="primary">View My Work</Button>
         <Button href="/contact" variant="secondary">Get in Touch</Button>
-      </div>
+      </ButtonGroup>
     </section>
   </main>
 
@@ -161,30 +166,5 @@ const recentDecisions = allDecisions
       justify-content: space-between;
       margin-bottom: 2rem;
     }
-
-    .decisions-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      border-top: 1px solid currentColor;
-    }
-
-    .decision-item {
-      padding: 1.5rem 0;
-      border-bottom: 1px solid currentColor;
-    }
-
-    .decision-item:last-child {
-      border-bottom: none;
-    }
-
-    .decision-date {
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-
   </style>
 </BaseLayout>

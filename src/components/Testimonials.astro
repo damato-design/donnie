@@ -60,12 +60,12 @@ const featuredTestimonials = allTestimonials
 
 {featuredTestimonials.length > 0 && (
   <section class="testimonials">
-    {showTitle && <Typography tagName="h2" size="xl">{title}</Typography>}
+    {showTitle && <Typography tagName="h2">{title}</Typography>}
     <ul class="testimonials-list">
       {featuredTestimonials.map((testimonial) => (
         <li>
           <blockquote class="testimonial">
-          <Typography tagName="p" size="lg" variant="primary">"{testimonial.data.quote}"</Typography>
+          <Typography tagName="p">"{testimonial.data.quote}"</Typography>
           <footer class="testimonial-attribution">
             <cite class="testimonial-author">
               {testimonial.data.linkedin ? (
@@ -79,9 +79,9 @@ const featuredTestimonials = allTestimonials
               ) : (
                 testimonial.data.name
               )}
-              <Typography tagName="span" variant="secondary">, {testimonial.data.role} at {testimonial.data.company}</Typography>
+              <Typography tagName="span">, {testimonial.data.role} at {testimonial.data.company}</Typography>
             </cite>
-            <Typography tagName="span" size="sm">{testimonial.data.relationship}</Typography>
+            <Typography tagName="span">{testimonial.data.relationship}</Typography>
           </footer>
           </blockquote>
         </li>

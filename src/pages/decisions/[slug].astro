@@ -80,7 +80,7 @@ const formattedDate = formatLongDate(decision.data.date);
           {formattedDate}
         </time>
         
-        <Typography tagName="h1" size="3xl">{decision.data.title}</Typography>
+        <Typography tagName="h1">{decision.data.title}</Typography>
 
         {decision.data.tags && decision.data.tags.length > 0 && (
           <ul class="decision-tags">
@@ -91,25 +91,25 @@ const formattedDate = formatLongDate(decision.data.date);
         )}
       </header>
 
-      <Section title="Context" class="decision-section" size="xs">
+      <Section title="Context">
         <Typography tagName="p">{decision.data.context}</Typography>
       </Section>
 
-      <Section title="Decision" class="decision-section decision-made" size="xs">
+      <Section title="Decision">
         <div class="decision-callout">
-          <Typography tagName="p" variant="primary">{decision.data.decision}</Typography>
+          <Typography tagName="p">{decision.data.decision}</Typography>
         </div>
       </Section>
 
-      <Section title="Alternatives Considered" class="decision-section" size="xs">
+      <Section title="Alternatives Considered">
         <ul class="alternatives-list">
           {decision.data.alternatives.map((alt) => (
             <li class="alternative-item">
-              <Typography tagName="h3" size="base" variant="primary">{alt.option}</Typography>
+              <Typography tagName="h3">{alt.option}</Typography>
               <div class="alternative-details">
                 {alt.pros && alt.pros.length > 0 && (
                   <div class="pros-cons">
-                    <Typography tagName="span" size="xs" class="detail-label pros-label">Pros</Typography>
+                    <span class="detail-label pros-label">Pros</span>
                     <ul class="detail-list">
                       {alt.pros.map((pro) => (
                         <li>{pro}</li>
@@ -119,7 +119,7 @@ const formattedDate = formatLongDate(decision.data.date);
                 )}
                 {alt.cons && alt.cons.length > 0 && (
                   <div class="pros-cons">
-                    <Typography tagName="span" size="xs" class="detail-label cons-label">Cons</Typography>
+                    <span class="detail-label cons-label">Cons</span>
                     <ul class="detail-list">
                       {alt.cons.map((con) => (
                         <li>{con}</li>
@@ -133,7 +133,7 @@ const formattedDate = formatLongDate(decision.data.date);
         </ul>
       </Section>
 
-      <Section title="Reasoning" class="decision-section" size="xs">
+      <Section title="Reasoning">
         <Typography tagName="p">{decision.data.reasoning}</Typography>
       </Section>
 
@@ -186,7 +186,7 @@ const formattedDate = formatLongDate(decision.data.date);
       gap: 0.5rem;
     }
 
-    .decision-content :global(.decision-section) {
+    .decision-content :global(.section) {
       padding-bottom: 1.5rem;
     }
 

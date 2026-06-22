@@ -15,8 +15,8 @@
  */
 
 import BaseLayout from '@layouts/BaseLayout.astro';
-import Typography from '@components/Typography.astro';
 import Button from '@components/Button.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
 
 const pageTitle = '404 - Page Not Found';
 ---
@@ -36,15 +36,17 @@ const pageTitle = '404 - Page Not Found';
         <line x1="12" y1="16" x2="12.01" y2="16"></line>
       </svg>
 
-      <Typography tagName="p" size="base" class="error-code">404 Error</Typography>
+      <p class="error-code">404 Error</p>
 
-      <Typography tagName="h1" class="title">Page Not Found</Typography>
+      <h1 class="title">Page Not Found</h1>
 
-      <Typography tagName="p" size="lg" class="description">
+      <p class="description">
         The page you're looking for doesn't exist or has been moved. Let's get you back on track.
-      </Typography>
+      </p>
 
-      <Button href="/">Back to Home</Button>
+      <ButtonGroup>
+        <Button href="/">Back to Home</Button>
+      </ButtonGroup>
     </div>
   </div>
 </BaseLayout>

@@ -30,14 +30,12 @@ interface Props {
   color?: 'neutral' | 'accent' | 'green' | 'purple' | 'amber' | 'pink';
   /** Emphasized treatment (uppercase, bolder, smaller) */
   uppercase?: boolean;
-  /** Additional CSS classes */
-  class?: string;
 }
 
-const { color = 'neutral', uppercase = false, class: className } = Astro.props;
+const { color = 'neutral', uppercase = false } = Astro.props;
 ---
 
-<span class:list={['label', `label--${color}`, uppercase && 'label--uppercase', className]}>
+<span class:list={['label', `label--${color}`, uppercase && 'label--uppercase']}>
   <slot />
 </span>
 

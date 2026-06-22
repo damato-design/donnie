@@ -44,7 +44,6 @@
 import Card from '@components/Card.astro';
 import Label from '@components/Label.astro';
 import TagList from '@components/TagList.astro';
-import Typography from '@components/Typography.astro';
 import { formatMonthYear } from '@utils/formatDate';
 import { timelineTypeLabels, timelineTypeColors } from '@utils/cards';
 
@@ -93,7 +92,7 @@ const formattedDate = formatMonthYear(date);
 
       {skills && skills.length > 0 && (
         <div slot="tags" class="timeline-skills">
-          <Typography tagName="span" size="sm" variant="secondary" class="skills-label">Skills:</Typography>
+          <span class="skills-label">Skills:</span>
           <TagList items={skills} />
         </div>
       )}

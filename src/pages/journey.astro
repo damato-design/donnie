@@ -28,6 +28,8 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import TimelineEntry from '@components/TimelineEntry.astro';
+import PageContainer from '@components/PageContainer.astro';
+import PageHeader from '@components/PageHeader.astro';
 import Typography from '@components/Typography.astro';
 import { mdxComponents } from '@components/mdxComponents';
 import { getCollection, render } from 'astro:content';
@@ -77,11 +79,11 @@ const entriesWithContent = await Promise.all(
     type="website"
   />
 
-  <main class="page-container">
-    <header class="page-header">
+  <PageContainer>
+    <PageHeader>
       <Typography tagName="h1">{pagesConfig.journey.heading}</Typography>
-      <Typography tagName="p" variant="secondary">{pagesConfig.journey.intro}</Typography>
-    </header>
+      <Typography tagName="p">{pagesConfig.journey.intro}</Typography>
+    </PageHeader>
 
     {entriesWithContent.length > 0 ? (
       <div class="journey-timeline">
@@ -99,9 +101,9 @@ const entriesWithContent = await Promise.all(
         ))}
       </div>
     ) : (
-      <Typography tagName="p" class="empty-state">No journey entries yet.</Typography>
+      <p class="empty-state">No journey entries yet.</p>
     )}
-  </main>
+  </PageContainer>
 
   <style>
     .journey-timeline {

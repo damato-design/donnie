@@ -3,15 +3,16 @@
  * ArrowIcon Component
  *
  * Inline arrow SVG shared by the site's directional navigation affordances
- * (ForwardLink, CardCta, BackLink) so each one doesn't carry its own copy of
- * the path. Pass `class` to attach the consumer's animation/sizing hook.
+ * (ForwardLink, BackLink, and Button's `arrow` prop) so each one doesn't carry
+ * its own copy of the path. Size it with the `size` prop; consumers that need to
+ * animate it target the rendered `<svg>` from their own scoped styles.
  *
  * @component
  *
  * @example
  * ```astro
- * <ArrowIcon class="arrow-icon" />
- * <ArrowIcon direction="left" class="back-icon" />
+ * <ArrowIcon />
+ * <ArrowIcon direction="left" size={14} />
  * ```
  */
 
@@ -20,11 +21,9 @@ interface Props {
   direction?: 'left' | 'right';
   /** Width/height of the rendered SVG in px (default: 16) */
   size?: number;
-  /** Class applied to the <svg> (animation/sizing hook) */
-  class?: string;
 }
 
-const { direction = 'right', size = 16, class: className } = Astro.props;
+const { direction = 'right', size = 16 } = Astro.props;
 
 const paths = {
   right:
@@ -35,7 +34,6 @@ const paths = {
 ---
 
 <svg
-  class:list={[className]}
   width={size}
   height={size}
   viewBox="0 0 24 24"

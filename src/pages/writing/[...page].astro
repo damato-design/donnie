@@ -27,9 +27,12 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import Pagination from '@components/Pagination.astro';
 import Card from '@components/Card.astro';
-import CardCta from '@components/CardCta.astro';
+import CardList from '@components/CardList.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
 import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
+import PageContainer from '@components/PageContainer.astro';
+import PageHeader from '@components/PageHeader.astro';
 import Hero from '@components/Hero.astro';
 import HeroPlaceholder from '@components/HeroPlaceholder.astro';
 import Typography from '@components/Typography.astro';
@@ -112,51 +115,49 @@ const pageTitle = currentPage === 1
     type="website"
   />
 
-  <main class="page-container">
+  <PageContainer>
     {currentPage === 1 && (
       <Hero>
         <Typography tagName="h2">Now in print: <em>Mise en Mode</em></Typography>
-        <Typography tagName="p" size="lg" variant="secondary">My book on rebuilding design token architecture from first principles. Stop adding tokens, start expressing modes.</Typography>
-        <div class="hero-cta">
+        <Typography tagName="p">My book on rebuilding design token architecture from first principles. Stop adding tokens, start expressing modes.</Typography>
+        <ButtonGroup>
           <Button href="https://mode.place" variant="primary" external>Read the book</Button>
-        </div>
+        </ButtonGroup>
         <HeroPlaceholder slot="aside" />
       </Hero>
     )}
 
-    <header class="page-header">
+    <PageHeader>
       <Typography tagName="h1">{pagesConfig.writing.heading}</Typography>
-      <Typography tagName="p" variant="secondary">{pagesConfig.writing.intro}</Typography>
+      <Typography tagName="p">{pagesConfig.writing.intro}</Typography>
       <PageStats text={totalPages > 1
         ? `Showing ${(currentPage - 1) * postsPerPage + 1}–${Math.min(currentPage * postsPerPage, totalArticles)} of ${totalArticles} articles`
         : `${totalArticles} articles`
       } />
-    </header>
+    </PageHeader>
 
-    {articles.length > 0 ? (
-      <ul class="card-list">
-        {articles.map((article) => (
-          <li>
-            <Card>
-              <Fragment slot="meta">{formatLongDate(article.data.publishDate)}</Fragment>
-              <Fragment slot="title">{article.data.title}</Fragment>
-              <Fragment slot="description">{article.data.description}</Fragment>
+    <CardList empty="No articles published yet.">
+      {articles.map((article) => (
+        <li>
+          <Card>
+            <Fragment slot="meta">{formatLongDate(article.data.publishDate)}</Fragment>
+            <Fragment slot="title">{article.data.title}</Fragment>
+            <Fragment slot="description">{article.data.description}</Fragment>
 
-              <TagList slot="tags" items={article.data.tags ?? []} />
+            <TagList slot="tags" items={article.data.tags ?? []} />
 
-              <CardCta slot="cta" href={article.data.url} text="Read on blog" external />
-            </Card>
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <Typography tagName="p" class="empty-state">No articles published yet.</Typography>
-    )}
+            <ButtonGroup slot="cta">
+              <Button href={article.data.url} variant="secondary" size="sm" external arrow>Read on blog</Button>
+            </ButtonGroup>
+          </Card>
+        </li>
+      ))}
+    </CardList>
 
     <Pagination 
       currentPage={currentPage} 
       totalPages={totalPages} 
-      baseUrl="/writing" 
+      baseUrl="/writing"
     />
-  </main>
+  </PageContainer>
 </BaseLayout>

@@ -75,23 +75,38 @@ update both sides when renaming/deleting.
 - `src/pages/` — `index.astro` (home), `projects/`, `decisions/`, `journey.astro`,
   `writing/[...page].astro` (paginated, 5/page) + `writing/[slug].astro`, `speaking.astro`,
   `uses.astro`, `contact.astro`, `404.astro`, `robots.txt.ts`.
-- `src/layouts/` — `BaseLayout`, `ArticleLayout`, `CaseStudyLayout`.
+- `src/layouts/` — `BaseLayout` (the only layout; the theme's unused `ArticleLayout`/
+  `CaseStudyLayout` were removed).
 - `src/styles/` — `global.css` (CSS custom-property design tokens like `--color-bg`,
   `--color-bg-elevated`, `--color-accent`, `--space-*`; foreground text is derived via
-  `contrast-color()`/`currentColor`, not a token; plus base resets and page-layout
-  utilities), `typography.css`, and `cards.css`. Most
+  `contrast-color()`/`currentColor`, not a token; plus base resets and the `.container`
+  utility), `typography.css`, and `cards.css`. Most
   component styles are scoped `<style>` blocks inside `.astro` files.
+- The page shell is componentized: `PageContainer.astro` (the centered max-width `<main>`)
+  and `PageHeader.astro` (the `<header>` intro block) own their layout as scoped styles —
+  there is no global `.page-container`/`.page-header` utility.
 - Key components: `SEO.astro`, `StructuredData.astro` (JSON-LD, fully config-driven),
-  `Navigation.astro`, `Testimonials.astro`, the unified **`Card` pattern** below,
-  `Pagination`, `PageStats`, `ForwardLink`, and the **Hero pattern** below.
+  `Navigation.astro`, `Testimonials.astro`, the unified **`Card` pattern** below (plus
+  `CardList` for listings), `Pagination`, `PageStats`, `ForwardLink`, `PageContainer`,
+  `PageHeader`, and the **Hero pattern** below.
+- **Components own their styling; no consumer `class` prop.** A component does not accept a
+  `class`/`className` escape hatch — it carries its own base class (`.card`, `.btn`, `.label`,
+  `.section`, ...) and pages hook onto that from their own scoped styles via `:global`,
+  scoped under a page-specific ancestor to avoid bleed (e.g. `.case-study :global(.section)`).
+- **`Typography` takes only `tagName`** — no `class`, no attribute pass-through. It renders the
+  element and applies the editorial `.inline` highlight to block text. If an element needs a
+  class or any attribute (href, id, aria-*, ...), author it as a **plain HTML element**, not a
+  `<Typography>` (this is why MDX overrides in `mdxComponents.ts` render raw elements). The
+  inert `size`/`variant`/`prose` props were removed site-wide.
 
-### Card pattern (`src/components/Card.astro`, `CardCta.astro`)
+### Card pattern (`src/components/Card.astro`)
 There is **one** card component. It is slot-driven and has no per-type variants: a call
 site composes a card by filling slots — `badge` (top label row, rendered raw), `meta`
 (eyebrow, wrapped in a span so it must be inline text), `title`, `description`, `tags`
 (a `TagList`), the default slot (bespoke content), and an optional `cta`. The card itself is
-**not** a link; the only interactive element is whatever goes in the `cta` slot (typically
-`<CardCta href text />`, the standard forward button). Per-type formatting/maps (date format,
+**not** a link; the only interactive element is whatever goes in the `cta` slot (typically a
+`<ButtonGroup>` holding a forward `<Button … arrow>`, see the Button group pattern below).
+Per-type formatting/maps (date format,
 context truncation, talk/timeline type→label/colour, project status) live in
 `src/utils/cards.ts` + `src/utils/formatDate.ts` and are applied at the call site.
 
@@ -99,10 +114,26 @@ context truncation, talk/timeline type→label/colour, project status) live in
   `BaseLayout`): `.card`, `.card-list`/`--compact`, and `.card-badges`. The component
   carries no scoped styles. Slotted bespoke markup is styled by the call site's own CSS
   (e.g. the timeline header/skills/disclosure scoped in `TimelineEntry`).
-- Used directly on: projects, decisions, writing (listings) and speaking; `TimelineEntry`
-  renders a `Card` for its content area inside the dot/line rail on `/journey`.
+- `CardList.astro` is the listing shell: it owns the `<ul class="card-list">` wrapper
+  (`compact` prop → `--compact`) and the empty-state fallback, auto-detecting emptiness from
+  its slot. Callers map their items into `<li><Card/></li>` in the default slot and pass an
+  `empty` message. `empty` is optional: omit it when an outer guard already handles the empty
+  case (e.g. speaking's per-year lists, which only exist when they have talks), and the list
+  renders nothing when empty.
+- Used directly on: projects, decisions, writing (listings) and speaking (one `CardList` per
+  year group), all via `CardList`; `TimelineEntry` renders a `Card` for its content area
+  inside the dot/line rail on `/journey`.
 - Block content (a flex row with `<time>`/labels) must go in the `badge` or default slot,
   **not** `meta` (which is wrapped in an inline span).
+
+### Button group pattern (`src/components/ButtonGroup.astro`, `Button.astro`)
+`Button` is the action primitive (filled `primary`/outline `secondary`, `sm` size, optional
+`arrow` prop that appends the shared `ArrowIcon`). **Whenever you place one or two buttons,
+wrap them in `<ButtonGroup>`** — the slot-driven flex wrapper that owns their layout (gap +
+wrapping); it carries its own scoped `.button-group` style and accepts no `class`. Used for
+hero/section CTAs, the 404 home link, and each card's `cta` slot (a single secondary `sm`
+`Button` with `arrow`). `Pagination` and `ScrollToTop` are their own specialized controls and
+do **not** use `ButtonGroup`. (`ButtonGroup` replaced the former single-purpose `CardCta`.)
 
 ### Hero pattern (`src/components/Hero.astro`)
 Reusable two-column promo banner: left = value statement (default slot); right = **the

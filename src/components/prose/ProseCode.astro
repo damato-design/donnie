@@ -1,5 +1,4 @@
 ---
-/** MDX prose inline `<code>` (smaller size in flowing text). */
-import Typography from '@components/Typography.astro';
+/** MDX prose inline `<code>`. Renders a raw element preserving any attributes. */
 ---
-<Typography tagName="code" prose {...Astro.props}><slot /></Typography>
+<code {...Astro.props}><slot /></code>

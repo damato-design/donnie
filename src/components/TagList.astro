@@ -27,18 +27,16 @@ interface Props {
   items: string[];
   /** Optional cap; items beyond this collapse into a "+N" pill */
   max?: number;
-  /** Additional CSS classes to apply to the list wrapper */
-  class?: string;
 }
 
-const { items, max, class: className } = Astro.props;
+const { items, max } = Astro.props;
 
 const visible = typeof max === 'number' ? items.slice(0, max) : items;
 const overflow = typeof max === 'number' ? Math.max(items.length - max, 0) : 0;
 ---
 
 {items.length > 0 && (
-  <ul class:list={['tags-list', className]}>
+  <ul class="tags-list">
     {visible.map((item) => (
       <li><Label>{item}</Label></li>
     ))}

@@ -1,0 +1,34 @@
+---
+/**
+ * PageHeader
+ *
+ * The page intro block for listing/content pages: a `<header>` carrying the
+ * page's <h1>, intro copy, and optional <PageStats>. Replaces the former
+ * global `.page-header` utility so the spacing lives with the component.
+ *
+ * @component
+ *
+ * @slot default - Heading, intro copy, and any page stats.
+ *
+ * @example
+ * ```astro
+ * <PageHeader>
+ *   <Typography tagName="h1">{heading}</Typography>
+ *   <Typography tagName="p">{intro}</Typography>
+ *   <PageStats text="..." />
+ * </PageHeader>
+ * ```
+ */
+
+interface Props {}
+---
+
+<header>
+  <slot />
+</header>
+
+<style>
+  header {
+    margin-bottom: 3rem;
+  }
+</style>

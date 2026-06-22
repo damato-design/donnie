@@ -60,7 +60,7 @@ const hasRelated = projects.length > 0 || decisions.length > 0;
     <div class="related-grid">
       {projects.length > 0 && (
         <div class="related-section">
-          <Typography tagName="h3" size="xs">
+          <Typography tagName="h3">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
             </svg>
@@ -70,8 +70,8 @@ const hasRelated = projects.length > 0 || decisions.length > 0;
             {projects.map((project) => (
               <li>
                 <a href={`/projects/${project.id}`} class="related-item">
-                  <Typography tagName="span" size="xs" class="related-item-meta">{project.data.role} · {project.data.year}</Typography>
-                  <Typography tagName="span" size="sm" variant="primary" class="related-item-title">{project.data.title}</Typography>
+                  <span class="related-item-meta">{project.data.role} · {project.data.year}</span>
+                  <span class="related-item-title">{project.data.title}</span>
                 </a>
               </li>
             ))}
@@ -81,7 +81,7 @@ const hasRelated = projects.length > 0 || decisions.length > 0;
       
       {decisions.length > 0 && (
         <div class="related-section">
-          <Typography tagName="h3" size="xs">
+          <Typography tagName="h3">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"></circle>
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -93,8 +93,8 @@ const hasRelated = projects.length > 0 || decisions.length > 0;
             {decisions.map((decision) => (
               <li>
                 <a href={`/decisions/${decision.id}`} class="related-item">
-                  <Typography tagName="span" size="xs" class="related-item-meta">{formatMonthShortYear(decision.data.date)}</Typography>
-                  <Typography tagName="span" size="sm" variant="primary" class="related-item-title">{decision.data.title}</Typography>
+                  <span class="related-item-meta">{formatMonthShortYear(decision.data.date)}</span>
+                  <span class="related-item-title">{decision.data.title}</span>
                 </a>
               </li>
             ))}

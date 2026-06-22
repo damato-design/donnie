@@ -22,11 +22,15 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import Card from '@components/Card.astro';
-import CardCta from '@components/CardCta.astro';
+import CardList from '@components/CardList.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
+import Button from '@components/Button.astro';
 import FeaturedBadge from '@components/FeaturedBadge.astro';
 import Label from '@components/Label.astro';
 import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
+import PageContainer from '@components/PageContainer.astro';
+import PageHeader from '@components/PageHeader.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
 import { statusConfig } from '@utils/cards';
@@ -79,38 +83,36 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
     type="website"
   />
 
-  <main class="page-container">
-    <header class="page-header">
+  <PageContainer>
+    <PageHeader>
       <Typography tagName="h1">{pagesConfig.projects.heading}</Typography>
-      <Typography tagName="p" variant="secondary">{pagesConfig.projects.intro}</Typography>
+      <Typography tagName="p">{pagesConfig.projects.intro}</Typography>
       <PageStats text={`${totalProjects} projects · ${featuredCount} featured`} />
-    </header>
+    </PageHeader>
 
-    {sortedProjects.length > 0 ? (
-      <ul class="card-list">
-        {sortedProjects.map((project) => (
-          <li>
-            <Card>
-              <div slot="badge" class="card-badges">
-                {project.data.featured && <FeaturedBadge />}
-                {project.data.status !== 'completed' && (
-                  <Label color={statusConfig[project.data.status].color} uppercase>{statusConfig[project.data.status].label}</Label>
-                )}
-              </div>
+    <CardList empty="No projects available yet.">
+      {sortedProjects.map((project) => (
+        <li>
+          <Card>
+            <div slot="badge" class="card-badges">
+              {project.data.featured && <FeaturedBadge />}
+              {project.data.status !== 'completed' && (
+                <Label color={statusConfig[project.data.status].color} uppercase>{statusConfig[project.data.status].label}</Label>
+              )}
+            </div>
 
-              <Fragment slot="meta">{project.data.role} · {project.data.year}</Fragment>
-              <Fragment slot="title">{project.data.title}</Fragment>
-              <Fragment slot="description">{project.data.outcomeSummary}</Fragment>
+            <Fragment slot="meta">{project.data.role} · {project.data.year}</Fragment>
+            <Fragment slot="title">{project.data.title}</Fragment>
+            <Fragment slot="description">{project.data.outcomeSummary}</Fragment>
 
-              <TagList slot="tags" items={project.data.techStack} max={4} />
+            <TagList slot="tags" items={project.data.techStack} max={4} />
 
-              <CardCta slot="cta" href={`/projects/${project.id}`} text="View case study" />
-            </Card>
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <Typography tagName="p" class="empty-state">No projects available yet.</Typography>
-    )}
-  </main>
+            <ButtonGroup slot="cta">
+              <Button href={`/projects/${project.id}`} variant="secondary" size="sm" arrow>View case study</Button>
+            </ButtonGroup>
+          </Card>
+        </li>
+      ))}
+    </CardList>
+  </PageContainer>
 </BaseLayout>

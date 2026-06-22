@@ -27,6 +27,8 @@
 
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
+import PageContainer from '@components/PageContainer.astro';
+import PageHeader from '@components/PageHeader.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
 import { pagesConfig } from '../pages.config';
@@ -90,11 +92,11 @@ const categoryOrder: Array<'tools' | 'stack' | 'environment'> = ['tools', 'stack
     type="website"
   />
 
-  <main class="page-container">
-    <header class="page-header">
+  <PageContainer>
+    <PageHeader>
       <Typography tagName="h1">{pagesConfig.uses.heading}</Typography>
-      <Typography tagName="p" variant="secondary">{pagesConfig.uses.intro}</Typography>
-    </header>
+      <Typography tagName="p">{pagesConfig.uses.intro}</Typography>
+    </PageHeader>
 
     {categoryOrder.map((categoryKey) => {
       const entries = groupedByCategory[categoryKey];
@@ -105,25 +107,25 @@ const categoryOrder: Array<'tools' | 'stack' | 'environment'> = ['tools', 'stack
       return (
         <section class="category-section">
           <div class="category-header">
-            <Typography tagName="h2" size="2xl">{info.title}</Typography>
-            <Typography tagName="p" variant="secondary">{info.description}</Typography>
+            <Typography tagName="h2">{info.title}</Typography>
+            <Typography tagName="p">{info.description}</Typography>
           </div>
 
           <div class="items-list">
             {entries.map((entry) => (
               entry.data.items.map((item) => (
                 <div class="item">
-                  <Typography tagName="h3" size="xl" class="item-name">
+                  <h3 class="item-name">
                     {item.url ? (
                       <a href={item.url} target="_blank" rel="noopener noreferrer">
                         {item.name}
-                        <Typography tagName="span" size="sm" class="external-link-icon" aria-hidden="true">↗</Typography>
+                        <span class="external-link-icon" aria-hidden="true">↗</span>
                       </a>
                     ) : (
                       item.name
                     )}
-                  </Typography>
-                  <Typography tagName="p" variant="secondary">{item.description}</Typography>
+                  </h3>
+                  <Typography tagName="p">{item.description}</Typography>
                 </div>
               ))
             ))}
@@ -133,9 +135,9 @@ const categoryOrder: Array<'tools' | 'stack' | 'environment'> = ['tools', 'stack
     })}
 
     {sortedUses.length === 0 && (
-      <Typography tagName="p" class="empty-state">No uses documented yet.</Typography>
+      <p class="empty-state">No uses documented yet.</p>
     )}
-  </main>
+  </PageContainer>
 
   <style>
     .category-section {

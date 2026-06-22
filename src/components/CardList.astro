@@ -1,0 +1,51 @@
+---
+/**
+ * CardList
+ *
+ * The shared listing shell for the index pages (projects, decisions, writing):
+ * a vertically-stacked `<ul class="card-list">` whose `<li>` items are authored
+ * by the caller (typically each wrapping a <Card>). Replaces the repeated
+ * "ternary on length → <ul> of cards, else empty-state paragraph" block.
+ *
+ * Emptiness is detected from the slot, so callers just map their items into the
+ * default slot and provide the message to show when there are none.
+ *
+ * @component
+ *
+ * @slot default - The `<li>` items (each typically a <Card>).
+ *
+ * @example
+ * ```astro
+ * <CardList empty="No projects available yet.">
+ *   {projects.map((project) => (
+ *     <li><Card>...</Card></li>
+ *   ))}
+ * </CardList>
+ * ```
+ */
+
+interface Props {
+  /**
+   * Message shown when no items are rendered into the slot. Omit it when an
+   * outer guard already handles the empty case (e.g. the year-grouped speaking
+   * page); the list then simply renders nothing when empty.
+   */
+  empty?: string;
+  /** Tighter gap between cards (used by the decisions listing). */
+  compact?: boolean;
+}
+
+const { empty, compact = false } = Astro.props;
+
+/** Render the slot up front so we can fall back to the empty state when it has no items. */
+const items = await Astro.slots.render('default');
+const isEmpty = items.trim().length === 0;
+---
+
+{
+  isEmpty ? (
+    empty && <p class="empty-state">{empty}</p>
+  ) : (
+    <ul class:list={['card-list', { 'card-list--compact': compact }]} set:html={items} />
+  )
+}

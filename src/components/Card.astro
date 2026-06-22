@@ -9,8 +9,8 @@
  *
  * The card itself is NOT a link. For accessibility, the only interactive
  * element is whatever the call site puts in the `cta` slot (typically a
- * <CardCta>), so a whole block of headings and tags is never wrapped in a
- * single anchor.
+ * <ButtonGroup> holding a forward <Button>), so a whole block of headings and
+ * tags is never wrapped in a single anchor.
  *
  * The meta / title / description wrappers are only rendered when their slot is
  * filled, so the card also works as a styled shell (passing bespoke markup in
@@ -25,7 +25,7 @@
  * @slot tags - Container for a TagList
  * @slot default - Bespoke content between tags and the CTA (e.g. a talk's event
  *   line and slides/video links, or a timeline disclosure)
- * @slot cta - Optional call-to-action at the bottom (typically a <CardCta>)
+ * @slot cta - Optional call-to-action at the bottom (typically a <ButtonGroup>)
  *
  * @example
  * ```astro
@@ -33,30 +33,27 @@
  *   <Fragment slot="meta">January 2024</Fragment>
  *   <Fragment slot="title">Card Title</Fragment>
  *   <Fragment slot="description">Card description text</Fragment>
- *   <CardCta slot="cta" href="/example" text="Read more" />
+ *   <ButtonGroup slot="cta">
+ *     <Button href="/example" variant="secondary" size="sm" arrow>Read more</Button>
+ *   </ButtonGroup>
  * </Card>
  * ```
  */
 
 import Typography from '@components/Typography.astro';
 
-interface Props {
-  /** Additional CSS classes to apply to the card */
-  class?: string;
-}
-
-const { class: className } = Astro.props;
+interface Props {}
 
 const hasMeta = Astro.slots.has('meta');
 const hasTitle = Astro.slots.has('title');
 const hasDescription = Astro.slots.has('description');
 ---
 
-<article class:list={['card', className]}>
+<article class="card">
   <slot name="badge" />
-  {hasMeta && <Typography tagName="span" size="xs"><slot name="meta" /></Typography>}
-  {hasTitle && <Typography tagName="span" size="lg" variant="primary"><slot name="title" /></Typography>}
-  {hasDescription && <Typography tagName="span" size="sm" variant="secondary"><slot name="description" /></Typography>}
+  {hasMeta && <Typography tagName="span"><slot name="meta" /></Typography>}
+  {hasTitle && <Typography tagName="span"><slot name="title" /></Typography>}
+  {hasDescription && <Typography tagName="span"><slot name="description" /></Typography>}
   <slot name="tags" />
   <slot />
   <slot name="cta" />

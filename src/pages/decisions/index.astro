@@ -22,9 +22,13 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import Card from '@components/Card.astro';
-import CardCta from '@components/CardCta.astro';
+import CardList from '@components/CardList.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
+import Button from '@components/Button.astro';
 import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
+import PageContainer from '@components/PageContainer.astro';
+import PageHeader from '@components/PageHeader.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
 import { formatMonthYear } from '@utils/formatDate';
@@ -60,31 +64,29 @@ const totalDecisions = sortedDecisions.length;
     type="website"
   />
 
-  <main class="page-container">
-    <header class="page-header">
+  <PageContainer>
+    <PageHeader>
       <Typography tagName="h1">{pagesConfig.decisions.heading}</Typography>
-      <Typography tagName="p" variant="secondary">{pagesConfig.decisions.intro}</Typography>
+      <Typography tagName="p">{pagesConfig.decisions.intro}</Typography>
       <PageStats text={`${totalDecisions} decisions documented`} />
-    </header>
+    </PageHeader>
 
-    {sortedDecisions.length > 0 ? (
-      <ul class="card-list card-list--compact">
-        {sortedDecisions.map((decision) => (
-          <li>
-            <Card>
-              <Fragment slot="meta">{formatMonthYear(decision.data.date)}</Fragment>
-              <Fragment slot="title">{decision.data.title}</Fragment>
-              <Fragment slot="description">{truncate(decision.data.context, 180)}</Fragment>
+    <CardList compact empty="No decisions documented yet.">
+      {sortedDecisions.map((decision) => (
+        <li>
+          <Card>
+            <Fragment slot="meta">{formatMonthYear(decision.data.date)}</Fragment>
+            <Fragment slot="title">{decision.data.title}</Fragment>
+            <Fragment slot="description">{truncate(decision.data.context, 180)}</Fragment>
 
-              <TagList slot="tags" items={decision.data.tags ?? []} />
+            <TagList slot="tags" items={decision.data.tags ?? []} />
 
-              <CardCta slot="cta" href={`/decisions/${decision.id}`} text="Read decision" />
-            </Card>
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <Typography tagName="p" class="empty-state">No decisions documented yet.</Typography>
-    )}
-  </main>
+            <ButtonGroup slot="cta">
+              <Button href={`/decisions/${decision.id}`} variant="secondary" size="sm" arrow>Read decision</Button>
+            </ButtonGroup>
+          </Card>
+        </li>
+      ))}
+    </CardList>
+  </PageContainer>
 </BaseLayout>

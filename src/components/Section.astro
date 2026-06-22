@@ -2,14 +2,13 @@
 /**
  * Section Component
  *
- * Structural wrapper for a titled content section: a `<section>` with a heading
- * followed by slotted content. Standardizes the markup repeated across the case
- * study page (`.case-study-section`) and the decision page (`.decision-section`
- * + `.section-label`).
+ * Structural wrapper for a titled content section: a `<section class="section">`
+ * with a heading followed by slotted content. Standardizes the markup repeated
+ * across the case study page and the decision page.
  *
- * The heading renders through <Typography>; callers control its appearance with
- * the `size` and `variant` props (e.g. a large case-study heading vs. a small
- * decision eyebrow) rather than with their own scoped CSS.
+ * The heading renders through <Typography>. Per-page spacing hooks onto the
+ * component-owned `.section` class from the page's own scoped styles (e.g.
+ * `.case-study :global(.section)`), so there is no consumer-supplied class.
  *
  * @component
  *
@@ -17,34 +16,27 @@
  *
  * @example
  * ```astro
- * <Section title="Overview" class="case-study-section">
- *   <Typography tagName="p" prose>{overview}</Typography>
+ * <Section title="Overview">
+ *   <Typography tagName="p">{overview}</Typography>
  * </Section>
  *
- * <Section title="Context" class="decision-section" size="xs">
+ * <Section title="Context">
  *   <Typography tagName="p">{context}</Typography>
  * </Section>
  * ```
  */
 
 import Typography from '@components/Typography.astro';
-import type { TypographySize } from '@components/Typography.astro';
 
 interface Props {
   /** Heading text */
   title: string;
-  /** Class(es) for the <section> wrapper */
-  class?: string;
-  /** Heading size, decoupled from the h2 element. */
-  size?: TypographySize;
-  /** Heading colour/emphasis variant. */
-  variant?: 'lead' | 'secondary' | 'primary';
 }
 
-const { title, class: className, size, variant } = Astro.props;
+const { title } = Astro.props;
 ---
 
-<section class:list={[className]}>
-  <Typography tagName="h2" size={size} variant={variant}>{title}</Typography>
+<section class="section">
+  <Typography tagName="h2">{title}</Typography>
   <slot />
 </section>

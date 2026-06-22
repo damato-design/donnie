@@ -1,5 +1,4 @@
 ---
-/** MDX prose `<a>` -> underlined accent content link. */
-import Typography from '@components/Typography.astro';
+/** MDX prose `<a>` content link. Renders a raw anchor so `href` is preserved. */
 ---
-<Typography tagName="a" prose {...Astro.props}><slot /></Typography>
+<a {...Astro.props}><slot /></a>

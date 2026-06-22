@@ -1,0 +1,35 @@
+---
+/**
+ * PageContainer
+ *
+ * The shared page shell for listing/content pages: a centered, max-width
+ * `<main>` with consistent page padding. Replaces the former global
+ * `.page-container` utility so the layout lives with the component.
+ *
+ * @component
+ *
+ * @slot default - The page content (typically a <PageHeader> plus listings).
+ *
+ * @example
+ * ```astro
+ * <PageContainer>
+ *   <PageHeader>...</PageHeader>
+ *   ...
+ * </PageContainer>
+ * ```
+ */
+
+interface Props {}
+---
+
+<main>
+  <slot />
+</main>
+
+<style>
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+</style>

@@ -1,12 +1,11 @@
 /**
  * MDX component map.
  *
- * Pass to `<Content components={mdxComponents} />` so every markdown element is
- * rendered through <Typography prose> at its lowest level (e.g. an `<a>` inside
- * a `<li>` becomes the component, not the list item). Only elements that need
- * prose context (flow spacing, content-link styling) are overridden here; the
- * rest (`p`, `ul`, `li`, `blockquote`, `strong`, `img`, `pre`, ...) fall through
- * to the global base typography in `src/styles/typography.css`.
+ * Pass to `<Content components={mdxComponents} />`. Each entry renders the raw
+ * HTML element while forwarding its attributes (e.g. an `<a>`'s `href`, a
+ * heading's `id`). The rest (`p`, `ul`, `li`, `blockquote`, `strong`, `img`,
+ * `pre`, ...) fall through to the global base typography in
+ * `src/styles/typography.css`.
  */
 import ProseLink from '@components/prose/ProseLink.astro';
 import ProseH2 from '@components/prose/ProseH2.astro';

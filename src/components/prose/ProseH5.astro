@@ -1,5 +1,4 @@
 ---
-/** MDX prose `<h5>` with flow spacing. */
-import Typography from '@components/Typography.astro';
+/** MDX prose `<h5>`. Renders a raw heading so `id` anchors are preserved. */
 ---
-<Typography tagName="h5" prose {...Astro.props}><slot /></Typography>
+<h5 {...Astro.props}><slot /></h5>
