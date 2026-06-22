@@ -31,10 +31,8 @@ import CardList from '@components/CardList.astro';
 import ButtonGroup from '@components/ButtonGroup.astro';
 import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
-import PageContainer from '@components/PageContainer.astro';
 import PageHeader from '@components/PageHeader.astro';
 import Hero from '@components/Hero.astro';
-import HeroPlaceholder from '@components/HeroPlaceholder.astro';
 import Typography from '@components/Typography.astro';
 import Button from '@components/Button.astro';
 import { getCollection } from 'astro:content';
@@ -115,15 +113,15 @@ const pageTitle = currentPage === 1
     type="website"
   />
 
-  <PageContainer>
     {currentPage === 1 && (
       <Hero>
-        <Typography tagName="h2">Now in print: <em>Mise en Mode</em></Typography>
+        <Typography tagName="h2">Now in print:<br/> <em>Mise en Mode</em></Typography>
         <Typography tagName="p">My book on rebuilding design token architecture from first principles. Stop adding tokens, start expressing modes.</Typography>
         <ButtonGroup>
           <Button href="https://mode.place" variant="primary" external>Read the book</Button>
         </ButtonGroup>
-        <HeroPlaceholder slot="aside" />
+        <mode-book slot="aside"></mode-book>
+        <script is:inline type="module" src="https://mode.place/mode-book.js"></script>
       </Hero>
     )}
 
@@ -159,5 +157,4 @@ const pageTitle = currentPage === 1
       totalPages={totalPages} 
       baseUrl="/writing"
     />
-  </PageContainer>
 </BaseLayout>

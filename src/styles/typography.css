@@ -16,6 +16,7 @@ h1 {
   filter: url('#longshadow');
   transform: scale(2) skewY(-4deg) translate(25%, 0);
   color: var(--color-bg-elevated);
+  pointer-events: none;
   line-height: 1;
   padding-block: 56px;
   margin-block: 0;

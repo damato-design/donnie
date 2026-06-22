@@ -9,7 +9,6 @@
  * - decisions: Architectural and technical decision records
  * - journey: Career timeline entries
  * - writing: Blog posts and articles
- * - uses: Tools, stack, and environment documentation
  * - speaking: Conference talks and presentations
  * - testimonials: Endorsements and recommendations
  * 
@@ -147,7 +146,10 @@ const decisionsCollection = defineCollection({
     
     /** Reasoning behind the decision */
     reasoning: z.string(),
-    
+
+    /** Why the decision mattered (closing reflection) */
+    whyItMattered: z.string(),
+
     /** Optional tags for categorization */
     tags: z.array(z.string()).optional(),
     
@@ -247,34 +249,6 @@ const writingCollection = defineCollection({
 
     /** Canonical URL of the full post on the blog */
     url: z.string().url(),
-  }),
-});
-
-/**
- * Uses Collection
- * 
- * Documentation of tools, technologies, and environment used in development workflow.
- * 
- * Features:
- * - Three categories (tools, stack, environment)
- * - Items with name, description, and optional URL
- * - Custom order for intentional presentation
- */
-const usesCollection = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/uses' }),
-  schema: z.object({
-    /** Category for grouping */
-    category: z.enum(['tools', 'stack', 'environment']),
-    
-    /** List of items in this category */
-    items: z.array(z.object({
-      name: z.string(),
-      description: z.string(),
-      url: z.string().url().optional(),
-    })),
-    
-    /** Sort order within category */
-    order: z.number(),
   }),
 });
 
@@ -383,7 +357,6 @@ export const collections = {
   decisions: decisionsCollection,
   journey: journeyCollection,
   writing: writingCollection,
-  uses: usesCollection,
   speaking: speakingCollection,
   testimonials: testimonialsCollection,
 };

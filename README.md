@@ -88,36 +88,6 @@ npm run dev
 
 Your site is now running at [http://localhost:4321](http://localhost:4321)
 
-## Documentation
-
-Full documentation is available in the [`docs/`](./docs/) folder:
-
-### Getting Started
-- [Installation](./docs/01-getting-started/installation.md), Prerequisites and setup
-- [Quick Start](./docs/01-getting-started/quick-start.md), See results in 5 minutes
-- [Project Structure](./docs/01-getting-started/project-structure.md), Understand the codebase
-
-### Configuration
-- [Configuration](./docs/02-configuration/configuration.md), Environment variables, navigation, favicons
-
-### Content
-- [Content Guide](./docs/03-content/content-guide.md), All content types and schemas
-- [Templates](./docs/03-content/templates.md), Copy-paste templates for quick content creation
-- [Images](./docs/03-content/images.md), Image handling and optimization
-- [Content Strategy](./docs/03-content/content-strategy.md), Best practices for featured content
-
-### Customization
-- [Styling](./docs/04-customization/styling.md), Colors, typography, spacing, breakpoints
-- [Components](./docs/04-customization/components.md), Modifying and creating components
-- [Advanced](./docs/04-customization/advanced.md), Layouts, new content collections
-
-### Deployment
-- [Deployment](./docs/05-deployment/deployment.md), Build and deploy to various platforms
-- [Post-Deployment](./docs/05-deployment/post-deployment.md), Verification checklist
-
-### Reference
-- [Troubleshooting](./docs/06-reference/troubleshooting.md), Common issues and solutions
-
 ## License
 
 Case Theme is free for personal and commercial use under the [MIT License](./LICENSE). Attribution is not required, but a link back to this repository is always appreciated if you find the theme useful.

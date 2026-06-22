@@ -10,8 +10,7 @@
  *
  * Author the left column with the editorial primitives (<Typography>, <Button>)
  * and the right column with whatever supporting content fits; the right column
- * stacks its children vertically. (A temporary <HeroPlaceholder slot="aside" />
- * currently fills the right column on pages awaiting their real aside content.)
+ * stacks its children vertically.
  *
  * Used as the homepage banner and as a promotional banner on secondary pages
  * (e.g. promoting the Mise en Mode book, the Wireframe show, or Cal.com booking).
@@ -25,7 +24,7 @@
  * ```astro
  * <Hero>
  *   <Typography tagName="h2">Now in print: <em>Mise en Mode</em></Typography>
- *   <HeroPlaceholder slot="aside" />
+ *   <Media slot="aside" src="/cover.png" alt="Book cover" />
  * </Hero>
  * ```
  */
@@ -37,6 +36,8 @@ const hasAside = Astro.slots.has("aside");
 ---
 
 <section class="hero">
+  
+
   {
     hasAside && (
       <div class="hero-media">
@@ -52,22 +53,23 @@ const hasAside = Astro.slots.has("aside");
 
 <style>
   .hero {
-    padding: 32px 0;
-    border-bottom: 1px solid currentColor;
-    margin-bottom: 32px;
-    display: flex;
-    flex-flow: row-reverse wrap;
-    justify-content: space-between;
+    margin-block: 32px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     align-items: center;
-    gap: 40px;
     font-size: 1.4em;
   }
 
-  .hero-media {
-    margin: auto;
+  .hero-content {
+    grid-column: 1 / -3;
+    grid-row: 1;
+    isolation: isolate;
   }
 
-  .hero-content {
-    flex-basis: 30ch;
+  .hero-media {
+    grid-row: 1;
+    grid-column: 2 / -1;
+    display: flex;
+    justify-content: end;
   }
 </style>

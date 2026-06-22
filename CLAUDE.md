@@ -64,7 +64,6 @@ All content is MDX in `src/content/<collection>/`, validated by Zod. Collections
   short summaries linking to the full posts on `blog.damato.design`.
 - **speaking** — `title, description, event, eventUrl?, date, location, type(conference|
   meetup|podcast|workshop|webinar), slides?, video?, duration?, topics?, featured`.
-- **uses** — `category(tools|stack|environment), items[{name, description, url?}], order`.
 - **testimonials** — `name, role, company, relationship, quote, linkedin?, featured, date`.
 
 Cross-references (`relatedProjects`/`relatedDecisions`) use the file slug (filename without
@@ -74,7 +73,7 @@ update both sides when renaming/deleting.
 ### Pages, layouts, components
 - `src/pages/` — `index.astro` (home), `projects/`, `decisions/`, `journey.astro`,
   `writing/[...page].astro` (paginated, 5/page) + `writing/[slug].astro`, `speaking.astro`,
-  `uses.astro`, `contact.astro`, `404.astro`, `robots.txt.ts`.
+  `contact.astro`, `404.astro`, `robots.txt.ts`.
 - `src/layouts/` — `BaseLayout` (the only layout; the theme's unused `ArticleLayout`/
   `CaseStudyLayout` were removed).
 - `src/styles/` — `global.css` (CSS custom-property design tokens like `--color-bg`,
@@ -141,10 +140,14 @@ Reusable two-column promo banner: left = value statement (default slot); right =
 are `compact` and `divider`.
 
 - `.hero-right` is a flex column, so multiple slotted items stack with gap.
-- The former `HeroCard` has been **removed**; a temporary `HeroPlaceholder` fills the aside
-  on home, writing, and speaking until the real replacement content is built.
-- Used on: home, writing (Mise en Mode book promo copy), speaking (Wireframe promo copy),
-  contact (single-column, Cal.com CTA).
+- The former `HeroCard` and the temporary `HeroPlaceholder` have both been **removed**; the
+  aside now holds real content (the `Media` component on home/speaking, the `<mode-book>` web
+  component on writing).
+- Used on **every top-level nav page** (always placed first, before the page header): home
+  (`Media` portrait), writing (Mise en Mode book promo + `<mode-book>` embed), speaking
+  (Wireframe promo + `Media` sizzle video), and single-column value-statement heroes on
+  projects (Cal.com/contact CTA), decisions (Mise en Mode CTA), journey (contact CTA), and
+  contact (Cal.com CTA).
 - On secondary pages the hero is placed **first** and its heading is an `h2` so the page's
   real `<h1>` (its header) stays the single document h1.
 
@@ -155,7 +158,7 @@ are `compact` and `divider`.
 - **Dates must match Donnie's LinkedIn résumé** (the source of truth for employment dates).
 - **No "DS Events" mentions** — that project was intentionally removed from the site.
 - Some content is **inferred/fabricated to fill the theme's IA** and is *not* published fact:
-  project `impact.metrics`, the `decisions`, `uses`, and `testimonials` collections, and
+  project `impact.metrics`, the `decisions` and `testimonials` collections, and
   writing `publishDate`s. Testimonials use **non-identifying composite names** on purpose
   (don't attribute invented quotes to real, named people). Treat these as placeholders;
   prefer real data when available, and don't add fabricated quantitative claims beyond the

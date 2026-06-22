@@ -35,7 +35,6 @@ import FeaturedBadge from '@components/FeaturedBadge.astro';
 import Label from '@components/Label.astro';
 import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
-import PageContainer from '@components/PageContainer.astro';
 import PageHeader from '@components/PageHeader.astro';
 import Hero from '@components/Hero.astro';
 import Media from '@components/Media.astro';
@@ -108,7 +107,6 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
     type="website"
   />
 
-  <PageContainer>
     <Hero>
       <Typography tagName="h2">Catch me live on <em>Wireframe</em></Typography>
       <Typography tagName="p">A weekday live show: candid design talk, new approaches, and the occasional spicy hot take with guests from the community.</Typography>
@@ -196,5 +194,4 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
     ) : (
       <p class="empty-state">No speaking engagements yet.</p>
     )}
-  </PageContainer>
 </BaseLayout>

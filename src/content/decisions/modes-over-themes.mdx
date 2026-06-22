@@ -26,6 +26,10 @@ alternatives:
       - "Requires tooling/mental model for scoping"
       - "Eventual-consistency of meaning within scopes"
 reasoning: "Moving semantic responsibility from tokens to scopes resolves the tension between expression and consistency. A boxed region becomes a place for a new expression by receiving new values for the same semantic tokens, no new tokens required, so the system stays bounded and coherent."
+whyItMattered: >-
+  Mise en Mode reframed the question from "what token do I add?" to "what scope
+  receives a new expression?" That shift is what lets a system stay consistent
+  and still feel expressive where it counts.
 tags:
   - "design-tokens"
   - "theming"
@@ -36,7 +40,3 @@ relatedProjects:
 relatedDecisions:
   - "semantic-intent-tokens"
 ---
-
-## Why it mattered
-
-Mise en Mode reframed the question from "what token do I add?" to "what scope receives a new expression?" That shift is what lets a system stay consistent and still feel expressive where it counts.

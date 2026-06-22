@@ -28,9 +28,11 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import TimelineEntry from '@components/TimelineEntry.astro';
-import PageContainer from '@components/PageContainer.astro';
 import PageHeader from '@components/PageHeader.astro';
+import Hero from '@components/Hero.astro';
 import Typography from '@components/Typography.astro';
+import Button from '@components/Button.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
 import { mdxComponents } from '@components/mdxComponents';
 import { getCollection, render } from 'astro:content';
 import { pagesConfig } from '../pages.config';
@@ -79,7 +81,14 @@ const entriesWithContent = await Promise.all(
     type="website"
   />
 
-  <PageContainer>
+    <Hero>
+      <Typography tagName="h2">Two decades in, <em>still learning out loud</em></Typography>
+      <Typography tagName="p">From making creative interactions to architecting design systems and teaching others to do the same. If the path resonates, I'd love to hear from you.</Typography>
+      <ButtonGroup>
+        <Button href="/contact" variant="primary">Let's connect</Button>
+      </ButtonGroup>
+    </Hero>
+
     <PageHeader>
       <Typography tagName="h1">{pagesConfig.journey.heading}</Typography>
       <Typography tagName="p">{pagesConfig.journey.intro}</Typography>
@@ -103,11 +112,4 @@ const entriesWithContent = await Promise.all(
     ) : (
       <p class="empty-state">No journey entries yet.</p>
     )}
-  </PageContainer>
-
-  <style>
-    .journey-timeline {
-      margin-top: 2rem;
-    }
-  </style>
 </BaseLayout>

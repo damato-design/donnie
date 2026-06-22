@@ -29,8 +29,8 @@ import FeaturedBadge from '@components/FeaturedBadge.astro';
 import Label from '@components/Label.astro';
 import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
-import PageContainer from '@components/PageContainer.astro';
 import PageHeader from '@components/PageHeader.astro';
+import Hero from '@components/Hero.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
 import { statusConfig } from '@utils/cards';
@@ -83,7 +83,14 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
     type="website"
   />
 
-  <PageContainer>
+    <Hero>
+      <Typography tagName="h2">Got a hard problem? <em>Let's build the system</em></Typography>
+      <Typography tagName="p">Every case study here started as someone's tangled, unscalable mess. If that sounds familiar, let's talk it through.</Typography>
+      <ButtonGroup>
+        <Button href="/contact" variant="primary">Work with me</Button>
+      </ButtonGroup>
+    </Hero>
+
     <PageHeader>
       <Typography tagName="h1">{pagesConfig.projects.heading}</Typography>
       <Typography tagName="p">{pagesConfig.projects.intro}</Typography>
@@ -114,5 +121,4 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
         </li>
       ))}
     </CardList>
-  </PageContainer>
 </BaseLayout>

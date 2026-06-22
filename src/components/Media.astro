@@ -16,6 +16,11 @@
  * to opt out. Any other valid attribute (loading, width, height, autoplay,
  * loop, muted, poster, ...) is forwarded to the rendered element.
  *
+ * Pass `ratio` to lock the media into a fixed aspect-ratio box: the media is
+ * scaled to fit (without cropping) and centered both ways inside that box. The
+ * value is any CSS `aspect-ratio` (e.g. `"16/9"`, `"1/1"`, or a number). Without
+ * `ratio` the media keeps its own intrinsic dimensions.
+ *
  * @component
  *
  * @example
@@ -23,6 +28,7 @@
  * <Media src="/assets/cover.png" alt="Book cover" />
  * <Media src="/media/talk.mp4" alt="Conference talk" poster="/media/talk.jpg" />
  * <Media src="/media/episode.mp3" alt="Podcast episode" />
+ * <Media src="/media/sizzle.webm" alt="Sizzle reel" ratio="16/9" />
  * ```
  */
 
@@ -33,11 +39,16 @@ interface Props {
   alt?: string;
   /** Show native controls on video/audio (default: true; ignored for images). */
   controls?: boolean;
+  /**
+   * CSS aspect-ratio for a frame the media is centered and contained within
+   * (e.g. "16/9", "1/1", 1.5). Omit to use the media's intrinsic size.
+   */
+  ratio?: string | number;
   /** Any other valid attribute, forwarded to the rendered element. */
   [key: string]: unknown;
 }
 
-const { src, alt = '', controls = true, ...rest } = Astro.props;
+const { src, alt = '', controls = true, ratio, ...rest } = Astro.props;
 
 const ext = src.split(/[?#]/)[0].split('.').pop()?.toLowerCase() ?? '';
 
@@ -45,21 +56,21 @@ const VIDEO = ['mp4', 'webm', 'ogv', 'mov', 'm4v'];
 const AUDIO = ['mp3', 'wav', 'ogg', 'oga', 'm4a', 'aac', 'flac'];
 
 const kind = VIDEO.includes(ext) ? 'video' : AUDIO.includes(ext) ? 'audio' : 'image';
+
+const Tag = kind === 'image' ? 'img' : kind;
+const mediaAttrs =
+  kind === 'image'
+    ? { src, alt }
+    : { src, controls, 'aria-label': alt || undefined };
 ---
 
 {
-  kind === 'image' && (
-    <img class="media" src={src} alt={alt} {...rest} />
-  )
-}
-{
-  kind === 'video' && (
-    <video class="media" src={src} controls={controls} aria-label={alt || undefined} {...rest} />
-  )
-}
-{
-  kind === 'audio' && (
-    <audio class="media" src={src} controls={controls} aria-label={alt || undefined} {...rest} />
+  ratio != null ? (
+    <div class="media-frame" style={`aspect-ratio: ${ratio};`}>
+      <Tag class="media" {...mediaAttrs} {...rest} />
+    </div>
+  ) : (
+    <Tag class="media" {...mediaAttrs} {...rest} />
   )
 }
 
@@ -76,5 +87,25 @@ const kind = VIDEO.includes(ext) ? 'video' : AUDIO.includes(ext) ? 'audio' : 'im
 
   audio.media {
     width: 100%;
+  }
+
+  /* Aspect-ratio frame: hold the box, center + contain the media inside it. */
+  .media-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .media-frame .media {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .media-frame img.media,
+  .media-frame video.media {
+    height: auto;
+    object-fit: contain;
   }
 </style>

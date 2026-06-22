@@ -39,6 +39,7 @@ import StructuredData from '@components/StructuredData.astro';
 import ForwardLink from '@components/ForwardLink.astro';
 import Testimonials from '@components/Testimonials.astro';
 import Hero from '@components/Hero.astro';
+import PageHeader from '@components/PageHeader.astro';
 import Media from '@components/Media.astro';
 import Card from '@components/Card.astro';
 import CardList from '@components/CardList.astro';
@@ -75,8 +76,6 @@ const recentDecisions = allDecisions
   <!-- Structured Data for Homepage -->
   <StructuredData type="WebSite" />
   <StructuredData type="Person" />
-
-  <main class="home-page">
     <!-- CASE-FIRST HERO -->
     <Hero>
       <Typography tagName="h1">Donnie <br/> D'Amato</Typography>
@@ -89,7 +88,7 @@ const recentDecisions = allDecisions
     </Hero>
 
     <!-- Introduction -->
-    <section class="introduction">
+    <PageHeader>
       <Typography tagName="p">
         Hey, I'm {siteConfig.author.name}, a {siteConfig.author.title.toLowerCase()} with a background in UX design, front-end engineering, and higher education. I build systems that aren't just component libraries, they're strategic frameworks that turn chaos into cohesion.
       </Typography>
@@ -97,7 +96,7 @@ const recentDecisions = allDecisions
         Every major decision is documented, because the best design systems don't just scale products, they scale people too.
       </Typography>
       <ForwardLink href="/journey" text="Read my journey" />
-    </section>
+    </PageHeader>
 
     <!-- Recent Decisions -->
     <section class="recent-decisions">
@@ -147,24 +146,4 @@ const recentDecisions = allDecisions
         <Button href="/contact" variant="secondary">Get in Touch</Button>
       </ButtonGroup>
     </section>
-  </main>
-
-  <style>
-    .home-page {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0 1.5rem 4rem;
-    }
-
-    .recent-decisions {
-      margin-bottom: 5rem;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 2rem;
-    }
-  </style>
 </BaseLayout>

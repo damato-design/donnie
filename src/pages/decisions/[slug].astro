@@ -35,6 +35,7 @@ import { mdxComponents } from '@components/mdxComponents';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 import { formatLongDate } from '@utils/formatDate';
+import { renderInlineMarkdown } from '@utils/markdown';
 
 /**
  * Generates static paths for all decision entries
@@ -63,6 +64,7 @@ const { decision } = Astro.props;
 const { Content } = await render(decision);
 
 const formattedDate = formatLongDate(decision.data.date);
+const whyItMatteredHtml = await renderInlineMarkdown(decision.data.whyItMattered);
 ---
 
 <BaseLayout>
@@ -73,7 +75,6 @@ const formattedDate = formatLongDate(decision.data.date);
     type="article"
   />
 
-  <main class="decision-page">
     <article class="decision-content">
       <header class="decision-header">
         <time class="decision-date" datetime={decision.data.date.toISOString()}>
@@ -137,6 +138,10 @@ const formattedDate = formatLongDate(decision.data.date);
         <Typography tagName="p">{decision.data.reasoning}</Typography>
       </Section>
 
+      <Section title="Why it mattered">
+        <Typography tagName="p"><Fragment set:html={whyItMatteredHtml} /></Typography>
+      </Section>
+
       {decision.body && decision.body.trim().length > 0 && (
         <section class="decision-body prose">
           <Content components={mdxComponents} />
@@ -150,11 +155,12 @@ const formattedDate = formatLongDate(decision.data.date);
 
       <BackLink href="/decisions" text="All decisions" />
     </article>
-  </main>
-
   <ScrollToTop />
 
-  <style>
+  
+</BaseLayout>
+
+<style>
     .decision-page {
       max-width: 800px;
       margin: 0 auto;
@@ -275,4 +281,3 @@ const formattedDate = formatLongDate(decision.data.date);
     }
 
   </style>
-</BaseLayout>

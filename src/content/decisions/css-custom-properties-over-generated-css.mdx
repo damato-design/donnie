@@ -28,6 +28,11 @@ alternatives:
       - "Requires a baseline of modern browser support"
       - "Runtime, not build-time, resolution"
 reasoning: "CSS Custom Properties had become broadly supported, making it possible to retheme a single stylesheet at runtime. This collapsed the file-generation pipeline and made brand, locale, and accessibility variations a matter of swapping values rather than rebuilding stylesheets."
+whyItMattered: >-
+  The old approach treated every brand and locale as a new build artifact.
+  Custom Properties reframed theming as data: define the variables once, swap
+  their values per context, and let the cascade do the work. It's the foundation
+  everything else at GoDaddy's UXCore was built on.
 tags:
   - "css"
   - "theming"
@@ -37,7 +42,3 @@ relatedProjects:
 relatedDecisions:
   - "semantic-intent-tokens"
 ---
-
-## Why it mattered
-
-The old approach treated every brand and locale as a new build artifact. Custom Properties reframed theming as data: define the variables once, swap their values per context, and let the cascade do the work. It's the foundation everything else at GoDaddy's UXCore was built on.

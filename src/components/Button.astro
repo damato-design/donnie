@@ -35,8 +35,6 @@ interface Props {
   href?: string;
   /** Visual style. */
   variant?: 'primary' | 'secondary';
-  /** Compact sizing (e.g. pagination controls). */
-  size?: 'md' | 'sm';
   /** Open link in a new tab. */
   external?: boolean;
   /** Disabled state (non-interactive). */
@@ -52,7 +50,6 @@ interface Props {
 const {
   href,
   variant = 'primary',
-  size = 'md',
   external = false,
   disabled = false,
   arrow = false,
@@ -74,7 +71,7 @@ const tagAttrs =
   class:list={[
     'btn',
     `btn--${variant}`,
-    { 'btn--sm': size === 'sm', 'btn--disabled': disabled },
+    { 'btn--disabled': disabled },
   ]}
   {...tagAttrs}
   {...rest}
@@ -98,30 +95,16 @@ const tagAttrs =
       background 0.2s ease;
   }
 
-  .btn--sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-  }
-
   .btn--primary {
     background: contrast-color(var(--color-bg));
     color: var(--color-bg);
     border-color: contrast-color(var(--color-bg));
   }
 
-  .btn--primary:hover:not(.btn--disabled) {
-    opacity: 0.85;
-  }
-
   .btn--secondary {
     background: transparent;
     color: currentColor;
     border-color: currentColor;
-  }
-
-  .btn--secondary:hover:not(.btn--disabled) {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
   }
 
   .btn--disabled {

@@ -26,6 +26,12 @@ alternatives:
       - "Rows of labels need a separator to stay legible"
       - "Color-only distinctions must be paired with text for accessibility"
 reasoning: "If everything is a box, nothing signals interactivity. Stripping the chrome from labels keeps the real controls (links and buttons) visually distinct, and a single text-based primitive keeps tags, type labels, status, and 'featured' consistent across the site. Color-coded labels always carry their own text, so meaning never rests on color alone."
+whyItMattered: >-
+  A label and a button that look identical force the user to guess, the
+  "Schrödinger's button" problem: its state is unknowable until you interact
+  with it. Removing the chip chrome resolves the guess by letting only
+  interactive elements carry interactive affordances. The reasoning is laid out
+  in [Chip away](https://blog.damato.design/posts/chip-away/).
 tags:
   - "accessibility"
   - "affordance"
@@ -34,7 +40,3 @@ relatedProjects:
   - "damatods"
 relatedDecisions: []
 ---
-
-## Why it mattered
-
-A label and a button that look identical force the user to guess, the "Schrödinger's button" problem: its state is unknowable until you interact with it. Removing the chip chrome resolves the guess by letting only interactive elements carry interactive affordances. The reasoning is laid out in [Chip away](https://blog.damato.design/posts/chip-away/).

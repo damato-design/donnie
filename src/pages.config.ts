@@ -109,16 +109,6 @@ export const pagesConfig = {
   },
 
   /**
-   * Uses/tools page (/uses)
-   */
-  uses: {
-    title: 'Uses - Tools, Stack & Environment',
-    description: 'The tools, technologies, and environment I use to build design systems and the work around them.',
-    heading: 'Uses',
-    intro: 'A transparent look at the tools, technologies, and environment behind my design systems work and the community projects around it, what I use and why.',
-  },
-
-  /**
    * Contact page (/contact)
    */
   contact: {

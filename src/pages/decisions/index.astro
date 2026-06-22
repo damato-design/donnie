@@ -27,8 +27,8 @@ import ButtonGroup from '@components/ButtonGroup.astro';
 import Button from '@components/Button.astro';
 import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
-import PageContainer from '@components/PageContainer.astro';
 import PageHeader from '@components/PageHeader.astro';
+import Hero from '@components/Hero.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
 import { formatMonthYear } from '@utils/formatDate';
@@ -64,7 +64,14 @@ const totalDecisions = sortedDecisions.length;
     type="website"
   />
 
-  <PageContainer>
+    <Hero>
+      <Typography tagName="h2">The reasoning, in book form: <em>Mise en Mode</em></Typography>
+      <Typography tagName="p">These decisions trace the same first principles I wrote a whole book about: stop adding tokens, start expressing modes.</Typography>
+      <ButtonGroup>
+        <Button href="https://mode.place" variant="primary" external>Read the book</Button>
+      </ButtonGroup>
+    </Hero>
+
     <PageHeader>
       <Typography tagName="h1">{pagesConfig.decisions.heading}</Typography>
       <Typography tagName="p">{pagesConfig.decisions.intro}</Typography>
@@ -88,5 +95,4 @@ const totalDecisions = sortedDecisions.length;
         </li>
       ))}
     </CardList>
-  </PageContainer>
 </BaseLayout>
