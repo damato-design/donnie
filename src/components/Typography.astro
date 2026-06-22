@@ -33,22 +33,15 @@
  * ```
  */
 
-/** Font-size scale keys, mirroring the `--font-size-*` tokens. */
-export type TypographySize =
-  | 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl';
-
 interface Props {
   /** The underlying HTML element. Defaults to `p`. */
   tagName?: keyof astroHTML.JSX.IntrinsicElements;
-  /** Visual size, decoupled from the element. Omit to use the element default. */
-  size?: TypographySize;
   /** Any other valid attributes for the chosen element (href, datetime, id, ...). */
   [key: string]: unknown;
 }
 
 const {
   tagName = 'p',
-  size,
   ...rest
 } = Astro.props;
 
@@ -57,10 +50,7 @@ const blockElements = ['p', 'h2', 'h3', 'h4', 'h5', 'h6', 'li'];
 const shouldWrap = blockElements.includes(Tag);
 ---
 
-<Tag
-  data-size={size}
-  {...rest}
->
+<Tag {...rest}>
     {shouldWrap ? <span class="inline"><slot /></span> : <slot />}
 </Tag>
 
@@ -77,18 +67,6 @@ const shouldWrap = blockElements.includes(Tag);
     padding-block: 1rem;
     filter: url(#longshadow);
   }
-
-  /* Decoupled size scale: set only when `size` is passed, otherwise the element
-     keeps its default size from the global stylesheet. */
-  [data-size="xs"]   { font-size: var(--font-size-xs); }
-  [data-size="sm"]   { font-size: var(--font-size-sm); }
-  [data-size="base"] { font-size: var(--font-size-base); }
-  [data-size="lg"]   { font-size: var(--font-size-lg); }
-  [data-size="xl"]   { font-size: var(--font-size-xl); }
-  [data-size="2xl"]  { font-size: var(--font-size-2xl); }
-  [data-size="3xl"]  { font-size: var(--font-size-3xl); }
-  [data-size="4xl"]  { font-size: var(--font-size-4xl); }
-  [data-size="5xl"]  { font-size: var(--font-size-5xl); }
 
   /* Prose flow context: top spacing between sections (headings have no
      top-margin by default so they stay usable in UI). */
