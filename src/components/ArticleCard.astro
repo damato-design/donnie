@@ -1,18 +1,18 @@
 ---
 /**
  * ArticleCard Component
- * 
+ *
  * Displays a blog/writing entry in a card format with metadata, title, description, and tags.
- * Extends BaseCard component with article-specific formatting and automatically generates
- * links to the full article page.
- * 
+ * Extends BaseCard with article-specific formatting. Articles live on the blog, so the card
+ * links out to the full post on blog.damato.design.
+ *
  * @component
- * 
+ *
  * @example
  * ```astro
  * <ArticleCard
  *   title="Getting Started with Astro"
- *   slug="getting-started-astro"
+ *   href="https://blog.damato.design/posts/getting-started-astro"
  *   description="Learn how to build fast websites with Astro"
  *   publishDate={new Date('2024-01-15')}
  *   tags={['astro', 'web-development', 'tutorial']}
@@ -27,24 +27,24 @@ import { formatLongDate } from '@utils/formatDate';
 interface Props {
   /** Article title (displayed as card heading) */
   title: string;
-  
-  /** URL slug for the article (used to generate /writing/{slug} link) */
-  slug: string;
-  
+
+  /** Full URL to the article on the blog */
+  href: string;
+
   /** Brief description or excerpt of the article */
   description: string;
-  
+
   /** Publication date (formatted as "Month Day, Year") */
   publishDate: Date;
-  
+
   /** Optional array of tags/categories for the article */
   tags?: string[];
 }
 
-const { title, slug, description, publishDate, tags = [] } = Astro.props;
+const { title, href, description, publishDate, tags = [] } = Astro.props;
 ---
 
-<BaseCard href={`/writing/${slug}`} ctaText="Read article" class="article-card">
+<BaseCard href={href} external ctaText="Read on blog" class="article-card">
   <Fragment slot="meta">{formatLongDate(publishDate)}</Fragment>
   <Fragment slot="title">{title}</Fragment>
   <Fragment slot="description">{description}</Fragment>

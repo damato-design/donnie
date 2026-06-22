@@ -48,9 +48,7 @@ import type { GetStaticPaths } from 'astro';
 export const getStaticPaths: GetStaticPaths = async () => {
   const postsPerPage = 5;
   
-  const allArticles = await getCollection('writing', ({ data }) => {
-    return data.draft === false;
-  });
+  const allArticles = await getCollection('writing');
 
   // Sort by publishDate (descending - most recent first)
   const sortedArticles = allArticles.sort((a, b) => {
@@ -144,7 +142,7 @@ const pageTitle = currentPage === 1
         {articles.map((article) => (
           <ArticleCard
             title={article.data.title}
-            slug={article.id}
+            href={article.data.url}
             description={article.data.description}
             publishDate={article.data.publishDate}
             tags={article.data.tags}

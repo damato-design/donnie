@@ -192,34 +192,61 @@ const journeyCollection = defineCollection({
 
 /**
  * Writing (Blog) Collection
- * 
- * Blog posts and technical articles with MDX support.
- * 
- * Features:
- * - Draft mode for unpublished content
- * - Publish and update dates
- * - Optional tags for categorization
+ *
+ * Articles are not authored locally. They are pulled at build time from the
+ * blog's "standard site" feed (https://blog.damato.design/standard-site.json)
+ * and surfaced here as previews that link out to the full posts on the blog.
+ *
+ * The feed shape is `{ siteUrl, documents: [{ slug, title, description,
+ * publishedAt, tags, ... }] }`. We map each document to a collection entry
+ * (keyed by slug) and pre-compute the canonical post `url`.
  */
+const BLOG_FEED_URL = 'https://blog.damato.design/standard-site.json';
+
 const writingCollection = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/writing' }),
+  loader: async () => {
+    const response = await fetch(BLOG_FEED_URL);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch blog feed (${BLOG_FEED_URL}): ${response.status} ${response.statusText}`
+      );
+    }
+
+    const { siteUrl, documents } = (await response.json()) as {
+      siteUrl: string;
+      documents: Array<{
+        slug: string;
+        title: string;
+        description: string;
+        publishedAt: string;
+        tags?: string[];
+      }>;
+    };
+
+    return documents.map((doc) => ({
+      id: doc.slug,
+      title: doc.title,
+      description: doc.description,
+      publishDate: doc.publishedAt,
+      tags: doc.tags ?? [],
+      url: `${siteUrl}/posts/${doc.slug}`,
+    }));
+  },
   schema: z.object({
     /** Article title */
     title: z.string(),
-    
+
     /** Article description for SEO and previews */
     description: z.string(),
-    
+
     /** Original publication date */
     publishDate: z.coerce.date(),
-    
-    /** Last updated date (optional) */
-    updatedDate: z.coerce.date().optional(),
-    
+
     /** Tags for categorization */
     tags: z.array(z.string()).optional(),
-    
-    /** Whether the article is a draft (hidden from production) */
-    draft: z.boolean().default(false),
+
+    /** Canonical URL of the full post on the blog */
+    url: z.string().url(),
   }),
 });
 
