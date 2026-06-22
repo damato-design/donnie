@@ -27,6 +27,7 @@ import { Resvg } from '@resvg/resvg-js';
 import juice from 'juice';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import OgImage from '../components/OgImage.astro';
+import LongShadow from '../components/LongShadow.astro';
 import ogImageCss from '../components/OgImage.css?raw';
 
 const assetsDir = join(process.cwd(), 'src/assets');
@@ -37,34 +38,18 @@ const TITLE_SENTINEL = '#ff00ff';
 const TITLE_FILL = '#ffffff';
 
 /**
- * The site's `#longshadow` filter (mirrors src/components/LongShadow.astro),
- * serialized inline so resvg can resolve it. A widened filter region keeps the
- * diagonal extrusion from being clipped.
+ * The site's `#longshadow` filter, rendered from `LongShadow.astro` so it is
+ * defined in exactly one place. resvg supports the underlying filter
+ * primitives; the component carries a widened filter region so the diagonal
+ * extrusion isn't clipped. Memoized per process (the markup is static).
  */
-const LONGSHADOW_FILTER =
-  '<filter id="longshadow" x="-20%" y="-20%" width="140%" height="140%">' +
-  '<feMorphology in="SourceGraphic" operator="dilate" radius="2" result="expand"/>' +
-  '<feOffset in="expand" dx="1" dy="1" result="shadow_1"/>' +
-  '<feOffset in="expand" dx="2" dy="2" result="shadow_2"/>' +
-  '<feOffset in="expand" dx="3" dy="3" result="shadow_3"/>' +
-  '<feOffset in="expand" dx="4" dy="4" result="shadow_4"/>' +
-  '<feOffset in="expand" dx="5" dy="5" result="shadow_5"/>' +
-  '<feOffset in="expand" dx="6" dy="6" result="shadow_6"/>' +
-  '<feOffset in="expand" dx="7" dy="7" result="shadow_7"/>' +
-  '<feMerge result="shadow">' +
-  '<feMergeNode in="expand"/><feMergeNode in="shadow_1"/><feMergeNode in="shadow_2"/>' +
-  '<feMergeNode in="shadow_3"/><feMergeNode in="shadow_4"/><feMergeNode in="shadow_5"/>' +
-  '<feMergeNode in="shadow_6"/><feMergeNode in="shadow_7"/>' +
-  '</feMerge>' +
-  '<feFlood flood-color="#000"/>' +
-  '<feComposite in2="shadow" operator="in" result="shadow"/>' +
-  '<feMorphology operator="dilate" radius="1" result="border"/>' +
-  '<feFlood flood-color="#000"/>' +
-  '<feComposite in2="border" operator="in" result="border"/>' +
-  '<feMerge>' +
-  '<feMergeNode in="border"/><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/>' +
-  '</feMerge>' +
-  '</filter>';
+let filterPromise: Promise<string> | undefined;
+function loadLongshadowFilter(container: AstroContainer): Promise<string> {
+  if (!filterPromise) {
+    filterPromise = container.renderToString(LongShadow).then((s) => s.trim());
+  }
+  return filterPromise;
+}
 
 /**
  * Splice the long-shadow filter into a satori-produced SVG and apply it to the
@@ -73,8 +58,8 @@ const LONGSHADOW_FILTER =
  * group and swap the sentinel for the real glyph fill. Other groups are left
  * untouched. (Groups aren't nested, so the per-group regex is unambiguous.)
  */
-function applyLongShadow(svg: string): string {
-  const withDefs = svg.replace(/(<svg\b[^>]*>)/, `$1<defs>${LONGSHADOW_FILTER}</defs>`);
+function applyLongShadow(svg: string, filter: string): string {
+  const withDefs = svg.replace(/(<svg\b[^>]*>)/, `$1<defs>${filter}</defs>`);
   return withDefs.replace(/<g\b[^>]*>((?:(?!<\/g>)[\s\S])*)<\/g>/g, (match, inner) => {
     if (!inner.includes(TITLE_SENTINEL)) return match;
     return `<g filter="url(#longshadow)">${inner.split(TITLE_SENTINEL).join(TITLE_FILL)}</g>`;
@@ -145,6 +130,7 @@ export async function renderOgPng({
     loadPortrait(),
     loadFonts(),
   ]);
+  const filter = await loadLongshadowFilter(container);
 
   const html = await container.renderToString(OgImage, {
     props: { title, description, portrait: PORTRAIT_PLACEHOLDER, wordmark: 'donnie.damato.design' },
@@ -170,7 +156,7 @@ export async function renderOgPng({
   setImgSrc(markup, portrait);
 
   const svg = await satori(markup, { width: 1200, height: 630, fonts });
-  return new Resvg(applyLongShadow(svg)).render().asPng();
+  return new Resvg(applyLongShadow(svg, filter)).render().asPng();
 }
 
 export const ogResponseHeaders = {

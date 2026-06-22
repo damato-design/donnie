@@ -1,37 +1,47 @@
-<svg width='0' height='0'>
-  <filter id='longshadow'>
-    <feMorphology in='SourceGraphic' operator='dilate' radius='2' result='expand'/>
+<!--
+  LongShadow
 
-    <feOffset in='expand' dx='1' dy='1' result='shadow_1'/>
-    <feOffset in='expand' dx='2' dy='2' result='shadow_2'/>
-    <feOffset in='expand' dx='3' dy='3' result='shadow_3'/>
-    <feOffset in='expand' dx='4' dy='4' result='shadow_4'/>
-    <feOffset in='expand' dx='5' dy='5' result='shadow_5'/>
-    <feOffset in='expand' dx='6' dy='6' result='shadow_6'/>
-    <feOffset in='expand' dx='7' dy='7' result='shadow_7'/>
+  The site's `#longshadow` SVG filter, in isolation (no `<svg>` wrapper). It is
+  applied via CSS (`filter: url(#longshadow)`) by Typography/typography.css, and
+  spliced into satori's output by src/lib/og.ts (which renders this component to
+  a string so the filter is defined in exactly one place).
 
-    <feMerge result='shadow'>
-      <feMergeNode in='expand'/>
-      <feMergeNode in='shadow_1'/>
-      <feMergeNode in='shadow_2'/>
-      <feMergeNode in='shadow_3'/>
-      <feMergeNode in='shadow_4'/>
-      <feMergeNode in='shadow_5'/>
-      <feMergeNode in='shadow_6'/>
-      <feMergeNode in='shadow_7'/>
-    </feMerge>
+  Consumers must place this inside an `<svg>` (BaseLayout wraps it in a
+  zero-size `<svg>`; og.ts wraps it in `<defs>`). The widened filter region
+  (x/y/width/height) keeps the diagonal extrusion from being clipped.
+-->
+<filter id="longshadow" x="-20%" y="-20%" width="140%" height="140%">
+  <feMorphology in="SourceGraphic" operator="dilate" radius="2" result="expand"/>
 
-    <feFlood flood-color='#000'/>
-    <feComposite in2='shadow' operator='in' result='shadow'/>
+  <feOffset in="expand" dx="1" dy="1" result="shadow_1"/>
+  <feOffset in="expand" dx="2" dy="2" result="shadow_2"/>
+  <feOffset in="expand" dx="3" dy="3" result="shadow_3"/>
+  <feOffset in="expand" dx="4" dy="4" result="shadow_4"/>
+  <feOffset in="expand" dx="5" dy="5" result="shadow_5"/>
+  <feOffset in="expand" dx="6" dy="6" result="shadow_6"/>
+  <feOffset in="expand" dx="7" dy="7" result="shadow_7"/>
 
-    <feMorphology operator='dilate' radius='1' result='border'/>
-    <feFlood flood-color='#000'/>
-    <feComposite in2='border' operator='in' result='border'/>
+  <feMerge result="shadow">
+    <feMergeNode in="expand"/>
+    <feMergeNode in="shadow_1"/>
+    <feMergeNode in="shadow_2"/>
+    <feMergeNode in="shadow_3"/>
+    <feMergeNode in="shadow_4"/>
+    <feMergeNode in="shadow_5"/>
+    <feMergeNode in="shadow_6"/>
+    <feMergeNode in="shadow_7"/>
+  </feMerge>
 
-    <feMerge>
-      <feMergeNode in='border'/>
-      <feMergeNode in='shadow'/>
-      <feMergeNode in='SourceGraphic'/>
-    </feMerge>
-  </filter>
-</svg>
+  <feFlood flood-color="#000"/>
+  <feComposite in2="shadow" operator="in" result="shadow"/>
+
+  <feMorphology operator="dilate" radius="1" result="border"/>
+  <feFlood flood-color="#000"/>
+  <feComposite in2="border" operator="in" result="border"/>
+
+  <feMerge>
+    <feMergeNode in="border"/>
+    <feMergeNode in="shadow"/>
+    <feMergeNode in="SourceGraphic"/>
+  </feMerge>
+</filter>
