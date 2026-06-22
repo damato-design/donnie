@@ -21,7 +21,9 @@ interface Props {
   title: string;
   /** Supporting copy below the heading. */
   description: string;
-  /** Portrait image as a base64 data URI (resolved by the renderer). */
+  /** Portrait <img> src. The renderer passes a short placeholder and injects
+   *  the real base64 data URI onto the parsed node afterward (for performance,
+   *  see src/lib/og.ts). */
   portrait: string;
   /** Footer wordmark, e.g. "donnie.damato.design". */
   wordmark: string;

@@ -46,7 +46,11 @@
   font-family: 'BBH Hegarty', sans-serif;
   font-size: 80px;
   line-height: 1.05;
-  color: #262626;
+  /* Sentinel fill. satori can't reference the site's `#longshadow` SVG filter,
+     so the renderer (src/lib/og.ts) post-processes satori's output SVG: it
+     finds the title text by this unique color, swaps it for the real hollow
+     glyph fill, and attaches `filter="url(#longshadow)"`. */
+  color: #ff00ff;
 }
 
 .og-description {
