@@ -21,10 +21,11 @@
  * @page
  */
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import SEO from '../components/SEO.astro';
-import Hero from '../components/Hero.astro';
-import Typography from '../components/Typography.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import Hero from '@components/Hero.astro';
+import Typography from '@components/Typography.astro';
+import Button from '@components/Button.astro';
 import { siteConfig } from '../config';
 import { pagesConfig } from '../pages.config';
 
@@ -54,14 +55,13 @@ const socialLinks = Object.entries(siteConfig.social)
 
   <main class="contact-page">
     <!-- Zone 1: Book a call -->
-    <Hero
-      compact
-      headingLevel={2}
-      title="Prefer to talk it through?"
-      emphasis="Book a time"
-      subtitle="Grab a slot on my calendar and let's talk design systems, theming, or whatever you're working on."
-      primary={{ label: 'Book on Cal.com', href: 'https://cal.com/donnie-damato', external: true }}
-    />
+    <Hero compact>
+      <Typography tagName="h2">Prefer to talk it through? <em>Book a time</em></Typography>
+      <Typography tagName="p" size="lg" variant="secondary">Grab a slot on my calendar and let's talk design systems, theming, or whatever you're working on.</Typography>
+      <div class="hero-cta">
+        <Button href="https://cal.com/donnie-damato" variant="primary" external>Book on Cal.com</Button>
+      </div>
+    </Hero>
 
     <!-- Zone 2: Primary Intent -->
     <section class="primary-zone">

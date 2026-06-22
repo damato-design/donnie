@@ -19,36 +19,36 @@
  * <ScrollToTop />
  * ```
  */
+
+import Button from '@components/Button.astro';
 ---
 
-<button 
-  class="scroll-to-top" 
-  type="button"
+<Button
+  variant="secondary"
+  class="scroll-to-top"
   aria-label="Scroll to top"
   title="Scroll to top"
 >
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <polyline points="18 15 12 9 6 15"></polyline>
   </svg>
-</button>
+</Button>
 
 <style>
-  .scroll-to-top {
+  /* Icon-only FAB: reshapes the Button primitive into a fixed, square control.
+     Element-qualified selectors win specificity over the .btn base rules. */
+  button.scroll-to-top {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
     width: 44px;
     height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 0;
     background: var(--color-bg-elevated);
-    border: 1px solid currentColor;
-    cursor: pointer;
     opacity: 0;
     visibility: hidden;
     transform: translateY(10px);
-    transition: 
+    transition:
       opacity 0.2s ease,
       visibility 0.2s ease,
       transform 0.2s ease,
@@ -58,12 +58,12 @@
     z-index: 50;
   }
 
-  .scroll-to-top:focus-visible {
+  button.scroll-to-top:focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
   }
 
-  .scroll-to-top.is-visible {
+  button.scroll-to-top.is-visible {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);

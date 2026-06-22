@@ -7,8 +7,8 @@
  * Usage:
  * ```astro
  * ---
- * import BaseLayout from '../layouts/BaseLayout.astro';
- * import SEO from '../components/SEO.astro';
+ * import BaseLayout from '@layouts/BaseLayout.astro';
+ * import SEO from '@components/SEO.astro';
  * import { pagesConfig } from '../pages.config';
  * ---
  * 

@@ -23,18 +23,18 @@
  * @page
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import SEO from '../../components/SEO.astro';
-import ScrollToTop from '../../components/ScrollToTop.astro';
-import BackLink from '../../components/BackLink.astro';
-import RelatedContent from '../../components/RelatedContent.astro';
-import Section from '../../components/Section.astro';
-import Label from '../../components/Label.astro';
-import Typography from '../../components/Typography.astro';
-import { mdxComponents } from '../../components/mdxComponents';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import ScrollToTop from '@components/ScrollToTop.astro';
+import BackLink from '@components/BackLink.astro';
+import RelatedContent from '@components/RelatedContent.astro';
+import Section from '@components/Section.astro';
+import Label from '@components/Label.astro';
+import Typography from '@components/Typography.astro';
+import { mdxComponents } from '@components/mdxComponents';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
-import { formatLongDate } from '../../utils/formatDate';
+import { formatLongDate } from '@utils/formatDate';
 
 /**
  * Generates static paths for all decision entries

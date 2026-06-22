@@ -32,19 +32,19 @@
  * @page
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import SEO from '../../components/SEO.astro';
-import StructuredData from '../../components/StructuredData.astro';
-import ScrollToTop from '../../components/ScrollToTop.astro';
-import BackLink from '../../components/BackLink.astro';
-import RelatedContent from '../../components/RelatedContent.astro';
-import ImpactMetrics from '../../components/ImpactMetrics.astro';
-import Section from '../../components/Section.astro';
-import Label from '../../components/Label.astro';
-import Typography from '../../components/Typography.astro';
-import { mdxComponents } from '../../components/mdxComponents';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import StructuredData from '@components/StructuredData.astro';
+import ScrollToTop from '@components/ScrollToTop.astro';
+import BackLink from '@components/BackLink.astro';
+import RelatedContent from '@components/RelatedContent.astro';
+import ImpactMetrics from '@components/ImpactMetrics.astro';
+import Section from '@components/Section.astro';
+import Label from '@components/Label.astro';
+import Typography from '@components/Typography.astro';
+import { mdxComponents } from '@components/mdxComponents';
 import { getCollection, getEntry, render } from 'astro:content';
-import { calculateReadingTime, formatReadingTime } from '../../utils/readingTime';
+import { calculateReadingTime, formatReadingTime } from '@utils/readingTime';
 
 /**
  * Generates static paths for all project entries

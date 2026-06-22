@@ -8,13 +8,13 @@
  * rest (`p`, `ul`, `li`, `blockquote`, `strong`, `img`, `pre`, ...) fall through
  * to the global base typography in `src/styles/typography.css`.
  */
-import ProseLink from './prose/ProseLink.astro';
-import ProseH2 from './prose/ProseH2.astro';
-import ProseH3 from './prose/ProseH3.astro';
-import ProseH4 from './prose/ProseH4.astro';
-import ProseH5 from './prose/ProseH5.astro';
-import ProseH6 from './prose/ProseH6.astro';
-import ProseCode from './prose/ProseCode.astro';
+import ProseLink from '@components/prose/ProseLink.astro';
+import ProseH2 from '@components/prose/ProseH2.astro';
+import ProseH3 from '@components/prose/ProseH3.astro';
+import ProseH4 from '@components/prose/ProseH4.astro';
+import ProseH5 from '@components/prose/ProseH5.astro';
+import ProseH6 from '@components/prose/ProseH6.astro';
+import ProseCode from '@components/prose/ProseCode.astro';
 
 export const mdxComponents = {
   a: ProseLink,

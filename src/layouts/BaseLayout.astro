@@ -24,8 +24,8 @@
  * @example
  * ```astro
  * ---
- * import BaseLayout from '../layouts/BaseLayout.astro';
- * import SEO from '../components/SEO.astro';
+ * import BaseLayout from '@layouts/BaseLayout.astro';
+ * import SEO from '@components/SEO.astro';
  * ---
  *
  * <BaseLayout>
@@ -40,14 +40,14 @@
  */
 
 import { ClientRouter } from "astro:transitions";
-import Navigation from "../components/Navigation.astro";
-import Footer from "../components/Footer.astro";
-import LongShadow from "../components/LongShadow.astro";
+import Navigation from "@components/Navigation.astro";
+import Footer from "@components/Footer.astro";
+import LongShadow from "@components/LongShadow.astro";
 import { siteConfig } from "../config";
-import "../styles/global.css";
-import "../styles/typography.css";
-import "../styles/utilities.css";
-import "../styles/cards.css";
+import "@styles/global.css";
+import "@styles/typography.css";
+import "@styles/utilities.css";
+import "@styles/cards.css";
 ---
 
 <!doctype html>

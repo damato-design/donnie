@@ -63,7 +63,7 @@ const tagAttrs =
     ? { href, ...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {}) }
     : Tag === 'button'
       ? { type, disabled }
-      : { 'aria-disabled': 'true' };
+      : { 'aria-disabled': true };
 ---
 
 <Tag

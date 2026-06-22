@@ -2,103 +2,50 @@
 /**
  * Hero
  *
- * Reusable two-column hero / promo banner. The left column holds a value
- * statement (title with optional emphasis, subtitle, meta, and up to two
- * call-to-action buttons). The right column renders whatever is passed via the
- * `aside` slot (cards, embeds, images, forms, ...). When the slot is empty the
- * hero collapses to a single column.
+ * Reusable two-column hero / promo banner. It owns only the layout shell: a
+ * value statement on the left (the default slot) and supporting content on the
+ * right (the `aside` slot). Both columns are authored by the caller, so any
+ * markup is allowed (headings, copy, CTAs, cards, embeds, images, forms, ...).
+ * When the `aside` slot is empty the hero collapses to a single column.
  *
- * For the common promo/snapshot card, drop one or more <HeroCard> into the slot;
- * the right column stacks its children vertically.
+ * Author the left column with the editorial primitives (<Typography>, <Button>)
+ * and the right column with one or more <HeroCard slot="aside"> for the common
+ * promo/snapshot card; the right column stacks its children vertically.
  *
  * Used as the homepage banner and as a promotional banner on secondary pages
  * (e.g. promoting the Mise en Mode book, the Wireframe show, or Cal.com booking).
  *
  * @component
  *
+ * @slot default - Left-column value statement (heading, copy, CTAs).
  * @slot aside - Right-column content. When empty, the hero is single-column.
  *
  * @example
  * ```astro
- * <Hero title="Now in print:" emphasis="Mise en Mode" headingLevel={2} compact>
+ * <Hero compact>
+ *   <Typography tagName="h2">Now in print: <em>Mise en Mode</em></Typography>
  *   <HeroCard slot="aside" label="Book" title="Mise en Mode" href="https://mode.place" external />
  * </Hero>
  * ```
  */
 
-import Typography from './Typography.astro';
-
-/** A call-to-action button */
-export interface HeroCTA {
-  label: string;
-  href: string;
-  external?: boolean;
-}
-
 interface Props {
-  /** Main heading text */
-  title: string;
-  /** Emphasized continuation of the heading, rendered on a new line */
-  emphasis?: string;
-  /** Subtitle below the heading */
-  subtitle?: string;
-  /** Small muted meta line (e.g. name · title) */
-  meta?: string;
-  /** Primary (filled) call-to-action button */
-  primary?: HeroCTA;
-  /** Secondary (outline) call-to-action button */
-  secondary?: HeroCTA;
-  /** Heading level for the title (1 for the page's main hero, 2 for promos) */
-  headingLevel?: 1 | 2;
   /** Reduce vertical padding (for use below a page header) */
   compact?: boolean;
   /** Show the bottom divider/border (default true) */
   divider?: boolean;
 }
 
-const {
-  title,
-  emphasis,
-  subtitle,
-  meta,
-  primary,
-  secondary,
-  headingLevel = 1,
-  compact = false,
-  divider = true,
-} = Astro.props;
+const { compact = false, divider = true } = Astro.props;
 
 /** Whether custom right-column content was provided */
 const hasAside = Astro.slots.has('aside');
-
-/** Attributes for external links */
-const ext = (external?: boolean) =>
-  external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 ---
 
 <section class:list={['hero', { 'hero--compact': compact, 'hero--no-divider': !divider }]}>
   <div class:list={['hero-grid', { 'hero-grid--single': !hasAside }]}>
     <div class="hero-left">
-      <Typography tagName={`h${headingLevel}`}>
-        {title}
-        {emphasis && (
-          <Fragment><em>{emphasis}</em></Fragment>
-        )}
-      </Typography>
-
-      {subtitle && <Typography tagName="p" size="lg" variant="secondary">{subtitle}</Typography>}
-      {meta && <Typography tagName="p" size="sm" variant="muted">{meta}</Typography>}
-
-      {(primary || secondary) && (
-        <div class="hero-cta">
-          {primary && (
-            <a href={primary.href} class="btn-primary" {...ext(primary.external)}>{primary.label}</a>
-          )}
-          {secondary && (
-            <a href={secondary.href} class="btn-secondary" {...ext(secondary.external)}>{secondary.label}</a>
-          )}
-        </div>
-      )}
+      <slot />
     </div>
 
     {hasAside && (
@@ -146,35 +93,13 @@ const ext = (external?: boolean) =>
     max-width: 640px;
   }
 
-  .hero-cta {
+  /* Call-authored CTA row in the left column. `:global` reaches across the slot
+     boundary, since slotted markup is owned by the parent, not this component. */
+  .hero-left :global(.hero-cta) {
     display: flex;
-    gap: 1rem;
     flex-wrap: wrap;
-  }
-
-  .btn-primary {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background: var(--color-text);
-    color: var(--color-bg);
-    font-size: 0.9375rem;
-    text-decoration: none;
-    transition: opacity 0.2s ease;
-  }
-
-  .btn-primary:hover {
-    opacity: 0.85;
-  }
-
-  .btn-secondary {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background: transparent;
-    color: var(--color-text);
-    font-size: 0.9375rem;
-    text-decoration: none;
-    border: 1px solid currentColor;
-    transition: border-color 0.2s ease;
+    gap: 1rem;
+    margin-top: 1.5rem;
   }
 
   /* Right column: stacks slotted content (e.g. multiple <HeroCard>) vertically */

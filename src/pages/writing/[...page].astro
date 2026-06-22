@@ -23,14 +23,15 @@
  * @page
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import SEO from '../../components/SEO.astro';
-import Pagination from '../../components/Pagination.astro';
-import ArticleCard from '../../components/ArticleCard.astro';
-import PageStats from '../../components/PageStats.astro';
-import Hero from '../../components/Hero.astro';
-import HeroCard from '../../components/HeroCard.astro';
-import Typography from '../../components/Typography.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import Pagination from '@components/Pagination.astro';
+import ArticleCard from '@components/ArticleCard.astro';
+import PageStats from '@components/PageStats.astro';
+import Hero from '@components/Hero.astro';
+import HeroCard from '@components/HeroCard.astro';
+import Typography from '@components/Typography.astro';
+import Button from '@components/Button.astro';
 import { getCollection } from 'astro:content';
 import { pagesConfig } from '../../pages.config';
 import type { GetStaticPaths } from 'astro';
@@ -112,14 +113,12 @@ const pageTitle = currentPage === 1
 
   <main class="page-container">
     {currentPage === 1 && (
-      <Hero
-        compact
-        headingLevel={2}
-        title="Now in print:"
-        emphasis="Mise en Mode"
-        subtitle="My book on rebuilding design token architecture from first principles. Stop adding tokens, start expressing modes."
-        primary={{ label: 'Read the book', href: 'https://mode.place', external: true }}
-      >
+      <Hero compact>
+        <Typography tagName="h2">Now in print: <em>Mise en Mode</em></Typography>
+        <Typography tagName="p" size="lg" variant="secondary">My book on rebuilding design token architecture from first principles. Stop adding tokens, start expressing modes.</Typography>
+        <div class="hero-cta">
+          <Button href="https://mode.place" variant="primary" external>Read the book</Button>
+        </div>
         <HeroCard
           slot="aside"
           label="Book"

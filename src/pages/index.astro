@@ -33,14 +33,15 @@
  * @page
  */
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import SEO from '../components/SEO.astro';
-import StructuredData from '../components/StructuredData.astro';
-import ForwardLink from '../components/ForwardLink.astro';
-import Testimonials from '../components/Testimonials.astro';
-import Hero from '../components/Hero.astro';
-import HeroCard from '../components/HeroCard.astro';
-import Typography from '../components/Typography.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import StructuredData from '@components/StructuredData.astro';
+import ForwardLink from '@components/ForwardLink.astro';
+import Testimonials from '@components/Testimonials.astro';
+import Hero from '@components/Hero.astro';
+import HeroCard from '@components/HeroCard.astro';
+import Button from '@components/Button.astro';
+import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../config';
 
@@ -91,13 +92,14 @@ const recentDecisions = allDecisions
 
   <main class="home-page">
     <!-- CASE-FIRST HERO -->
-    <Hero
-      title="Experience Architect"
-      subtitle="Design systems where design and code work beautifully together."
-      meta={`${siteConfig.author.name} · ${siteConfig.author.title}`}
-      primary={{ label: 'Explore Case Studies', href: '/projects' }}
-      secondary={{ label: 'How I Make Decisions', href: '/decisions' }}
-    >
+    <Hero>
+      <Typography tagName="h1">Experience Architect</Typography>
+      <Typography tagName="p" size="lg" variant="secondary">Design systems where design and code work beautifully together.</Typography>
+      <Typography tagName="p" size="sm" variant="muted">{`${siteConfig.author.name} · ${siteConfig.author.title}`}</Typography>
+      <div class="hero-cta">
+        <Button href="/projects" variant="primary">Explore Case Studies</Button>
+        <Button href="/decisions" variant="secondary">How I Make Decisions</Button>
+      </div>
       {caseSnapshots.map((project) => (
         <HeroCard
           slot="aside"
@@ -164,8 +166,8 @@ const recentDecisions = allDecisions
         Looking for design systems leadership, theming and token architecture, or someone who documents their thinking and shares it openly? Let's talk.
       </Typography>
       <div class="cta-buttons">
-        <a href="/projects" class="btn-primary">View My Work</a>
-        <a href="/contact" class="btn-secondary">Get in Touch</a>
+        <Button href="/projects" variant="primary">View My Work</Button>
+        <Button href="/contact" variant="secondary">Get in Touch</Button>
       </div>
     </section>
   </main>
@@ -175,28 +177,6 @@ const recentDecisions = allDecisions
       max-width: 1100px;
       margin: 0 auto;
       padding: 0 1.5rem 4rem;
-    }
-
-    .btn-primary {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      font-size: 0.9375rem;
-      text-decoration: none;
-      transition: opacity 0.2s ease;
-    }
-
-    .btn-primary:hover {
-      opacity: 0.85;
-    }
-
-    .btn-secondary {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      background: transparent;
-      font-size: 0.9375rem;
-      text-decoration: none;
-      border: 1px solid currentColor;
-      transition: border-color 0.2s ease;
     }
 
     .introduction {

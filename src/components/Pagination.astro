@@ -26,7 +26,8 @@
  * ```
  */
 
-import Typography from './Typography.astro';
+import Typography from '@components/Typography.astro';
+import Button from '@components/Button.astro';
 
 interface Props {
   /** Current active page number (1-indexed) */
@@ -92,21 +93,18 @@ function getPageUrl(page: number): string {
 
 {totalPages > 1 && (
   <nav class="pagination" aria-label="Pagination">
-    {currentPage > 1 ? (
-      <a href={getPageUrl(currentPage - 1)} class="pagination-btn pagination-prev" aria-label="Previous page">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-        <Typography tagName="span">Previous</Typography>
-      </a>
-    ) : (
-      <span class="pagination-btn pagination-prev disabled" aria-disabled="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"></polyline>
-        </svg>
-        <Typography tagName="span">Previous</Typography>
-      </span>
-    )}
+    <Button
+      href={currentPage > 1 ? getPageUrl(currentPage - 1) : undefined}
+      variant="secondary"
+      size="sm"
+      disabled={currentPage <= 1}
+      aria-label="Previous page"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      <Typography tagName="span">Previous</Typography>
+    </Button>
 
     <div class="pagination-numbers">
       {pageNumbers.map((page) => (
@@ -124,21 +122,18 @@ function getPageUrl(page: number): string {
       ))}
     </div>
 
-    {currentPage < totalPages ? (
-      <a href={getPageUrl(currentPage + 1)} class="pagination-btn pagination-next" aria-label="Next page">
-        <Typography tagName="span">Next</Typography>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </a>
-    ) : (
-      <span class="pagination-btn pagination-next disabled" aria-disabled="true">
-        <Typography tagName="span">Next</Typography>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 18 15 12 9 6"></polyline>
-        </svg>
-      </span>
-    )}
+    <Button
+      href={currentPage < totalPages ? getPageUrl(currentPage + 1) : undefined}
+      variant="secondary"
+      size="sm"
+      disabled={currentPage >= totalPages}
+      aria-label="Next page"
+    >
+      <Typography tagName="span">Next</Typography>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </Button>
   </nav>
 )}
 
@@ -151,29 +146,6 @@ function getPageUrl(page: number): string {
     margin-top: 3rem;
     padding-top: 2rem;
     border-top: 1px solid currentColor;
-  }
-
-  .pagination-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    
-    color: var(--color-text);
-    text-decoration: none;
-    border: 1px solid currentColor;
-    transition: all 0.2s ease;
-  }
-
-  .pagination-btn:hover:not(.disabled) {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-  }
-
-  .pagination-btn.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
   }
 
   .pagination-numbers {

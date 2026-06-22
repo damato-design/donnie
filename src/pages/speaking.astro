@@ -27,13 +27,14 @@
  * @page
  */
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import SEO from '../components/SEO.astro';
-import TalkCard from '../components/TalkCard.astro';
-import PageStats from '../components/PageStats.astro';
-import Hero from '../components/Hero.astro';
-import Typography from '../components/Typography.astro';
-import HeroCard from '../components/HeroCard.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import TalkCard from '@components/TalkCard.astro';
+import PageStats from '@components/PageStats.astro';
+import Hero from '@components/Hero.astro';
+import Typography from '@components/Typography.astro';
+import HeroCard from '@components/HeroCard.astro';
+import Button from '@components/Button.astro';
 import { getCollection } from 'astro:content';
 import { pagesConfig } from '../pages.config';
 
@@ -99,14 +100,12 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
   />
 
   <main class="page-container">
-    <Hero
-      compact
-      headingLevel={2}
-      title="Catch me live on"
-      emphasis="Wireframe"
-      subtitle="A weekday live show: candid design talk, new approaches, and the occasional spicy hot take with guests from the community."
-      primary={{ label: 'Watch Wireframe', href: 'https://wireframe.ds.house', external: true }}
-    >
+    <Hero compact>
+      <Typography tagName="h2">Catch me live on <em>Wireframe</em></Typography>
+      <Typography tagName="p" size="lg" variant="secondary">A weekday live show: candid design talk, new approaches, and the occasional spicy hot take with guests from the community.</Typography>
+      <div class="hero-cta">
+        <Button href="https://wireframe.ds.house" variant="primary" external>Watch Wireframe</Button>
+      </div>
       <HeroCard
         slot="aside"
         label="Live Show"
