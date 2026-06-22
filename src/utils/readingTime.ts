@@ -70,21 +70,3 @@ export function calculateReadingTime(content: string): number {
 export function formatReadingTime(minutes: number): string {
   return `${minutes} min read`;
 }
-
-/**
- * Calculates and formats reading time from content in one step
- * 
- * Convenience function that combines calculateReadingTime and formatReadingTime.
- * Useful when you need the formatted output directly without intermediate values.
- * 
- * @param content - The text content to analyze (markdown or plain text)
- * @returns Formatted reading time string (e.g., "5 min read")
- * 
- * @example
- * const readingTime = getReadingTime(article.body);
- * // returns: "5 min read"
- */
-export function getReadingTime(content: string): string {
-  const minutes = calculateReadingTime(content);
-  return formatReadingTime(minutes);
-}

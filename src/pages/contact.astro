@@ -65,11 +65,11 @@ const socialLinks = Object.entries(siteConfig.social)
 
     <!-- Zone 2: Primary Intent -->
     <section class="primary-zone">
-      <Typography tagName="h1" size="lg" variant="muted">{pagesConfig.contact.heading}</Typography>
+      <Typography tagName="h1" size="lg">{pagesConfig.contact.heading}</Typography>
       <a href={`mailto:${siteConfig.author.email}`} class="email-link">
         {siteConfig.author.email}
       </a>
-      <Typography tagName="p" variant="muted">
+      <Typography tagName="p">
         I read every email. Expect a reply within a few days.
       </Typography>
     </section>
@@ -77,17 +77,16 @@ const socialLinks = Object.entries(siteConfig.social)
     <!-- Zone 3: Secondary (Social) -->
     {socialLinks.length > 0 && (
       <section class="secondary-zone">
-        <Typography tagName="h2" size="sm" variant="muted">Elsewhere</Typography>
-        <div class="social-links">
-          {socialLinks.map((link, index) => (
-            <>
+        <Typography tagName="h2" size="sm">Elsewhere</Typography>
+        <ul class="social-links">
+          {socialLinks.map((link) => (
+            <li>
               <a href={link.url} target="_blank" rel="noopener noreferrer">
                 {link.platform}
               </a>
-              {index < socialLinks.length - 1 && <Typography tagName="span" variant="muted" class="separator">·</Typography>}
-            </>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
     )}
   </main>
@@ -107,9 +106,9 @@ const socialLinks = Object.entries(siteConfig.social)
       display: block;
       font-size: clamp(1.75rem, 5vw, 2.5rem);
       
-      color: var(--color-text);
+      color: currentColor;
       text-decoration: none;
-      
+
       margin-bottom: 1.5rem;
       transition: color 0.2s ease;
     }
@@ -120,13 +119,24 @@ const socialLinks = Object.entries(siteConfig.social)
     }
 
     .social-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 0.5rem;
     }
 
-    .separator {
+    .social-links li {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Decorative separator between social links (was an inline span). */
+    .social-links li:not(:first-child)::before {
+      content: "·";
       user-select: none;
     }
 

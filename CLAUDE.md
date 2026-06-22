@@ -75,10 +75,12 @@ update both sides when renaming/deleting.
 - `src/pages/` — `index.astro` (home), `projects/`, `decisions/`, `journey.astro`,
   `writing/[...page].astro` (paginated, 5/page) + `writing/[slug].astro`, `speaking.astro`,
   `uses.astro`, `contact.astro`, `404.astro`, `robots.txt.ts`.
-- `src/layouts/` — `BaseLayout`, `PageLayout`, `ArticleLayout`, `CaseStudyLayout`.
-- `src/styles/` — `global.css`, `typography.css`, `utilities.css` (CSS custom-property
-  design tokens like `--color-text`, `--color-bg-elevated`, `--space-*`). Most component
-  styles are scoped `<style>` blocks inside `.astro` files.
+- `src/layouts/` — `BaseLayout`, `ArticleLayout`, `CaseStudyLayout`.
+- `src/styles/` — `global.css` (CSS custom-property design tokens like `--color-bg`,
+  `--color-bg-elevated`, `--color-accent`, `--space-*`; foreground text is derived via
+  `contrast-color()`/`currentColor`, not a token; plus base resets and page-layout
+  utilities), `typography.css`, and `cards.css`. Most
+  component styles are scoped `<style>` blocks inside `.astro` files.
 - Key components: `SEO.astro`, `StructuredData.astro` (JSON-LD, fully config-driven),
   `Navigation.astro`, `Testimonials.astro`, the unified **`Card` pattern** below,
   `Pagination`, `PageStats`, `ForwardLink`, and the **Hero pattern** below.
@@ -86,17 +88,17 @@ update both sides when renaming/deleting.
 ### Card pattern (`src/components/Card.astro`, `CardCta.astro`)
 There is **one** card component. It is slot-driven and has no per-type variants: a call
 site composes a card by filling slots — `badge` (top label row, rendered raw), `meta`
-(eyebrow, wrapped in a muted span so it must be inline text), `title`, `description`, `tags`
+(eyebrow, wrapped in a span so it must be inline text), `title`, `description`, `tags`
 (a `TagList`), the default slot (bespoke content), and an optional `cta`. The card itself is
 **not** a link; the only interactive element is whatever goes in the `cta` slot (typically
 `<CardCta href text />`, the standard forward button). Per-type formatting/maps (date format,
 context truncation, talk/timeline type→label/colour, project status) live in
 `src/utils/cards.ts` + `src/utils/formatDate.ts` and are applied at the call site.
 
-- All card styles are global in `src/styles/cards.css` (imported once in `BaseLayout`);
-  the component carries no scoped styles. Slotted bespoke markup (talk event line +
-  slides/video links via `card-talk-*`, timeline header/skills/disclosure) is styled by the
-  call site's own CSS (global for talks, scoped in `TimelineEntry` for the timeline).
+- The shared card styles are global in `src/styles/cards.css` (imported once in
+  `BaseLayout`): `.card`, `.card-list`/`--compact`, and `.card-badges`. The component
+  carries no scoped styles. Slotted bespoke markup is styled by the call site's own CSS
+  (e.g. the timeline header/skills/disclosure scoped in `TimelineEntry`).
 - Used directly on: projects, decisions, writing (listings) and speaking; `TimelineEntry`
   renders a `Card` for its content area inside the dot/line rail on `/journey`.
 - Block content (a flex row with `<time>`/labels) must go in the `badge` or default slot,

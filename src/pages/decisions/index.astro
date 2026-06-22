@@ -68,19 +68,21 @@ const totalDecisions = sortedDecisions.length;
     </header>
 
     {sortedDecisions.length > 0 ? (
-      <div class="card-list card-list--compact">
+      <ul class="card-list card-list--compact">
         {sortedDecisions.map((decision) => (
-          <Card>
-            <Fragment slot="meta">{formatMonthYear(decision.data.date)}</Fragment>
-            <Fragment slot="title">{decision.data.title}</Fragment>
-            <Fragment slot="description">{truncate(decision.data.context, 180)}</Fragment>
+          <li>
+            <Card>
+              <Fragment slot="meta">{formatMonthYear(decision.data.date)}</Fragment>
+              <Fragment slot="title">{decision.data.title}</Fragment>
+              <Fragment slot="description">{truncate(decision.data.context, 180)}</Fragment>
 
-            <TagList slot="tags" items={decision.data.tags ?? []} />
+              <TagList slot="tags" items={decision.data.tags ?? []} />
 
-            <CardCta slot="cta" href={`/decisions/${decision.id}`} text="Read decision" />
-          </Card>
+              <CardCta slot="cta" href={`/decisions/${decision.id}`} text="Read decision" />
+            </Card>
+          </li>
         ))}
-      </div>
+      </ul>
     ) : (
       <Typography tagName="p" class="empty-state">No decisions documented yet.</Typography>
     )}

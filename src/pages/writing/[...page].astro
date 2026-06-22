@@ -134,19 +134,21 @@ const pageTitle = currentPage === 1
     </header>
 
     {articles.length > 0 ? (
-      <div class="card-list">
+      <ul class="card-list">
         {articles.map((article) => (
-          <Card>
-            <Fragment slot="meta">{formatLongDate(article.data.publishDate)}</Fragment>
-            <Fragment slot="title">{article.data.title}</Fragment>
-            <Fragment slot="description">{article.data.description}</Fragment>
+          <li>
+            <Card>
+              <Fragment slot="meta">{formatLongDate(article.data.publishDate)}</Fragment>
+              <Fragment slot="title">{article.data.title}</Fragment>
+              <Fragment slot="description">{article.data.description}</Fragment>
 
-            <TagList slot="tags" items={article.data.tags ?? []} />
+              <TagList slot="tags" items={article.data.tags ?? []} />
 
-            <CardCta slot="cta" href={article.data.url} text="Read on blog" external />
-          </Card>
+              <CardCta slot="cta" href={article.data.url} text="Read on blog" external />
+            </Card>
+          </li>
         ))}
-      </div>
+      </ul>
     ) : (
       <Typography tagName="p" class="empty-state">No articles published yet.</Typography>
     )}

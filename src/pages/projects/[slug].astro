@@ -201,9 +201,9 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
 
     <!-- Key Decisions Section -->
     <Section title="Key Decisions" class="case-study-section" size="2xl">
-      <div class="decisions-list">
+      <ul class="decisions-list">
         {keyDecisions.map((decision) => (
-          <div class="decision-item">
+          <li class="decision-item">
             <Typography tagName="h3" size="xl" variant="primary">{decision.decision}</Typography>
             <div class="decision-reasoning">
               <strong>Reasoning:</strong>
@@ -219,9 +219,9 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
                 </ul>
               </div>
             )}
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </Section>
 
     <!-- Tech Stack Section -->
@@ -335,6 +335,9 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     }
 
     .decisions-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
       gap: 2rem;

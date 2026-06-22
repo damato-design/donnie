@@ -129,15 +129,9 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
               {talksByYear[year].map((talk) => (
                 <Card>
                   <Fragment slot="badge">
-                    {talk.data.featured && (
-                      <div class="card-talk-featured">
-                        <FeaturedBadge />
-                      </div>
-                    )}
-                    <div class="card-talk-meta">
-                      <Label color={talkTypeColors[talk.data.type]} uppercase>{talkTypeLabels[talk.data.type]}</Label>
-                      <Typography tagName="span" size="xs" variant="muted">{formatMonthYear(talk.data.date)}</Typography>
-                    </div>
+                    {talk.data.featured && <FeaturedBadge />}
+                    <Label color={talkTypeColors[talk.data.type]} uppercase>{talkTypeLabels[talk.data.type]}</Label>
+                    <Typography tagName="span" size="xs">{formatMonthYear(talk.data.date)}</Typography>
                   </Fragment>
 
                   <Fragment slot="title">{talk.data.title}</Fragment>
@@ -145,44 +139,38 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
 
                   <TagList slot="tags" items={talk.data.topics ?? []} />
 
-                  <div class="card-talk-event">
-                    {talk.data.eventUrl ? (
-                      <a href={talk.data.eventUrl} target="_blank" rel="noopener noreferrer" class="card-talk-event-link">
-                        {talk.data.event}
-                        <svg class="card-talk-external-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                          <polyline points="15 3 21 3 21 9"></polyline>
-                          <line x1="10" y1="14" x2="21" y2="3"></line>
-                        </svg>
-                      </a>
-                    ) : (
-                      <Typography tagName="span">{talk.data.event}</Typography>
-                    )}
-                    <Typography tagName="span" variant="muted">· {talk.data.location}</Typography>
-                    {talk.data.duration && <Typography tagName="span" variant="muted">· {talk.data.duration}</Typography>}
-                  </div>
+                  {talk.data.eventUrl ? (
+                    <a href={talk.data.eventUrl} target="_blank" rel="noopener noreferrer">
+                      {talk.data.event}
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                      </svg>
+                    </a>
+                  ) : (
+                    <Typography tagName="span">{talk.data.event}</Typography>
+                  )}
+                  <Typography tagName="span">· {talk.data.location}</Typography>
+                  {talk.data.duration && <Typography tagName="span">· {talk.data.duration}</Typography>}
 
-                  {(talk.data.slides || talk.data.video) && (
-                    <div class="card-talk-links">
-                      {talk.data.slides && (
-                        <a href={talk.data.slides} target="_blank" rel="noopener noreferrer" class="card-talk-link">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                            <line x1="8" y1="21" x2="16" y2="21"></line>
-                            <line x1="12" y1="17" x2="12" y2="21"></line>
-                          </svg>
-                          Slides
-                        </a>
-                      )}
-                      {talk.data.video && (
-                        <a href={talk.data.video} target="_blank" rel="noopener noreferrer" class="card-talk-link">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                          </svg>
-                          Video
-                        </a>
-                      )}
-                    </div>
+                  {talk.data.slides && (
+                    <a href={talk.data.slides} target="_blank" rel="noopener noreferrer">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                      </svg>
+                      Slides
+                    </a>
+                  )}
+                  {talk.data.video && (
+                    <a href={talk.data.video} target="_blank" rel="noopener noreferrer">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                      </svg>
+                      Video
+                    </a>
                   )}
                 </Card>
               ))}

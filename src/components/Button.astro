@@ -99,9 +99,9 @@ const tagAttrs =
   }
 
   .btn--primary {
-    background: var(--color-text);
+    background: contrast-color(var(--color-bg));
     color: var(--color-bg);
-    border-color: var(--color-text);
+    border-color: contrast-color(var(--color-bg));
   }
 
   .btn--primary:hover:not(.btn--disabled) {
@@ -110,7 +110,7 @@ const tagAttrs =
 
   .btn--secondary {
     background: transparent;
-    color: var(--color-text);
+    color: currentColor;
     border-color: currentColor;
   }
 

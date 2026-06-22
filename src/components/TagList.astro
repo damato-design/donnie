@@ -21,7 +21,6 @@
  */
 
 import Label from '@components/Label.astro';
-import Typography from '@components/Typography.astro';
 
 interface Props {
   /** Tag labels to display */
@@ -39,29 +38,37 @@ const overflow = typeof max === 'number' ? Math.max(items.length - max, 0) : 0;
 ---
 
 {items.length > 0 && (
-  <div class:list={['tags-list', className]}>
-    {visible.map((item, i) => (
-      <Fragment>
-        {i > 0 && <Typography tagName="span" size="xs" variant="muted" aria-hidden="true">·</Typography>}
-        <Label>{item}</Label>
-      </Fragment>
+  <ul class:list={['tags-list', className]}>
+    {visible.map((item) => (
+      <li><Label>{item}</Label></li>
     ))}
     {overflow > 0 && (
-      <Fragment>
-        <Typography tagName="span" size="xs" variant="muted" aria-hidden="true">·</Typography>
-        <Label>+{overflow}</Label>
-      </Fragment>
+      <li><Label>+{overflow}</Label></li>
     )}
-  </div>
+  </ul>
 )}
 
 <style>
   .tags-list {
+    list-style: none;
+    margin: 0 0 1rem 0;
+    padding: 0;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1rem;
+  }
+
+  .tags-list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Decorative separator between tags (was an aria-hidden span). */
+  .tags-list li:not(:first-child)::before {
+    content: "·";
+    font-size: var(--font-size-xs);
   }
 
 </style>

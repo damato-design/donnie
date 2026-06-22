@@ -87,26 +87,28 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
     </header>
 
     {sortedProjects.length > 0 ? (
-      <div class="card-list">
+      <ul class="card-list">
         {sortedProjects.map((project) => (
-          <Card>
-            <div slot="badge" class="card-badges">
-              {project.data.featured && <FeaturedBadge />}
-              {project.data.status !== 'completed' && (
-                <Label color={statusConfig[project.data.status].color} uppercase>{statusConfig[project.data.status].label}</Label>
-              )}
-            </div>
+          <li>
+            <Card>
+              <div slot="badge" class="card-badges">
+                {project.data.featured && <FeaturedBadge />}
+                {project.data.status !== 'completed' && (
+                  <Label color={statusConfig[project.data.status].color} uppercase>{statusConfig[project.data.status].label}</Label>
+                )}
+              </div>
 
-            <Fragment slot="meta">{project.data.role} · {project.data.year}</Fragment>
-            <Fragment slot="title">{project.data.title}</Fragment>
-            <Fragment slot="description">{project.data.outcomeSummary}</Fragment>
+              <Fragment slot="meta">{project.data.role} · {project.data.year}</Fragment>
+              <Fragment slot="title">{project.data.title}</Fragment>
+              <Fragment slot="description">{project.data.outcomeSummary}</Fragment>
 
-            <TagList slot="tags" items={project.data.techStack} max={4} />
+              <TagList slot="tags" items={project.data.techStack} max={4} />
 
-            <CardCta slot="cta" href={`/projects/${project.id}`} text="View case study" />
-          </Card>
+              <CardCta slot="cta" href={`/projects/${project.id}`} text="View case study" />
+            </Card>
+          </li>
         ))}
-      </div>
+      </ul>
     ) : (
       <Typography tagName="p" class="empty-state">No projects available yet.</Typography>
     )}

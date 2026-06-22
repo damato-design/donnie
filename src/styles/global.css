@@ -1,7 +1,8 @@
 /* Global Styles and CSS Custom Properties */
 
 :root {
-  /* Color System - Dark Mode Default */
+  /* Color System - base background; the rest is derived at use sites via
+     contrast-color() and oklch(from ...) rather than fixed tokens. */
   --color-bg: #f7f7f7;
   --color-bg-elevated: oklch(from var(--color-bg) calc(l + .05) c h);
   --color-border: #262626;
@@ -157,4 +158,21 @@ pre code {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* Page layout utilities (shared across listing/content pages) */
+.page-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.page-header {
+  margin-bottom: 3rem;
+}
+
+/* Empty-state message shown when a collection has no entries */
+.empty-state {
+  font-style: italic;
+  font-size: 1.125rem;
 }

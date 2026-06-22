@@ -75,7 +75,7 @@ const recentDecisions = allDecisions
     <Hero>
       <Typography tagName="h1">Experience Architect</Typography>
       <Typography tagName="p" size="lg" variant="secondary">Design systems where design and code work beautifully together.</Typography>
-      <Typography tagName="p" size="sm" variant="muted">{`${siteConfig.author.name} · ${siteConfig.author.title}`}</Typography>
+      <Typography tagName="p" size="sm">{`${siteConfig.author.name} · ${siteConfig.author.title}`}</Typography>
       <div class="hero-cta">
         <Button href="/projects" variant="primary">Explore Case Studies</Button>
         <Button href="/decisions" variant="secondary">How I Make Decisions</Button>
@@ -91,32 +91,32 @@ const recentDecisions = allDecisions
       <Typography tagName="p" size="lg" variant="secondary">
         Every major decision is documented, because the best design systems don't just scale products, they scale people too.
       </Typography>
-      <ForwardLink href="/journey" text="Read my journey" variant="muted" />
+      <ForwardLink href="/journey" text="Read my journey" />
     </section>
 
     <!-- Recent Decisions -->
     <section class="recent-decisions">
       <div class="section-header">
         <Typography tagName="h2" size="xl">Recent Decisions</Typography>
-        <ForwardLink href="/decisions" text="View all" variant="muted" />
+        <ForwardLink href="/decisions" text="View all" />
       </div>
       
       {recentDecisions.length > 0 ? (
-        <div class="decisions-list">
+        <ul class="decisions-list">
           {recentDecisions.map((decision) => {
             const date = new Date(decision.data.date);
             const formattedDate = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
             return (
-              <article class="decision-item">
-                <Typography tagName="span" size="xs" variant="muted" class="decision-date">{formattedDate}</Typography>
+              <li class="decision-item">
+                <Typography tagName="span" size="xs" class="decision-date">{formattedDate}</Typography>
                 <Typography tagName="h3" size="lg" variant="primary">{decision.data.title}</Typography>
                 <Typography tagName="p" size="sm">{decision.data.context}</Typography>
-              </article>
+              </li>
             );
           })}
-        </div>
+        </ul>
       ) : (
-        <Typography tagName="p" variant="muted">No decisions documented yet.</Typography>
+        <Typography tagName="p">No decisions documented yet.</Typography>
       )}
     </section>
 
@@ -168,6 +168,9 @@ const recentDecisions = allDecisions
     }
 
     .decisions-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
       gap: 0;

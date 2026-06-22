@@ -9,11 +9,9 @@
  * Features:
  * - HTML document structure
  * - Favicon and manifest configuration
- * - Theme system with dark/light mode support
- * - Prevents flash of wrong theme on page load
- * - Astro View Transitions support with theme persistence
+ * - Astro View Transitions support
  * - Sticky navigation header
- * - Global CSS imports (global, typography, utilities)
+ * - Global CSS imports (global, typography, cards)
  * - Responsive layout structure
  *
  * Note: SEO meta tags (title, description, OG, Twitter) should be handled
@@ -46,7 +44,6 @@ import LongShadow from "@components/LongShadow.astro";
 import { siteConfig } from "../config";
 import "@styles/global.css";
 import "@styles/typography.css";
-import "@styles/utilities.css";
 import "@styles/cards.css";
 ---
 
@@ -74,14 +71,6 @@ import "@styles/cards.css";
     <link href="https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=LINE+Seed+JP&display=swap" rel="stylesheet">
 
     <ClientRouter />
-
-    <!-- Preserve theme during View Transitions -->
-    <script is:inline>
-      document.addEventListener("astro:before-swap", (e) => {
-        const theme = document.documentElement.getAttribute("data-theme");
-        e.newDocument.documentElement.setAttribute("data-theme", theme);
-      });
-    </script>
 
     <script is:inline defer src="https://scripts.withcabin.com/hello.js"></script>
 

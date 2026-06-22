@@ -61,9 +61,10 @@ const featuredTestimonials = allTestimonials
 {featuredTestimonials.length > 0 && (
   <section class="testimonials">
     {showTitle && <Typography tagName="h2" size="xl">{title}</Typography>}
-    <div class="testimonials-list">
+    <ul class="testimonials-list">
       {featuredTestimonials.map((testimonial) => (
-        <blockquote class="testimonial">
+        <li>
+          <blockquote class="testimonial">
           <Typography tagName="p" size="lg" variant="primary">"{testimonial.data.quote}"</Typography>
           <footer class="testimonial-attribution">
             <cite class="testimonial-author">
@@ -80,11 +81,12 @@ const featuredTestimonials = allTestimonials
               )}
               <Typography tagName="span" variant="secondary">, {testimonial.data.role} at {testimonial.data.company}</Typography>
             </cite>
-            <Typography tagName="span" size="sm" variant="muted">{testimonial.data.relationship}</Typography>
+            <Typography tagName="span" size="sm">{testimonial.data.relationship}</Typography>
           </footer>
-        </blockquote>
+          </blockquote>
+        </li>
       ))}
-    </div>
+    </ul>
   </section>
 )}
 
@@ -94,6 +96,9 @@ const featuredTestimonials = allTestimonials
   }
 
   .testimonials-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 2.5rem;

@@ -83,28 +83,28 @@ const formattedDate = formatLongDate(decision.data.date);
         <Typography tagName="h1" size="3xl">{decision.data.title}</Typography>
 
         {decision.data.tags && decision.data.tags.length > 0 && (
-          <div class="decision-tags">
+          <ul class="decision-tags">
             {decision.data.tags.map((tag) => (
-              <Label>{tag}</Label>
+              <li><Label>{tag}</Label></li>
             ))}
-          </div>
+          </ul>
         )}
       </header>
 
-      <Section title="Context" class="decision-section" size="xs" variant="muted">
+      <Section title="Context" class="decision-section" size="xs">
         <Typography tagName="p">{decision.data.context}</Typography>
       </Section>
 
-      <Section title="Decision" class="decision-section decision-made" size="xs" variant="muted">
+      <Section title="Decision" class="decision-section decision-made" size="xs">
         <div class="decision-callout">
           <Typography tagName="p" variant="primary">{decision.data.decision}</Typography>
         </div>
       </Section>
 
-      <Section title="Alternatives Considered" class="decision-section" size="xs" variant="muted">
-        <div class="alternatives-list">
+      <Section title="Alternatives Considered" class="decision-section" size="xs">
+        <ul class="alternatives-list">
           {decision.data.alternatives.map((alt) => (
-            <div class="alternative-item">
+            <li class="alternative-item">
               <Typography tagName="h3" size="base" variant="primary">{alt.option}</Typography>
               <div class="alternative-details">
                 {alt.pros && alt.pros.length > 0 && (
@@ -128,12 +128,12 @@ const formattedDate = formatLongDate(decision.data.date);
                   </div>
                 )}
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </Section>
 
-      <Section title="Reasoning" class="decision-section" size="xs" variant="muted">
+      <Section title="Reasoning" class="decision-section" size="xs">
         <Typography tagName="p">{decision.data.reasoning}</Typography>
       </Section>
 
@@ -178,6 +178,9 @@ const formattedDate = formatLongDate(decision.data.date);
     }
 
     .decision-tags {
+      list-style: none;
+      margin: 0;
+      padding: 0;
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
@@ -194,6 +197,9 @@ const formattedDate = formatLongDate(decision.data.date);
     }
 
     .alternatives-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
       display: flex;
       flex-direction: column;
       gap: 1.5rem;

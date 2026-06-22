@@ -11,6 +11,9 @@
 
 /* --- Card list (stacks cards on listing pages) --- */
 .card-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -29,33 +32,6 @@
   border: 1px solid;
 }
 
-/* --- Card CTA (CardCta, slotted into `cta`) ---
-   The CTA renders via the Button primitive; slide its arrow on card hover. These
-   live here (not scoped to CardCta) so the `.card:hover` ancestor selector can
-   reach the arrow across the slot boundary. */
-.card-cta-arrow {
-  transition: transform 0.2s ease;
-}
-
-.card:hover .card-cta-arrow {
-  transform: translateX(3px);
-}
-
-.card-meta {
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.card-title {
-  display: block;
-  margin-bottom: 0.625rem;
-}
-
-.card-description {
-  display: block;
-  margin-bottom: 1rem;
-}
-
 /* --- Badge row (ProjectCard: Featured + status) --- */
 .card-badges {
   display: flex;
@@ -66,67 +42,4 @@
 
 .card-badges:empty {
   display: none;
-}
-
-/* --- Talk content (slotted into a Card's badge + default slots) --- */
-.card-talk-featured {
-  margin-bottom: 0.75rem;
-}
-
-.card-talk-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.card-talk-event {
-  font-size: 0.9375rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.card-talk-event-link {
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  transition: color 0.2s ease;
-}
-
-.card-talk-event-link:hover {
-  color: var(--color-accent);
-}
-
-.card-talk-external-icon {
-  opacity: 0.6;
-}
-
-.card-talk-links {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid currentColor;
-}
-
-.card-talk-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-size: 0.875rem;
-  
-  color: var(--color-accent);
-  text-decoration: none;
-  transition: opacity 0.2s ease;
-}
-
-.card-talk-link:hover {
-  opacity: 0.8;
-}
-
-.card-talk-link svg {
-  flex-shrink: 0;
 }

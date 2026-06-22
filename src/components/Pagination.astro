@@ -106,21 +106,23 @@ function getPageUrl(page: number): string {
       <Typography tagName="span">Previous</Typography>
     </Button>
 
-    <div class="pagination-numbers">
+    <ul class="pagination-numbers">
       {pageNumbers.map((page) => (
-        page === '...' ? (
-          <Typography tagName="span" variant="secondary" class="pagination-ellipsis">...</Typography>
-        ) : (
-          <a 
-            href={getPageUrl(page as number)} 
-            class={`pagination-number ${page === currentPage ? 'active' : ''}`}
-            aria-current={page === currentPage ? 'page' : undefined}
-          >
-            {page}
-          </a>
-        )
+        <li>
+          {page === '...' ? (
+            <Typography tagName="span" variant="secondary" class="pagination-ellipsis">...</Typography>
+          ) : (
+            <a
+              href={getPageUrl(page as number)}
+              class={`pagination-number ${page === currentPage ? 'active' : ''}`}
+              aria-current={page === currentPage ? 'page' : undefined}
+            >
+              {page}
+            </a>
+          )}
+        </li>
       ))}
-    </div>
+    </ul>
 
     <Button
       href={currentPage < totalPages ? getPageUrl(currentPage + 1) : undefined}
@@ -149,9 +151,16 @@ function getPageUrl(page: number): string {
   }
 
   .pagination-numbers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
     display: flex;
     align-items: center;
     gap: 0.25rem;
+  }
+
+  .pagination-numbers li {
+    display: flex;
   }
 
   .pagination-number {

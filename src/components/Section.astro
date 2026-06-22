@@ -9,7 +9,7 @@
  *
  * The heading renders through <Typography>; callers control its appearance with
  * the `size` and `variant` props (e.g. a large case-study heading vs. a small
- * muted decision eyebrow) rather than with their own scoped CSS.
+ * decision eyebrow) rather than with their own scoped CSS.
  *
  * @component
  *
@@ -21,7 +21,7 @@
  *   <Typography tagName="p" prose>{overview}</Typography>
  * </Section>
  *
- * <Section title="Context" class="decision-section" size="xs" variant="muted">
+ * <Section title="Context" class="decision-section" size="xs">
  *   <Typography tagName="p">{context}</Typography>
  * </Section>
  * ```
@@ -38,7 +38,7 @@ interface Props {
   /** Heading size, decoupled from the h2 element. */
   size?: TypographySize;
   /** Heading colour/emphasis variant. */
-  variant?: 'lead' | 'muted' | 'secondary' | 'primary';
+  variant?: 'lead' | 'secondary' | 'primary';
 }
 
 const { title, class: className, size, variant } = Astro.props;

@@ -29,7 +29,7 @@
  * <Typography tagName="h2" size="4xl">Section title</Typography>
  * <Typography tagName="h3" size="xl">Looks like an h3, ranks like an h3</Typography>
  * <Typography tagName="p" prose size="lg">Lead-in paragraph.</Typography>
- * <Typography tagName="span" variant="muted">caption</Typography>
+ * <Typography tagName="span" size="sm">caption</Typography>
  * ```
  */
 
@@ -43,7 +43,7 @@ interface Props {
   /** Visual size, decoupled from the element. Omit to use the element default. */
   size?: TypographySize;
   /** Semantic colour/emphasis variant (composes the global utility classes). */
-  variant?: 'lead' | 'muted' | 'secondary' | 'primary';
+  variant?: 'lead' | 'secondary' | 'primary';
   /** Text alignment helper. */
   align?: 'center' | 'right';
   /** Apply prose flow context: heading top-margins and underlined accent links. */
@@ -56,7 +56,6 @@ interface Props {
 
 const variantClass = {
   lead: 'lead',
-  muted: 'text-muted',
   secondary: 'text-secondary',
   primary: 'text-primary',
 } as const;

@@ -7,8 +7,6 @@ h3,
 h4,
 h5,
 h6 {
-  margin-top: 0;
-  margin-bottom: var(--space-md);
   font-family: "BBH Hegarty", sans-serif;
   font-weight: normal;
 }
@@ -24,7 +22,6 @@ h1 {
 
 h2 {
   font-size: var(--font-size-4xl);
-  
 }
 
 h3 {
@@ -47,52 +44,6 @@ h6 {
    in the Typography component (`<Typography prose>` / mdxComponents), so the
    same rules are not duplicated across the article and case-study pages. */
 
-/* Paragraphs */
-
-p:last-child {
-  margin-bottom: 0;
-}
-
-/* Lead Paragraph */
-.lead {
-  font-size: var(--font-size-xl);
-  
-  margin-bottom: var(--space-xl);
-}
-
-/* Lists */
-ul,
-ol {
-  margin-bottom: var(--space-lg);
-  padding-left: var(--space-xl);
-}
-
-ul {
-  list-style-type: disc;
-}
-
-ol {
-  list-style-type: decimal;
-}
-
-li {
-  margin-bottom: var(--space-sm);
-  
-}
-
-li:last-child {
-  margin-bottom: 0;
-}
-
-/* Nested Lists */
-ul ul,
-ol ol,
-ul ol,
-ol ul {
-  margin-top: var(--space-sm);
-  margin-bottom: var(--space-sm);
-}
-
 /* Blockquotes */
 blockquote {
   border-left: 4px solid currentColor;
@@ -101,20 +52,11 @@ blockquote {
   font-style: italic;
 }
 
-blockquote p {
-  margin-bottom: var(--space-md);
-}
-
 /* Horizontal Rule */
 hr {
   border: none;
   border-top: 1px solid currentColor;
   margin: var(--space-3xl) 0;
-}
-
-em,
-i {
-  font-style: italic;
 }
 
 /* Tables */
@@ -131,13 +73,5 @@ td {
   border-bottom: 1px solid currentColor;
 }
 
-
-.text-center {
-  text-align: center;
-}
-
-.text-right {
-  text-align: right;
-}
 
 /* Responsive Typography */
