@@ -29,11 +29,14 @@ import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
 import PageHeader from '@components/PageHeader.astro';
 import Hero from '@components/Hero.astro';
+import Media from '@components/Media.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
 import { formatMonthYear } from '@utils/formatDate';
 import { truncate } from '@utils/cards';
 import { pagesConfig } from '../../pages.config';
+import { siteConfig } from 'src/config';
+import uxdx from '@assets/uxdx.jpg'
 
 /**
  * Queries all decisions from the content collection
@@ -70,6 +73,7 @@ const totalDecisions = sortedDecisions.length;
       <ButtonGroup>
         <Button href="https://mode.place" variant="primary" external>Read the book</Button>
       </ButtonGroup>
+      <Media slot="aside" src={uxdx.src} alt={` ${siteConfig.author.name} on stage`} />
     </Hero>
 
     <PageHeader>

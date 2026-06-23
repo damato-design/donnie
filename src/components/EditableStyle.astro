@@ -1,0 +1,26 @@
+---
+const style = `
+    display: block;
+    padding: 16px;
+    border: 4px solid white;
+    background: #262b3f;
+    color: #df3079;
+    white-space: pre;
+    max-width: 420px;
+    font-family: monospace;
+    border-radius: 8px;
+    font-size: .8em;
+    box-shadow: 4px 8px 13px rgba(0 0 0 / .35);
+`
+---
+
+<style is:inline style={style} contenteditable spellcheck="false"
+>body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--color-bg);
+    color: contrast-color(var(--color-bg));
+    font-family: "LINE Seed JP", sans-serif;
+    line-height: 1.4;
+}
+</style>

@@ -31,6 +31,7 @@ import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
 import PageHeader from '@components/PageHeader.astro';
 import Hero from '@components/Hero.astro';
+import EditableStyle from '@components/EditableStyle.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
 import { statusConfig } from '@utils/cards';
@@ -89,6 +90,7 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
       <ButtonGroup>
         <Button href="/contact" variant="primary">Work with me</Button>
       </ButtonGroup>
+      <EditableStyle slot="aside"/>
     </Hero>
 
     <PageHeader>
