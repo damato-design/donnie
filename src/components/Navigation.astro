@@ -70,8 +70,6 @@ const isActive = (href: string) => {
 
 <style>
   .site-nav {
-    display: flex;
-    align-items: center;
     border-bottom: 1px solid currentColor;
     background: var(--color-bg-elevated);
   }
@@ -83,6 +81,9 @@ const isActive = (href: string) => {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 16px;
   }
 
   .nav-scroll::-webkit-scrollbar {
@@ -92,7 +93,7 @@ const isActive = (href: string) => {
   .nav-list {
     display: flex;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: space-between;
     list-style: none;
     margin: 0;
     padding: 0;

@@ -31,7 +31,6 @@ import RelatedContent from '@components/RelatedContent.astro';
 import Section from '@components/Section.astro';
 import Label from '@components/Label.astro';
 import Typography from '@components/Typography.astro';
-import { mdxComponents } from '@components/mdxComponents';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
 import { formatLongDate } from '@utils/formatDate';
@@ -144,7 +143,7 @@ const whyItMatteredHtml = await renderInlineMarkdown(decision.data.whyItMattered
 
       {decision.body && decision.body.trim().length > 0 && (
         <section class="decision-body prose">
-          <Content components={mdxComponents} />
+          <Content />
         </section>
       )}
 

@@ -58,3 +58,15 @@ const hasDescription = Astro.slots.has('description');
   <slot />
   <slot name="cta" />
 </article>
+
+<style>
+  .card {
+     display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 8px;
+    padding: 1.5rem 1.75rem;
+    background: var(--color-bg-elevated);
+    border: 1px solid;
+  }
+</style>

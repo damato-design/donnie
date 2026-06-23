@@ -76,9 +76,8 @@ update both sides when renaming/deleting.
   `CaseStudyLayout` were removed).
 - `src/styles/` — `global.css` (CSS custom-property design tokens like `--color-bg`,
   `--color-bg-elevated`, `--color-accent`, `--space-*`; foreground text is derived via
-  `contrast-color()`/`currentColor`, not a token; plus base resets and the `.container`
-  utility), `typography.css`, and `cards.css`. Most
-  component styles are scoped `<style>` blocks inside `.astro` files.
+  `contrast-color()`/`currentColor`, not a token. Component styles are scoped `<style>`
+  blocks inside `.astro` files.
 - The page shell is componentized: `PageContainer.astro` (the centered max-width `<main>`)
   and `PageHeader.astro` (the `<header>` intro block) own their layout as scoped styles —
   there is no global `.page-container`/`.page-header` utility.
@@ -93,8 +92,9 @@ update both sides when renaming/deleting.
 - **`Typography` takes only `tagName`** — no `class`, no attribute pass-through. It renders the
   element and applies the editorial `.inline` highlight to block text. If an element needs a
   class or any attribute (href, id, aria-*, ...), author it as a **plain HTML element**, not a
-  `<Typography>` (this is why MDX overrides in `mdxComponents.ts` render raw elements). The
-  inert `size`/`variant`/`prose` props were removed site-wide.
+  `<Typography>`. MDX bodies render with **plain HTML** elements (no `components` map passed to
+  `<Content />`); there is no `mdxComponents` override layer. The inert `size`/`variant`/`prose`
+  props were removed site-wide.
 
 ### Card pattern (`src/components/Card.astro`)
 There is **one** card component. It is slot-driven and has no per-type variants: a call
@@ -107,10 +107,6 @@ Per-type formatting/maps (date format,
 context truncation, talk/timeline type→label/colour, project status) live in
 `src/utils/cards.ts` + `src/utils/formatDate.ts` and are applied at the call site.
 
-- The shared card styles are global in `src/styles/cards.css` (imported once in
-  `BaseLayout`): `.card`, `.card-list`/`--compact`, and `.card-badges`. The component
-  carries no scoped styles. Slotted bespoke markup is styled by the call site's own CSS
-  (e.g. the timeline header/skills/disclosure scoped in `TimelineEntry`).
 - `CardList.astro` is the listing shell: it owns the `<ul class="card-list">` wrapper
   (`compact` prop → `--compact`) and the empty-state fallback, auto-detecting emptiness from
   its slot. Callers map their items into `<li><Card/></li>` in the default slot and pass an

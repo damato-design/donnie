@@ -42,7 +42,6 @@ import ImpactMetrics from '@components/ImpactMetrics.astro';
 import Section from '@components/Section.astro';
 import Label from '@components/Label.astro';
 import Typography from '@components/Typography.astro';
-import { mdxComponents } from '@components/mdxComponents';
 import { getCollection, getEntry, render } from 'astro:content';
 import { calculateReadingTime, formatReadingTime } from '@utils/readingTime';
 
@@ -254,7 +253,7 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     <!-- Additional MDX Content (if any) -->
     {Content && (
       <section class="case-study-content">
-        <Content components={mdxComponents} />
+        <Content />
       </section>
     )}
 

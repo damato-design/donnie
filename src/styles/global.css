@@ -83,11 +83,22 @@ a:focus-visible {
   outline: 2px solid var(--color-accent);
 }
 
+ul li {
+  margin-block: 16px;
+}
+
 /* Images */
 img {
   max-width: 100%;
   height: auto;
   display: block;
+}
+
+blockquote {
+  border-left: 4px solid currentColor;
+  padding-left: 16px;
+  margin: 16px 0;
+  font-style: italic;
 }
 
 /* Disclosure (native <details>/<summary>)

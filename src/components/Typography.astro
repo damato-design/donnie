@@ -38,6 +38,22 @@ const shouldWrap = blockElements.includes(Tag);
 </Tag>
 
 <style>
+  :where(h1, h2, h3) {
+    font-family: "BBH Hegarty", sans-serif;
+    font-weight: normal;
+  }
+
+  h1 {
+    filter: url('#longshadow');
+    transform: skewY(-4deg);
+    color: var(--color-bg-elevated);
+    pointer-events: none;
+    line-height: 1;
+    padding-block-end: 32px;
+    margin-block: 0;
+    font-size: clamp(2.25rem, 1.5rem + 6vw, 10rem);
+  }
+
   .inline {
     background: var(--color-bg-elevated);
     padding: .25lh .5em;

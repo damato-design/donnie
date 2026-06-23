@@ -80,10 +80,10 @@ const recentDecisions = allDecisions
     <!-- CASE-FIRST HERO -->
     <Hero>
       <Typography tagName="h1">Donnie <br/> D'Amato</Typography>
-      <Typography>Design systems where design and code work beautifully together.</Typography>
+      <Typography>UX Architect improving design systems and AI behavior.</Typography>
       <ButtonGroup>
-        <Button href="/projects" variant="primary">Explore Case Studies</Button>
-        <Button href="/decisions" variant="secondary">How I Make Decisions</Button>
+        <Button href="/projects" variant="primary">Explore my work</Button>
+        <Button href="/decisions" variant="secondary">Follow my thinking</Button>
       </ButtonGroup>
       <Media slot="aside" src={portrait.src} alt={`Portrait of ${siteConfig.author.name}`} />
     </Hero>
@@ -91,12 +91,8 @@ const recentDecisions = allDecisions
     <!-- Introduction -->
     <PageHeader>
       <Typography tagName="p">
-        Hey, I'm {siteConfig.author.name}, a {siteConfig.author.title.toLowerCase()} with a background in UX design, front-end engineering, and higher education. I build systems that aren't just component libraries, they're strategic frameworks that turn chaos into cohesion.
+        Hey, I'm {siteConfig.author.name}, a {siteConfig.author.title.toLowerCase()} with a background spanning design, front-end engineering, and higher education. For over a decade I've worked across the design systems practice, from token architecture and governance to the strategic frameworks that bring coherence at scale. Now I'm bringing that same discipline to a new frontier: shaping how AI behaves with the rigor we expect from a best in class interface.
       </Typography>
-      <Typography tagName="p">
-        Every major decision is documented, because the best design systems don't just scale products, they scale people too.
-      </Typography>
-      <ForwardLink href="/journey" text="Read my journey" />
     </PageHeader>
 
     <!-- Recent Decisions -->
@@ -126,21 +122,29 @@ const recentDecisions = allDecisions
     </section>
 
     <!-- Testimonials -->
-    <Testimonials limit={3} />
+    <!-- <Testimonials limit={3} /> -->
 
     <!-- What I Think About -->
     <section class="thinking">
       <Typography tagName="h2">Problems I Enjoy Solving</Typography>
-      <Typography>
-        Allowing expression without breaking consistency · Giving designers and engineers the same language · Theming at scale across brands, locales, and accessibility needs · Bounded, semantic token systems over sprawling primitives · Working with the web's native layout instead of against it · Standardizing the vocabulary of design tokens · Bridging the gap between design and code · Scaling people, not just products
-      </Typography>
+      <ul>
+        <Typography tagName='li'>Allowing expression without breaking consistency</Typography>
+        <Typography tagName='li'>Giving designers, engineers, and now models the same language</Typography>
+        <Typography tagName='li'>Designing how AI behaves predictably without flattening it</Typography>
+        <Typography tagName='li'>Theming at scale across brands, locales, and accessibility needs</Typography>
+        <Typography tagName='li'>Bounded, semantic token systems over sprawling primitives</Typography>
+        <Typography tagName='li'>Bringing systems thinking to a new medium</Typography>
+        <Typography tagName='li'>Bridging the gap between design and code</Typography>
+        <Typography tagName='li'>Teaching the next people to do this work</Typography>
+        <Typography tagName='li'>Scaling people, not just products</Typography>
+      </ul>
     </section>
 
     <!-- CTA -->
     <section class="cta">
       <Typography tagName="h2">Let's Work Together</Typography>
       <Typography>
-        Looking for design systems leadership, theming and token architecture, or someone who documents their thinking and shares it openly? Let's talk.
+        Looking for user experience leadership, design systems and token architecture, guidance on designing how AI behaves, or someone who documents their thinking and shares it openly? Let's talk.
       </Typography>
       <ButtonGroup>
         <Button href="/projects" variant="primary">View My Work</Button>

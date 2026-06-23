@@ -45,7 +45,7 @@ export const siteConfig = {
    *
    * Default meta description for SEO and social sharing.
    */
-  description: 'Design Systems Architect based in New York, author of Mise en Mode, and international speaker bridging design and engineering with scalable, token-driven systems.',
+  description: 'User Experience Architect based in New York, author of Mise en Mode, and international speaker bridging design and engineering with scalable, token-driven systems.',
 
   /**
    * Author information
@@ -58,10 +58,10 @@ export const siteConfig = {
     name: "Donnie D'Amato",
 
     /** Professional title or role */
-    title: 'Design Systems Architect',
+    title: 'User Experience Architect',
 
     /** Short biography or professional summary */
-    bio: 'Design Systems Architect based in New York and author of Mise en Mode. I began as an artist making creative interactions and, after two decades of writing code, found my purpose: to build great systems and pass the knowledge on to others.',
+    bio: 'User Experience Architect based in New York and author of Mise en Mode. I began as an artist making creative interactions and, after two decades of being a maker on the web, found my purpose: to build great systems and pass the knowledge on to others.',
 
     /** Contact email address */
     email: 'donnie@damato.design',

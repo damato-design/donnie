@@ -59,13 +59,6 @@ interface Props {
 
 const { src, alt = '', controls = true, ratio, maxWidth, ...rest } = Astro.props;
 
-const maxWidthValue =
-  maxWidth != null
-    ? typeof maxWidth === 'number'
-      ? `${maxWidth}px`
-      : maxWidth
-    : undefined;
-
 const ext = src.split(/[?#]/)[0].split('.').pop()?.toLowerCase() ?? '';
 
 const VIDEO = ['mp4', 'webm', 'ogv', 'mov', 'm4v'];
