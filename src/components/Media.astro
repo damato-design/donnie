@@ -21,6 +21,10 @@
  * value is any CSS `aspect-ratio` (e.g. `"16/9"`, `"1/1"`, or a number). Without
  * `ratio` the media keeps its own intrinsic dimensions.
  *
+ * Pass `maxWidth` to cap how wide the media can grow (any CSS length, e.g.
+ * `"480px"`, `"32rem"`; a bare number is treated as pixels). With `ratio` the
+ * cap applies to the aspect-ratio frame, otherwise to the media element.
+ *
  * @component
  *
  * @example
@@ -44,11 +48,23 @@ interface Props {
    * (e.g. "16/9", "1/1", 1.5). Omit to use the media's intrinsic size.
    */
   ratio?: string | number;
+  /**
+   * CSS max-width cap for the media (e.g. "480px", "32rem", "60ch"). A bare
+   * number is treated as pixels. Omit for the default full-width behavior.
+   */
+  maxWidth?: string | number;
   /** Any other valid attribute, forwarded to the rendered element. */
   [key: string]: unknown;
 }
 
-const { src, alt = '', controls = true, ratio, ...rest } = Astro.props;
+const { src, alt = '', controls = true, ratio, maxWidth, ...rest } = Astro.props;
+
+const maxWidthValue =
+  maxWidth != null
+    ? typeof maxWidth === 'number'
+      ? `${maxWidth}px`
+      : maxWidth
+    : undefined;
 
 const ext = src.split(/[?#]/)[0].split('.').pop()?.toLowerCase() ?? '';
 
@@ -62,15 +78,24 @@ const mediaAttrs =
   kind === 'image'
     ? { src, alt }
     : { src, controls, 'aria-label': alt || undefined };
+const max = maxWidth ? `min(${maxWidth}, 100%)` : '100%';
 ---
 
 {
   ratio != null ? (
-    <div class="media-frame" style={`aspect-ratio: ${ratio};`}>
+    <div
+      class="media-frame"
+      style={`aspect-ratio: ${ratio}; max-width: ${max}`}
+    >
       <Tag class="media" {...mediaAttrs} {...rest} />
     </div>
   ) : (
-    <Tag class="media" {...mediaAttrs} {...rest} />
+    <Tag
+      class="media"
+      style={`max-width: ${max}`}
+      {...mediaAttrs}
+      {...rest}
+    />
   )
 }
 

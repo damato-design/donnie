@@ -30,12 +30,15 @@ import SEO from '@components/SEO.astro';
 import TimelineEntry from '@components/TimelineEntry.astro';
 import PageHeader from '@components/PageHeader.astro';
 import Hero from '@components/Hero.astro';
+import Media from '@components/Media.astro';
 import Typography from '@components/Typography.astro';
 import Button from '@components/Button.astro';
 import ButtonGroup from '@components/ButtonGroup.astro';
 import { mdxComponents } from '@components/mdxComponents';
 import { getCollection, render } from 'astro:content';
 import { pagesConfig } from '../pages.config';
+import { siteConfig } from 'src/config';
+import building from '@assets/building.jpg';
 
 /**
  * Queries all journey entries from the content collection
@@ -82,11 +85,12 @@ const entriesWithContent = await Promise.all(
   />
 
     <Hero>
-      <Typography tagName="h2">Two decades in, <em>still learning out loud</em></Typography>
+      <Typography tagName="h2">Start'em young</Typography>
       <Typography tagName="p">From making creative interactions to architecting design systems and teaching others to do the same. If the path resonates, I'd love to hear from you.</Typography>
       <ButtonGroup>
-        <Button href="/contact" variant="primary">Let's connect</Button>
+        <Button href="/projects" variant="primary">Recent projects</Button>
       </ButtonGroup>
+      <Media slot="aside" src={building.src} alt={`Younger photo of ${siteConfig.author.name}`} maxWidth="360px" />
     </Hero>
 
     <PageHeader>
