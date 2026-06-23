@@ -18,7 +18,8 @@
  * @module content.config
  */
 
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 /**
@@ -248,7 +249,7 @@ const writingCollection = defineCollection({
     tags: z.array(z.string()).optional(),
 
     /** Canonical URL of the full post on the blog */
-    url: z.string().url(),
+    url: z.url(),
   }),
 });
 
@@ -277,7 +278,7 @@ const speakingCollection = defineCollection({
     event: z.string(),
     
     /** Event website URL (optional) */
-    eventUrl: z.string().url().optional(),
+    eventUrl: z.url().optional(),
     
     /** Date of the talk */
     date: z.coerce.date(),
@@ -289,10 +290,10 @@ const speakingCollection = defineCollection({
     type: z.enum(['conference', 'meetup', 'podcast', 'workshop', 'webinar']),
     
     /** Link to slides (optional) */
-    slides: z.string().url().optional(),
+    slides: z.url().optional(),
     
     /** Link to video recording (optional) */
-    video: z.string().url().optional(),
+    video: z.url().optional(),
     
     /** Talk duration (e.g., "45 min", "1 hour") */
     duration: z.string().optional(),
@@ -336,7 +337,7 @@ const testimonialsCollection = defineCollection({
     quote: z.string(),
     
     /** LinkedIn profile URL (optional) */
-    linkedin: z.string().url().optional(),
+    linkedin: z.url().optional(),
     
     /** Whether to feature on homepage */
     featured: z.boolean().default(false),

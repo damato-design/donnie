@@ -18,7 +18,7 @@ content while keeping the theme's structure, design, and tooling.
 
 ## Tech stack & commands
 
-- **Astro v5** (static output), **MDX**, **@astrojs/sitemap**, **sharp** for images.
+- **Astro v7** (static output), **MDX**, **@astrojs/sitemap**, **sharp** for images.
 - `npm run dev` — local dev server.
 - `npm run build` — runs **`astro check` (type check) && `astro build`**. A green build is
   the bar; it validates every content collection against its Zod schema.
