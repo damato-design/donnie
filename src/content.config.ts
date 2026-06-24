@@ -32,7 +32,6 @@ import { glob } from 'astro/loaders';
  * - Required narrative sections for consistent storytelling
  * - Key decisions with reasoning and alternatives
  * - Impact metrics (quantitative and qualitative)
- * - Featured flag for homepage showcase
  * - Optional custom order for manual curation
  * - Related project and decision slugs for cross-referencing
  */
@@ -92,10 +91,7 @@ const projectsCollection = defineCollection({
     
     /** Key learnings and takeaways */
     learnings: z.array(z.string()),
-    
-    /** Whether to feature on homepage */
-    featured: z.boolean().default(false),
-    
+
     /** Project status */
     status: z.enum(['completed', 'ongoing', 'archived']).default('completed'),
     
@@ -263,7 +259,6 @@ const writingCollection = defineCollection({
  * - Links to slides and video recordings
  * - Event information and location
  * - Optional topics and duration
- * - Featured flag for highlighting
  */
 const speakingCollection = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/speaking' }),
@@ -273,9 +268,6 @@ const speakingCollection = defineCollection({
     
     /** Talk description */
     description: z.string(),
-    
-    /** Event name */
-    event: z.string(),
     
     /** Event website URL (optional) */
     eventUrl: z.url().optional(),
@@ -300,9 +292,6 @@ const speakingCollection = defineCollection({
     
     /** Topics covered in the talk */
     topics: z.array(z.string()).optional(),
-    
-    /** Whether to feature this talk */
-    featured: z.boolean().default(false),
   }),
 });
 
@@ -316,7 +305,6 @@ const speakingCollection = defineCollection({
  * - Relationship context
  * - Quote text
  * - Optional LinkedIn profile link
- * - Featured flag for homepage display
  */
 const testimonialsCollection = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/testimonials' }),
@@ -338,10 +326,7 @@ const testimonialsCollection = defineCollection({
     
     /** LinkedIn profile URL (optional) */
     linkedin: z.url().optional(),
-    
-    /** Whether to feature on homepage */
-    featured: z.boolean().default(false),
-    
+
     /** Date of the testimonial */
     date: z.coerce.date(),
   }),

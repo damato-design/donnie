@@ -18,7 +18,7 @@
  *
  * @component
  *
- * @slot badge - Optional badge/label row at top (e.g. "Featured", status, type)
+ * @slot badge - Optional badge/label row at top (e.g. status, type)
  * @slot meta - Metadata line (date, role, category, etc.)
  * @slot title - Card heading/title
  * @slot description - Card description or summary text
@@ -34,7 +34,7 @@
  *   <Fragment slot="title">Card Title</Fragment>
  *   <Fragment slot="description">Card description text</Fragment>
  *   <ButtonGroup slot="cta">
- *     <Button href="/example" variant="secondary" size="sm" arrow>Read more</Button>
+ *     <Button href="/example" variant="secondary" arrow>Read more</Button>
  *   </ButtonGroup>
  * </Card>
  * ```
@@ -52,8 +52,8 @@ const hasDescription = Astro.slots.has('description');
 <article class="card">
   <slot name="badge" />
   {hasMeta && <Typography tagName="span"><slot name="meta" /></Typography>}
-  {hasTitle && <Typography tagName="span"><slot name="title" /></Typography>}
-  {hasDescription && <Typography tagName="span"><slot name="description" /></Typography>}
+  {hasTitle && <Typography tagName="h3"><slot name="title" /></Typography>}
+  {hasDescription && <Typography tagName="p"><slot name="description" /></Typography>}
   <slot name="tags" />
   <slot />
   <slot name="cta" />
@@ -61,12 +61,27 @@ const hasDescription = Astro.slots.has('description');
 
 <style>
   .card {
-     display: flex;
+    display: flex;
     flex-direction: column;
     align-items: start;
-    gap: 8px;
     padding: 1.5rem 1.75rem;
     background: var(--color-bg-elevated);
     border: 1px solid;
+
+    & > :global(:where(h3, p, li) span) {
+      display: contents;
+      line-height: inherit;
+    }
+
+    & > :global(span) {
+      font-size: .8em;
+      padding-block-end: 8px;
+    }
+
+    & > :global(h3) {
+      margin: 0;
+      font-size: 2em;
+      line-height: 1;
+    }
   }
 </style>

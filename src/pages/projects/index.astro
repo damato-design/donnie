@@ -4,12 +4,12 @@
  * 
  * Lists all projects as case studies with impact summaries. Projects are displayed
  * in a prioritized order: custom order (if specified) takes precedence, otherwise
- * sorted by year (most recent first). Featured projects are highlighted.
- * 
+ * sorted by year (most recent first).
+ *
  * Features:
  * - Queries all projects from content collection
  * - Smart sorting: custom order → year (descending)
- * - Displays project and featured count statistics
+ * - Displays project count statistics
  * - Uses the shared Card component for consistent presentation
  * - SEO optimization
  * - Empty state handling
@@ -25,7 +25,6 @@ import Card from '@components/Card.astro';
 import CardList from '@components/CardList.astro';
 import ButtonGroup from '@components/ButtonGroup.astro';
 import Button from '@components/Button.astro';
-import FeaturedBadge from '@components/FeaturedBadge.astro';
 import Label from '@components/Label.astro';
 import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
@@ -50,7 +49,7 @@ const allProjects = await getCollection('projects');
  * 2. Projects with 'order' field are prioritized over those without
  * 3. Projects without 'order' are sorted by year (descending - newest first)
  * 
- * This allows manual curation of featured projects while maintaining
+ * This allows manual curation of priority projects while maintaining
  * chronological order for others.
  */
 const sortedProjects = allProjects.sort((a, b) => {
@@ -69,11 +68,6 @@ const sortedProjects = allProjects.sort((a, b) => {
  * Total count of projects for statistics display
  */
 const totalProjects = sortedProjects.length;
-
-/**
- * Count of featured projects for statistics display
- */
-const featuredCount = sortedProjects.filter(p => p.data.featured).length;
 ---
 
 <BaseLayout>
@@ -96,7 +90,7 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
     <PageHeader>
       <Typography tagName="h1">{pagesConfig.projects.heading}</Typography>
       <Typography tagName="p">{pagesConfig.projects.intro}</Typography>
-      <PageStats text={`${totalProjects} projects · ${featuredCount} featured`} />
+      <PageStats text={`${totalProjects} projects`} />
     </PageHeader>
 
     <CardList empty="No projects available yet.">
@@ -104,7 +98,6 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
         <li>
           <Card>
             <div slot="badge" class="card-badges">
-              {project.data.featured && <FeaturedBadge />}
               {project.data.status !== 'completed' && (
                 <Label color={statusConfig[project.data.status].color} uppercase>{statusConfig[project.data.status].label}</Label>
               )}
@@ -117,7 +110,7 @@ const featuredCount = sortedProjects.filter(p => p.data.featured).length;
             <TagList slot="tags" items={project.data.techStack} max={4} />
 
             <ButtonGroup slot="cta">
-              <Button href={`/projects/${project.id}`} variant="secondary" size="sm" arrow>View case study</Button>
+              <Button href={`/projects/${project.id}`} variant="secondary" arrow>View case study</Button>
             </ButtonGroup>
           </Card>
         </li>

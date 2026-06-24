@@ -3,8 +3,8 @@
  * Home Page
  * 
  * Case-study-first portfolio homepage that immediately showcases real impact and outcomes
- * rather than generic taglines. Features a hero section with featured project snapshots,
- * recent decisions, testimonials, and clear calls-to-action.
+ * rather than generic taglines. Features a hero section, recent decisions, testimonials,
+ * and clear calls-to-action.
  * 
  * Design Philosophy:
  * - Lead with tangible results and case studies
@@ -13,15 +13,14 @@
  * - Provide multiple entry points (projects, decisions, journey)
  * 
  * Sections:
- * 1. Hero - Value statement with featured case study snapshots
+ * 1. Hero - Value statement with portrait
  * 2. Introduction - Brief personal introduction with journey link
  * 3. Recent Decisions - Latest architectural/technical decisions
  * 4. Testimonials - Social proof from colleagues and clients
  * 5. Thinking - Problems and topics of interest
  * 6. CTA - Call-to-action for work opportunities
- * 
+ *
  * Features:
- * - Featured projects showcase (top 2-3)
  * - Recent decisions preview (top 2)
  * - Testimonials integration
  * - Structured data for SEO (WebSite and Person)
@@ -37,7 +36,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import StructuredData from '@components/StructuredData.astro';
 import ForwardLink from '@components/ForwardLink.astro';
-import Testimonials from '@components/Testimonials.astro';
+// import Testimonials from '@components/Testimonials.astro';
 import Hero from '@components/Hero.astro';
 import PageHeader from '@components/PageHeader.astro';
 import Media from '@components/Media.astro';
@@ -113,7 +112,7 @@ const recentDecisions = allDecisions
               <TagList slot="tags" items={decision.data.tags ?? []} />
 
               <ButtonGroup slot="cta">
-                <Button href={`/decisions/${decision.id}`} variant="secondary" size="sm" arrow>Read decision</Button>
+                <Button href={`/decisions/${decision.id}`} variant="secondary" arrow>Read decision</Button>
               </ButtonGroup>
             </Card>
           </li>

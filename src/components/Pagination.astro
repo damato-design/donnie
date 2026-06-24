@@ -96,7 +96,6 @@ function getPageUrl(page: number): string {
     <Button
       href={currentPage > 1 ? getPageUrl(currentPage - 1) : undefined}
       variant="secondary"
-      size="sm"
       disabled={currentPage <= 1}
       aria-label="Previous page"
     >
@@ -127,7 +126,6 @@ function getPageUrl(page: number): string {
     <Button
       href={currentPage < totalPages ? getPageUrl(currentPage + 1) : undefined}
       variant="secondary"
-      size="sm"
       disabled={currentPage >= totalPages}
       aria-label="Next page"
     >

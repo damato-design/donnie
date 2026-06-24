@@ -7,7 +7,7 @@
  * for it wherever a `<Button>` (or two) is dropped into the page: hero CTAs,
  * section CTAs, a card's `cta` slot, the 404 home link, etc. It owns only the
  * grouping/layout; the buttons themselves are composed as slotted children, so
- * each picks its own `variant`/`size`/`arrow`.
+ * each picks its own `variant`/`arrow`.
  *
  * @component
  * @slot default - The button(s) to lay out (one or two `<Button>`s).
@@ -22,7 +22,7 @@
  * <Card>
  *   ...
  *   <ButtonGroup slot="cta">
- *     <Button href="/projects/x" variant="secondary" size="sm" arrow>View case study</Button>
+ *     <Button href="/projects/x" variant="secondary" arrow>View case study</Button>
  *   </ButtonGroup>
  * </Card>
  * ```

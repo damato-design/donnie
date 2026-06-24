@@ -52,8 +52,8 @@ All content is MDX in `src/content/<collection>/`, validated by Zod. Collections
 
 - **projects** — case studies. Rich schema: `title, role, year, outcomeSummary, overview,
   problem, constraints[], approach, keyDecisions[], techStack[], impact{metrics?,
-  qualitative}, learnings[], featured, status, order?, relatedProjects?, relatedDecisions?`.
-  `featured` + `order` drive the homepage hero cards.
+  qualitative}, learnings[], status, order?, relatedProjects?, relatedDecisions?`.
+  `order` drives the manual sort order on the projects listing.
 - **decisions** — ADR-style: `title, date, context, decision, alternatives[], reasoning,
   tags?, relatedProjects?, relatedDecisions?`.
 - **journey** — timeline entries: `date, title, type(milestone|learning|transition),
@@ -61,8 +61,8 @@ All content is MDX in `src/content/<collection>/`, validated by Zod. Collections
 - **writing** — `title, description, publishDate, updatedDate?, tags?, draft`. Bodies are
   short summaries linking to the full posts on `blog.damato.design`.
 - **speaking** — `title, description, event, eventUrl?, date, location, type(conference|
-  meetup|podcast|workshop|webinar), slides?, video?, duration?, topics?, featured`.
-- **testimonials** — `name, role, company, relationship, quote, linkedin?, featured, date`.
+  meetup|podcast|workshop|webinar), slides?, video?, duration?, topics?`.
+- **testimonials** — `name, role, company, relationship, quote, linkedin?, date`.
 
 Cross-references (`relatedProjects`/`relatedDecisions`) use the file slug (filename without
 extension). A dangling reference to a deleted slug will break related-content rendering —
@@ -163,6 +163,6 @@ are `compact` and `divider`.
 ## Adding content (typical task)
 1. Add an MDX file under the right `src/content/<collection>/`; match an existing file's
    frontmatter exactly (schemas are strict — required arrays may be empty but must be valid).
-2. For projects, set `featured`/`order` if it should appear in the homepage hero.
+2. For projects, set `order` to control its position in the projects listing.
 3. Wire any `relatedProjects`/`relatedDecisions` by slug on both sides.
 4. `npm run build` and confirm a green build (no schema errors), then spot-check `dist/`.

@@ -55,22 +55,16 @@ const sortedJourneyEntries = allJourneyEntries.sort((a, b) => {
 });
 
 /**
- * Renders content for each entry and checks for body content
- * 
- * Processes each journey entry to:
- * 1. Render the MDX content component
- * 2. Detect if the entry has body content beyond frontmatter
- * 3. Return entry data with Content component and hasContent flag
- * 
- * This allows the TimelineEntry component to conditionally show
- * the expand/collapse functionality only for entries with additional content.
+ * Renders the MDX content component for each entry.
+ *
+ * The TimelineEntry's Disclosure renders nothing when the slotted body is
+ * empty, so entries without additional content simply omit the expander, with
+ * no per-entry flag needed here.
  */
 const entriesWithContent = await Promise.all(
   sortedJourneyEntries.map(async (entry) => {
     const { Content } = await render(entry);
-    // Check if entry has body content (not just frontmatter)
-    const hasContent = Boolean(entry.body && entry.body.trim().length > 0);
-    return { entry, Content, hasContent };
+    return { entry, Content };
   })
 );
 ---
@@ -99,16 +93,15 @@ const entriesWithContent = await Promise.all(
 
     {entriesWithContent.length > 0 ? (
       <div class="journey-timeline">
-        {entriesWithContent.map(({ entry, Content, hasContent }) => (
+        {entriesWithContent.map(({ entry, Content }) => (
           <TimelineEntry
             date={entry.data.date}
             title={entry.data.title}
             type={entry.data.type}
             description={entry.data.description}
             skills={entry.data.skills}
-            hasContent={hasContent}
           >
-            {hasContent && <Content />}
+            <Content />
           </TimelineEntry>
         ))}
       </div>

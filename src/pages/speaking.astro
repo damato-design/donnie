@@ -31,8 +31,6 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import Card from '@components/Card.astro';
 import CardList from '@components/CardList.astro';
-import FeaturedBadge from '@components/FeaturedBadge.astro';
-import Label from '@components/Label.astro';
 import TagList from '@components/TagList.astro';
 import PageStats from '@components/PageStats.astro';
 import PageHeader from '@components/PageHeader.astro';
@@ -43,7 +41,6 @@ import Button from '@components/Button.astro';
 import ButtonGroup from '@components/ButtonGroup.astro';
 import { getCollection } from 'astro:content';
 import { formatMonthYear } from '@utils/formatDate';
-import { talkTypeLabels, talkTypeColors } from '@utils/cards';
 import { pagesConfig } from '../pages.config';
 
 /**
@@ -141,49 +138,31 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
               {talksByYear[year].map((talk) => (
                 <li>
                   <Card>
-                    <Fragment slot="badge">
-                      {talk.data.featured && <FeaturedBadge />}
-                      <Label color={talkTypeColors[talk.data.type]} uppercase>{talkTypeLabels[talk.data.type]}</Label>
-                      <Typography tagName="span">{formatMonthYear(talk.data.date)}</Typography>
-                    </Fragment>
-
+                    <Fragment slot="meta">{formatMonthYear(talk.data.date)} · {talk.data.location}</Fragment>
                     <Fragment slot="title">{talk.data.title}</Fragment>
                     <Fragment slot="description">{talk.data.description}</Fragment>
-
                     <TagList slot="tags" items={talk.data.topics ?? []} />
-
-                    {talk.data.eventUrl ? (
-                      <a href={talk.data.eventUrl} target="_blank" rel="noopener noreferrer">
-                        {talk.data.event}
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                          <polyline points="15 3 21 3 21 9"></polyline>
-                          <line x1="10" y1="14" x2="21" y2="3"></line>
-                        </svg>
-                      </a>
-                    ) : (
-                      <Typography tagName="span">{talk.data.event}</Typography>
-                    )}
-                    <Typography tagName="span">· {talk.data.location}</Typography>
-                    {talk.data.duration && <Typography tagName="span">· {talk.data.duration}</Typography>}
-
-                    {talk.data.slides && (
-                      <a href={talk.data.slides} target="_blank" rel="noopener noreferrer">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                          <line x1="8" y1="21" x2="16" y2="21"></line>
-                          <line x1="12" y1="17" x2="12" y2="21"></line>
-                        </svg>
-                        Slides
-                      </a>
-                    )}
-                    {talk.data.video && (
-                      <a href={talk.data.video} target="_blank" rel="noopener noreferrer">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                        </svg>
-                        Video
-                      </a>
+                    {(talk.data.slides || talk.data.video) && (
+                      <ButtonGroup slot="cta">
+                        {talk.data.slides && (
+                          <Button href={talk.data.slides} variant="secondary" external>
+                            <svg slot="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                              <line x1="8" y1="21" x2="16" y2="21"></line>
+                              <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            Slides
+                          </Button>
+                        )}
+                        {talk.data.video && (
+                          <Button href={talk.data.video} variant="secondary" external>
+                            <svg slot="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            Video
+                          </Button>
+                        )}
+                      </ButtonGroup>
                     )}
                   </Card>
                 </li>

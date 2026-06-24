@@ -12,19 +12,23 @@
  * - no `href`                  -> `<button type=...>`
  *
  * Content is slotted, so an icon + label compose naturally (the button is a
- * flex row). Visual variants are `primary` (filled) and `secondary` (outline);
- * `sm` tightens padding/size for compact controls like pagination. Set `arrow`
- * to append the standard trailing forward arrow (e.g. card CTAs).
+ * flex row). Visual variants are `primary` (filled) and `secondary` (outline).
+ * Set `arrow` to append the standard trailing forward arrow (e.g. card CTAs);
+ * fill the `icon` slot to prepend a leading icon (e.g. a Slides/Video glyph).
  *
  * @component
  * @slot default - Button label / icon content.
+ * @slot icon - Optional leading icon, rendered before the label.
  *
  * @example
  * ```astro
  * <Button href="/projects" variant="primary">View My Work</Button>
  * <Button href="https://cal.com/x" variant="secondary" external>Book a call</Button>
- * <Button href="/projects/x" variant="secondary" size="sm" arrow>View case study</Button>
- * <Button variant="secondary" size="sm" disabled aria-label="Previous page">…</Button>
+ * <Button href="/projects/x" variant="secondary" arrow>View case study</Button>
+ * <Button href="https://slides.example" variant="secondary" external>
+ *   <SomeIcon slot="icon" />Slides
+ * </Button>
+ * <Button variant="secondary" disabled aria-label="Previous page">…</Button>
  * ```
  */
 
@@ -75,7 +79,7 @@ const tagAttrs =
   ]}
   {...tagAttrs}
   {...rest}
-><slot />{arrow && <ArrowIcon />}</Tag>
+><slot name="icon" /><slot />{arrow && <ArrowIcon />}</Tag>
 
 <style>
   .btn {
