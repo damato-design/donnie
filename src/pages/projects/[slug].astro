@@ -24,7 +24,6 @@
  * - Structured data for SEO
  * - Optional additional markdown content
  * - Scroll-to-top functionality
- * - Related content navigation
  * - Back navigation to projects list
  * 
  * Route: /projects/[slug]
@@ -39,7 +38,6 @@ import ScrollToTop from '@components/ScrollToTop.astro';
 import BackLink from '@components/BackLink.astro';
 import ImpactMetrics from '@components/ImpactMetrics.astro';
 import Section from '@components/Section.astro';
-import Label from '@components/Label.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import { calculateReadingTime, formatReadingTime } from '@utils/readingTime';
@@ -90,16 +88,7 @@ const {
   techStack,
   impact,
   learnings,
-  status,
 } = project.data;
-
-// Status display configuration
-const statusConfig = {
-  completed: { label: 'Completed', color: 'neutral' as const },
-  ongoing: { label: 'Ongoing', color: 'green' as const },
-  archived: { label: 'Archived', color: 'neutral' as const },
-};
-const statusInfo = statusConfig[status || 'completed'];
 
 /**
  * Calculates reading time from all case study content

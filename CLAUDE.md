@@ -52,10 +52,10 @@ All content is MDX in `src/content/<collection>/`, validated by Zod. Collections
 
 - **projects** — case studies. Rich schema: `title, role, year, outcomeSummary, overview,
   problem, constraints[], approach, keyDecisions[], techStack[], impact{metrics?,
-  qualitative}, learnings[], status, order?, relatedProjects?, relatedDecisions?`.
+  qualitative}, learnings[], status, order?`.
   `order` drives the manual sort order on the projects listing.
-- **decisions** — ADR-style: `title, date, context, decision, alternatives[], reasoning,
-  tags?, relatedProjects?, relatedDecisions?`.
+- **decisions** — ADR-style: `title, context, decision, alternatives[], reasoning,
+  tags?`.
 - **journey** — timeline entries: `date, title, type(milestone|learning|transition),
   description, skills?`. Rendered chronologically on `/journey`.
 - **writing** — `title, description, publishDate, updatedDate?, tags?, draft`. Bodies are
@@ -63,10 +63,6 @@ All content is MDX in `src/content/<collection>/`, validated by Zod. Collections
 - **speaking** — `title, description, event, eventUrl?, date, location, type(conference|
   meetup|podcast|workshop|webinar), slides?, video?, duration?, topics?`.
 - **testimonials** — `name, role, company, relationship, quote, linkedin?, date`.
-
-Cross-references (`relatedProjects`/`relatedDecisions`) use the file slug (filename without
-extension). A dangling reference to a deleted slug will break related-content rendering —
-update both sides when renaming/deleting.
 
 ### Pages, layouts, components
 - `src/pages/` — `index.astro` (home), `projects/`, `decisions/`, `journey.astro`,
@@ -164,5 +160,4 @@ are `compact` and `divider`.
 1. Add an MDX file under the right `src/content/<collection>/`; match an existing file's
    frontmatter exactly (schemas are strict — required arrays may be empty but must be valid).
 2. For projects, set `order` to control its position in the projects listing.
-3. Wire any `relatedProjects`/`relatedDecisions` by slug on both sides.
-4. `npm run build` and confirm a green build (no schema errors), then spot-check `dist/`.
+3. `npm run build` and confirm a green build (no schema errors), then spot-check `dist/`.

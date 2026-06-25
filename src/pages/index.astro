@@ -3,7 +3,7 @@
  * Home Page
  * 
  * Case-study-first portfolio homepage that immediately showcases real impact and outcomes
- * rather than generic taglines. Features a hero section, recent decisions, testimonials,
+ * rather than generic taglines. Features a hero section, a decisions preview, testimonials,
  * and clear calls-to-action.
  * 
  * Design Philosophy:
@@ -15,13 +15,13 @@
  * Sections:
  * 1. Hero - Value statement with portrait
  * 2. Introduction - Brief personal introduction with journey link
- * 3. Recent Decisions - Latest architectural/technical decisions
+ * 3. Decisions - A preview of architectural/technical decisions
  * 4. Testimonials - Social proof from colleagues and clients
  * 5. Thinking - Problems and topics of interest
  * 6. CTA - Call-to-action for work opportunities
  *
  * Features:
- * - Recent decisions preview (top 2)
+ * - Decisions preview (first 2)
  * - Testimonials integration
  * - Structured data for SEO (WebSite and Person)
  * - Responsive grid layout
@@ -47,21 +47,17 @@ import TagList from '@components/TagList.astro';
 import Button from '@components/Button.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
-import { formatMonthYear } from '@utils/formatDate';
 import { truncate } from '@utils/cards';
 import { siteConfig } from '../config';
 import portrait from '../assets/donnie.png';
 
 /**
- * Queries recent decisions for preview section
- * 
- * Retrieves all decisions, sorts by date (newest first), and limits to
- * top 2 for the homepage preview.
+ * Queries decisions for the homepage preview section
+ *
+ * Retrieves all decisions and limits to the first 2 for the preview.
  */
 const allDecisions = await getCollection('decisions');
-const recentDecisions = allDecisions
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
-  .slice(0, 2);
+const recentDecisions = allDecisions.slice(0, 2);
 ---
 
 <BaseLayout>
@@ -94,10 +90,10 @@ const recentDecisions = allDecisions
       </Typography>
     </PageHeader>
 
-    <!-- Recent Decisions -->
+    <!-- Decisions -->
     <section class="recent-decisions">
       <div class="section-header">
-        <Typography tagName="h2">Recent Decisions</Typography>
+        <Typography tagName="h2">Decisions</Typography>
         <ForwardLink href="/decisions" text="View all" />
       </div>
       
@@ -105,7 +101,6 @@ const recentDecisions = allDecisions
         {recentDecisions.map((decision) => (
           <li>
             <Card>
-              <Fragment slot="meta">{formatMonthYear(decision.data.date)}</Fragment>
               <Fragment slot="title">{decision.data.title}</Fragment>
               <Fragment slot="description">{truncate(decision.data.context, 180)}</Fragment>
 

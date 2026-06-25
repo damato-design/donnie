@@ -1,6 +1,5 @@
 ---
 title: "Use Semantic 'Intent' Tokens Instead of Exposing Primitives"
-date: 2020-04-09
 context: "Runtime theming made an unbounded value space possible. Without structure, teams would wire components directly to raw primitive values (hex codes, pixel values), recreating the sprawl we were trying to escape."
 decision: "Introduce a small, bounded set of semantic 'Intent' tokens, named by purpose, priority, and property, as the only theming API consumers touch."
 alternatives:
@@ -36,11 +35,4 @@ tags:
   - "design-tokens"
   - "semantic-tokens"
   - "naming"
-relatedProjects:
-  - "godaddy"
-  - "damatods"
-  - "tokenpedia"
-relatedDecisions:
-  - "css-custom-properties-over-generated-css"
-  - "modes-over-themes"
 ---

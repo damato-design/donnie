@@ -1,6 +1,5 @@
 ---
 title: "Avoid z-index Escalation in the System"
-date: 2023-12-11
 context: "Stacking conflicts tempt teams into an arms race of ever-larger z-index values, 'my thing is more important than your thing', until the numbers are meaningless and overlays fight each other unpredictably."
 decision: "Treat reaching for a higher z-index as a smell. Prefer source order, scoped stacking contexts, and a small named set of layers over ad-hoc numeric escalation."
 alternatives:
@@ -34,6 +33,4 @@ tags:
   - "css"
   - "layout"
   - "best-practices"
-relatedDecisions:
-  - "gridless-layout"
 ---

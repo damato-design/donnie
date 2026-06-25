@@ -1,6 +1,5 @@
 ---
 title: "Use Nested Modes Instead of New Tokens for Expressive Moments"
-date: 2023-10-30
 context: "Design systems struggle with expressive fragments, like highlighting a premium product on an otherwise uniform page. The instinct is to mint new tokens for each moment, but that bloats the token set and erodes consistency. Figma's 2023 introduction of Variables with Modes sharpened the question."
 decision: "Scope expression with nested modes (Mise en Mode): visually box a region, then supply new values to existing semantic tokens only within that scope, rather than creating dedicated tokens per expressive moment."
 alternatives:
@@ -34,9 +33,4 @@ tags:
   - "design-tokens"
   - "theming"
   - "modes"
-relatedProjects:
-  - "miseenmode"
-  - "godaddy"
-relatedDecisions:
-  - "semantic-intent-tokens"
 ---

@@ -33,20 +33,6 @@ import { siteConfig } from "../config";
 import { pagesConfig } from "../pages.config";
 import friends from '@assets/friends.jpg';
 
-/**
- * Filters and formats social links from site configuration
- *
- * Only includes platforms that have a URL configured (non-empty values).
- * Capitalizes platform names for display (e.g., "github" becomes "Github").
- *
- * @returns Array of social link objects with platform name and URL
- */
-const socialLinks = Object.entries(siteConfig.social)
-  .filter(([_, url]) => url)
-  .map(([platform, url]) => ({
-    platform: platform.charAt(0).toUpperCase() + platform.slice(1),
-    url,
-  }));
 ---
 
 <BaseLayout>
@@ -68,64 +54,4 @@ const socialLinks = Object.entries(siteConfig.social)
     </ButtonGroup>
     <Media slot="aside" src={friends.src} alt={`Friends of ${siteConfig.author.name}`} maxWidth="460px" />
   </Hero>
-
-  <!-- Page header -->
-  <header class="primary-zone">
-    <Typography tagName="h1">{pagesConfig.contact.heading}</Typography>
-    <Typography tagName="p">
-      The best way to reach me is to grab a slot on my calendar, or find me on
-      the channels below.
-    </Typography>
-  </header>
-
-  <!-- Zone 2: Secondary (Social) -->
-  {
-    socialLinks.length > 0 && (
-      <section class="secondary-zone">
-        <Typography tagName="h2">Elsewhere</Typography>
-        <ul class="social-links">
-          {socialLinks.map((link) => (
-            <li>
-              <a href={link.url} target="_blank" rel="noopener noreferrer">
-                {link.platform}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )
-  }
 </BaseLayout>
-
-<style>
-  .primary-zone {
-    margin-bottom: 3rem;
-  }
-
-  .secondary-zone {
-    padding-top: 3rem;
-    border-top: 1px solid currentColor;
-  }
-
-  .social-links {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .social-links li {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  /* Decorative separator between social links (was an inline span). */
-  .social-links li:not(:first-child)::before {
-    content: "·";
-    user-select: none;
-  }
-</style>

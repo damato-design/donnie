@@ -97,12 +97,6 @@ const projectsCollection = defineCollection({
     
     /** Custom sort order (lower numbers first) */
     order: z.number().optional(),
-    
-    /** Related project slugs for cross-referencing */
-    relatedProjects: z.array(z.string()).optional(),
-    
-    /** Related decision slugs for cross-referencing */
-    relatedDecisions: z.array(z.string()).optional(),
   }),
 });
 
@@ -124,10 +118,7 @@ const decisionsCollection = defineCollection({
   schema: z.object({
     /** Decision title */
     title: z.string(),
-    
-    /** Date the decision was made */
-    date: z.coerce.date(),
-    
+
     /** Context and background for the decision */
     context: z.string(),
     
@@ -149,12 +140,6 @@ const decisionsCollection = defineCollection({
 
     /** Optional tags for categorization */
     tags: z.array(z.string()).optional(),
-    
-    /** Related project slugs for cross-referencing */
-    relatedProjects: z.array(z.string()).optional(),
-    
-    /** Related decision slugs for cross-referencing */
-    relatedDecisions: z.array(z.string()).optional(),
   }),
 });
 

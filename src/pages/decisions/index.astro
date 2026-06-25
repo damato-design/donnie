@@ -2,13 +2,12 @@
 /**
  * Decisions Index Page
  * 
- * Lists all decision log entries in reverse chronological order (most recent first).
- * Provides a transparent view of architectural and technical decisions made throughout
- * the career, with each entry linking to its detailed decision record.
- * 
+ * Lists all decision log entries. Provides a transparent view of architectural and
+ * technical decisions made throughout the career, with each entry linking to its
+ * detailed decision record.
+ *
  * Features:
  * - Queries all decisions from content collection
- * - Sorts by date (descending - newest first)
  * - Displays decision count statistics
  * - Uses the shared Card component for consistent presentation
  * - SEO optimization
@@ -32,7 +31,6 @@ import Hero from '@components/Hero.astro';
 import Media from '@components/Media.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
-import { formatMonthYear } from '@utils/formatDate';
 import { truncate } from '@utils/cards';
 import { pagesConfig } from '../../pages.config';
 import { siteConfig } from 'src/config';
@@ -44,19 +42,9 @@ import uxdx from '@assets/uxdx.jpg'
 const allDecisions = await getCollection('decisions');
 
 /**
- * Sorts decisions by date in descending order (most recent first)
- * 
- * Ensures the latest decisions appear at the top of the list for
- * easy access to recent architectural choices.
- */
-const sortedDecisions = allDecisions.sort((a, b) => {
-  return b.data.date.getTime() - a.data.date.getTime();
-});
-
-/**
  * Total count of documented decisions for statistics display
  */
-const totalDecisions = sortedDecisions.length;
+const totalDecisions = allDecisions.length;
 ---
 
 <BaseLayout>
@@ -83,10 +71,9 @@ const totalDecisions = sortedDecisions.length;
     </PageHeader>
 
     <CardList compact empty="No decisions documented yet.">
-      {sortedDecisions.map((decision) => (
+      {allDecisions.map((decision) => (
         <li>
           <Card>
-            <Fragment slot="meta">{formatMonthYear(decision.data.date)}</Fragment>
             <Fragment slot="title">{decision.data.title}</Fragment>
             <Fragment slot="description">{truncate(decision.data.context, 180)}</Fragment>
 

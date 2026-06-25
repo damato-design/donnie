@@ -15,7 +15,6 @@
  * - Optional markdown body content
  * - SEO optimization with article type
  * - Scroll-to-top functionality
- * - Related content navigation
  * - Back navigation to decisions list
  * 
  * Route: /decisions/[slug]
@@ -33,7 +32,6 @@ import TagList from '@components/TagList.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
-import { formatLongDate } from '@utils/formatDate';
 import { renderInlineMarkdown } from '@utils/markdown';
 
 /**
@@ -62,7 +60,6 @@ interface Props {
 const { decision } = Astro.props;
 const { Content } = await render(decision);
 
-const formattedDate = formatLongDate(decision.data.date);
 const whyItMatteredHtml = await renderInlineMarkdown(decision.data.whyItMattered);
 ---
 
