@@ -1,0 +1,30 @@
+---
+/**
+ * ProsConsList Component
+ *
+ * Renders the contents of one pros/cons table cell: a bulleted list of points,
+ * or a muted "None" placeholder when there are none. The header row (Pros /
+ * Cons) supplies the label and tone, so the list itself is unlabelled.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <td><ProsConsList items={alt.pros} /></td>
+ * ```
+ */
+
+interface Props {
+  /** The points to list; an empty or omitted list renders a "None" placeholder */
+  items?: string[];
+}
+
+const { items = [] } = Astro.props;
+---
+
+ <ul class="detail-list">
+  {items.map((item) => (
+    <li>{item}</li>
+  ))}
+</ul>
+

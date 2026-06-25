@@ -37,7 +37,6 @@ import SEO from '@components/SEO.astro';
 import StructuredData from '@components/StructuredData.astro';
 import ScrollToTop from '@components/ScrollToTop.astro';
 import BackLink from '@components/BackLink.astro';
-import RelatedContent from '@components/RelatedContent.astro';
 import ImpactMetrics from '@components/ImpactMetrics.astro';
 import Section from '@components/Section.astro';
 import Label from '@components/Label.astro';
@@ -91,8 +90,6 @@ const {
   techStack,
   impact,
   learnings,
-  relatedProjects,
-  relatedDecisions,
   status,
 } = project.data;
 
@@ -145,11 +142,6 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
 
     <!-- Case Study Header -->
     <header class="case-study-header">
-      <div class="header-badges">
-        {status && status !== 'completed' && (
-          <Label color={statusInfo.color} uppercase>{statusInfo.label}</Label>
-        )}
-      </div>
       <Typography tagName="h1">{title}</Typography>
       <div class="case-study-meta">
         <Typography tagName="span">{role}</Typography>
@@ -256,12 +248,6 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
         <Content />
       </section>
     )}
-
-    <!-- Related Content -->
-    <RelatedContent 
-      relatedProjects={relatedProjects} 
-      relatedDecisions={relatedDecisions} 
-    />
 
     <BackLink href="/projects" text="All projects" />
 

@@ -27,9 +27,9 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import ScrollToTop from '@components/ScrollToTop.astro';
 import BackLink from '@components/BackLink.astro';
-import RelatedContent from '@components/RelatedContent.astro';
 import Section from '@components/Section.astro';
-import Label from '@components/Label.astro';
+import Alternatives from '@components/Alternatives.astro';
+import TagList from '@components/TagList.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
@@ -76,19 +76,8 @@ const whyItMatteredHtml = await renderInlineMarkdown(decision.data.whyItMattered
 
     <article class="decision-content">
       <header class="decision-header">
-        <time class="decision-date" datetime={decision.data.date.toISOString()}>
-          {formattedDate}
-        </time>
-        
         <Typography tagName="h1">{decision.data.title}</Typography>
-
-        {decision.data.tags && decision.data.tags.length > 0 && (
-          <ul class="decision-tags">
-            {decision.data.tags.map((tag) => (
-              <li><Label>{tag}</Label></li>
-            ))}
-          </ul>
-        )}
+        <TagList items={decision.data.tags ?? []} />
       </header>
 
       <Section title="Context">
@@ -96,41 +85,11 @@ const whyItMatteredHtml = await renderInlineMarkdown(decision.data.whyItMattered
       </Section>
 
       <Section title="Decision">
-        <div class="decision-callout">
-          <Typography tagName="p">{decision.data.decision}</Typography>
-        </div>
+        <Typography tagName="blockquote">{decision.data.decision}</Typography>
       </Section>
 
       <Section title="Alternatives Considered">
-        <ul class="alternatives-list">
-          {decision.data.alternatives.map((alt) => (
-            <li class="alternative-item">
-              <Typography tagName="h3">{alt.option}</Typography>
-              <div class="alternative-details">
-                {alt.pros && alt.pros.length > 0 && (
-                  <div class="pros-cons">
-                    <span class="detail-label pros-label">Pros</span>
-                    <ul class="detail-list">
-                      {alt.pros.map((pro) => (
-                        <li>{pro}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {alt.cons && alt.cons.length > 0 && (
-                  <div class="pros-cons">
-                    <span class="detail-label cons-label">Cons</span>
-                    <ul class="detail-list">
-                      {alt.cons.map((con) => (
-                        <li>{con}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
+        <Alternatives alternatives={decision.data.alternatives} />
       </Section>
 
       <Section title="Reasoning">
@@ -147,11 +106,6 @@ const whyItMatteredHtml = await renderInlineMarkdown(decision.data.whyItMattered
         </section>
       )}
 
-      <RelatedContent 
-        relatedProjects={decision.data.relatedProjects} 
-        relatedDecisions={decision.data.relatedDecisions} 
-      />
-
       <BackLink href="/decisions" text="All decisions" />
     </article>
   <ScrollToTop />
@@ -159,124 +113,3 @@ const whyItMatteredHtml = await renderInlineMarkdown(decision.data.whyItMattered
   
 </BaseLayout>
 
-<style>
-    .decision-page {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
-    }
-
-    .decision-content {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .decision-header {
-      padding-bottom: 2rem;
-    }
-
-    .decision-date {
-      display: block;
-      font-size: 0.875rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .decision-tags {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .decision-content :global(.section) {
-      padding-bottom: 1.5rem;
-    }
-
-    .decision-callout {
-      padding: 1rem 1.25rem;
-      background: var(--color-bg-elevated);
-      border-left: 3px solid var(--color-accent);
-    }
-
-    .alternatives-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .alternative-item {
-      padding: 1.25rem;
-      background: var(--color-bg-elevated);
-      border: 1px solid currentColor;
-    }
-
-    .alternative-details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .pros-cons {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .pros-label {
-      color: #22c55e;
-    }
-
-    .cons-label {
-      color: #ef4444;
-    }
-
-    .detail-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      font-size: 0.875rem;
-      
-    }
-
-    .detail-list li {
-      position: relative;
-      padding-left: 1rem;
-      margin-bottom: 0.375rem;
-    }
-
-    .detail-list li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-    }
-
-    .decision-body {
-      padding-top: 1rem;
-    }
-
-    .decision-body.prose :global(code) {
-      font-size: 0.9em;
-      padding: 0.2em 0.4em;
-      background: var(--color-bg-elevated);
-    }
-
-    .decision-body.prose :global(pre) {
-      padding: 1.25rem;
-      background: var(--color-bg-elevated);
-      border: 1px solid currentColor;
-      overflow-x: auto;
-      margin-bottom: 1.5rem;
-    }
-
-    .decision-body.prose :global(pre code) {
-      padding: 0;
-      background: none;
-    }
-
-  </style>
