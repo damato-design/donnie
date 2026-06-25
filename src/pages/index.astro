@@ -35,29 +35,15 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import StructuredData from '@components/StructuredData.astro';
-import ForwardLink from '@components/ForwardLink.astro';
 // import Testimonials from '@components/Testimonials.astro';
 import Hero from '@components/Hero.astro';
 import PageHeader from '@components/PageHeader.astro';
 import Media from '@components/Media.astro';
-import Card from '@components/Card.astro';
-import CardList from '@components/CardList.astro';
 import ButtonGroup from '@components/ButtonGroup.astro';
-import TagList from '@components/TagList.astro';
 import Button from '@components/Button.astro';
 import Typography from '@components/Typography.astro';
-import { getCollection } from 'astro:content';
-import { truncate } from '@utils/cards';
 import { siteConfig } from '../config';
 import portrait from '../assets/donnie.png';
-
-/**
- * Queries decisions for the homepage preview section
- *
- * Retrieves all decisions and limits to the first 2 for the preview.
- */
-const allDecisions = await getCollection('decisions');
-const recentDecisions = allDecisions.slice(0, 2);
 ---
 
 <BaseLayout>
@@ -89,31 +75,6 @@ const recentDecisions = allDecisions.slice(0, 2);
         Hey, I'm {siteConfig.author.name}, a {siteConfig.author.title.toLowerCase()} with a background spanning design, front-end engineering, and higher education. For over a decade I've worked across the design systems practice, from token architecture and governance to the strategic frameworks that bring coherence at scale. Now I'm bringing that same discipline to a new frontier: shaping how AI behaves with the rigor we expect from a best in class interface.
       </Typography>
     </PageHeader>
-
-    <!-- Decisions -->
-    <section class="recent-decisions">
-      <div class="section-header">
-        <Typography tagName="h2">Decisions</Typography>
-        <ForwardLink href="/decisions" text="View all" />
-      </div>
-      
-      <CardList compact empty="No decisions documented yet.">
-        {recentDecisions.map((decision) => (
-          <li>
-            <Card>
-              <Fragment slot="title">{decision.data.title}</Fragment>
-              <Fragment slot="description">{truncate(decision.data.context, 180)}</Fragment>
-
-              <TagList slot="tags" items={decision.data.tags ?? []} />
-
-              <ButtonGroup slot="cta">
-                <Button href={`/decisions/${decision.id}`} variant="secondary" arrow>Read decision</Button>
-              </ButtonGroup>
-            </Card>
-          </li>
-        ))}
-      </CardList>
-    </section>
 
     <!-- Testimonials -->
     <!-- <Testimonials limit={3} /> -->

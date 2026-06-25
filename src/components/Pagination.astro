@@ -109,15 +109,15 @@ function getPageUrl(page: number): string {
       {pageNumbers.map((page) => (
         <li>
           {page === '...' ? (
-            <span class="pagination-ellipsis">...</span>
+            <span class="pagination-ellipsis"></span>
           ) : (
-            <a
+            <Button
               href={getPageUrl(page as number)}
-              class={`pagination-number ${page === currentPage ? 'active' : ''}`}
+              variant={page === currentPage ? 'primary' : 'secondary'}
               aria-current={page === currentPage ? 'page' : undefined}
             >
               {page}
-            </a>
+            </Button>
           )}
         </li>
       ))}
@@ -161,32 +161,18 @@ function getPageUrl(page: number): string {
     display: flex;
   }
 
-  .pagination-number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 2.25rem;
-    height: 2.25rem;
-    font-size: 0.875rem;
-    
-    transition: all 0.2s ease;
-  }
-
-  .pagination-number:hover:not(.active) {
-    background: var(--color-bg-elevated);
-  }
-
-  .pagination-number.active {
-    background: var(--color-accent);
-    color: var(--color-bg);
-  }
-
   .pagination-ellipsis {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 2.25rem;
-    height: 2.25rem;
+    display: inline-flex;
+    gap: 4px;
+
+    &::before, &::after {
+      content: '';
+      width: 6px;
+      height: 1.5lh;
+      display: inline-block;
+      background: var(--color-bg);
+      border: 1px solid black;
+    }
   }
 
 </style>
