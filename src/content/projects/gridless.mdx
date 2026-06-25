@@ -1,44 +1,51 @@
 ---
-title: "Gridless Design"
-role: "Author & Creator"
+title: "Gridless Design, A Reference Site for Layout Without Grids"
+role: "Creator"
 year: 2021
-outcomeSummary: "An educational resource challenging traditional grid-based design in favor of leveraging native web layout algorithms for responsive design."
-overview: "Gridless Design is a book and educational resource that reframes web layout for designers coming from traditional, grid-first backgrounds, teaching them to harness the browser's own layout engine."
+outcomeSummary: "An educational reference site that helps designers and developers build resilient, responsive layouts by working with the browser's layout engine instead of imposing a print-style grid."
+overview: "Gridless Design makes the case that the web supplies structure and order through its own layout engine, not a fixed visual grid. It walks from the history of the grid through guidance for designers and concrete techniques for developers."
 problem: "Grids have been a foundational design tool for decades, but the web is a different medium. Overlaying a curated grid onto the browser's existing alignment algorithms is often more trouble than it's worth, fighting the platform instead of working with it."
 constraints:
   - "Audience spans traditional designers and web engineers with different mental models"
   - "Must teach a mindset shift, not just a technique"
   - "Examples have to hold up across viewport sizes and user preferences"
-approach: "Rather than prescribe a grid, Gridless Design teaches readers to let content dictate the size of containers and to lean on existing layout rules, flexbox, grid, intrinsic sizing, to create well-aligned compositions without highly curated constraints. On the web, user preferences come first."
+approach: "Rather than prescribe a grid, the site shows how the web supplies structure on its own: content-driven spacing in rem, max and min widths with auto margins for alignment, flexbox for one-dimensional rows and CSS Grid for two-dimensional layouts where columns are informed by their content, and a move away from viewport media queries toward content- and container-aware techniques like the Holy Albatross and ResizeObserver."
 keyDecisions:
   - decision: "Teach 'content-out' layout instead of imposing a fixed grid"
     reasoning: "Letting content and the browser's algorithms drive layout produces more resilient, accessible, preference-respecting results than a rigid grid."
     alternatives:
       - "Standard 12-column grid systems"
       - "Framework-provided grid utilities"
+  - decision: "Split the material into a designer track and a developer track"
+    reasoning: "Designers need the mindset shift while developers need the concrete CSS, so each track meets its reader where they are."
+    alternatives:
+      - "One combined explanation for every reader"
 techStack:
   - "CSS Grid"
   - "Flexbox"
-  - "Intrinsic web design"
+  - "Intrinsic / content-driven sizing"
+  - "Container-aware layout (ResizeObserver, Holy Albatross)"
   - "Responsive design"
 impact:
   metrics:
     - label: "Format"
-      value: "Open educational resource + book"
+      value: "Open educational reference site"
     - label: "Reach"
-      value: "Referenced widely across the design systems community"
+      value: "Cited by Brad Frost, Christine Vallaure, and Figma's design systems guide"
   qualitative: "Gridless Design gave the community a vocabulary and rationale for working with the grain of the web, and it continues to influence how teams think about responsive layout."
 learnings:
-  - "The web rewards working with the medium rather than porting print conventions onto it"
-  - "A clear, opinionated framing helps a mindset shift land"
+  - "The reference resonated more than I expected: as responsive design became the standard, a rigid grid was just another rule stacked on the web's own, and getting content to flow was unfamiliar enough to traditional designers that the teaching was genuinely needed"
+  - "The web rewards working with the medium rather than porting print conventions onto it. Column counts and fixed gutters are habits from a fixed canvas; the browser already resolves alignment, wrapping, and available space, and designing with those algorithms removes the friction that designing against them creates"
+  - "A clear, opinionated framing helps a mindset shift land. Naming the idea 'gridless' and stating the provocation plainly gave people a memorable handle for an unintuitive change, which carried it into talks, articles, and other teams' guidance far better than a neutral how-to would have"
 status: completed
-order: 3
 ---
-
-Grids have been a foundational design tool for decades and perhaps much longer. It would seem ubiquitous to any design practice. However, the web was built as a different medium and it is inappropriate to consider it in the same way as more traditional forms of the past. The act of overlaying a grid onto existing alignment algorithms is arguably more trouble than the results are worth.
 
 > How might we leverage existing layout rules to achieve responsive design?
 
-The "gridless" web design mentality aims to educate folks from traditional design backgrounds in the way of web layout and to harness the power of existing layout engineering to create well-aligned compositions without highly curated constraints. It recommends allowing content to dictate the size of containers because, on the web, user preferences come first.
+Grids came to the web as an inheritance from print, where a fixed canvas makes a fixed grid sensible. The web has no fixed canvas. The viewport, the reader's font size, their zoom, and the content itself all vary, so a curated grid becomes one more rigid rule stacked on top of the rules the browser is already enforcing. "Blasphemy, I need structure and order!" is the honest reaction, and the site's answer is that the web already supplies both through its own layout engine, if you stop fighting it.
+
+The hard part is rarely the CSS, it is the mindset. Anyone trained on a static artboard has learned to place things at coordinates, so letting content simply flow, sizing itself to the space and the words inside it, can feel like giving up control. Gridless meets that discomfort directly: it traces where the grid came from, separates the path for designers from the path for developers, and shows that the order designers want is still there, just produced by the platform instead of drawn on top of it.
+
+That unfamiliarity is exactly why the reference was needed, and why it resonated well beyond what I expected.
 
 Read more at [gridless.design](https://gridless.design).

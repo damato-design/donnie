@@ -52,8 +52,8 @@ All content is MDX in `src/content/<collection>/`, validated by Zod. Collections
 
 - **projects** — case studies. Rich schema: `title, role, year, outcomeSummary, overview,
   problem, constraints[], approach, keyDecisions[], techStack[], impact{metrics?,
-  qualitative}, learnings[], status, order?`.
-  `order` drives the manual sort order on the projects listing.
+  qualitative}, learnings[], status`.
+  The projects listing is sorted by `year` (newest first).
 - **decisions** — ADR-style: `title, context, decision, alternatives[], reasoning,
   tags?`.
 - **journey** — timeline entries: `date, title, type(milestone|learning|transition),
@@ -159,5 +159,5 @@ are `compact` and `divider`.
 ## Adding content (typical task)
 1. Add an MDX file under the right `src/content/<collection>/`; match an existing file's
    frontmatter exactly (schemas are strict — required arrays may be empty but must be valid).
-2. For projects, set `order` to control its position in the projects listing.
+2. Projects are sorted by `year` (newest first); set `year` accordingly.
 3. `npm run build` and confirm a green build (no schema errors), then spot-check `dist/`.

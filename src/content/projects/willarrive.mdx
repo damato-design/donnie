@@ -1,43 +1,44 @@
 ---
-title: "willarrive.in"
+title: "willarrive.in, Real-Time NYC Train Arrivals"
 role: "Creator"
 year: 2016
-outcomeSummary: "A minimal progressive web app that uses geolocation to instantly show when the next train arrives at the nearest station on a chosen line."
-overview: "willarrive.in is a deliberately minimal transit PWA: open it and, with at most one or two taps, see when the next train arrives at your nearest station."
+outcomeSummary: "A minimal PWA for New York City transit: save a subway line to your device, grant location once, and see the next trains in both directions at your nearest station in real time, with almost no tapping."
+overview: "willarrive.in is a deliberately minimal NYC transit PWA, with a separate, branded app for each subway line. Open the one you saved and it shows the next trains in both directions at your closest station."
 problem: "Transit apps usually involve a lot of navigation, ironic for tools whose whole job is to get you somewhere. Each extra tap is friction when you just want to know when the next train comes."
 constraints:
-  - "Minimize taps to surface accurate transit info"
-  - "Real-time accuracy using MTA data"
+  - "Minimize taps to surface the next train"
+  - "Cover both directions at the nearest station from one screen"
   - "Lightweight enough to install as a PWA"
-approach: "Users save a train-line page as a PWA. Launching it checks geolocation to find the closest stop on the chosen line, then shows the relative time to the next train (e.g. 'next train in 7 minutes'). The only other interaction is switching direction, so at most two taps, often just one."
+approach: "The first launch asks for your location once; from then on, opening the saved line uses your geo position to find the closest station and show the next trains in both directions in real time, with nothing to navigate."
 keyDecisions:
-  - decision: "Render line branding via subdomain redirects + Lambda functions"
-    reasoning: "Mapping each line to a URL/subdomain let a single system serve per-line branding without bespoke builds."
+  - decision: "Give each line its own branded subdomain, parsed at the edge"
+    reasoning: "Visiting a line's own subdomain is all that's needed; the line code is parsed at the edge to make the server requests and serve the page back as HTML, branded to match that line."
     alternatives:
       - "A single app with in-app line selection"
-  - decision: "Use the native Geolocation API to pick the nearest stop"
-    reasoning: "Automatically choosing the closest stop removes a manual selection step."
+  - decision: "Use the native Geolocation API to pick the nearest station"
+    reasoning: "Automatically choosing the closest station removes a manual selection step."
     alternatives:
       - "Manual station selection"
 techStack:
   - "Progressive Web App"
   - "Geolocation API"
-  - "AWS Lambda"
+  - "AWS"
+  - "Edge functions"
   - "MTA real-time data"
 impact:
   metrics:
     - label: "Interaction cost"
-      value: "At most two taps to see the next train, often one"
-  qualitative: "willarrive.in demonstrated how far you can cut interaction cost by combining geolocation, real-time data, and a PWA shell into a single-purpose tool."
+      value: "Open and see both directions; location granted once, then no tapping"
+  qualitative: "willarrive.in showed how far you can cut interaction cost by combining geolocation, real-time data, and a per-line PWA into a single-purpose tool."
 learnings:
   - "Aggressively cutting interaction cost can redefine a familiar experience"
+  - "The data you need is often already on the page; reading the network requests can be all it takes"
+  - "The flip side: APIs should restrict which origins can call them and never expose a key the client can read, since an unguarded key is effectively open to anyone"
 status: archived
 ---
 
-Transit app experiences usually result in a lot of navigation. After all, it is an experience meant to navigate a person to a physical destination.
+> How might we reduce the number of taps but continue to present accurate transit information?
 
-> How might we reduce the number of taps but continue to present accurate transit information.
+The name was part of the spark: the domain willarrive.in was available, and a line subdomain reads as a sentence, `e.willarrive.in`, "E will arrive in." Each line got its own branded page, the E rendered as a blue circle with a white E, just like the station signage.
 
-The site allows the user to save a train line web page as a progressive web app to their device. Tapping the icon launches a very minimal interface, first checking for their geographic position to determine the closest stop on the line chosen. Once identified, the relative time of the next train is presented (ie., the next train is in 7 minutes). The only other tap would be to change the direction as most platforms allow for a train line to go in two directions. As a result, the user will tap at most twice to learn when the next train will come to their station, and in many cases only once.
-
-The site makes heavy use of subdomain redirecting and Lambda functions to render train line branding based on the requested URL. The native JavaScript Geoposition API is used to capture the user's location and train times are provided by the MTA in real-time.
+Arrivals came from the MTA's own real-time feed. There was no public key at the time, so I inspected the requests on the MTA's site, found the API key they were using, and, since nothing checked which site was making the call, queried the same feed from mine.

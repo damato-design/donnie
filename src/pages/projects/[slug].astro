@@ -222,20 +222,16 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       <Typography tagName="p">{impact.qualitative}</Typography>
     </Section>
 
-    <!-- Learnings Section -->
-    <Section title="Learnings">
-      <ul class="learnings-list">
-        {learnings.map((learning) => (
-          <li>{learning}</li>
-        ))}
-      </ul>
-    </Section>
-
     <!-- Additional MDX Content (if any) -->
     {Content && (
-      <section class="case-study-content">
+      <Section title="Learnings">
+        <ul class="learnings-list">
+          {learnings.map((learning) => (
+            <li>{learning}</li>
+          ))}
+        </ul>
         <Content />
-      </section>
+      </Section>
     )}
 
     <BackLink href="/projects" text="All projects" />

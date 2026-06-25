@@ -42,27 +42,9 @@ import { pagesConfig } from '../../pages.config';
 const allProjects = await getCollection('projects');
 
 /**
- * Sorts projects with intelligent prioritization
- * 
- * Sorting logic:
- * 1. If both projects have an 'order' field, sort by order (ascending)
- * 2. Projects with 'order' field are prioritized over those without
- * 3. Projects without 'order' are sorted by year (descending - newest first)
- * 
- * This allows manual curation of priority projects while maintaining
- * chronological order for others.
+ * Sorts projects by year (descending - newest first).
  */
-const sortedProjects = allProjects.sort((a, b) => {
-  // If both have order field, sort by order
-  if (a.data.order !== undefined && b.data.order !== undefined) {
-    return a.data.order - b.data.order;
-  }
-  // If only one has order, prioritize it
-  if (a.data.order !== undefined) return -1;
-  if (b.data.order !== undefined) return 1;
-  // Otherwise sort by year (descending)
-  return b.data.year - a.data.year;
-});
+const sortedProjects = allProjects.sort((a, b) => b.data.year - a.data.year);
 
 /**
  * Total count of projects for statistics display

@@ -4,60 +4,57 @@ role: "Principal, UX Platform · Design Systems Lead"
 year: 2019
 duration: "2019–present"
 teamSize: 6
-outcomeSummary: "Led GoDaddy's UXCore component library, introducing CSS Custom Properties-based theming and a semantic Intent token system that powers theming across 20M+ customers."
-overview: "Leading the team responsible for UXCore, GoDaddy's React component library, through a transition from brittle generated stylesheets to a composable, semantic, token-driven architecture."
-problem: "GoDaddy had just shipped a painful stylistic update, new colors, new typography, and a migration to React, all at once. The existing styling system generated dozens of CSS files to cover every brand and localization permutation, making brand updates slow, risky, and expensive to maintain."
+outcomeSummary: "Lead UXCore, GoDaddy's React design system: replaced statically generated palettes with CSS Custom Properties theming and a semantic Intent token system that themes across 20M+ customers, and rebuilt the component library in place toward composable primitives."
+overview: "Leading the team behind UXCore, GoDaddy's React design system: its component library and the theming layer that styles it across the company's brands and locales."
+problem: "UXCore had two problems to solve. Brand styling came from a long-standing system that statically generated dozens of CSS palettes, one set per brand and localization permutation, so any brand update was slow, risky, and expensive. The component library itself had grown as a contributor model with no one saying no, so one-off components of questionable value kept accumulating across the organization. Both had to be fixed carefully, because I had arrived just after a React migration and a painful color and typography restyle, two breaking changes that had already shaken partner trust."
 constraints:
-  - "Breaking changes had already shaken partner trust, stability was paramount"
+  - "Stability was paramount; partners had little appetite for more disruption"
   - "Theming had to support brand, localization, and accessibility variations"
-  - "A contributor-model component library with inconsistent quality and adoption"
   - "Changes had to roll out without blocking dozens of product teams"
-approach: "I introduced CSS Custom Properties as the runtime theming layer, replacing the old file-generation pipeline. To keep the value space manageable I adopted a semantic token system, 'Intents', co-designed with our design counterparts. From there I drove a multi-year effort to deprecate low-value components and morph the library toward a small set of highly composable primitives that teams could combine into richer experiences."
+approach: "The work came in two units. The first was the theming system: brand styling had shipped as statically generated CSS palettes, so I replaced it with CSS variables and a naming convention, the Intents, served through an API, making theming flexible at runtime instead of regenerated for every permutation. The second was the component library: rather than ship a replacement teams would have to adopt, I rebuilt UXCore in place, a ship of Theseus, swapping the components teams already used piece by piece toward a small set of highly composable primitives, so they kept the same library while it changed underneath them."
 keyDecisions:
-  - decision: "Use CSS Custom Properties for runtime theming instead of generating per-brand CSS files"
-    reasoning: "Custom Properties were now broadly supported and let a single stylesheet retheme at runtime, eliminating combinatorial file generation."
+  - decision: "Use CSS Custom Properties for runtime theming instead of generating static CSS palettes"
+    reasoning: "Custom Properties were now broadly supported and let a single stylesheet retheme at runtime, served through an API, eliminating the combinatorial palette generation."
     alternatives:
       - "Continue generating static CSS per brand/locale"
       - "Sass-based theme compilation"
-  - decision: "Adopt a small set of semantic 'Intent' tokens"
-    reasoning: "Naming tokens by purpose (action, surface, text), priority, and property keeps the system predictable and bounded instead of sprawling into hundreds of one-off values."
+  - decision: "Adopt a semantic 'Intent' token system"
+    reasoning: "Naming tokens by purpose (action, surface, text), priority, and property aimed to keep the system predictable and bounded rather than sprawling into hundreds of one-off values, though holding that line in practice proved harder than the design."
     alternatives:
       - "Expose raw primitive tokens directly to consumers"
       - "Per-component theming APIs"
-  - decision: "Shift the library from a contributor model toward composable primitives"
-    reasoning: "Composable pieces reduce duplication and questionable one-off components, and they scale to more experiences than a large catalog of bespoke components."
+  - decision: "Rebuild the library in place toward curated, composable primitives"
+    reasoning: "The contributor model accepted nearly everything because no one was saying no, so I was brought in to set a quality bar and move the library toward a small set of composable primitives. Teams were averse to adopting yet another new library, even one objectively better designed and built than what they had, so instead of shipping a replacement, we swapped the components they already used piece by piece. The library they imported stayed the same while its internals were rebuilt underneath them, delivering the composable direction with no migration."
     alternatives:
-      - "Keep accepting contributed components"
-      - "Freeze the library and fork per team"
+      - "Keep accepting contributed components as-is"
+      - "Ship a new library and migrate every team"
+      - "Freeze UXCore and start fresh"
 techStack:
   - "React"
   - "CSS Custom Properties"
+  - "Theming API"
   - "Design Tokens"
   - "Semantic / Intent tokens"
+  - "Composable components"
   - "JavaScript / TypeScript"
 impact:
   metrics:
     - label: "Theming model"
-      value: "Hundreds of generated CSS files replaced by a single runtime-themed layer"
+      value: "Dozens of generated CSS palettes replaced by a single runtime-themed layer"
     - label: "Token surface"
-      value: "~33 semantic Intent tokens covering brand, locale & a11y needs"
+      value: "~500 Intent tokens, well past the small set intended, as teams minted component-specific tokens instead of generalizing"
     - label: "Support response"
       value: "Partner requests triaged within ~24 hours"
-  qualitative: "The Intent system gave designers and engineers a shared, bounded language for theming, and the move toward composable primitives steadily reduced the maintenance burden of a sprawling contributor-driven library. The theming approach has been widely cited in the design systems community."
+  qualitative: "The Intent system gave designers and engineers a shared semantic language for theming, and the move toward composable primitives steadily reduced the maintenance burden of a sprawling contributor-driven library."
 learnings:
-  - "A bounded, semantic token vocabulary scales better than exposing every primitive"
+  - "A bounded vocabulary only stays bounded if adopters know how to generalize; teams kept minting component-specific Intents for very particular cases, and the set ballooned to around 500, far past the small set intended"
+  - "An open contributor model needs someone empowered to say no; without a quality bar, a component library fills with one-off pieces"
   - "Fast, human support (triage within a day) keeps partner teams unblocked and trusting the system"
+  - "Teams resist adopting a new library even when it is objectively better; meeting them where they are by rebuilding in place beats shipping a superior replacement they would refuse"
   - "Deprecation is as much design system work as creation"
 status: ongoing
-order: 1
 ---
 
-I was hired at GoDaddy to lead the team responsible for the component library called UXCore. The brand had just finished a painful stylistic update which introduced many breaking changes at once. The company not only updated colors and typography, but also completed a migration to React.
+The Intent token system was an idea I had adopted at my previous company and kept developing. The aim was a small, bounded vocabulary, but adoption pulled the other way: teams minted component-specific Intents for very particular cases rather than generalizing, and the set grew to around 500. That token bloat, too many tokens for too-specific things, is the very problem that later led me to Mise en Mode.
 
-One of my first orders of business was to create a way to allow brand updates to occur more seamlessly. The system that had been in place before would generate dozens of new CSS files to support all the possible brand and localization changes that might be required. Luckily, CSS Custom Properties were now widely supported across browsers, so the system that we would eventually migrate to would make serious use of that technology.
-
-To manage the number of possible values, I adopted a system that was successful at my previous company called "Intents". These were design tokens, more commonly described as semantic tokens, which had a specific purpose and construction. The naming convention was determined in partnership with the design counterparts of the library and we eventually launched this new system within the first year of my employment.
-
-From here, I took to the component library itself which was mostly a contributor model; many components were added that had questionable use across the organization. My major focus for the next few years was to identify areas of improvement and deprecation and begin to morph the library into a highly composable one. An assortment of pieces that could be combined easily to create more complex experiences. This work is still ongoing.
-
-The largest part of my role is support where my responses to our communication channels is normally within 24 hours and sooner during the normal work day. It is my responsibility to triage the request and take appropriate action whether by creating a low-priority support ticket to reaching out and pairing on a video call. It is important to me that I don't block partners but also recommend the best experience possible given all the information.
+Support turned out to be the largest part of the role: triaging each request and taking the right action, whether opening a low-priority ticket or pairing on a call, so I never block partners while still steering them toward the best experience.

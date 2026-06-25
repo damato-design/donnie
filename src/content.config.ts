@@ -32,7 +32,6 @@ import { glob } from 'astro/loaders';
  * - Required narrative sections for consistent storytelling
  * - Key decisions with reasoning and alternatives
  * - Impact metrics (quantitative and qualitative)
- * - Optional custom order for manual curation
  * - Related project and decision slugs for cross-referencing
  */
 const projectsCollection = defineCollection({
@@ -94,9 +93,6 @@ const projectsCollection = defineCollection({
 
     /** Project status */
     status: z.enum(['completed', 'ongoing', 'archived']).default('completed'),
-    
-    /** Custom sort order (lower numbers first) */
-    order: z.number().optional(),
   }),
 });
 

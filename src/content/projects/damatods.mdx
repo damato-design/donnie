@@ -1,43 +1,44 @@
 ---
-title: "DAMATO Design System"
+title: "DAMATO Design System, A Playground for Exploring New Ideas"
 role: "Creator"
 year: 2022
-outcomeSummary: "A personal design system exploring novel token naming conventions, color scales, and component architecture without business constraints."
-overview: "The DAMATO Design System (system.damato.design) is a personal design system built without business influence, a sandbox for exploring token naming, color, spacing, and component ideas on their own merits."
-problem: "Most design systems carry business constraints that shape (and limit) their decisions. I wanted a system free of those pressures, to focus purely on which pieces can share design elements while still giving users the right affordances to reach their goals."
+outcomeSummary: "A personal design system playground for proving the longer-term, less-obvious ideas on their own merits, the ones real projects rarely have room to try."
+overview: "system.damato.design is my design system playground, an open exploration of design system ideas built without business influence, where ways of organizing and composing a system's resources can be tried purely on their merits."
+problem: "In real systems, near-term opinions tend to shape the guidelines in ways that help right now but hinder them long term. The more robust solutions often aren't immediately obvious, and chasing them shouldn't block the teams that need an answer today. I wanted a place to work those longer-view solutions out and show their benefit in isolation, away from that pressure."
 constraints:
-  - "No business stakeholders, so rigor had to be self-imposed"
-  - "Aimed at a near-perfect Lighthouse score and offline PWA support"
-approach: "I built dedicated sections for color, typography, spacing, layout, and components, each using the very parts of the system it describes alongside the reference material behind it. Several approaches are novel, for example distinguishing tokens that describe the brand (genitive) from where a value is applied (locative), with a color scale computed in steps from mid-grayscale and spacing values based on size."
+  - "No CSS should be required from the people using the system"
+  - "Stylistic choices happen outside the components, through Mise en Mode"
+  - "Every decision is justified by logical direction, not feeling"
+approach: "The system is composition-first: elements are deliberately designed to be used together, which lets it fill the gaps left by wireframing and user flows and give teams guidance for implementing common patterns and themes."
 keyDecisions:
-  - decision: "Differentiate 'genitive' (brand) tokens from 'locative' (application) tokens"
-    reasoning: "Separating what a token describes from where it's applied clarifies token responsibility and naming."
+  - decision: "Write no custom styles for components"
+    reasoning: "Layout is set through specifically defined component props and cosmetics through scoped themes, so consumers assemble existing parts instead of authoring one-off CSS."
     alternatives:
-      - "Conventional flat semantic token naming"
-  - decision: "Compute color scales and spacing algorithmically"
-    reasoning: "Deriving steps from mid-grayscale (contrast) and sizing keeps scales principled rather than hand-picked."
+      - "Allow per-component custom CSS"
+      - "Ship style overrides as one-offs"
+  - decision: "Impose deliberate restrictions to reduce the number of decisions"
+    reasoning: "Fewer, more intentional choices keep the system coherent and easier to trust than open-ended flexibility."
     alternatives:
-      - "Hand-tuned palettes and spacing"
+      - "Maximize flexibility and configuration"
+      - "Hand-pick values case by case"
 techStack:
   - "Design Tokens"
-  - "CSS Custom Properties"
-  - "PWA / offline"
-  - "Performance (Lighthouse)"
+  - "Composition"
+  - "Scoped theming (Mise en Mode)"
+  - "TypeScript"
+  - "Storybook"
+  - "Vite"
+  - "Vitest"
 impact:
-  metrics:
-    - label: "Performance"
-      value: "Near-perfect Lighthouse score, offline-capable PWA"
-  qualitative: "The project is regularly cited in other teams' design systems decisions and has been well received in the community as a space for trying ideas before they hit production constraints."
+  qualitative: "Approaches the playground tries, scoped theming, complementary space, and fluid headings, have made their way into my writing and into how I think about real systems."
 learnings:
   - "Removing business constraints surfaces which design decisions are actually principled"
-  - "Naming is a design problem worth dedicated exploration"
+  - "An outcome people already reach by feel can often be turned into a deliberate, logical rule"
 status: ongoing
 ---
 
-This was a personal project in design systems; to create a system without business influence. This was to strictly focus on what pieces can use similar design elements while providing the proper affordance for users to achieve their goals.
+Some approaches here are highly experimental and remain only as proofs of concept, so user discretion is advised. The throughline is that trust is built from the smallest pieces up: when a token or component behaves as expected, the larger experience earns confidence, and a novel concept that breaks that expectation spends it.
 
-The project has sections dedicated to color, typography, spacing, layout, and components. Each section was curated to use the parts of the system they describe along with any reference material or approaches used to create the outcome. Some of the approaches are new; with unique terms to describe the parts of the system. For example, there is a significant difference between the design tokens that describe the brand (genitive) versus where the value of the token will be applied (locative). The color scale is also computed in steps from the middle of the grayscale for contrast and spacing values are based on size.
-
-This was also a journey into preparing a website for a nearly perfect Lighthouse score and PWA with offline capabilities. The reception within the design systems community for the project has been positive, and the work continues to be cited for other teams' design systems decisions.
+Two of those experiments shape the everyday details. Density follows a [complementary space](https://blog.damato.design/posts/complementary-space/) model, where a region's scope, not individual tokens, describes how compact it is, so nested composition grows tighter on its own without separate size variants. Headings use a [fluid](https://blog.damato.design/posts/fluid-headings/) approach that shows the logic-over-feeling rule in action. Designers curating headings by feel were already, accidentally, keeping each heading's overall composition, the way its lines wrap and break, as it scaled down to smaller devices. The fluid rule makes that deliberate instead of incidental; `clamp()` is just how it gets there.
 
 Explore it at [system.damato.design](https://system.damato.design).

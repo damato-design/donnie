@@ -1,10 +1,10 @@
 ---
-title: "Mise en Mode"
+title: "Mise en Mode, Scoped Expressions & Semantic Tokens"
 role: "Creator & Speaker"
 year: 2023
-outcomeSummary: "A design systems technique using nested modes and scoped semantic tokens to enable expressive design fragments within a consistent system."
-overview: "Mise en Mode (Fr. 'placement in mode') is a technique for creating expressive, scoped exceptions inside an otherwise consistent design system, first published at Clarity 2023."
-problem: "Design systems struggle to allow expressive fragments of a larger experience, like highlighting a premium product on an otherwise uniform pricing page. These moments feel unsystematic and deviate based on marketing trends and needs, putting expression at odds with consistency."
+outcomeSummary: "A design systems technique that curbs token bloat: instead of minting a new token for every expressive change, it rewires existing semantic tokens within a scope, re-pointing a style value at a generic UI concept inside a boxed part of the experience."
+overview: "Mise en Mode (Fr. 'placement in mode') is a technique for creating expressive, scoped exceptions inside an otherwise consistent design system, first presented at Clarity 2023."
+problem: "As design systems grow, teams tend to mint a new token for every kind of change, a highlight color here, a promotional treatment there, until the token set bloats with one-off values. Each new token is also slow and expensive to add: the workflow is full of friction, usually routing through design and engineering sign-off before a single value ships. The expressive moments driving this, like highlighting a premium product on an otherwise uniform pricing page, feel unsystematic, and answering each with its own token does not scale."
 constraints:
   - "Must preserve overall system consistency while allowing local deviation"
   - "Should reuse the existing semantic token layer, not introduce a parallel one"
@@ -16,7 +16,7 @@ keyDecisions:
     alternatives:
       - "Create dedicated tokens for every expressive moment"
       - "One-off component variants"
-  - decision: "Publish the technique openly as a presentation/site"
+  - decision: "Present the technique openly as a conference talk and site"
     reasoning: "The idea matures faster as shared community vocabulary than as internal-only practice."
     alternatives:
       - "Keep it as an internal pattern"
@@ -27,24 +27,19 @@ techStack:
   - "Theming / Modes"
 impact:
   metrics:
-    - label: "First published"
+    - label: "First presented"
       value: "Clarity 2023, the original design systems conference"
-    - label: "Format"
-      value: "Site doubles as a full-screen slideshow presentation"
-  qualitative: "Mise en Mode gave the community a concrete model for reconciling expression with consistency, and seeded the terminology work that became Tokenpedia."
+    - label: "Published as"
+      value: "A physical and digital book at mode.place"
+  qualitative: "Mise en Mode gave the community a concrete model for reconciling expression with consistency: scoping a theme to part of an experience instead of expanding the token vocabulary to cover every exception. Because it reuses existing tokens, the person who wants a new expression can apply it themselves, without routing a new token through other teams."
 learnings:
-  - "Moving semantic responsibility from tokens to scopes resolves the expression-vs-consistency tension"
+  - "Moving semantic responsibility from tokens to scopes keeps the token set small instead of growing one per exception"
+  - "Letting contributors rewire tokens in their own scope removes the cross-team friction of introducing a brand-new token"
+  - "The number of expressions a person might want can explode, and multi-dimensional modes (one mode spanning qualities like dark, Chinese, promotional, and Visa at once) get hard to curate by hand; this is where AI can help pick values close enough to capture each dimension"
   - "Framing matters: a memorable name carries a technique further"
 status: completed
-order: 5
 ---
 
-One of the concepts that has been challenging in design systems is allowing for expressive fragments of a larger experience. For example, highlighting a premium product in an otherwise consistently styled pricing page experience. These moments are seemingly unsystematic and deviate based on marketing trends and needs.
+> How might we create freedoms of expression while aligning with system expectations?
 
-> How might we allow to create freedoms of expression while aligning with system expectations?
-
-Mise en mode (Fr. "placement in mode") is a way of framing an interface; quite literally. Parts of an experience are visually boxed, creating a new scope that is expected to receive a new expression. To receive a new expression, we provide new values to existing semantic tokens. In the case of a new highlighting color, we provide that new color as a separate mini-theme which will only affect the components within a smaller scope of the page; the place for this new expression. The experience outside the scope can receive the more common values for these same tokens.
-
-The technique was first published during Clarity 2023, the original Design Systems conference. When the site is launched as full-screen, it becomes a slideshow presentation.
-
-Explore the technique at [mode.place](https://mode.place).
+Mise en mode is a way of framing an interface, quite literally. Read it as a book at [mode.place](https://mode.place).
