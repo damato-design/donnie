@@ -35,8 +35,9 @@ content while keeping the theme's structure, design, and tooling.
 
 ### Identity is config-driven (single source, no env)
 Author name, title, bio, email, location, social links, and site metadata are **plain
-literals** in `src/config.ts` (`siteConfig`). There are no `.env` files and no `import.meta.env`
-lookups; edit `siteConfig` directly to change identity. `siteConfig` flows into SEO,
+literals** in `src/config.ts` (`siteConfig`). Identity uses no env vars; edit `siteConfig`
+directly to change it. (The project's **only** env var is `CABIN_API_KEY`, a build-time secret
+for blog analytics, unrelated to identity; see "Build-time data" below.) `siteConfig` flows into SEO,
 `StructuredData.astro`, `Navigation.astro`, the contact page, etc. Nav lives in `siteConfig.nav`.
 
 The **site URL is not in `siteConfig`** — it comes from Astro's built-in `Astro.site`, set by
@@ -48,7 +49,9 @@ The **site URL is not in `siteConfig`** — it comes from Astro's built-in `Astr
 Static page titles/headings/intros live in `src/pages.config.ts` (`pagesConfig`).
 
 ### Content collections (`src/content.config.ts`)
-All content is MDX in `src/content/<collection>/`, validated by Zod. Collections:
+All content is MDX in `src/content/<collection>/`, validated by Zod — **except `writing`**,
+which has no local files and is fetched at build time from the blog feed (see "Build-time data"
+below). Collections:
 
 - **projects** — case studies. Rich schema: `title, role, year, outcomeSummary, overview,
   problem, constraints[], approach, keyDecisions[], techStack[], impact{metrics?,
@@ -58,15 +61,39 @@ All content is MDX in `src/content/<collection>/`, validated by Zod. Collections
   tags?`.
 - **journey** — timeline entries: `date, title, type(milestone|learning|transition),
   description, skills?`. Rendered chronologically on `/journey`.
-- **writing** — `title, description, publishDate, updatedDate?, tags?, draft`. Bodies are
-  short summaries linking to the full posts on `blog.damato.design`.
+- **writing** — **not authored locally**: a custom loader in `content.config.ts` pulls posts at
+  build time from the blog feed (`blog.damato.design/standard-site.json`). Schema: `title,
+  description, publishDate, tags?, url`. Each entry is a preview that links out to the full post
+  via `url`; there are no MDX bodies.
 - **speaking** — `title, description, event, eventUrl?, date, location, type(conference|
   meetup|podcast|workshop|webinar), slides?, video?, duration?, topics?`.
 - **testimonials** — `name, role, company, relationship, quote, linkedin?, date`.
 
+### Build-time data: blog feed & analytics
+Two build-time fetches power the Writing page. Both run **only at build** (numbers are "as of
+last build") and both **fail soft** so a green build never depends on a third party being up:
+
+- **Blog feed** — the `writing` collection loader fetches `blog.damato.design/standard-site.json`
+  and maps each post to a preview entry (`url = <siteUrl>/posts/<slug>`).
+- **Cabin analytics** — `src/utils/analytics.ts` (`getBlogAnalytics()`) fetches read counts and
+  reach from the Cabin API for `blog.damato.design`, authorized by the **build secret**
+  `CABIN_API_KEY` (read via `import.meta.env`/`process.env`; set in Netlify, never committed,
+  not `PUBLIC_`-prefixed). A missing key or any error returns `null` and the page renders without
+  analytics. `getPageStat()` joins Cabin's `/posts/<slug>` rows to entries by path.
+
+`writing/index.astro` shows the **top 10 posts by Cabin reads** (ties break by date; falls back
+to most-recent-by-date when analytics is `null`). Each card's `meta` is `<date> · <N> reads`; the
+header has a reach line (`<reads> · read in <N> countries`); a closing CTA links to the full
+chronological archive on the blog. **Do not** reintroduce pagination or per-post dwell time (both
+removed — dwell time measured time-on-page, not reading length, and read as misleading).
+
+To refresh this without a code change, a **Netlify Scheduled Function**
+(`netlify/functions/weekly-rebuild.mjs`, weekly cron) POSTs to a Netlify build hook
+(URL in the `BUILD_HOOK_URL` env var) to trigger a rebuild. There is no GitHub Action.
+
 ### Pages, layouts, components
 - `src/pages/` — `index.astro` (home), `projects/`, `decisions/`, `journey.astro`,
-  `writing/[...page].astro` (paginated, 5/page) + `writing/[slug].astro`, `speaking.astro`,
+  `writing/index.astro` (a single curated page, no pagination), `speaking.astro`,
   `contact.astro`, `404.astro`, `robots.txt.ts`.
 - `src/layouts/` — `BaseLayout` (the only layout; the theme's unused `ArticleLayout`/
   `CaseStudyLayout` were removed).
@@ -79,7 +106,7 @@ All content is MDX in `src/content/<collection>/`, validated by Zod. Collections
   there is no global `.page-container`/`.page-header` utility.
 - Key components: `SEO.astro`, `StructuredData.astro` (JSON-LD, fully config-driven),
   `Navigation.astro`, `Testimonials.astro`, the unified **`Card` pattern** below (plus
-  `CardList` for listings), `Pagination`, `PageStats`, `ForwardLink`, `PageContainer`,
+  `CardList` for listings), `PageStats`, `ForwardLink`, `PageContainer`,
   `PageHeader`, and the **Hero pattern** below.
 - **Components own their styling; no consumer `class` prop.** A component does not accept a
   `class`/`className` escape hatch — it carries its own base class (`.card`, `.btn`, `.label`,
@@ -121,8 +148,8 @@ context truncation, talk/timeline type→label/colour, project status) live in
 wrap them in `<ButtonGroup>`** — the slot-driven flex wrapper that owns their layout (gap +
 wrapping); it carries its own scoped `.button-group` style and accepts no `class`. Used for
 hero/section CTAs, the 404 home link, and each card's `cta` slot (a single secondary `sm`
-`Button` with `arrow`). `Pagination` and `ScrollToTop` are their own specialized controls and
-do **not** use `ButtonGroup`. (`ButtonGroup` replaced the former single-purpose `CardCta`.)
+`Button` with `arrow`). `ScrollToTop` is its own specialized control and does **not** use
+`ButtonGroup`. (`ButtonGroup` replaced the former single-purpose `CardCta`.)
 
 ### Hero pattern (`src/components/Hero.astro`)
 Reusable two-column promo banner: left = value statement (default slot); right = **the
