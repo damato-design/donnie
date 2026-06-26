@@ -147,14 +147,43 @@ are `compact` and `divider`.
   colons). Don't reintroduce them in copy. En dashes in ranges ("2019–present") are fine.
 - **Dates must match Donnie's LinkedIn résumé** (the source of truth for employment dates).
 - **No "DS Events" mentions** — that project was intentionally removed from the site.
-- Some content is **inferred/fabricated to fill the theme's IA** and is *not* published fact:
-  project `impact.metrics`, the `decisions` and `testimonials` collections, and
-  writing `publishDate`s. Testimonials use **non-identifying composite names** on purpose
-  (don't attribute invented quotes to real, named people). Treat these as placeholders;
-  prefer real data when available, and don't add fabricated quantitative claims beyond the
-  existing on-brand ones.
+- **Design Systems House (DSH) is not a project entry** — it houses projects rather than being
+  one, so it was removed from `projects` and lives only as a `journey` milestone (plus
+  references in `decisions`/`speaking`).
+- **Project entries were reviewed with Donnie for accuracy** (2026); their copy and
+  `impact.metrics` are real, confirmed facts (e.g. GoDaddy's ~500 Intent tokens, Roxor's ~70%
+  of charts, Gridless cited by Brad Frost, Christine Vallaure & Figma). **Donnie is the source
+  of truth; don't invent metrics or claims — ask him.**
+- Still **inferred/fabricated to fill the theme's IA** and *not* published fact: the
+  `decisions` and `testimonials` collections and writing `publishDate`s. Testimonials use
+  **non-identifying composite names** on purpose (don't attribute invented quotes to real,
+  named people). Treat these as placeholders; prefer real data when available.
 - Real grounding sources: `blog.damato.design` (writing), `mode.place` (the book),
   `wireframe.ds.house` (the show), `ds.house` ecosystem, the LinkedIn résumé.
+
+## Messaging & voice
+- **Throughline: "creativity within constraints."** Donnie's core positioning: the best work
+  comes from limits, not from adding more (fewer tokens in Mise en Mode, no grid in Gridless,
+  no custom CSS in the DAMATO design system, near-zero taps in willarrive). It bridges his
+  artist origin and his systems work, and is anchored in `siteConfig.description`,
+  `siteConfig.author.bio`, the home intro, and the `/projects` hero. Lead new value statements
+  with this angle; **avoid the cliché "taming chaos / order from a mess"** framing.
+- **Avoid "scale" / "scalable" / "scales" in voice copy** (Donnie dislikes the buzzword); use
+  "grow," "goes further," "across an organization," etc. Legitimate technical terms are fine
+  (`initial-scale`, `grayscale`, a type/z-index scale), and **factual records stay verbatim**
+  (e.g. the real talk "Scaling Your Design Systems").
+- Role focus is **design systems + shaping how AI behaves**, layered on the constraints
+  throughline.
+
+## Project case-study body convention
+The frontmatter carries the objective case study (overview → problem → constraints → approach
+→ keyDecisions → techStack → impact → learnings). The **MDX body after the frontmatter is the
+first-person "story behind it"** the fields can't hold:
+- origin/motivation (the natural home for name origins, e.g. willarrive/deltazeus/nextup),
+  optionally **one vivid unique detail/anecdote**, and a **closing live link only when a public
+  artifact exists** (omit for archived/employment entries).
+- **No "How might we…" pull-quotes** — removed site-wide.
+- The body must **not restate the frontmatter fields**; each fact lives once (dedup).
 
 ## Adding content (typical task)
 1. Add an MDX file under the right `src/content/<collection>/`; match an existing file's

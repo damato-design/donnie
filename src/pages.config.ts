@@ -55,7 +55,7 @@ export const pagesConfig = {
    */
   home: {
     title: 'Home',
-    description: 'Design Systems Architect bridging design and engineering with scalable, accessible, token-driven systems.',
+    description: 'Design Systems Architect bridging design and engineering with accessible, token-driven systems.',
   },
 
   /**
@@ -63,9 +63,9 @@ export const pagesConfig = {
    */
   projects: {
     title: 'Projects - Case Studies',
-    description: 'Case studies in design systems, theming, and design token architecture, from enterprise component libraries to community projects.',
+    description: 'Case studies at the intersection of design and engineering: design systems and theming alongside the products, experiments, and game design that shaped the practice.',
     heading: 'Projects',
-    intro: 'Case studies that demonstrate how I approach design systems, theming, and the space between design and engineering. Each project tells the story of the challenge, the constraints, the decisions made, and the outcomes achieved.',
+    intro: 'Case studies from across my career at the intersection of design and engineering: design systems and theming at the core, plus the products, experiments, and even game design that shaped how I work. Each tells the story of the challenge, the constraints, the decisions, and what came of them.',
   },
 
   /**
