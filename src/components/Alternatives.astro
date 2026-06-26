@@ -3,10 +3,8 @@
  * Alternatives Component
  *
  * Renders each alternative option considered for a decision record as its own
- * two-column table with three rows:
- *   1. the option name, merged across both columns
- *   2. the "Pros" / "Cons" column headers
- *   3. the pros and cons lists
+ * `SplitTable`: the option name spans both columns, with Pros and Cons lists
+ * beneath their 👍 / 👎 labels.
  *
  * @component
  *
@@ -19,7 +17,8 @@
  * ```
  */
 
-import ProsConsList from '@components/ProsConsList.astro';
+import SplitTable from '@components/SplitTable.astro';
+import DetailList from '@components/DetailList.astro';
 
 interface Alternative {
   /** The alternative option's name */
@@ -43,21 +42,14 @@ const { alternatives } = Astro.props;
 <ul class="alternatives-list">
   {alternatives.map((alt) => (
     <li>
-      <table class="alternative-table">
-        <tbody>
-          <tr>
-            <th colspan="2" scope="colgroup" class="option-cell">{alt.option}</th>
-          </tr>
-          <tr>
-            <th scope="col" class="col-pros">Pros</th>
-            <th scope="col" class="col-cons">Cons</th>
-          </tr>
-          <tr>
-            <td><ProsConsList items={alt.pros} /></td>
-            <td><ProsConsList items={alt.cons} /></td>
-          </tr>
-        </tbody>
-      </table>
+      <SplitTable
+        title={alt.option}
+        leftLabel="👍 Pros"
+        rightLabel="👎 Cons"
+      >
+        <DetailList slot="left" items={alt.pros} />
+        <DetailList slot="right" items={alt.cons} />
+      </SplitTable>
     </li>
   ))}
 </ul>
@@ -67,40 +59,5 @@ const { alternatives } = Astro.props;
     list-style: none;
     margin: 0;
     padding: 0;
-  }
-
-  .alternative-table {
-    width: 100%;
-    text-align: left;
-    border-collapse: collapse;
-    background: var(--color-bg-elevated);
-    border: 1px solid;
-  }
-
-  .alternative-table th,
-  .alternative-table td {
-    width: 50%;
-    padding: 0.75rem 1rem;
-    vertical-align: top;
-    border: 1px solid currentColor;
-  }
-
-  .option-cell {
-    font-size: 1rem;
-  }
-
-  .col-pros,
-  .col-cons {
-    font-size: 0.6875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .col-pros {
-    color: #22c55e;
-  }
-
-  .col-cons {
-    color: #ef4444;
   }
 </style>

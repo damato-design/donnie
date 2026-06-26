@@ -31,7 +31,6 @@ import Hero from '@components/Hero.astro';
 import Media from '@components/Media.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
-import { truncate } from '@utils/cards';
 import { pagesConfig } from '../../pages.config';
 import { siteConfig } from 'src/config';
 import uxdx from '@assets/uxdx.jpg'
@@ -75,7 +74,7 @@ const totalDecisions = allDecisions.length;
         <li>
           <Card>
             <Fragment slot="title">{decision.data.title}</Fragment>
-            <Fragment slot="description">{truncate(decision.data.context, 180)}</Fragment>
+            <Fragment slot="description">{decision.data.context}</Fragment>
 
             <TagList slot="tags" items={decision.data.tags ?? []} />
 

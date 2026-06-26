@@ -36,8 +36,9 @@ import SEO from '@components/SEO.astro';
 import StructuredData from '@components/StructuredData.astro';
 import ScrollToTop from '@components/ScrollToTop.astro';
 import BackLink from '@components/BackLink.astro';
-import ImpactMetrics from '@components/ImpactMetrics.astro';
 import Section from '@components/Section.astro';
+import SplitTable from '@components/SplitTable.astro';
+import DetailList from '@components/DetailList.astro';
 import Typography from '@components/Typography.astro';
 import { getCollection, getEntry, render } from 'astro:content';
 import { calculateReadingTime, formatReadingTime } from '@utils/readingTime';
@@ -77,8 +78,6 @@ const {
   title,
   role,
   year,
-  duration,
-  teamSize,
   outcomeSummary,
   overview,
   problem,
@@ -130,27 +129,11 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
   />
 
     <!-- Case Study Header -->
-    <header class="case-study-header">
+    <header>
       <Typography tagName="h1">{title}</Typography>
-      <div class="case-study-meta">
-        <Typography tagName="span">{role}</Typography>
-        <span class="meta-separator">·</span>
-        <Typography tagName="span">{year}</Typography>
-        {duration && (
-          <>
-            <span class="meta-separator">·</span>
-            <Typography tagName="span">{duration}</Typography>
-          </>
-        )}
-        {teamSize && (
-          <>
-            <span class="meta-separator">·</span>
-            <Typography tagName="span">{teamSize} {teamSize === 1 ? 'person' : 'people'}</Typography>
-          </>
-        )}
-        <span class="meta-separator">·</span>
-        <Typography tagName="span">{readingTime}</Typography>
-      </div>
+      <Typography>
+        {role} · {year} · {readingTime}
+      </Typography>
       <Typography tagName="p">{outcomeSummary}</Typography>
     </header>
 
@@ -166,9 +149,9 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
 
     <!-- Constraints Section -->
     <Section title="Constraints">
-      <ul class="constraints-list">
+      <ul>
         {constraints.map((constraint) => (
-          <li>{constraint}</li>
+          <Typography tagName="li">{constraint}</Typography>
         ))}
       </ul>
     </Section>
@@ -182,22 +165,17 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
     <Section title="Key Decisions">
       <ul class="decisions-list">
         {keyDecisions.map((decision) => (
-          <li class="decision-item">
-            <Typography tagName="h3">{decision.decision}</Typography>
-            <div class="decision-reasoning">
-              <strong>Reasoning:</strong>
-              <Typography tagName="p">{decision.reasoning}</Typography>
-            </div>
-            {decision.alternatives && decision.alternatives.length > 0 && (
-              <div class="decision-alternatives">
-                <strong>Alternatives considered:</strong>
-                <ul>
-                  {decision.alternatives.map((alt) => (
-                    <li>{alt}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+          <li>
+            <SplitTable
+              title={decision.decision}
+              leftLabel="Reasoning"
+              rightLabel="Alternatives"
+            >
+              <Fragment slot="left">
+                <p>{decision.reasoning}</p>
+              </Fragment>
+              <DetailList slot="right" items={decision.alternatives} />
+            </SplitTable>
           </li>
         ))}
       </ul>
@@ -205,160 +183,47 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
 
     <!-- Tech Stack Section -->
     <Section title="Tech Stack">
-      <ul class="tech-stack-list">
+      <ul>
         {techStack.map((tech) => (
-          <li>{tech}</li>
+          <Typography tagName="li">{tech}</Typography>
         ))}
       </ul>
     </Section>
 
     <!-- Result/Impact Section -->
     <Section title="Result & Impact">
-      {/* Display metrics with visualization */}
       {impact.metrics && impact.metrics.length > 0 && (
-        <ImpactMetrics metrics={impact.metrics} />
+        <ul>
+          {impact.metrics.map((metric) => (
+            <Typography tagName="li"><strong>{metric.label}</strong>: {metric.value}</Typography>
+          ))}
+        </ul>
       )}
 
       <Typography tagName="p">{impact.qualitative}</Typography>
     </Section>
 
-    <!-- Additional MDX Content (if any) -->
-    {Content && (
-      <Section title="Learnings">
-        <ul class="learnings-list">
-          {learnings.map((learning) => (
-            <li>{learning}</li>
-          ))}
-        </ul>
-        <Content />
-      </Section>
-    )}
+    <Section title="Learnings">
+      <ul class="learnings-list">
+        {learnings.map((learning) => (
+          <Typography tagName="li">{learning}</Typography>
+        ))}
+      </ul>
+    </Section>
+
+    <Section>
+      <Content />
+    </Section>
 
     <BackLink href="/projects" text="All projects" />
 
   <ScrollToTop />
-
-  
 </BaseLayout>
 
 <style>
-    .case-study {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
-    }
-
-    .case-study-header {
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid currentColor;
-    }
-
-    .header-badges {
-      margin-bottom: 0.75rem;
-    }
-
-    .header-badges:empty {
-      display: none;
-    }
-
-
-    .case-study-meta {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 0.9375rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .meta-separator {
-      opacity: 0.5;
-    }
-
-    .case-study :global(.section) {
-      margin-bottom: 3rem;
-    }
-
-    .constraints-list,
-    .tech-stack-list,
-    .learnings-list {
-      list-style: none;
-      padding: 0;
-    }
-
-    .constraints-list li,
-    .tech-stack-list li,
-    .learnings-list li {
-      font-size: 1.0625rem;
-      
-      padding: 0.5rem 0;
-      padding-left: 1.5rem;
-      position: relative;
-    }
-
-    .constraints-list li::before,
-    .tech-stack-list li::before,
-    .learnings-list li::before {
-      content: "→";
-      position: absolute;
-      left: 0;
-      color: var(--color-accent);
-    }
-
-    .decisions-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .decision-item {
-      padding: 1.5rem;
-      border: 1px solid currentColor;
-      background: var(--color-bg-elevated);
-    }
-
-    .decision-reasoning,
-    .decision-alternatives {
-      margin-top: 1rem;
-    }
-
-    .decision-reasoning strong,
-    .decision-alternatives strong {
-      display: block;
-      font-size: 0.9375rem;
-      margin-bottom: 0.5rem;
-      text-transform: uppercase;
-      
-    }
-
-    .decision-alternatives ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 0.5rem;
-    }
-
-    .decision-alternatives li {
-      font-size: 1.0625rem;
-      
-      padding: 0.25rem 0;
-      padding-left: 1.25rem;
-      position: relative;
-    }
-
-    .decision-alternatives li::before {
-      content: "•";
-      position: absolute;
-      left: 0;
-      color: var(--color-accent);
-    }
-
-    .case-study-content {
-      margin-top: 3rem;
-      font-size: 1.0625rem;
-      
-    }
-
-  </style>
+  .decisions-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+</style>

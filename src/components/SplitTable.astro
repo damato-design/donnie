@@ -1,0 +1,68 @@
+---
+/**
+ * SplitTable Component
+ *
+ * A titled two-column table: a heading cell spanning both columns, a row of two
+ * column labels, then a row of two content cells filled by the `left` and
+ * `right` slots. Generalizes the shell shared by the decision-record
+ * "Alternatives" tables (Pros / Cons, via `Alternatives`) and the project
+ * "Key Decisions" tables (Reasoning / Alternatives).
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <SplitTable title="Build it ourselves" leftLabel="👍 Pros" rightLabel="👎 Cons">
+ *   <DetailList slot="left" items={pros} />
+ *   <DetailList slot="right" items={cons} />
+ * </SplitTable>
+ * ```
+ */
+
+interface Props {
+  /** Heading spanning both columns */
+  title: string;
+
+  /** Label for the left column */
+  leftLabel: string;
+
+  /** Label for the right column */
+  rightLabel: string;
+}
+
+const { title, leftLabel, rightLabel } = Astro.props;
+---
+
+<table class="split-table">
+  <tbody>
+    <tr>
+      <th colspan="2" scope="colgroup" class="split-title">{title}</th>
+    </tr>
+    <tr>
+      <th scope="col" class="split-label">{leftLabel}</th>
+      <th scope="col" class="split-label">{rightLabel}</th>
+    </tr>
+    <tr>
+      <td><slot name="left" /></td>
+      <td><slot name="right" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<style>
+  .split-table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    background: var(--color-bg-elevated);
+    border: 1px solid;
+    font-size: min(1em, 4vw);
+  }
+
+  .split-table :where(th, td) {
+    width: 50%;
+    padding: 8px 16px;
+    vertical-align: top;
+    border: 1px solid currentColor;
+  }
+</style>

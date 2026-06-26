@@ -28,16 +28,11 @@ keyDecisions:
 techStack:
   - "TypeScript"
   - "Node.js"
-  - "Model Context Protocol (MCP)"
-  - "MCP TypeScript SDK"
-  - "JSON-RPC over HTTP"
+  - "MCP"
+  - "MCP SDK"
+  - "JSON-RPC"
   - "llms.txt"
 impact:
-  metrics:
-    - label: "Clients supported"
-      value: "Claude Desktop, Cursor, Cline, Windsurf, Zed, Continue, and any MCP client"
-    - label: "Content surface"
-      value: "Expertise, projects, media, blog posts, and design system docs across subdomains"
   qualitative: "AI assistants can now answer questions about my work and design systems thinking from my actual, current content, and the same llms.txt sources power both the websites and the server, so there is nothing extra to keep in sync."
 learnings:
   - "Treating published llms.txt as the source of truth keeps an AI integration honest and low-maintenance"
