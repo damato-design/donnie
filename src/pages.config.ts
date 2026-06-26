@@ -75,7 +75,7 @@ export const pagesConfig = {
     title: 'Decisions - Design Systems & Technical Choices',
     description: 'A log of design systems and technical decisions, documenting the context, alternatives considered, and reasoning behind key choices.',
     heading: 'Decisions',
-    intro: 'A transparent log of the design systems and technical decisions behind my work, semantic tokens, theming, layout, and content models. Each entry documents the context, the alternatives considered, and the reasoning behind the choice.',
+    intro: 'A transparent log of the design systems and technical decisions behind my work, from semantic tokens and theming to layout, components, and interaction patterns. Each entry documents the context, the alternatives considered, and the reasoning behind the choice.',
   },
 
   /**

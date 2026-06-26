@@ -42,7 +42,7 @@ const socialLinks = Object.entries(siteConfig.social)
 
 <footer class="site-footer">
   <div class="footer-container">
-    <Typography tagName="span">© {currentYear} {siteConfig.author.name}</Typography>
+    <Typography tagName="span">© {currentYear} - {siteConfig.author.name}</Typography>
     
     {socialLinks.length > 0 && (
       <ul class="footer-social">
@@ -62,13 +62,13 @@ const socialLinks = Object.entries(siteConfig.social)
   .site-footer {
     background: var(--color-bg-elevated);
     border-top: 1px solid currentColor;
-    padding: 2rem 1.5rem;
     margin-top: auto;
   }
 
   .footer-container {
-    max-width: 1100px;
+    max-width: min(800px, 100%);
     margin: 0 auto;
+    padding: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;

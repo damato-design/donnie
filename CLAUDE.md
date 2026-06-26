@@ -97,10 +97,6 @@ To refresh this without a code change, a **Netlify Scheduled Function**
   `contact.astro`, `404.astro`, `robots.txt.ts`.
 - `src/layouts/` — `BaseLayout` (the only layout; the theme's unused `ArticleLayout`/
   `CaseStudyLayout` were removed).
-- `src/styles/` — `global.css` (CSS custom-property design tokens like `--color-bg`,
-  `--color-bg-elevated`, `--color-accent`, `--space-*`; foreground text is derived via
-  `contrast-color()`/`currentColor`, not a token. Component styles are scoped `<style>`
-  blocks inside `.astro` files.
 - The page shell is componentized: `PageContainer.astro` (the centered max-width `<main>`)
   and `PageHeader.astro` (the `<header>` intro block) own their layout as scoped styles —
   there is no global `.page-container`/`.page-header` utility.
@@ -158,13 +154,13 @@ are `compact` and `divider`.
 
 - `.hero-right` is a flex column, so multiple slotted items stack with gap.
 - The former `HeroCard` and the temporary `HeroPlaceholder` have both been **removed**; the
-  aside now holds real content (the `Media` component on home/speaking, the `<mode-book>` web
-  component on writing).
+  aside now holds real content (the `Media` component on home/speaking/decisions, the
+  `<mode-book>` web component on writing).
 - Used on **every top-level nav page** (always placed first, before the page header): home
   (`Media` portrait), writing (Mise en Mode book promo + `<mode-book>` embed), speaking
-  (Wireframe promo + `Media` sizzle video), and single-column value-statement heroes on
-  projects (Cal.com/contact CTA), decisions (Mise en Mode CTA), journey (contact CTA), and
-  contact (Cal.com CTA).
+  (Wireframe promo + `Media` sizzle video), decisions (`Media` on-stage photo + a "Put me on
+  your stage" speaking/Cal.com CTA), and single-column value-statement heroes on projects
+  (Cal.com/contact CTA), journey (contact CTA), and contact (Cal.com CTA).
 - On secondary pages the hero is placed **first** and its heading is an `h2` so the page's
   real `<h1>` (its header) stays the single document h1.
 

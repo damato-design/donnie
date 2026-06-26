@@ -1,29 +1,21 @@
 ---
 title: "Use Nested Modes Instead of New Tokens for Expressive Moments"
-context: "Design systems struggle with expressive fragments, like highlighting a premium product on an otherwise uniform page. The instinct is to mint new tokens for each moment, but that bloats the token set and erodes consistency. Figma's 2023 introduction of Variables with Modes sharpened the question."
+context: "Design systems struggle with expressive fragments, like highlighting a premium product on an otherwise uniform page. The instinct is to mint new tokens for each moment, but that bloats the token set and erodes consistency. Figma's 2023 introduction of Variables with Modes sharpened the question, and it's the idea I went on to promote as Mise en Mode at mode.place."
 decision: "Scope expression with nested modes (Mise en Mode): visually box a region, then supply new values to existing semantic tokens only within that scope, rather than creating dedicated tokens per expressive moment."
 alternatives:
   - option: "Create dedicated tokens for each expressive moment"
     pros:
-      - "Explicit and easy to target"
+      - "Explicit and easy to manage"
     cons:
-      - "Token sprawl"
-      - "Erodes the bounded semantic vocabulary"
-      - "Every new highlight is a new token to maintain"
+      - "Token bloat"
+      - "Erodes the meaning and usage"
+      - "Every new idea is a few new tokens to maintain"
   - option: "One-off component variants"
     pros:
       - "Localized to the component"
     cons:
-      - "Doesn't compose across a region"
-      - "Multiplies component surface area"
-  - option: "Nested modes over existing semantic tokens"
-    pros:
-      - "Reuses the existing token vocabulary"
-      - "Keeps the system consistent while allowing local expression"
-      - "Scopes a 'mini-theme' to exactly where it's needed"
-    cons:
-      - "Requires tooling/mental model for scoping"
-      - "Eventual-consistency of meaning within scopes"
+      - "The expression is locked inside one component, so it can't be reused"
+      - "Doesn't compose across a region of mixed elements"
 reasoning: "Moving semantic responsibility from tokens to scopes resolves the tension between expression and consistency. A boxed region becomes a place for a new expression by receiving new values for the same semantic tokens, no new tokens required, so the system stays bounded and coherent."
 whyItMattered: >-
   Mise en Mode reframed the question from "what token do I add?" to "what scope
@@ -34,3 +26,7 @@ tags:
   - "theming"
   - "modes"
 ---
+
+I first made this case at [mode.place](https://mode.place/), the site that
+introduced Mise en Mode, and have since expanded it into the book of the same
+name, available there to purchase.

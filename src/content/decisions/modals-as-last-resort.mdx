@@ -1,0 +1,43 @@
+---
+title: "Treat Modals as a Last Resort"
+context: "A modal is the default reach for almost any interruption, but it is often a way to avoid organizing the page: when content has no obvious home, it gets dropped into a dialog that appears on demand. It is also one of the hardest patterns to get right. Focus management, screen reader announcements, and stacked dialogs are all genuinely difficult, and even the native `<dialog>` does not hand you full accessibility for free."
+decision: "Treat modals as a last resort rather than a default. The first move should be to organize the information a task needs directly into the page, in a sensible order, so it is already there when the user arrives instead of appearing suddenly on top of everything. When something genuinely needs its own space, prefer a separate page for multi-field creation or editing, inline editing for a single value, sequential navigation over a multi-step wizard, and a full-screen view over a lightbox. A separate page here means a real, navigable page with its own URL, reachable directly by hyperlink and the back button, not a full-page takeover modal that simply covers the base content the user expects to return to. Reserve modals for the two cases that truly call for one: destructive confirmations that demand deliberate intent, and moments where keeping the background context visible builds trust during a closely related task."
+alternatives:
+  - option: "Reach for a modal out of convenience"
+    pros:
+      - "Familiar and fast to drop in"
+      - "Keeps the user on the current page"
+    cons:
+      - "Focus management, announcements, and stacked dialogs are hard to get right"
+      - "Hosts a workflow the modal was never suited to"
+      - "Rarely tied to a URL, so state is not captured and getting back to the content is lost"
+      - "Even native `<dialog>` does not give full accessibility for free"
+  - option: "Reach for a modal because it is common practice"
+    pros:
+      - "Familiar to users who have seen it across big-name products"
+      - "Feels low-risk to follow an established convention"
+    cons:
+      - "Popularity is not evidence the pattern fits the problem at hand"
+      - "Copying large companies inherits their accessibility and lost-state pitfalls too"
+      - "A common default is still a default worth questioning"
+reasoning: "Designers reach for modals far more often than the moment calls for. Usually the content does not need to interrupt at all; it needs a home on the page, laid out in an order the user can follow. A modal that appears suddenly is both the hardest pattern to build well, with its focus, announcement, and stacking problems, and the most disruptive to someone trying to reach a goal. It is rarely tied to a URL either, so the user's state goes uncaptured: a refresh or a back press drops them out with no easy way back to where they were. The alternatives, a separate navigable page, an inline edit, a step in a sequence, are easier to manage and far less jarring. The few moments that survive the test, a destructive confirmation or a task that needs its background context visible, are exactly the ones a modal is actually good at. Choosing the pattern that fits the need is usually a matter of organizing the page rather than reaching for a layer on top of it."
+whyItMattered: >-
+  A modal too often papers over a page that was never organized, and it does so
+  by interrupting the very goal the user came to accomplish. Putting the
+  necessary information on the page, in order, respects that goal and avoids the
+  hardest, most disruptive pattern there is to manage.
+tags:
+  - "ux"
+  - "accessibility"
+  - "patterns"
+---
+
+I worked through the full argument, and the alternatives worth trying before a
+dialog, in [No More Modals](https://blog.damato.design/posts/no-more-modals/). On
+the accessibility side, [a11y-dialog](https://a11y-dialog.netlify.app/advanced/dialog-element/)
+shows the native `<dialog>` still does not ship complete accessibility,
+[`inert`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/inert) is
+what it takes to neutralize the content behind one, and
+[NN/Group](https://www.nngroup.com/articles/modal-nonmodal-dialog) covers when a
+dialog is warranted at all. For the blunt version of the same argument, there is
+[modalzmodalzmodalz.com](https://modalzmodalzmodalz.com/).

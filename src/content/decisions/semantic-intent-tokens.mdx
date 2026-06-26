@@ -1,38 +1,35 @@
 ---
-title: "Use Semantic 'Intent' Tokens Instead of Exposing Primitives"
-context: "Runtime theming made an unbounded value space possible. Without structure, teams would wire components directly to raw primitive values (hex codes, pixel values), recreating the sprawl we were trying to escape."
-decision: "Introduce a small, bounded set of semantic 'Intent' tokens, named by purpose, priority, and property, as the only theming API consumers touch."
+title: "Classify Tokens by Intent, Not Just a Value"
+context: "Runtime theming opened a large value space, but the real gap was upstream: variables carried almost no classification. A variable held a value yet said little about what it was for, so teams reasoned about them inconsistently and a variable's meaning lived only in the head of whoever defined it."
+decision: "Introduce a deliberately small set of semantic 'Intent' tokens, named by purpose, priority, and property, as the only theming API consumers touch. An intent names what an element is for in the experience and defers its cosmetic values to be resolved later in the lifecycle by the party responsible for them. Keep the set as small as the system can bear rather than letting it grow on request."
 alternatives:
-  - option: "Expose primitive tokens directly to consumers"
+  - option: "Leave variables unclassified, as plain values"
     pros:
       - "Maximum flexibility"
       - "Nothing to learn beyond the values"
     cons:
-      - "No shared meaning, every team reinvents semantics"
-      - "Theming becomes find-and-replace across hex codes"
-      - "Impossible to retheme safely"
+      - "No shared way to reason about what a variable is for"
+      - "Purpose and cosmetic styling stay tangled together"
+      - "Meaning lives only in whoever defined it"
   - option: "Per-component theming APIs"
     pros:
       - "Tailored to each component"
     cons:
       - "Inconsistent across the library"
       - "Explodes the surface area to maintain"
-  - option: "A bounded set of semantic Intent tokens"
-    pros:
-      - "Shared, predictable vocabulary for designers and engineers"
-      - "Retheming swaps a handful of values"
-      - "Keeps the token surface small (~33 intents)"
-    cons:
-      - "Requires up-front naming agreement"
-      - "Occasional pressure to add 'just one more' token"
-reasoning: "Naming tokens by intent (action, surface, text), priority (primary, secondary, auxiliary), and property keeps the system predictable and bounded. A small, semantic vocabulary co-designed with design counterparts goes much further than letting hundreds of one-off values proliferate."
+reasoning: "Naming tokens by intent (action, surface, text), priority (primary, secondary, auxiliary), and property clearly describes the purpose of an element in the experience, and separates that purpose from the cosmetic styles, which are settled later in the lifecycle by another responsible party. That keeps the system predictable and bounded, and a small, semantic vocabulary co-designed with design counterparts goes much further than letting hundreds of one-off values proliferate. It is also the foundation the rest of the system builds on: these same intents are exactly what nested modes re-value within a scope, so expression in Mise en Mode comes from re-valuing intents rather than minting new tokens. A bounded set of intents is what makes that possible."
 whyItMattered: >-
-  Intents gave designers and engineers one shared language for theming.
-  Constraining the surface to roughly three dozen semantic tokens is what made
-  the system legible, and is the same instinct that later produced Tokenpedia's
-  push for shared vocabulary.
+  Intents gave designers and engineers one shared language for theming, and the
+  discipline is to keep that set as small as possible, ideally fewer than three
+  dozen, since every constraint held is what keeps the system legible. The
+  closest relative of this idea is Mise en Mode, which leans directly on these
+  intents; Tokenpedia plays a different role, more like a dictionary for the
+  vocabulary itself.
 tags:
   - "design-tokens"
   - "semantic-tokens"
   - "naming"
 ---
+
+Mise en Mode builds directly on these intents; you can read it at
+[mode.place](https://mode.place/).
