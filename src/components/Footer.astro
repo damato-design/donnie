@@ -42,7 +42,7 @@ const socialLinks = Object.entries(siteConfig.social)
 
 <footer class="site-footer">
   <div class="footer-container">
-    <Typography tagName="span">© {currentYear} - {siteConfig.author.name}</Typography>
+    <Typography tagName="span">© {currentYear} <wbr> {siteConfig.author.name}</Typography>
     
     {socialLinks.length > 0 && (
       <ul class="footer-social">
@@ -70,9 +70,10 @@ const socialLinks = Object.entries(siteConfig.social)
     margin: 0 auto;
     padding: 16px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    column-gap: 16px;
   }
 
   .footer-social {
@@ -80,27 +81,10 @@ const socialLinks = Object.entries(siteConfig.social)
     margin: 0;
     padding: 0;
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+    flex-flow: row wrap;
+    gap: 16px;
 
-  .footer-social li {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  /* Decorative separator between social links (was an inline span). */
-  .footer-social li:not(:first-child)::before {
-    content: "·";
-    opacity: 0.5;
-    user-select: none;
-  }
-
-  .footer-social a {
-    font-size: 0.8125rem;
-    
-    transition: color 0.2s ease;
+    li { margin: 0;}
   }
 
 </style>

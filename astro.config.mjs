@@ -65,6 +65,15 @@ export default defineConfig({
   site: 'https://donnie.damato.design',
 
   /**
+   * Dev toolbar
+   *
+   * Disabled: the in-browser Astro dev toolbar is turned off during `npm run dev`.
+   */
+  devToolbar: {
+    enabled: false,
+  },
+
+  /**
    * Image optimization configuration
    * 
    * Uses Astro's built-in Sharp-based image service for automatic optimization.

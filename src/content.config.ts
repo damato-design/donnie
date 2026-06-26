@@ -185,32 +185,42 @@ const BLOG_FEED_URL = 'https://blog.damato.design/standard-site.json';
 
 const writingCollection = defineCollection({
   loader: async () => {
-    const response = await fetch(BLOG_FEED_URL);
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch blog feed (${BLOG_FEED_URL}): ${response.status} ${response.statusText}`
+    try {
+      const response = await fetch(BLOG_FEED_URL);
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch blog feed (${BLOG_FEED_URL}): ${response.status} ${response.statusText}`
+        );
+      }
+
+      const { siteUrl, documents } = (await response.json()) as {
+        siteUrl: string;
+        documents: Array<{
+          slug: string;
+          title: string;
+          description: string;
+          publishedAt: string;
+          tags?: string[];
+        }>;
+      };
+
+      return documents.map((doc) => ({
+        id: doc.slug,
+        title: doc.title,
+        description: doc.description,
+        publishDate: doc.publishedAt,
+        tags: doc.tags ?? [],
+        url: `${siteUrl}/posts/${doc.slug}`,
+      }));
+    } catch (error) {
+      // Fail soft: a missing/unreachable blog feed (e.g. building offline) must
+      // not break the build. The Writing page renders with no entries instead.
+      console.warn(
+        `[writing] Could not fetch blog feed (${BLOG_FEED_URL}); rendering Writing page without entries.`,
+        error instanceof Error ? error.message : error
       );
+      return [];
     }
-
-    const { siteUrl, documents } = (await response.json()) as {
-      siteUrl: string;
-      documents: Array<{
-        slug: string;
-        title: string;
-        description: string;
-        publishedAt: string;
-        tags?: string[];
-      }>;
-    };
-
-    return documents.map((doc) => ({
-      id: doc.slug,
-      title: doc.title,
-      description: doc.description,
-      publishDate: doc.publishedAt,
-      tags: doc.tags ?? [],
-      url: `${siteUrl}/posts/${doc.slug}`,
-    }));
   },
   schema: z.object({
     /** Article title */
