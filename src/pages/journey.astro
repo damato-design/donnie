@@ -109,3 +109,17 @@ const entriesWithContent = await Promise.all(
       <p class="empty-state">No journey entries yet.</p>
     )}
 </BaseLayout>
+
+<style>
+  /*
+   * Two-column timeline: a fixed 32px rail on the left, entries on the right.
+   * The continuous vertical line is a gradient stripe (no element) painted into
+   * the rail — a 2px line centered at 16px, starting at the first dot's center.
+   * Each entry paints its own dot (see TimelineEntry.astro).
+   */
+  .journey-timeline {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    background: linear-gradient(currentColor, currentColor) no-repeat 12px 16px / 2px 100%;
+  }
+</style>

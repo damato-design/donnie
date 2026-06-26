@@ -68,12 +68,7 @@ const formattedDate = formatMonthYear(date);
 ---
 
 <article class="timeline-entry">
-  <div class="timeline-marker">
-    <div class="timeline-dot" data-type={type}></div>
-    <div class="timeline-line"></div>
-  </div>
-  
-  <div class="timeline-content">
+  <div class="timeline-content" data-type={type}>
     <Card>
       <Fragment slot="meta">{formattedDate}</Fragment>
       <Fragment slot="title">{title}</Fragment>
@@ -89,51 +84,44 @@ const formattedDate = formatMonthYear(date);
 
 <style>
 
+  /*
+   * The entry box dissolves (`display: contents`) so `.timeline-content` becomes
+   * the page grid's only item. It spans both columns and pads its start by the
+   * rail width, so the card sits to the right of the line while the box's own
+   * background can paint the dot over the rail. The continuous line is drawn by
+   * the parent in `journey.astro`.
+   */
   .timeline-entry {
-    display: grid;
-    grid-template-columns: 2rem 1fr;
-    gap: 1.5rem;
-    position: relative;
+    display: contents;
   }
 
-  .timeline-entry:last-child .timeline-line {
-    display: none;
+  .timeline-content {
+    /* Dot colour per entry type, consumed by the dot gradient below. */
+    --dot-color: var(--color-accent);
+
+    grid-column: 1 / -1;
+    padding-inline-start: 32px;
+    margin-block-end: 32px;
+
+    /*
+     * The dot, drawn as a radial gradient (no element): a coloured core with a
+     * 3px `--color-bg` ring that masks the line where the dot crosses it. Centred
+     * in the rail (16px) and aligned to the card's meta line (~28px).
+     */
+    background: radial-gradient(
+      circle at 13px 20px,
+      var(--dot-color) 0 6px,
+      var(--color-bg) 6px 9px,
+      transparent 9px
+    ) no-repeat;
   }
 
-  .timeline-marker {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
+  .timeline-content[data-type="learning"] {
+    --dot-color: #10b981;
   }
 
-  .timeline-dot {
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-    background: var(--color-accent);
-    border: 3px solid var(--color-bg);
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  .timeline-dot[data-type="milestone"] {
-    background: var(--color-accent);
-  }
-
-  .timeline-dot[data-type="learning"] {
-    background: #10b981;
-  }
-
-  .timeline-dot[data-type="transition"] {
-    background: #f59e0b;
-  }
-
-  .timeline-line {
-    width: 2px;
-    flex-grow: 1;
-    background: currentColor;
-    margin-top: 0.5rem;
+  .timeline-content[data-type="transition"] {
+    --dot-color: #f59e0b;
   }
 
 </style>
