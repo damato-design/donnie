@@ -85,7 +85,7 @@ export const pagesConfig = {
     title: 'Journey - Career Growth & Learning Timeline',
     description: 'A chronological timeline of my professional journey across design, engineering, and education, the milestones and transitions that shaped my practice.',
     heading: 'Journey',
-    intro: 'A timeline of my professional growth across UX design, front-end engineering, and higher education. This isn\'t a resume, it\'s the story of how my practice evolved, the pivotal moments that shaped my thinking, and the work that came out of them.',
+    intro: 'A timeline of how my practice evolved, from hands-on building to UX design, front-end engineering, and higher education. This isn\'t a resume, it\'s the story of the pivotal moments that shaped my thinking, and the work that came out of them.',
   },
 
   /**
