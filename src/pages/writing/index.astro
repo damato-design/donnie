@@ -1,0 +1,140 @@
+---
+/**
+ * Writing Index Page
+ *
+ * A curated listing of the most-read articles rather than a full archive: the
+ * blog itself (blog.damato.design) is the complete record, so here we surface
+ * the top posts by real readership (Cabin analytics) and link out to the rest.
+ *
+ * Behaviour:
+ * - Articles are pulled at build time from the blog feed (see content.config.ts).
+ * - Ranked by Cabin read counts (descending); ties break by publish date.
+ * - When analytics is unavailable (no key / API down), falls back to the most
+ *   recent articles by publish date so the page still renders meaningfully.
+ * - Shows the top TOP_N posts; a CTA at the bottom links to the full blog.
+ *
+ * @page
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import Card from '@components/Card.astro';
+import CardList from '@components/CardList.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
+import TagList from '@components/TagList.astro';
+import PageStats from '@components/PageStats.astro';
+import PageHeader from '@components/PageHeader.astro';
+import Hero from '@components/Hero.astro';
+import Typography from '@components/Typography.astro';
+import Button from '@components/Button.astro';
+import { getCollection } from 'astro:content';
+import { formatLongDate } from '@utils/formatDate';
+import { getBlogAnalytics, getPageStat, formatReads, MIN_READS } from '@utils/analytics';
+import { pagesConfig } from '../../pages.config';
+
+/** How many top posts to feature. The rest live on the blog. */
+const TOP_N = 10;
+
+type Article = Awaited<ReturnType<typeof getCollection<'writing'>>>[number];
+
+const allArticles = await getCollection('writing');
+
+// Build-time blog analytics from Cabin (null when unavailable; purely additive).
+const analytics = await getBlogAnalytics();
+
+const byDateDesc = [...allArticles].sort(
+  (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
+);
+
+// Rank by reads when analytics is available, otherwise fall back to recency.
+const topArticles: Article[] = analytics
+  ? [...allArticles]
+      .sort((a, b) => {
+        const readsA = getPageStat(analytics, a.data.url)?.reads ?? 0;
+        const readsB = getPageStat(analytics, b.data.url)?.reads ?? 0;
+        return readsB - readsA || b.data.publishDate.getTime() - a.data.publishDate.getTime();
+      })
+      .slice(0, TOP_N)
+  : byDateDesc.slice(0, TOP_N);
+
+const totalArticles = allArticles.length;
+
+// The blog's origin, for the "read everything" link (derived from the feed URLs).
+const blogUrl = allArticles.length ? new URL(allArticles[0].data.url).origin : 'https://blog.damato.design';
+
+/**
+ * Card meta line: publish date, plus the real read count from Cabin when the
+ * post has meaningful traffic (otherwise just the date).
+ */
+const articleMeta = (article: Article): string => {
+  const date = formatLongDate(article.data.publishDate);
+  const stat = getPageStat(analytics, article.data.url);
+  if (!stat || stat.reads <= MIN_READS) return date;
+  return `${date} · ${formatReads(stat.reads)} reads`;
+};
+
+// Page-header reach line: real totals when available, else a simple count.
+const statsText = analytics
+  ? `${formatReads(analytics.totalReads)} reads · read in ${analytics.countryCount} countries`
+  : `${totalArticles} articles`;
+---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title={pagesConfig.writing.title}
+    description={pagesConfig.writing.description}
+    type="website"
+  />
+
+    <Hero>
+      <Typography tagName="h2">Now in print:<br/> <em>Mise en Mode</em></Typography>
+      <Typography tagName="p">My book on rebuilding design token architecture from first principles. Stop adding tokens, start expressing modes.</Typography>
+      <ButtonGroup>
+        <Button href="https://mode.place" variant="primary" external>Read the book</Button>
+      </ButtonGroup>
+      <mode-book slot="aside"></mode-book>
+      <script is:inline type="module" src="https://mode.place/mode-book.js"></script>
+    </Hero>
+
+    <PageHeader>
+      <Typography tagName="h1">{pagesConfig.writing.heading}</Typography>
+      <Typography tagName="p">{pagesConfig.writing.intro}</Typography>
+      <PageStats text={statsText} />
+    </PageHeader>
+
+    <CardList empty="No articles published yet.">
+      {topArticles.map((article) => (
+        <li>
+          <Card>
+            <Fragment slot="meta">{articleMeta(article)}</Fragment>
+            <Fragment slot="title">{article.data.title}</Fragment>
+            <Fragment slot="description">{article.data.description}</Fragment>
+
+            <TagList slot="tags" items={article.data.tags ?? []} />
+
+            <ButtonGroup slot="cta">
+              <Button href={article.data.url} variant="secondary" external arrow>Read the article</Button>
+            </ButtonGroup>
+          </Card>
+        </li>
+      ))}
+    </CardList>
+
+    <section class="see-all">
+      <Typography tagName="p">That's the {Math.min(TOP_N, totalArticles)} most-read. The full chronological archive of all {totalArticles} posts lives on the blog.</Typography>
+      <ButtonGroup>
+        <Button href={blogUrl} variant="primary" external arrow>Read everything on the blog</Button>
+      </ButtonGroup>
+    </section>
+</BaseLayout>
+
+<style>
+  .see-all {
+    margin-block-start: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1rem;
+  }
+</style>

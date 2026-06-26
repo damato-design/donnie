@@ -95,7 +95,7 @@ export const pagesConfig = {
     title: 'Writing - Articles & Hot Takes',
     description: 'Articles and hot takes on design systems, design tokens, CSS, and the craft of bridging design and engineering.',
     heading: 'Writing',
-    intro: 'Takes best served hot, on design systems, design tokens, CSS, and the craft of bridging design and engineering. The full archive lives on my blog; here are the highlights.',
+    intro: 'Takes best served hot, on design systems, design tokens, CSS, and the craft of bridging design and engineering. The full chronological archive lives on my blog; here are the highlights.',
   },
 
   /**
