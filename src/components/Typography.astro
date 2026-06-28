@@ -29,7 +29,7 @@ interface Props {
 const { tagName = 'p' } = Astro.props;
 
 const Tag = tagName as any;
-const blockElements = ['p', 'h2', 'h3', 'h4', 'h5', 'h6', 'li'];
+const blockElements = ['p', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'blockquote'];
 const shouldWrap = blockElements.includes(Tag);
 ---
 

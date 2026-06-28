@@ -1,0 +1,32 @@
+---
+title: "Scope Styles to Components, Not Utility Classes"
+context: "Utility-class frameworks promise speed: every style has a ready-made classname, and you compose an interface by stringing them together. But that bargain pushes concrete values into the markup (`border-teal-darkest`), so the same classnames that feel convenient also pin an element to a fixed look and fight a themable token system. Left without a convention, projects also drift into a soup of ad-hoc, colliding classnames (`btn`, `main-navbar` defined many times over) that no longer say what an element actually is."
+decision: "Encapsulate styles with the component instead of decorating markup with utilities. Reach first for scoped styling, Shadow DOM with `id` selectors or a CSS-in-JS solution, so an element's styles live with the element and reference semantic tokens (`--ds-surface-navigation-background`) rather than literal values. Where a classname is genuinely needed, name it for purpose with a namespace (`ds-main-navbar`), not for the values it sets. Even the usual holdout, visually hidden screenreader-only text, is better modeled as a property on a text component (`<Text screenreaderOnly>`), wired up with `aria-describedby` when it relates to another element, than as an `sr-only` utility. The aim is a system with no utility-class exceptions to reason about at all."
+alternatives:
+  - option: "Utility-class framework (e.g. Tailwind)"
+    pros:
+      - "Fast to compose; every style has a ready-made class"
+      - "No separate stylesheet to name or maintain"
+      - "Consistent spacing and color steps out of the box"
+    cons:
+      - "Classnames encode concrete values, which fights a themable token system"
+      - "Styling detail lives in the markup, so re-theming means editing every element"
+      - "Long, repeated class strings for what is usually a missing component"
+  - option: "Global, hand-named classnames (BEM and similar)"
+    pros:
+      - "Readable, purpose-driven names"
+    cons:
+      - "Names collide across a codebase, with no scope to keep them apart"
+      - "Unrelated styles leak into each other"
+reasoning: "The split that matters is semantic versus prescriptive. A semantic token, or a purpose-named class, describes what an element is for and lets its values change across themes; a prescriptive utility class hard-codes the value and cannot. Scoping styles to the component removes the need for unique global classnames at all, an `id` inside a shadow root never collides, and keeps each element pointed at intent-named tokens. The recurring complaint that you would otherwise retype a long list of properties is real, but it is usually a signal to make a component, not a reason to spray values across the markup. As the rule goes: if it has a purpose, it should have a name."
+whyItMattered: >-
+  Keeping styling out of the markup is what lets a single component re-theme
+  without a find-and-replace through every view. It is the same bet as naming
+  tokens by intent: describe purpose once, defer the values, and let a scope
+  re-value them later. Utilities optimize the first five minutes of typing;
+  scoped, semantic styles optimize every change after that.
+tags:
+  - "CSS"
+  - "design-tokens"
+  - "methodology"
+---

@@ -69,7 +69,6 @@ blockquote {
   border-left: 4px solid currentColor;
   padding-left: 16px;
   margin: 16px 0;
-  font-style: italic;
 }
 
 /* Disclosure (native <details>/<summary>)
@@ -92,23 +91,4 @@ details::details-content {
 
 details[open]::details-content {
   height: auto;
-}
-
-/* Code */
-code {
-  font-family: ui-monospace, 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, 'Courier New', monospace;
-  font-size: 0.9em;
-  background-color: var(--color-bg-elevated);
-  padding: 0.125rem 0.25rem;
-}
-
-pre {
-  background-color: var(--color-bg-elevated);
-  padding: .5em;
-  overflow-x: auto;
-}
-
-pre code {
-  background-color: transparent;
-  padding: 0;
 }
