@@ -118,8 +118,10 @@ const entriesWithContent = await Promise.all(
    * Each entry paints its own dot (see TimelineEntry.astro).
    */
   .journey-timeline {
+    --y-offset: 27px;
     display: grid;
     grid-template-columns: 32px 1fr;
-    background: linear-gradient(currentColor, currentColor) no-repeat 12px 16px / 2px 100%;
+    background: linear-gradient(currentColor, currentColor) no-repeat 12px var(--y-offset, 0px) / 2px 100%;
+    margin-inline-start: -12px;
   }
 </style>

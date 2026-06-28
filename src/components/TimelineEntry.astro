@@ -109,7 +109,7 @@ const formattedDate = formatMonthYear(date);
      * in the rail (16px) and aligned to the card's meta line (~28px).
      */
     background: radial-gradient(
-      circle at 13px 20px,
+      circle at 13px calc(var(--y-offset, 0px) + 6px),
       var(--dot-color) 0 6px,
       var(--color-bg) 6px 9px,
       transparent 9px
