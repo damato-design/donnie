@@ -103,6 +103,7 @@ const statsText = analytics
       <PageStats text={statsText} />
     </PageHeader>
 
+    <Typography tagName="h2">Top { TOP_N } Articles</Typography>
     <CardList empty="No articles published yet.">
       {topArticles.map((article) => (
         <li>
