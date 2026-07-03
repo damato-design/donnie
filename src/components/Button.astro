@@ -98,18 +98,13 @@ const tagAttrs =
     cursor: pointer;
     transition: opacity 0.2s ease, border-color 0.2s ease, color 0.2s ease,
       background 0.2s ease;
+    background: var(--bgcolor);
+    color: currentColor;
+    border-color: currentColor;
   }
 
   .btn--primary {
-    background: contrast-color(var(--color-bg));
-    color: var(--color-bg);
-    border-color: contrast-color(var(--color-bg));
-  }
-
-  .btn--secondary {
-    background: var(--color-bg);
-    color: currentColor;
-    border-color: currentColor;
+    filter: invert(1);
   }
 
   .btn--disabled {

@@ -1,16 +1,8 @@
-/* Global Styles and CSS Custom Properties */
-
-:root {
-  /* Color System - base background; the rest is derived at use sites via
-     contrast-color() and oklch(from ...) rather than fixed tokens. */
-  --color-bg: #f7f7f7;
-  --color-bg-elevated: oklch(from var(--color-bg) calc(l + .05) c h);
-  
-  /* Enable animating to/from intrinsic sizes (e.g. height: auto) */
-  interpolate-size: allow-keywords;
+@property --bgcolor {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: Canvas;
 }
-
-/* CSS Reset and Base Styles */
 
 *,
 *::before,
@@ -21,6 +13,7 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  interpolate-size: allow-keywords;
 }
 
 /* Smooth in-page anchor scrolling (e.g. the scroll-to-top control), opt-out for
@@ -33,13 +26,19 @@ html {
 
 body {
   margin: 0;
-  background-color: var(--color-bg);
-  color: contrast-color(var(--color-bg));
-  min-height: 100vh;
+  background-color: var(--bgcolor);
+  color: color(from var(--bgcolor) xyz-d65
+		clamp(0, (.36 / y - 1) * infinity, 1)
+		clamp(0, (.36 / y - 1) * infinity, 1)
+		clamp(0, (.36 / y - 1) * infinity, 1)
+	);
   font-family: "LINE Seed JP", sans-serif;
   line-height: 1.4;
-  background-image: radial-gradient(circle, contrast-color(var(--color-bg)) .5px, transparent .5px);
+  background-image: radial-gradient(circle, currentColor .5px, transparent .5px);
   background-size: 6px 6px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* Links */

@@ -60,7 +60,7 @@ const socialLinks = Object.entries(siteConfig.social)
 
 <style>
   .site-footer {
-    background: var(--color-bg-elevated);
+    background: oklch(from var(--bgcolor) calc(l + .05) c h);
     border-top: 1px solid currentColor;
     margin-top: auto;
   }

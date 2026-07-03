@@ -71,7 +71,7 @@ const isActive = (href: string) => {
 <style>
   .site-nav {
     border-bottom: 1px solid currentColor;
-    background: var(--color-bg-elevated);
+    background: oklch(from var(--bgcolor) calc(l + .05) c h);
   }
 
   .nav-scroll {
@@ -110,10 +110,11 @@ const isActive = (href: string) => {
     display: inline-flex;
     white-space: nowrap;
     padding: 16px;
+    background: oklch(from var(--bgcolor) calc(l + .05) c h);
+    color: currentColor;
 
     &[aria-current="page"] {
-      background: contrast-color(var(--color-bg));
-      color: var(--color-bg);
+      filter: invert(1);
     }
   }
 </style>

@@ -100,15 +100,10 @@ const formattedDate = formatMonthYear(date);
     padding-inline-start: 32px;
     margin-block-end: 32px;
 
-    /*
-     * The dot, drawn as a radial gradient (no element): a coloured core with a
-     * 3px `--color-bg` ring that masks the line where the dot crosses it. Centred
-     * in the rail (16px) and aligned to the card's meta line (~28px).
-     */
     background: radial-gradient(
       circle at 13px calc(var(--y-offset, 0px) + 6px),
       currentColor 0 6px,
-      var(--color-bg) 6px 9px,
+      var(--bgcolor) 6px 9px,
       transparent 9px
     ) no-repeat;
   }

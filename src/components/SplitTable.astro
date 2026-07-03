@@ -54,7 +54,7 @@ const { title, leftLabel, rightLabel } = Astro.props;
     width: 100%;
     text-align: left;
     border-collapse: collapse;
-    background: var(--color-bg-elevated);
+    background: oklch(from var(--bgcolor) calc(l + .05) c h);
     border: 1px solid;
     font-size: min(1em, 4vw);
   }

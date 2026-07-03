@@ -65,7 +65,7 @@ const hasDescription = Astro.slots.has('description');
     flex-direction: column;
     align-items: start;
     padding: 1.5rem 1.75rem;
-    background: var(--color-bg-elevated);
+    background: oklch(from var(--bgcolor) calc(l + .05) c h);
     border: 1px solid;
 
     & > :global(:where(h3, p, li) span) {
