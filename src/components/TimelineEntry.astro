@@ -96,9 +96,6 @@ const formattedDate = formatMonthYear(date);
   }
 
   .timeline-content {
-    /* Dot colour per entry type, consumed by the dot gradient below. */
-    --dot-color: var(--color-accent);
-
     grid-column: 1 / -1;
     padding-inline-start: 32px;
     margin-block-end: 32px;
@@ -110,7 +107,7 @@ const formattedDate = formatMonthYear(date);
      */
     background: radial-gradient(
       circle at 13px calc(var(--y-offset, 0px) + 6px),
-      var(--dot-color) 0 6px,
+      currentColor 0 6px,
       var(--color-bg) 6px 9px,
       transparent 9px
     ) no-repeat;

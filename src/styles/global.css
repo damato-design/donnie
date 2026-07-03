@@ -5,8 +5,6 @@
      contrast-color() and oklch(from ...) rather than fixed tokens. */
   --color-bg: #f7f7f7;
   --color-bg-elevated: oklch(from var(--color-bg) calc(l + .05) c h);
-  --color-border: #262626;
-  --color-accent: #3b82f6;
   
   /* Enable animating to/from intrinsic sizes (e.g. height: auto) */
   interpolate-size: allow-keywords;
@@ -48,10 +46,6 @@ body {
 a {
   color: currentColor;
   text-underline-offset: .15em;
-}
-
-a:focus-visible {
-  outline: 2px solid var(--color-accent);
 }
 
 ul li {

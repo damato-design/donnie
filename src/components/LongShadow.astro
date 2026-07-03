@@ -32,11 +32,11 @@
     <feMergeNode in="shadow_7"/>
   </feMerge>
 
-  <feFlood flood-color="#000"/>
+  <feFlood flood-color="currentColor"/>
   <feComposite in2="shadow" operator="in" result="shadow"/>
 
   <feMorphology operator="dilate" radius="1" result="border"/>
-  <feFlood flood-color="#000"/>
+  <feFlood flood-color="currentColor"/>
   <feComposite in2="border" operator="in" result="border"/>
 
   <feMerge>
