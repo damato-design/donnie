@@ -72,4 +72,14 @@ const hasAside = Astro.slots.has("aside");
     display: flex;
     justify-content: end;
   }
+
+  @media (max-width: 600px) {
+    .hero-content {
+      grid-column: 1 / -1;
+    }
+
+    .hero-media {
+      display: none;
+    }
+  }
 </style>
