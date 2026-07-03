@@ -1,0 +1,53 @@
+---
+/**
+ * Label Component
+ *
+ * The single, shared primitive for all small labels: tags, type labels, and
+ * project status.
+ *
+ * This is deliberately NOT a chip/button: no background, border, or rounded box.
+ * Those make a non-interactive label look clickable ("Schrödinger's button").
+ * It communicates purely through typographic hierarchy: color, weight, and case.
+ * See https://blog.damato.design/posts/chip-away/
+ *
+ * Variations are props, not separate components:
+ * - `color` tints the text (neutral by default).
+ * - `uppercase` switches to the emphasized treatment (smaller, bold, tracked).
+ *
+ * Content is slotted, so a label can include a leading icon.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <Label>react</Label>
+ * <Label color="accent" uppercase>Conference</Label>
+ * ```
+ */
+
+interface Props {
+  /** Text tint */
+  color?: 'neutral' | 'accent' | 'green' | 'purple' | 'amber' | 'pink';
+  /** Emphasized treatment (uppercase, bolder, smaller) */
+  uppercase?: boolean;
+}
+
+const { color = 'neutral', uppercase = false } = Astro.props;
+---
+
+<span class:list={['label', `label--${color}`, uppercase && 'label--uppercase']}>
+  <slot />
+</span>
+
+<style>
+  .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 1ch;
+    font-size: 0.75rem;
+  }
+
+  .label svg {
+    flex-shrink: 0;
+  }
+</style>

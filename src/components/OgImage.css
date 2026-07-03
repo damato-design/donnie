@@ -1,0 +1,77 @@
+/*
+ * Styles for OgImage.astro.
+ *
+ * Authored as a plain stylesheet (plain class selectors, no Astro scoping) so
+ * the renderer can inline it onto the markup with `juice` before handing it to
+ * satori (see src/lib/og.ts). satori only understands a flexbox subset of CSS,
+ * so: every multi-child element sets `display: flex`, colors are hard-coded
+ * hex (no contrast-color()/oklch() tokens), and there are no filters/transforms.
+ *
+ * Brand colors: bg #f7f7f7, fg #262626, muted #525252, accent #3b82f6.
+ */
+
+.og-root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 1200px;
+  height: 630px;
+  padding: 80px;
+  background-color: #f7f7f7;
+  /* The site's dot grid. satori can't tile a CSS radial-gradient via
+     background-size, so the dots are a repeating 12px SVG tile instead. If
+     satori ignores it, the solid background-color above remains as a fallback. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23262626' fill-opacity='0.18'/%3E%3C/svg%3E");
+  font-family: 'LINE Seed JP', sans-serif;
+}
+
+.og-body {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.og-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 64px;
+  flex: 1;
+}
+
+.og-title {
+  display: flex;
+  font-family: 'BBH Hegarty', sans-serif;
+  font-size: 80px;
+  line-height: 1.05;
+  /* Sentinel fill. satori can't reference the site's `#longshadow` SVG filter,
+     so the renderer (src/lib/og.ts) post-processes satori's output SVG: it
+     finds the title text by this unique color, swaps it for the real hollow
+     glyph fill, and attaches `filter="url(#longshadow)"`. */
+  color: #ff00ff;
+}
+
+.og-description {
+  display: flex;
+  font-size: 30px;
+  line-height: 1.4;
+  color: #525252;
+  margin-top: 28px;
+  max-width: 620px;
+}
+
+.og-portrait {
+  width: 380px;
+  height: 415px;
+  object-fit: cover;
+}
+
+.og-wordmark {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 28px;
+}

@@ -1,0 +1,44 @@
+---
+/**
+ * OgImage
+ *
+ * The visual template for generated Open Graph images (1200x630). It is NOT a
+ * normal page component: it is rendered to an HTML string via
+ * `experimental_AstroContainer`, then its stylesheet (`OgImage.css`) is inlined
+ * onto the markup with `juice` and the result is fed through satori -> resvg to
+ * produce a PNG (see `src/lib/og.ts`).
+ *
+ * Styling lives in `OgImage.css` as plain (unscoped) class selectors precisely
+ * so `juice` can inline it; satori only understands a flexbox subset of CSS, so
+ * the stylesheet stays within that subset. The portrait is passed in as a
+ * base64 data URI rather than a path so satori can resolve it at build time.
+ *
+ * @component
+ */
+
+interface Props {
+  /** Large heading (the top-level page name). */
+  title: string;
+  /** Supporting copy below the heading. */
+  description: string;
+  /** Portrait <img> src. The renderer passes a short placeholder and injects
+   *  the real base64 data URI onto the parsed node afterward (for performance,
+   *  see src/lib/og.ts). */
+  portrait: string;
+  /** Footer wordmark, e.g. "donnie.damato.design". */
+  wordmark: string;
+}
+
+const { title, description, portrait, wordmark } = Astro.props;
+---
+
+<div class="og-root">
+  <div class="og-body">
+    <div class="og-text">
+      <div class="og-title">{title}</div>
+      <div class="og-description">{description}</div>
+    </div>
+    <img class="og-portrait" src={portrait} width="380" height="415" />
+  </div>
+  <div class="og-wordmark">{wordmark}</div>
+</div>

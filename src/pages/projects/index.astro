@@ -1,21 +1,93 @@
 ---
+/**
+ * Projects Index Page
+ * 
+ * Lists all projects as case studies with impact summaries. Projects are displayed
+ * in a prioritized order: custom order (if specified) takes precedence, otherwise
+ * sorted by year (most recent first).
+ *
+ * Features:
+ * - Queries all projects from content collection
+ * - Smart sorting: custom order → year (descending)
+ * - Displays project count statistics
+ * - Uses the shared Card component for consistent presentation
+ * - SEO optimization
+ * - Empty state handling
+ * 
+ * Route: /projects
+ * 
+ * @page
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import Card from '@components/Card.astro';
+import CardList from '@components/CardList.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
+import Button from '@components/Button.astro';
+import TagList from '@components/TagList.astro';
+import PageStats from '@components/PageStats.astro';
+import PageHeader from '@components/PageHeader.astro';
+import Hero from '@components/Hero.astro';
+import EditableStyle from '@components/EditableStyle.astro';
+import Typography from '@components/Typography.astro';
 import { getCollection } from 'astro:content';
-import Section from '@components/Section.astro';
-import List from '@components/List.astro';
-export const partial = true;
+import { pagesConfig } from '../../pages.config';
 
-const entries = await getCollection('projects');
-const links = entries.sort((a, b) => b.data.date - a.data.date).filter((entry) => !entry.data.draft).reduce((acc, entry) => {
-    return Object.assign(acc, {[entry.data.title]: `/projects/${entry.id}`})
-}, {});
+/**
+ * Queries all projects from the content collection
+ */
+const allProjects = await getCollection('projects');
 
-const color = '#f4dd66';
+/**
+ * Sorts projects by year (descending - newest first).
+ */
+const sortedProjects = allProjects.sort((a, b) => b.data.year - a.data.year);
+
+/**
+ * Total count of projects for statistics display
+ */
+const totalProjects = sortedProjects.length;
 ---
 
-<Section level="secondary" color={ color }>
-    <h2 slot="leading">projects</h2>
-    <List list={ links } target="main" colors={[color]}/>
-    <div slot="trailing">
-        Looking for some spicy design systems hot takes? Check out <a href="https://blog.damato.design">my blog</a>.
-    </div>
-</Section>
+<BaseLayout>
+  <SEO 
+    slot="head"
+    title={pagesConfig.projects.title}
+    description={pagesConfig.projects.description}
+    type="website"
+  />
+
+    <Hero>
+      <Typography tagName="h2">Finding <em>creativity within constraints</em></Typography>
+      <Typography tagName="p">Real innovation isn't abundant options,<br> it's the discipline to do more with less.</Typography>
+      <ButtonGroup>
+        <Button href="/contact" variant="primary">Work with me</Button>
+      </ButtonGroup>
+      <EditableStyle slot="aside"/>
+    </Hero>
+
+    <PageHeader>
+      <Typography tagName="h1">{pagesConfig.projects.heading}</Typography>
+      <Typography tagName="p">{pagesConfig.projects.intro}</Typography>
+      <PageStats text={`${totalProjects} projects`} />
+    </PageHeader>
+
+    <CardList empty="No projects available yet.">
+      {sortedProjects.map((project) => (
+        <li>
+          <Card>
+            <Fragment slot="meta">{project.data.role} · {project.data.year}</Fragment>
+            <Fragment slot="title">{project.data.title}</Fragment>
+            <Fragment slot="description">{project.data.outcomeSummary}</Fragment>
+
+            <TagList slot="tags" items={project.data.techStack} />
+
+            <ButtonGroup slot="cta">
+              <Button href={`/projects/${project.id}`} variant="secondary" arrow>View case study</Button>
+            </ButtonGroup>
+          </Card>
+        </li>
+      ))}
+    </CardList>
+</BaseLayout>

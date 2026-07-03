@@ -1,0 +1,60 @@
+---
+title: "GoDaddy, UXCore & Semantic Theming"
+role: "Principal, UX Platform · Design Systems Lead"
+year: 2019
+duration: "2019–present"
+teamSize: 6
+outcomeSummary: "Lead UXCore, GoDaddy's React design system: replaced statically generated palettes with CSS Custom Properties theming and a semantic Intent token system that themes across 20M+ customers, and rebuilt the component library in place toward composable primitives."
+overview: "Leading the team behind UXCore, GoDaddy's React design system: its component library and the theming layer that styles it across the company's brands and locales."
+problem: "UXCore had two problems to solve. Brand styling came from a long-standing system that statically generated dozens of CSS palettes, one set per brand and localization permutation, so any brand update was slow, risky, and expensive. The component library itself had grown as a contributor model with no one saying no, so one-off components of questionable value kept accumulating across the organization. Both had to be fixed carefully, because I had arrived just after a React migration and a painful color and typography restyle, two breaking changes that had already shaken partner trust."
+constraints:
+  - "Stability was paramount; partners had little appetite for more disruption"
+  - "Theming had to support brand, localization, and accessibility variations"
+  - "Changes had to roll out without blocking dozens of product teams"
+approach: "The work came in two units. The first was the theming system: brand styling had shipped as statically generated CSS palettes, so I replaced it with CSS variables and a naming convention, the Intents, served through an API, making theming flexible at runtime instead of regenerated for every permutation. The second was the component library: rather than ship a replacement teams would have to adopt, I rebuilt UXCore in place, a ship of Theseus, swapping the components teams already used piece by piece toward a small set of highly composable primitives, so they kept the same library while it changed underneath them."
+keyDecisions:
+  - decision: "Use CSS Custom Properties for runtime theming instead of generating static CSS palettes"
+    reasoning: "Custom Properties were now broadly supported and let a single stylesheet retheme at runtime, served through an API, eliminating the combinatorial palette generation."
+    alternatives:
+      - "Continue generating static CSS per brand/locale"
+      - "Sass-based theme compilation"
+  - decision: "Adopt a semantic 'Intent' token system"
+    reasoning: "Naming tokens by purpose (action, surface, text), priority, and property aimed to keep the system predictable and bounded rather than sprawling into hundreds of one-off values, though holding that line in practice proved harder than the design."
+    alternatives:
+      - "Expose raw primitive tokens directly to consumers"
+      - "Per-component theming APIs"
+  - decision: "Rebuild the library in place toward curated, composable primitives"
+    reasoning: "The contributor model accepted nearly everything because no one was saying no, so I was brought in to set a quality bar and move the library toward a small set of composable primitives. Teams were averse to adopting yet another new library, even one objectively better designed and built than what they had, so instead of shipping a replacement, we swapped the components they already used piece by piece. The library they imported stayed the same while its internals were rebuilt underneath them, delivering the composable direction with no migration."
+    alternatives:
+      - "Keep accepting contributed components as-is"
+      - "Ship a new library and migrate every team"
+      - "Freeze UXCore and start fresh"
+techStack:
+  - "React"
+  - "CSS Custom Properties"
+  - "Theming API"
+  - "Design Tokens"
+  - "Intent tokens"
+  - "Composable components"
+  - "TypeScript"
+impact:
+  metrics:
+    - label: "Theming model"
+      value: "Dozens of generated CSS palettes replaced by a single runtime-themed layer"
+    - label: "Token surface"
+      value: "~500 semantic Intent tokens theming across 20M+ customers"
+    - label: "Support response"
+      value: "Partner requests triaged within ~24 hours"
+  qualitative: "The Intent system gave designers and engineers a shared semantic language for theming, and the move toward composable primitives steadily reduced the maintenance burden of a sprawling contributor-driven library."
+learnings:
+  - "A bounded vocabulary only stays bounded if adopters know how to generalize; teams kept minting component-specific Intents for very particular cases, and the set ballooned to around 500, far past the small set intended"
+  - "An open contributor model needs someone empowered to say no; without a quality bar, a component library fills with one-off pieces"
+  - "Fast, human support (triage within a day) keeps partner teams unblocked and trusting the system"
+  - "Teams resist adopting a new library even when it is objectively better; meeting them where they are by rebuilding in place beats shipping a superior replacement they would refuse"
+  - "Deprecation is as much design system work as creation"
+status: ongoing
+---
+
+The Intent token system was an idea I had adopted at my previous company and kept developing. The aim was a small, bounded vocabulary, but adoption pulled the other way: teams minted component-specific Intents for very particular cases rather than generalizing, and the set grew to around 500. That token bloat, too many tokens for too-specific things, is the very problem that later led me to Mise en Mode.
+
+Support turned out to be the largest part of the role: triaging each request and taking the right action, whether opening a low-priority ticket or pairing on a call, so I never block partners while still steering them toward the best experience.

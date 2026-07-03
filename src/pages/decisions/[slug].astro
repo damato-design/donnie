@@ -1,0 +1,112 @@
+---
+/**
+ * Decision Detail Page
+ * 
+ * Dynamic route that displays the full decision record for a specific decision entry.
+ * Presents a structured view of the decision-making process including context, the
+ * decision made, alternatives considered with pros/cons, reasoning, and optional
+ * additional content.
+ * 
+ * Features:
+ * - Static path generation for all decision entries
+ * - Structured decision presentation (Context → Decision → Alternatives → Reasoning)
+ * - Alternatives comparison with pros/cons lists
+ * - Tag display
+ * - Optional markdown body content
+ * - SEO optimization with article type
+ * - Scroll-to-top functionality
+ * - Back navigation to decisions list
+ * 
+ * Route: /decisions/[slug]
+ * 
+ * @page
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import ScrollToTop from '@components/ScrollToTop.astro';
+import BackLink from '@components/BackLink.astro';
+import Section from '@components/Section.astro';
+import Alternatives from '@components/Alternatives.astro';
+import TagList from '@components/TagList.astro';
+import Typography from '@components/Typography.astro';
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import { renderInlineMarkdown } from '@utils/markdown';
+
+/**
+ * Generates static paths for all decision entries
+ * 
+ * Queries the decisions content collection and creates a route for each entry
+ * using the entry ID as the slug parameter.
+ * 
+ * @returns Array of path objects with params and props
+ */
+export const getStaticPaths: GetStaticPaths = async () => {
+  const decisions = await getCollection('decisions');
+  return decisions.map((decision) => ({
+    params: { slug: decision.id },
+    props: { decision },
+  }));
+};
+
+type DecisionEntry = Awaited<ReturnType<typeof getCollection<'decisions'>>>[number];
+
+interface Props {
+  /** The decision entry from the content collection */
+  decision: DecisionEntry;
+}
+
+const { decision } = Astro.props;
+const { Content } = await render(decision);
+
+const whyItMatteredHtml = await renderInlineMarkdown(decision.data.whyItMattered);
+---
+
+<BaseLayout>
+  <SEO 
+    slot="head"
+    title={`${decision.data.title} - Decision Record`}
+    description={decision.data.context}
+    type="article"
+  />
+
+    <article class="decision-content">
+      <header class="decision-header">
+        <Typography tagName="h1">{decision.data.title}</Typography>
+        <TagList items={decision.data.tags ?? []} />
+      </header>
+
+      <Section title="Context">
+        <Typography tagName="p">{decision.data.context}</Typography>
+      </Section>
+
+      <Section title="Decision">
+        <Typography tagName="blockquote">{decision.data.decision}</Typography>
+      </Section>
+
+      <Section title="Alternatives Considered">
+        <Alternatives alternatives={decision.data.alternatives} />
+      </Section>
+
+      <Section title="Reasoning">
+        <Typography tagName="p">{decision.data.reasoning}</Typography>
+      </Section>
+
+      <Section title="Why it mattered">
+        <Typography tagName="p"><Fragment set:html={whyItMatteredHtml} /></Typography>
+      </Section>
+
+      {decision.body && decision.body.trim().length > 0 && (
+        <section class="decision-body prose">
+          <Content />
+        </section>
+      )}
+
+      <BackLink href="/decisions" text="All decisions" />
+    </article>
+  <ScrollToTop />
+
+  
+</BaseLayout>
+

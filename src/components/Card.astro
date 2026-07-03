@@ -1,0 +1,87 @@
+---
+/**
+ * Card Component
+ *
+ * The single, slot-driven card used across the site (projects, decisions,
+ * articles, talks, and the journey timeline's content area). It has no
+ * per-type variants: differences are expressed purely through which slots a
+ * call site fills.
+ *
+ * The card itself is NOT a link. For accessibility, the only interactive
+ * element is whatever the call site puts in the `cta` slot (typically a
+ * <ButtonGroup> holding a forward <Button>), so a whole block of headings and
+ * tags is never wrapped in a single anchor.
+ *
+ * The meta / title / description wrappers are only rendered when their slot is
+ * filled, so the card also works as a styled shell (passing bespoke markup in
+ * the default slot).
+ *
+ * @component
+ *
+ * @slot badge - Optional badge/label row at top (e.g. status, type)
+ * @slot meta - Metadata line (date, role, category, etc.)
+ * @slot title - Card heading/title
+ * @slot description - Card description or summary text
+ * @slot tags - Container for a TagList
+ * @slot default - Bespoke content between tags and the CTA (e.g. a talk's event
+ *   line and slides/video links, or a timeline disclosure)
+ * @slot cta - Optional call-to-action at the bottom (typically a <ButtonGroup>)
+ *
+ * @example
+ * ```astro
+ * <Card>
+ *   <Fragment slot="meta">January 2024</Fragment>
+ *   <Fragment slot="title">Card Title</Fragment>
+ *   <Fragment slot="description">Card description text</Fragment>
+ *   <ButtonGroup slot="cta">
+ *     <Button href="/example" variant="secondary" arrow>Read more</Button>
+ *   </ButtonGroup>
+ * </Card>
+ * ```
+ */
+
+import Typography from '@components/Typography.astro';
+
+interface Props {}
+
+const hasMeta = Astro.slots.has('meta');
+const hasTitle = Astro.slots.has('title');
+const hasDescription = Astro.slots.has('description');
+---
+
+<article class="card">
+  <slot name="badge" />
+  {hasMeta && <Typography tagName="span"><slot name="meta" /></Typography>}
+  {hasTitle && <Typography tagName="h3"><slot name="title" /></Typography>}
+  {hasDescription && <Typography tagName="p"><slot name="description" /></Typography>}
+  <slot name="tags" />
+  <slot />
+  <slot name="cta" />
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 1.5rem 1.75rem;
+    background: var(--color-bg-elevated);
+    border: 1px solid;
+
+    & > :global(:where(h3, p, li) span) {
+      display: contents;
+      line-height: inherit;
+    }
+
+    & > :global(span) {
+      font-size: .8em;
+      padding-block-end: 8px;
+    }
+
+    & > :global(h3) {
+      margin: 0;
+      font-size: 2em;
+      line-height: 1;
+    }
+  }
+</style>

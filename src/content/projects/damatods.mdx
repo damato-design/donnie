@@ -1,0 +1,44 @@
+---
+title: "DAMATO Design System, A Playground for Exploring New Ideas"
+role: "Creator"
+year: 2022
+outcomeSummary: "A personal design system playground for proving the longer-term, less-obvious ideas on their own merits, the ones real projects rarely have room to try."
+overview: "system.damato.design is my design system playground, an open exploration of design system ideas built without business influence, where ways of organizing and composing a system's resources can be tried purely on their merits."
+problem: "In real systems, near-term opinions tend to shape the guidelines in ways that help right now but hinder them long term. The more robust solutions often aren't immediately obvious, and chasing them shouldn't block the teams that need an answer today. I wanted a place to work those longer-view solutions out and show their benefit in isolation, away from that pressure."
+constraints:
+  - "No CSS should be required from the people using the system"
+  - "Stylistic choices happen outside the components, through Mise en Mode"
+  - "Every decision is justified by logical direction, not feeling"
+approach: "The system is composition-first: elements are deliberately designed to be used together, which lets it fill the gaps left by wireframing and user flows and give teams guidance for implementing common patterns and themes."
+keyDecisions:
+  - decision: "Write no custom styles for components"
+    reasoning: "Layout is set through specifically defined component props and cosmetics through scoped themes, so consumers assemble existing parts instead of authoring one-off CSS."
+    alternatives:
+      - "Allow per-component custom CSS"
+      - "Ship style overrides as one-offs"
+  - decision: "Impose deliberate restrictions to reduce the number of decisions"
+    reasoning: "Fewer, more intentional choices keep the system coherent and easier to trust than open-ended flexibility."
+    alternatives:
+      - "Maximize flexibility and configuration"
+      - "Hand-pick values case by case"
+techStack:
+  - "Design Tokens"
+  - "Composition"
+  - "Scoped theming"
+  - "TypeScript"
+  - "Storybook"
+  - "Vite"
+  - "Vitest"
+impact:
+  qualitative: "Approaches the playground tries, scoped theming, complementary space, and fluid headings, have made their way into my writing and into how I think about real systems."
+learnings:
+  - "Removing business constraints surfaces which design decisions are actually principled"
+  - "An outcome people already reach by feel can often be turned into a deliberate, logical rule"
+status: ongoing
+---
+
+Some approaches here are highly experimental and remain only as proofs of concept, so user discretion is advised. The throughline is that trust is built from the smallest pieces up: when a token or component behaves as expected, the larger experience earns confidence, and a novel concept that breaks that expectation spends it.
+
+Two of those experiments shape the everyday details. Density follows a [complementary space](https://blog.damato.design/posts/complementary-space/) model, where a region's scope, not individual tokens, describes how compact it is, so nested composition grows tighter on its own without separate size variants. Headings use a [fluid](https://blog.damato.design/posts/fluid-headings/) approach that shows the logic-over-feeling rule in action. Designers curating headings by feel were already, accidentally, keeping each heading's overall composition, the way its lines wrap and break, even as screens got smaller. The fluid rule makes that deliberate instead of incidental; `clamp()` is just how it gets there.
+
+Explore it at [system.damato.design](https://system.damato.design).

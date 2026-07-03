@@ -1,0 +1,119 @@
+---
+/**
+ * Button
+ *
+ * The action-button primitive, and the single home for button styling. Use it
+ * for buttons and for links that *look* like buttons (CTAs, pagination
+ * prev/next, etc.). Inline text links should stay plain `<a>` and not use this.
+ *
+ * Element rendered:
+ * - `href` (and not disabled)  -> `<a>`
+ * - `href` + `disabled`        -> `<span aria-disabled>` (non-navigable)
+ * - no `href`                  -> `<button type=...>`
+ *
+ * Content is slotted, so an icon + label compose naturally (the button is a
+ * flex row). Visual variants are `primary` (filled) and `secondary` (outline).
+ * Set `arrow` to append the standard trailing forward arrow (e.g. card CTAs);
+ * fill the `icon` slot to prepend a leading icon (e.g. a Slides/Video glyph).
+ *
+ * @component
+ * @slot default - Button label / icon content.
+ * @slot icon - Optional leading icon, rendered before the label.
+ *
+ * @example
+ * ```astro
+ * <Button href="/projects" variant="primary">View My Work</Button>
+ * <Button href="https://cal.com/x" variant="secondary" external>Book a call</Button>
+ * <Button href="/projects/x" variant="secondary" arrow>View case study</Button>
+ * <Button href="https://slides.example" variant="secondary" external>
+ *   <SomeIcon slot="icon" />Slides
+ * </Button>
+ * <Button variant="secondary" disabled aria-label="Previous page">…</Button>
+ * ```
+ */
+
+import ArrowIcon from '@components/ArrowIcon.astro';
+
+interface Props {
+  /** Destination. Provided -> renders a link; omitted -> renders a <button>. */
+  href?: string;
+  /** Visual style. */
+  variant?: 'primary' | 'secondary';
+  /** Open link in a new tab. */
+  external?: boolean;
+  /** Disabled state (non-interactive). */
+  disabled?: boolean;
+  /** Append the standard trailing forward arrow after the label. */
+  arrow?: boolean;
+  /** Button type when rendered as <button>. */
+  type?: 'button' | 'submit' | 'reset';
+  /** Any other valid attributes (aria-label, id, ...). */
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  variant = 'primary',
+  external = false,
+  disabled = false,
+  arrow = false,
+  type = 'button',
+  ...rest
+} = Astro.props;
+
+const Tag = !href ? 'button' : disabled ? 'span' : 'a';
+
+const tagAttrs =
+  Tag === 'a'
+    ? { href, ...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {}) }
+    : Tag === 'button'
+      ? { type, disabled }
+      : { 'aria-disabled': true };
+---
+
+<Tag
+  class:list={[
+    'btn',
+    `btn--${variant}`,
+    { 'btn--disabled': disabled },
+  ]}
+  {...tagAttrs}
+  {...rest}
+><slot name="icon" /><slot />{arrow && <ArrowIcon />}</Tag>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    line-height: inherit;
+    text-decoration: none;
+    font-weight: bolder;
+    letter-spacing: 2px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: opacity 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .btn--primary {
+    background: contrast-color(var(--color-bg));
+    color: var(--color-bg);
+    border-color: contrast-color(var(--color-bg));
+  }
+
+  .btn--secondary {
+    background: var(--color-bg);
+    color: currentColor;
+    border-color: currentColor;
+  }
+
+  .btn--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+</style>

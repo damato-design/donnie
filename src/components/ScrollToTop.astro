@@ -1,0 +1,83 @@
+---
+/**
+ * ScrollToTop Component
+ *
+ * Floating control in the bottom-right corner that returns the user to the top
+ * of the page. It is a plain anchor to the `#top` landmark (the site header):
+ *
+ * - The scroll itself is the browser's native anchor jump, smoothed by
+ *   `scroll-behavior: smooth` (global.css, gated behind `prefers-reduced-motion`).
+ * - Show/hide past a 300px scroll threshold is a CSS scroll-driven animation
+ *   (`animation-timeline: scroll()` + `animation-range`), so there is no
+ *   JavaScript: no scroll listener, and nothing to re-init after View Transitions.
+ *
+ * Browsers without scroll-driven animations (`@supports` fallback) simply show
+ * the control at all times.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <ScrollToTop />
+ * ```
+ */
+
+import Button from '@components/Button.astro';
+---
+
+<Button
+  variant="primary"
+  href="#top"
+  id="scroll-to-top"
+  aria-label="Scroll to top"
+  title="Scroll to top"
+>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</Button>
+
+<style>
+  /* Icon-only FAB: reshapes the Button primitive into a fixed, square control.
+     The id selector wins specificity over the .btn base rules.
+     Base state is always-visible; the @supports block below hides it until the
+     reader has scrolled, so unsupported browsers degrade to a static control. */
+  #scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease,
+      border-color 0.2s ease;
+    z-index: 1;
+  }
+
+  /* Reveal once the document has scrolled past 300px, fading in over the next
+     60px. `both` fill keeps the control hidden before the range and visible
+     after it. visibility:hidden in the start frame keeps it out of the tab
+     order while off-screen. */
+  @keyframes reveal-scroll-top {
+    from {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+
+  @supports (animation-timeline: scroll()) {
+    #scroll-to-top {
+      animation: reveal-scroll-top linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 300px 360px;
+    }
+  }
+</style>

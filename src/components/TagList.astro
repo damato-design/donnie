@@ -1,0 +1,62 @@
+---
+/**
+ * TagList Component
+ *
+ * Renders a horizontal, wrapping list of tags as shared Label primitives, so
+ * tags match every other badge. Centralizes the `tags.map(...)` markup repeated
+ * across the cards.
+ *
+ * Items are authored as plain readable text and rendered as hashtags: the
+ * leading "#" and PascalCase form are produced here by `toHashtag`, so the same
+ * source values can also be reused verbatim in non-tag contexts.
+ *
+ * Renders nothing when `items` is empty.
+ *
+ * Only the list layout is styled here; the label look comes from Label.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <TagList items={tags} />
+ * <TagList items={techStack} slot="tags" />
+ * ```
+ */
+
+import Label from '@components/Label.astro';
+import { toHashtag } from '@utils/hashtag';
+
+interface Props {
+  /** Tag labels to display */
+  items: string[];
+}
+
+const { items } = Astro.props;
+---
+
+{items.length > 0 && (
+  <ul class="tags-list">
+    {items.map((item) => (
+      <li><Label>{toHashtag(item)}</Label></li>
+    ))}
+  </ul>
+)}
+
+<style>
+  .tags-list {
+    list-style: none;
+    margin: 16px 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .tags-list li {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+  }
+
+</style>

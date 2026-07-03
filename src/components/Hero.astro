@@ -1,0 +1,75 @@
+---
+/**
+ * Hero
+ *
+ * Reusable two-column hero / promo banner. It owns only the layout shell: a
+ * value statement on the left (the default slot) and supporting content on the
+ * right (the `aside` slot). Both columns are authored by the caller, so any
+ * markup is allowed (headings, copy, CTAs, cards, embeds, images, forms, ...).
+ * When the `aside` slot is empty the hero collapses to a single column.
+ *
+ * Author the left column with the editorial primitives (<Typography>, <Button>)
+ * and the right column with whatever supporting content fits; the right column
+ * stacks its children vertically.
+ *
+ * Used as the homepage banner and as a promotional banner on secondary pages
+ * (e.g. promoting the Mise en Mode book, the Wireframe show, or Cal.com booking).
+ *
+ * @component
+ *
+ * @slot default - Left-column value statement (heading, copy, CTAs).
+ * @slot aside - Right-column content. When empty, the hero is single-column.
+ *
+ * @example
+ * ```astro
+ * <Hero>
+ *   <Typography tagName="h2">Now in print: <em>Mise en Mode</em></Typography>
+ *   <Media slot="aside" src="/cover.png" alt="Book cover" />
+ * </Hero>
+ * ```
+ */
+
+interface Props {}
+
+/** Whether custom right-column content was provided */
+const hasAside = Astro.slots.has("aside");
+---
+
+<section class="hero">
+  
+
+  {
+    hasAside && (
+      <div class="hero-media">
+        <slot name="aside" />
+      </div>
+    )
+  }
+
+  <div class="hero-content">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .hero {
+    margin-block: 32px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    font-size: 1.4em;
+  }
+
+  .hero-content {
+    grid-column: 1 / -3;
+    grid-row: 1;
+    isolation: isolate;
+  }
+
+  .hero-media {
+    grid-row: 1;
+    grid-column: 2 / -1;
+    display: flex;
+    justify-content: end;
+  }
+</style>

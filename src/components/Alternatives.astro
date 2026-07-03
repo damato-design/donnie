@@ -1,0 +1,63 @@
+---
+/**
+ * Alternatives Component
+ *
+ * Renders each alternative option considered for a decision record as its own
+ * `SplitTable`: the option name spans both columns, with Pros and Cons lists
+ * beneath their 👍 / 👎 labels.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <Alternatives alternatives={[
+ *   { option: "Build it ourselves", pros: ["Full control"], cons: ["Slower"] },
+ *   { option: "Buy a vendor solution", pros: ["Fast"], cons: ["Lock-in"] }
+ * ]} />
+ * ```
+ */
+
+import SplitTable from '@components/SplitTable.astro';
+import DetailList from '@components/DetailList.astro';
+
+interface Alternative {
+  /** The alternative option's name */
+  option: string;
+
+  /** Arguments in favour of this option */
+  pros?: string[];
+
+  /** Arguments against this option */
+  cons?: string[];
+}
+
+interface Props {
+  /** The alternatives considered for the decision */
+  alternatives: Alternative[];
+}
+
+const { alternatives } = Astro.props;
+---
+
+<ul class="alternatives-list">
+  {alternatives.map((alt) => (
+    <li>
+      <SplitTable
+        title={alt.option}
+        leftLabel="👍 Pros"
+        rightLabel="👎 Cons"
+      >
+        <DetailList slot="left" items={alt.pros} />
+        <DetailList slot="right" items={alt.cons} />
+      </SplitTable>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .alternatives-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+</style>

@@ -1,0 +1,34 @@
+---
+title: "Render Metadata as Text, Not Interactive-Looking Chips"
+context: "Tags, type labels, and status markers are non-interactive metadata, yet the common chip/pill treatment (background, border, rounded box) makes them look like buttons. When labels and real controls share the same shape, users cannot tell what is clickable, so they hesitate or avoid the controls entirely."
+decision: "Style non-interactive labels with typographic hierarchy alone (color, weight, and case), and drop the chip chrome. Reserve backgrounds, borders, and rounded boxes for genuinely interactive controls."
+alternatives:
+  - option: "Keep the chip/pill styling for every tag and badge"
+    pros:
+      - "Familiar and visually tidy"
+      - "Each label is clearly delimited"
+    cons:
+      - "Reads as a button, the interactivity is unknowable until clicked"
+      - "Creates hesitation, especially for users with button anxiety"
+      - "Blurs the line with the real controls sitting beside it"
+  - option: "Make the labels genuinely interactive (filterable chips)"
+    pros:
+      - "Resolves the ambiguity by making the affordance real"
+    cons:
+      - "Adds routing and scope the content does not need"
+      - "Not every label has a meaningful destination"
+      - "Turns every tag into upkeep: state, focus, and a target to maintain"
+reasoning: "If everything is a box, nothing signals interactivity. Stripping the chrome from labels keeps the real controls (links and buttons) visually distinct, and a single text-based primitive keeps tags, type labels, and status consistent across the site. Color-coded labels always carry their own text, so meaning never rests on color alone."
+whyItMattered: >-
+  A label and a button that look identical force the user to guess, the
+  "Schrödinger's button" problem: its state is unknowable until you interact
+  with it. Removing the chip chrome resolves the guess by letting only
+  interactive elements carry interactive affordances.
+tags:
+  - "accessibility"
+  - "affordance"
+  - "components"
+---
+
+I laid out the full reasoning in
+[Chip away](https://blog.damato.design/posts/chip-away/).

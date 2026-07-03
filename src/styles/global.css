@@ -1,0 +1,88 @@
+/* Global Styles and CSS Custom Properties */
+
+:root {
+  /* Color System - base background; the rest is derived at use sites via
+     contrast-color() and oklch(from ...) rather than fixed tokens. */
+  --color-bg: #f7f7f7;
+  --color-bg-elevated: oklch(from var(--color-bg) calc(l + .05) c h);
+  
+  /* Enable animating to/from intrinsic sizes (e.g. height: auto) */
+  interpolate-size: allow-keywords;
+}
+
+/* CSS Reset and Base Styles */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth in-page anchor scrolling (e.g. the scroll-to-top control), opt-out for
+   users who prefer reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: contrast-color(var(--color-bg));
+  min-height: 100vh;
+  font-family: "LINE Seed JP", sans-serif;
+  line-height: 1.4;
+  background-image: radial-gradient(circle, contrast-color(var(--color-bg)) .5px, transparent .5px);
+  background-size: 6px 6px;
+}
+
+/* Links */
+a {
+  color: currentColor;
+  text-underline-offset: .15em;
+}
+
+ul li {
+  margin-block: 16px;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+blockquote {
+  border-left: 4px solid currentColor;
+  padding-left: 16px;
+  margin: 16px 0;
+}
+
+/* Disclosure (native <details>/<summary>)
+   Animates open/close by transitioning ::details-content from height 0 to its
+   intrinsic height (enabled by interpolate-size: allow-keywords above). */
+summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+details::details-content {
+  height: 0;
+  overflow: clip;
+  transition: height 0.5s ease, content-visibility 0.5s ease allow-discrete;
+}
+
+details[open]::details-content {
+  height: auto;
+}

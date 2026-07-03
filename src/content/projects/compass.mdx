@@ -1,0 +1,59 @@
+---
+title: "Compass, UX Engineering & Design Systems"
+role: "Senior UX Engineer"
+year: 2017
+duration: "2017–2019"
+outcomeSummary: "Built and grew Compass's design system from a prototype component library into a cross-organizational resource, owned the CSS across Compass.com, and pushed the platform forward with early CSS Grid, a Storybook-to-Sketch pipeline, and web component / React interop."
+overview: "At the real-estate tech company Compass, I grew from a frontend engineer into the UX Engineer role, owned the CSS across Compass.com, and founded the design systems practice, turning repeated prototype work into a shared component library and team."
+problem: "As the sole engineer reporting into the design organization, I was remaking the same assets for every new prototype. There was no shared component library, and engineering teams had no vetted source of truth for building production versions of approved designs."
+constraints:
+  - "A single engineer embedded in a design org"
+  - "Teams were migrating from Angular to React, so the codebase spanned multiple frameworks at once"
+  - "Deliverables had to work on both legacy and modern apps"
+approach: "I built a component library grounded in the design org's real needs, which became a trusted resource for engineering. Owning the CSS across Compass.com, I put CSS Grid into production early and paired html-sketchapp with Storybook to generate Sketch symbols straight from coded components, keeping the design library in sync with the source of truth in code. I explored the interoperability of web components and React so one library could serve teams regardless of framework, delivered a framework-agnostic global navigation renderable on client or server and embeddable in legacy and modern apps."
+keyDecisions:
+  - decision: "Make the global navigation framework-agnostic and client/server renderable"
+    reasoning: "Applications were built by different teams in different ways; framework-agnostic delivery was the only way to inject one nav everywhere."
+    alternatives:
+      - "A React-only component"
+      - "Per-app reimplementations of the nav"
+  - decision: "Generate Sketch symbols from coded components with html-sketchapp and Storybook"
+    reasoning: "Driving the design library from production components keeps design and engineering working from one source of truth instead of drifting apart."
+    alternatives:
+      - "Hand-maintain a parallel Sketch symbol library"
+      - "Let design and code references diverge"
+  - decision: "Explore web components for cross-framework interop"
+    reasoning: "Teams were moving from Angular to React, so a framework-agnostic core could serve every team from one library instead of per-framework reimplementations."
+    alternatives:
+      - "Ship a React-only library"
+      - "Reimplement components per framework"
+techStack:
+  - "JavaScript"
+  - "CSS"
+  - "CSS Grid"
+  - "Storybook"
+  - "html-sketchapp"
+  - "Web Components"
+  - "React"
+  - "Component libraries"
+  - "Universal rendering"
+impact:
+  metrics:
+    - label: "Team"
+      value: "Grew from 1 to a cross-functional design systems team"
+    - label: "Longevity"
+      value: "Much of the work still ships on the site and app today"
+  qualitative: "The library and global navigation became foundational shared resources, and the design systems team established a durable practice that outlasted my tenure."
+learnings:
+  - "Design systems gain trust when grounded in the design org's real, repeated needs"
+  - "Framework-agnostic delivery is essential in a heterogeneous codebase"
+status: completed
+---
+
+I started at Compass as a frontend engineer. Within three weeks I was helping build out the frontend engineering team, interviewing at least three candidates a week; the group we assembled was the most talented I have worked with before or since.
+
+Supporting the design org meant remaking the same assets for every prototype, so I built a component library. Around then I also adopted an in-house idea called Intents, a semantic approach to design tokens that I would carry forward and keep developing for years.
+
+When I started, Compass was largely an Angular app, but teams were increasingly adopting React. That growing mix is what drew me to web components: a single, framework-agnostic library could serve everyone from one source. React, though, did not initially play nicely with web components, so much of my research toward the end of my tenure went into making that interop work no matter the framework.
+
+Beyond the library, I mentored engineers in the brand and marketing department and took ownership of older pages that had lost their maintainers, migrating them onto newer, more maintainable technologies.

@@ -1,0 +1,42 @@
+---
+title: "deltazeus, Weather Feed & Passive Notifications"
+role: "Creator"
+year: 2015
+outcomeSummary: "A passive weather notification service that sends RSS feed updates only when the weather changes significantly from the previous day."
+overview: "deltazeus reframed checking the weather from an active ritual into a passive one, an RSS feed that only updates when tomorrow's weather differs meaningfully from today's."
+problem: "People check the weather every day to prepare, but most days are similar to the last. That makes the daily check largely redundant, what if the weather notified you only when it actually changed?"
+constraints:
+  - "Keep third-party API (DarkSky) costs low"
+  - "Avoid requiring any app download or account"
+  - "Mostly server-side with a minimal web presence"
+approach: "Onboarding asked for a location (postal code or geolocation) and returned an RSS feed users could subscribe to with any service. The feed only updated when measurements differed significantly from the prior day. To control costs, feeds only refreshed while actively subscribed, incoming requests decided whether to add, update, or deprecate a feed."
+keyDecisions:
+  - decision: "Deliver updates via RSS instead of a dedicated app"
+    reasoning: "RSS made the delivery channel flexible and required no download or account."
+    alternatives:
+      - "A native push-notification app"
+      - "Email-only delivery"
+  - decision: "Only refresh feeds that are actively requested"
+    reasoning: "Tying refreshes to active subscriptions kept DarkSky API usage and costs low."
+    alternatives:
+      - "Refresh all feeds on a fixed schedule"
+techStack:
+  - "PHP"
+  - "MySQL"
+  - "RSS"
+  - "DarkSky API"
+  - "Geolocation"
+  - "AWS"
+  - "Netlify"
+impact:
+  qualitative: "The passive, change-driven idea deltazeus explored came first, later echoed by social platforms like Facebook and Google Plus."
+learnings:
+  - "Passive, change-driven notifications can beat active daily checking"
+  - "Usage-driven refresh is a simple lever for controlling API cost"
+  - "Even a lightweight service has a standing cost; an always-on hourly cron was eventually not worth keeping lit"
+status: archived
+---
+
+The name nods to the idea: a delta is a change, and Zeus is the god of sky and weather, a feed that speaks up only when tomorrow's weather actually differs from today's.
+
+The feeds were even custom-styled for anyone who opened one directly. deltazeus has had a long life for such a small thing: built first in PHP and MySQL, rebuilt entirely on AWS, and finally moved to Netlify. It is switched off now, since an always-on hourly cron grew too expensive to keep running.

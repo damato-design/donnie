@@ -1,0 +1,124 @@
+---
+/**
+ * SEO Component
+ * 
+ * Generates comprehensive meta tags for SEO, Open Graph, and Twitter Cards.
+ * Should be placed in the "head" slot of BaseLayout.
+ * 
+ * Features:
+ * - Page title with site name suffix
+ * - Meta description
+ * - Canonical URL
+ * - Open Graph tags for social sharing
+ * - Twitter Card tags
+ * - Article-specific metadata (publish/update dates)
+ * 
+ * @component
+ * 
+ * @example
+ * ```astro
+ * <BaseLayout>
+ *   <SEO 
+ *     slot="head"
+ *     title="About Me" 
+ *     description="Learn more about my background"
+ *   />
+ *   <div>Content</div>
+ * </BaseLayout>
+ * ```
+ */
+import { siteConfig } from '../config';
+
+interface Props {
+  /** Page title (will be suffixed with author name unless noSuffix is true) */
+  title: string;
+  
+  /** Page description for meta tags */
+  description?: string;
+  
+  /** Skip adding site name suffix to title (useful for homepage) */
+  noSuffix?: boolean;
+  
+  /** Page type for Open Graph */
+  type?: 'website' | 'article' | 'profile';
+  
+  /** Social sharing image URL */
+  image?: string;
+  
+  /** Article publish date (for articles) */
+  publishDate?: Date;
+  
+  /** Article updated date (for articles) */
+  updatedDate?: Date;
+  
+  /** Canonical URL override */
+  canonicalURL?: string;
+}
+
+const {
+  title,
+  description = siteConfig.description,
+  type = 'website',
+  image,
+  publishDate,
+  updatedDate,
+  canonicalURL,
+  noSuffix = false,
+} = Astro.props;
+
+// Generate full title with site name suffix (unless noSuffix is true)
+const fullTitle = noSuffix ? title : (title ? `${title} | ${siteConfig.author.name}` : siteConfig.title);
+
+// Get the current URL from Astro
+const currentURL = canonicalURL || Astro.url.href;
+
+// Map the current path to its top-level OG image. Deeper pages (e.g.
+// /projects/foo) reuse their section's image; everything else falls back to
+// the home card. These slugs must match `getStaticPaths` in
+// src/pages/og/[page].png.ts.
+const topLevelOg = ['projects', 'decisions', 'journey', 'writing', 'speaking', 'contact'];
+const ogSegment = Astro.url.pathname.replace(/^\/+/, '').split('/')[0];
+const ogSlug = topLevelOg.includes(ogSegment) ? ogSegment : 'home';
+
+// Resolve the OG image against the site root. `new URL` ignores the base when
+// the provided image is already an absolute URL, so this covers both cases.
+const ogImage = image || `/og/${ogSlug}.png`;
+const absoluteImageURL = new URL(ogImage, currentURL).href;
+---
+
+<!-- Page Title -->
+<title>{fullTitle}</title>
+
+<!-- Meta Description -->
+<meta name="description" content={description} />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={currentURL} />
+
+<!-- Author -->
+<meta name="author" content={siteConfig.author.name} />
+
+<!-- Open Graph Tags -->
+<meta property="og:type" content={type} />
+<meta property="og:url" content={currentURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={absoluteImageURL} />
+<meta property="og:site_name" content={siteConfig.title} />
+
+<!-- Article-specific Open Graph tags -->
+{type === 'article' && publishDate && (
+  <>
+    <meta property="article:published_time" content={publishDate.toISOString()} />
+    {updatedDate && (
+      <meta property="article:modified_time" content={updatedDate.toISOString()} />
+    )}
+  </>
+)}
+
+<!-- Twitter Card Tags -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={currentURL} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={absoluteImageURL} />

@@ -1,0 +1,54 @@
+---
+/**
+ * BackLink Component
+ * 
+ * Displays a back navigation link with a left-pointing arrow icon, typically used at the
+ * bottom of detail pages to return to list views. Features a hover animation that moves
+ * the arrow left to indicate backward navigation.
+ * 
+ * @component
+ * 
+ * @example
+ * ```astro
+ * <BackLink 
+ *   href="/writing" 
+ *   text="Back to all articles" 
+ * />
+ * ```
+ */
+
+import ArrowIcon from '@components/ArrowIcon.astro';
+
+interface Props {
+  /** Target URL for the back navigation link */
+  href: string;
+  
+  /** Link text displayed next to the arrow icon */
+  text: string;
+}
+
+const { href, text } = Astro.props;
+---
+
+<div class="back-link-container">
+  <a href={href} class="back-link">
+    <ArrowIcon direction="left" />
+    {text}
+  </a>
+</div>
+
+<style>
+  .back-link-container {
+    margin-top: 32px;
+    padding-block: 32px;
+    border-top: 1px solid currentColor;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    transition: color 0.2s ease;
+  }
+</style>

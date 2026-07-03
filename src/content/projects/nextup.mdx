@@ -1,0 +1,37 @@
+---
+title: "NextUp, Tournament Brackets & SMS Automation"
+role: "Creator"
+year: 2014
+outcomeSummary: "A tournament management platform that automated bracket progression and competitor notifications via SMS to reduce manual coordination at gaming events."
+overview: "NextUp was my first foray into backend engineering: a tournament platform that read a Challonge bracket and coordinated competitors by SMS, automating one of the most stressful parts of running a gaming event."
+problem: "Running large gaming tournaments, the hardest job was finding registered competitors across multiple stations as people wandered off-site. Even with staff, tracking everyone and all the scores was error-prone and stressful."
+constraints:
+  - "Competitors are mobile and easily distracted across a venue"
+  - "No app download for competitors; a phone number had to be the only thing they gave"
+  - "Solo build by someone new to backend engineering"
+  - "Whole events depended on the system being correct"
+approach: "Organizers entered participant names and phone numbers and linked a Challonge bracket. When the tournament started, NextUp read the bracket and texted the competitors due to play; they replied with a W or L to report results, the system updated the bracket and texted the next match, and it flagged conflicts for organizer verification."
+keyDecisions:
+  - decision: "Coordinate competitors over SMS via Twilio"
+    reasoning: "Text reaches people anywhere in or near a venue with no app to download; a phone number was the lowest-friction way for a competitor to plug into the organizer's bracket."
+    alternatives:
+      - "On-site displays and PA announcements"
+      - "A dedicated mobile app"
+techStack:
+  - "PHP"
+  - "MySQL"
+  - "Twilio API"
+  - "jQuery"
+  - "Challonge"
+impact:
+  qualitative: "NextUp ran several tournaments with real early success and interest, and I was proud of the implementation; with a solid, resilient backend it could have become a real product. But a mid-event failure with no result backup forced a replay, and I sunset it. It taught me a full web-application stack and the importance of resilience."
+learnings:
+  - "Systems that own a live event need backups and failure recovery from day one"
+  - "A polished implementation isn't a product without a resilient backend to stand on, which I didn't have yet"
+  - "It was a formative introduction to backend engineering and web app architecture"
+status: archived
+---
+
+During my years after high school, I was deep in competitive video gaming, traveling to local tournaments and some across state lines, and eventually becoming a well-known organizer who hosted some of the first international gaming tournaments with significant prizes. That firsthand experience is exactly why I knew the pain NextUp set out to fix.
+
+The whole idea lived in a text message: it told a competitor they were next up to play, which is where the name comes from.

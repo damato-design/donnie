@@ -1,0 +1,90 @@
+---
+/**
+ * Footer Component
+ * 
+ * Site-wide footer displaying copyright information and social media links.
+ * Automatically filters and displays only configured social links from site config.
+ * Responsive layout that stacks vertically on mobile devices.
+ * 
+ * Social links are pulled from siteConfig.social and only displayed if they have
+ * a URL value configured. Links open in new tabs with proper security attributes.
+ * 
+ * @component
+ * 
+ * @example
+ * ```astro
+ * <Footer />
+ * ```
+ */
+import { siteConfig } from '../config';
+import Typography from '@components/Typography.astro';
+
+/**
+ * Gets the current year for copyright display
+ */
+const currentYear = new Date().getFullYear();
+
+/**
+ * Filters and formats social links from site configuration
+ * 
+ * Only includes platforms that have a URL configured (non-empty values).
+ * Capitalizes platform names for display (e.g., "github" becomes "Github").
+ * 
+ * @returns Array of social link objects with platform name and URL
+ */
+const socialLinks = Object.entries(siteConfig.social)
+  .filter(([_, url]) => url)
+  .map(([platform, url]) => ({
+    platform: platform.charAt(0).toUpperCase() + platform.slice(1),
+    url
+  }));
+---
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <Typography tagName="span">© {currentYear} <wbr> {siteConfig.author.name}</Typography>
+    
+    {socialLinks.length > 0 && (
+      <ul class="footer-social">
+        {socialLinks.map((link) => (
+          <li>
+            <a href={link.url} target="_blank" rel="noopener noreferrer">
+              {link.platform}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--color-bg-elevated);
+    border-top: 1px solid currentColor;
+    margin-top: auto;
+  }
+
+  .footer-container {
+    max-width: min(800px, 100%);
+    margin: 0 auto;
+    padding: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 16px;
+  }
+
+  .footer-social {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-flow: row wrap;
+    gap: 16px;
+
+    li { margin: 0;}
+  }
+
+</style>

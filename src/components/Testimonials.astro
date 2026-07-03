@@ -1,0 +1,143 @@
+---
+/**
+ * Testimonials Component
+ * 
+ * Displays a section of testimonials/endorsements from colleagues and clients.
+ * Automatically queries the testimonials content collection.
+ * Supports LinkedIn profile links with icon integration.
+ *
+ * Testimonials are sorted by date (newest first) and can be limited to a specific count.
+ * Only renders if there are testimonials available.
+ * 
+ * @component
+ * 
+ * @example
+ * ```astro
+ * <!-- Show all testimonials with default title -->
+ * <Testimonials />
+ * 
+ * <!-- Limit to 2 testimonials -->
+ * <Testimonials limit={2} />
+ * 
+ * <!-- Hide section title -->
+ * <Testimonials showTitle={false} />
+ * 
+ * <!-- Custom title -->
+ * <Testimonials title="Client Feedback" limit={5} />
+ * ```
+ */
+
+import { getCollection } from 'astro:content';
+import Typography from '@components/Typography.astro';
+
+interface Props {
+  /** Maximum number of testimonials to display (default: 3) */
+  limit?: number;
+  
+  /** Whether to show the section title (default: true) */
+  showTitle?: boolean;
+  
+  /** Custom section title (default: "What People Say") */
+  title?: string;
+}
+
+const { limit = 3, showTitle = true, title = "What People Say" } = Astro.props;
+
+/**
+ * Queries testimonials from the content collection
+ *
+ * Sorts by date (newest first) and limits to the specified count.
+ *
+ * @returns Array of testimonial entries, sorted and limited
+ */
+const allTestimonials = await getCollection('testimonials');
+const testimonials = allTestimonials
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, limit);
+---
+
+{testimonials.length > 0 && (
+  <section class="testimonials">
+    {showTitle && <Typography tagName="h2">{title}</Typography>}
+    <ul class="testimonials-list">
+      {testimonials.map((testimonial) => (
+        <li>
+          <blockquote class="testimonial">
+          <Typography tagName="p">"{testimonial.data.quote}"</Typography>
+          <footer class="testimonial-attribution">
+            <cite class="testimonial-author">
+              {testimonial.data.linkedin ? (
+                <a href={testimonial.data.linkedin} target="_blank" rel="noopener noreferrer" class="author-link">
+                  <svg class="linkedin-icon" width="14" height="14" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8,72 L64,72 C68.418278,72 72,68.418278 72,64 L72,8 C72,3.581722 68.418278,0 64,0 L8,0 C3.581722,0 0,3.581722 0,8 L0,64 C0,68.418278 3.581722,72 8,72 Z" fill="currentColor"/>
+                    <path d="M62,62 L51.315625,62 L51.315625,43.8021149 C51.315625,38.8127542 49.4197917,36.0245323 45.4707031,36.0245323 C41.1746094,36.0245323 38.9300781,38.9261103 38.9300781,43.8021149 L38.9300781,62 L28.6333333,62 L28.6333333,27.3333333 L38.9300781,27.3333333 L38.9300781,32.0029283 C38.9300781,32.0029283 42.0260417,26.2742151 49.3825521,26.2742151 C56.7356771,26.2742151 62,30.7644705 62,40.051212 L62,62 Z M16.349349,22.7940133 C12.8420573,22.7940133 10,19.9296567 10,16.3970067 C10,12.8643566 12.8420573,10 16.349349,10 C19.8566406,10 22.6970052,12.8643566 22.6970052,16.3970067 C22.6970052,19.9296567 19.8566406,22.7940133 16.349349,22.7940133 Z M11.0325521,62 L21.769401,62 L21.769401,27.3333333 L11.0325521,27.3333333 L11.0325521,62 Z" fill="var(--color-bg)"/>
+                  </svg>
+                  {testimonial.data.name}
+                </a>
+              ) : (
+                testimonial.data.name
+              )}
+              <Typography tagName="span">, {testimonial.data.role} at {testimonial.data.company}</Typography>
+            </cite>
+            <Typography tagName="span">{testimonial.data.relationship}</Typography>
+          </footer>
+          </blockquote>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<style>
+  .testimonials {
+    margin-bottom: 5rem;
+  }
+
+  .testimonials-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    max-width: 700px;
+  }
+
+  .testimonial {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .testimonial-attribution {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .testimonial-author {
+    font-size: 0.9375rem;
+    font-style: normal;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .author-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 1ch;
+    transition: color 0.2s ease;
+  }
+
+  .linkedin-icon {
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+
+  .author-link:hover .linkedin-icon {
+    opacity: 1;
+  }
+
+</style>

@@ -1,0 +1,127 @@
+---
+/**
+ * Journey Timeline Page
+ * 
+ * Displays a chronological timeline of career growth and learning progression through
+ * expandable timeline entries. Each entry represents a milestone, learning experience,
+ * or career transition, with optional detailed content that can be revealed.
+ * 
+ * Features:
+ * - Queries all journey entries from content collection
+ * - Sorts by date (descending - most recent first)
+ * - Renders expandable content for each entry
+ * - Detects entries with body content vs. frontmatter-only
+ * - Visual timeline with color-coded entry types
+ * - Skills/technologies display per entry
+ * - Empty state handling
+ * 
+ * Entry Types:
+ * - milestone: Major achievements and launches
+ * - learning: Education and skill development
+ * - transition: Job changes and career moves
+ * 
+ * Route: /journey
+ * 
+ * @page
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import TimelineEntry from '@components/TimelineEntry.astro';
+import PageHeader from '@components/PageHeader.astro';
+import Hero from '@components/Hero.astro';
+import Media from '@components/Media.astro';
+import Typography from '@components/Typography.astro';
+import Button from '@components/Button.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
+import { getCollection, render } from 'astro:content';
+import { pagesConfig } from '../pages.config';
+import { siteConfig } from 'src/config';
+import building from '@assets/building.jpg';
+
+/**
+ * Queries all journey entries from the content collection
+ */
+const allJourneyEntries = await getCollection('journey');
+
+/**
+ * Sorts journey entries by date in descending order (most recent first)
+ * 
+ * Ensures the timeline displays with the latest experiences at the top,
+ * allowing visitors to see current context before historical progression.
+ */
+const sortedJourneyEntries = allJourneyEntries.sort((a, b) => {
+  return b.data.date.getTime() - a.data.date.getTime();
+});
+
+/**
+ * Renders the MDX content component for each entry.
+ *
+ * The TimelineEntry's Disclosure renders nothing when the slotted body is
+ * empty, so entries without additional content simply omit the expander, with
+ * no per-entry flag needed here.
+ */
+const entriesWithContent = await Promise.all(
+  sortedJourneyEntries.map(async (entry) => {
+    const { Content } = await render(entry);
+    return { entry, Content };
+  })
+);
+---
+
+<BaseLayout>
+  <SEO 
+    slot="head"
+    title={pagesConfig.journey.title}
+    description={pagesConfig.journey.description}
+    type="website"
+  />
+
+    <Hero>
+      <Typography tagName="h2">Always a builder</Typography>
+      <Typography tagName="p">Long before tokens and components, I was building things by hand with whatever was on the bench, learning that working within limits is what makes the work interesting. Same instinct, new materials.</Typography>
+      <ButtonGroup>
+        <Button href="/projects" variant="primary">Recent projects</Button>
+      </ButtonGroup>
+      <Media slot="aside" src={building.src} alt={`Younger photo of ${siteConfig.author.name}`} maxWidth="360px" />
+    </Hero>
+
+    <PageHeader>
+      <Typography tagName="h1">{pagesConfig.journey.heading}</Typography>
+      <Typography tagName="p">{pagesConfig.journey.intro}</Typography>
+    </PageHeader>
+
+    {entriesWithContent.length > 0 ? (
+      <div class="journey-timeline">
+        {entriesWithContent.map(({ entry, Content }) => (
+          <TimelineEntry
+            date={entry.data.date}
+            title={entry.data.title}
+            type={entry.data.type}
+            description={entry.data.description}
+            skills={entry.data.skills}
+          >
+            <Content />
+          </TimelineEntry>
+        ))}
+      </div>
+    ) : (
+      <p class="empty-state">No journey entries yet.</p>
+    )}
+</BaseLayout>
+
+<style>
+  /*
+   * Two-column timeline: a fixed 32px rail on the left, entries on the right.
+   * The continuous vertical line is a gradient stripe (no element) painted into
+   * the rail — a 2px line centered at 16px, starting at the first dot's center.
+   * Each entry paints its own dot (see TimelineEntry.astro).
+   */
+  .journey-timeline {
+    --y-offset: 27px;
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    background: linear-gradient(currentColor, currentColor) no-repeat 12px var(--y-offset, 0px) / 2px 100%;
+    margin-inline-start: -12px;
+  }
+</style>

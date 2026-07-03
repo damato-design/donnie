@@ -1,0 +1,95 @@
+---
+/**
+ * Disclosure Component
+ *
+ * A self-contained expand/collapse disclosure built on the native `<details>`
+ * element: an accent-colored toggle with a rotating chevron and a slotted body.
+ * The toggle label swaps between a closed and open state via CSS, so the labels
+ * are configurable without any client JS.
+ *
+ * The slot is rendered up front and the component renders nothing when that
+ * content is empty, so callers can pass a slot unconditionally (no `hasContent`
+ * flag) and trust the disclosure to disappear when there's nothing to reveal.
+ *
+ * @component
+ *
+ * @slot default - The content revealed when the disclosure is open (supports prose).
+ *
+ * @example
+ * ```astro
+ * <Disclosure>
+ *   <p>Detailed content shown when expanded…</p>
+ * </Disclosure>
+ *
+ * <Disclosure closedLabel="View details" openLabel="Hide details">
+ *   <p>…</p>
+ * </Disclosure>
+ * ```
+ */
+
+interface Props {
+  /** Toggle text when collapsed (default: "Read more") */
+  closedLabel?: string;
+  /** Toggle text when expanded (default: "Show less") */
+  openLabel?: string;
+}
+
+const { closedLabel = 'Read more', openLabel = 'Show less' } = Astro.props;
+
+const body = Astro.slots.has('default')
+  ? (await Astro.slots.render('default')).trim()
+  : '';
+---
+
+{body && (
+  <details
+    class="disclosure"
+    style={`--disclosure-closed: "${closedLabel}"; --disclosure-open: "${openLabel}";`}
+  >
+    <summary class="expand-toggle">
+      <span class="expand-text"></span>
+      <svg class="expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </summary>
+    <div class="disclosure-content prose" set:html={body} />
+  </details>
+)}
+
+<style>
+  .expand-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap:1ch;
+    background: none;
+    border: none;
+    font-size: 0.875rem;
+    color: currentColor;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .expand-toggle:hover {
+    opacity: 0.8;
+  }
+
+  .expand-icon {
+    transition: transform 0.2s ease;
+  }
+
+  .expand-text::before {
+    content: var(--disclosure-closed);
+  }
+
+  .disclosure[open] .expand-text::before {
+    content: var(--disclosure-open);
+  }
+
+  .disclosure[open] .expand-icon {
+    transform: rotate(180deg);
+  }
+
+  .disclosure-content :global(p) {
+    margin: 0;
+  }
+</style>

@@ -1,94 +1,65 @@
 ---
-import Scribble from '@assets/scribble.svg';
-const { level, color, rugged = true } = Astro.props;
-const Tag = typeof level === 'string' ? 'nav' : 'div';
-const rand = Math.random() * 17;
+/**
+ * Section Component
+ *
+ * Structural wrapper for a titled content section: a `<section class="section">`
+ * with a heading followed by slotted content. Standardizes the markup repeated
+ * across the case study page and the decision page.
+ *
+ * The heading renders through <Typography>. Per-page spacing hooks onto the
+ * component-owned `.section` class from the page's own scoped styles (e.g.
+ * `.case-study :global(.section)`), so there is no consumer-supplied class.
+ *
+ * @component
+ *
+ * @slot default - The section body content
+ *
+ * @example
+ * ```astro
+ * <Section title="Overview">
+ *   <Typography tagName="p">{overview}</Typography>
+ * </Section>
+ *
+ * <Section title="Context">
+ *   <Typography tagName="p">{context}</Typography>
+ * </Section>
+ * ```
+ */
+
+import Typography from '@components/Typography.astro';
+
+interface Props {
+  /** Heading text */
+  title?: string;
+}
+
+const { title } = Astro.props;
 ---
 
-<style>
-    .page {
-        background-color: var(--bg);
+<section class="section">
+  { title && <Typography tagName="h2">{title}</Typography> }
+  <slot />
+</section>
+
+<style is:global>
+  .section {
+    & > :where(p, ul, blockquote) {
+      font-size: 1.2em;
     }
 
-    .section {
-        grid-area: 1 / 1 / -1 / -1;
-        display: flex;
-        flex-direction: column;
-        padding: 32px;
-        min-height: 100vh;
-    }
+    &:not(:has(h2)) {
+      margin-block: 32px;
+      background: var(--color-bg-elevated);
+      border: 1px solid;
+      padding: 32px;
 
-    @media (max-width: 900px) {
-        .section {
-            min-height: auto;
-        }
-    }
+      & > :first-child {
+        margin-block-start: 0;
+      }
 
-    nav.content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+      & > :last-child {
+        margin-block-end: 0;
+      }
     }
-
-    .content:not(nav) {
-        max-width: 60ch;
-        width: 100%;
-        margin: auto;
-    }
-
-    .trailing {
-        font-size: .8em;
-        text-wrap: balance;
-    }
-
-    .scribble {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 150px;
-        height: 150px;
-        overflow: hidden;
-    }
-
-    .scribble :global(span) {
-        background: var(--color);
-        mask-image: url(scribble.png);
-        mask-size: 100% 100%;
-        display: block;
-        width: 100%;
-        height: 100%;
-        opacity: .8;
-        transform:
-            translate(20%, -20%)
-            rotate(calc(var(--rand) * 67deg));
-    }
-
-    .content :global(blockquote) {
-        margin: 0;
-        padding-inline: .5em;
-        display: flow-root;
-        border-left: .25em solid #8888;
-        font-size: 1.2em;
-        background: color-mix(in oklch, var(--bg), var(--fg) 5%);
-    }
-
-    .content :global(blockquote p) {
-        margin: .5em;
-    }
+  }
 </style>
-
-<div class="page rugged">
-    <div class:list={['section']}>
-        { color && <div class="scribble" style={{ '--rand': rand, '--color': color }}><span/></div> }
-        <div class="leading">
-            <slot name="leading"/>
-        </div>
-        <Tag class="content" aria-label={ level }>
-            <slot/>
-        </Tag>
-        <div class="trailing">
-            <slot name="trailing"/>
-        </div>
-    </div>
-</div>

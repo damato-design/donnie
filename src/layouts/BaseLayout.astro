@@ -1,0 +1,103 @@
+---
+/**
+ * BaseLayout
+ *
+ * Foundation layout component that provides the core HTML structure,
+ * navigation, footer, and global styles for all pages. All other layouts extend
+ * this base layout to ensure consistent site-wide structure.
+ *
+ * Features:
+ * - HTML document structure
+ * - Favicon and manifest configuration
+ * - Astro View Transitions support
+ * - Sticky navigation header
+ * - Global CSS imports (global, typography, cards)
+ * - Responsive layout structure
+ *
+ * Note: SEO meta tags (title, description, OG, Twitter) should be handled
+ * by the SEO component in each page, not in this layout.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * ---
+ * import BaseLayout from '@layouts/BaseLayout.astro';
+ * import SEO from '@components/SEO.astro';
+ * ---
+ *
+ * <BaseLayout>
+ *   <SEO
+ *     slot="head"
+ *     title="About Me"
+ *     description="Learn more about my background"
+ *   />
+ *   <div>Page content goes here</div>
+ * </BaseLayout>
+ * ```
+ */
+
+import { ClientRouter } from "astro:transitions";
+import Navigation from "@components/Navigation.astro";
+import Footer from "@components/Footer.astro";
+import LongShadow from "@components/LongShadow.astro";
+import { siteConfig } from "../config";
+import "@styles/global.css";
+---
+
+<!doctype html>
+<html lang={siteConfig.language} data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO tags injected via slot -->
+    <slot name="head" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <!-- Font imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=BBH+Hegarty&family=LINE+Seed+JP&display=swap" rel="stylesheet">
+
+    <ClientRouter />
+
+    <script is:inline defer src="https://scripts.withcabin.com/hello.js"></script>
+
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      main {
+        flex: 1;
+        max-width: min(800px, 100%);
+        margin: 0 auto;
+        padding: 16px;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <Navigation />
+    </header>
+    <main id="top">
+      <slot />
+    </main>
+    <Footer />
+    <svg width="0" height="0"><LongShadow /></svg>
+  </body>
+</html>

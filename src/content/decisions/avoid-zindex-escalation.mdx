@@ -1,0 +1,31 @@
+---
+title: "Avoid z-index Escalation in the System"
+context: "Stacking conflicts tempt teams into an arms race of ever-larger z-index values, 'my thing is more important than your thing', until the numbers are meaningless and overlays fight each other unpredictably."
+decision: "Treat reaching for a higher z-index as a smell. To stack elements, reach first for CSS Grid positioning: layer overlapping elements in the same grid cell so they stack by source order, with no new stacking context and no explicit `position`. For elements that must escape to the very top, like menus, popovers, and modals, promote them to the browser's top layer (via the `popover` attribute or a `<dialog>`), where they stack in the order they are shown rather than by z-index. Keep z-index for the rare cases where an unintended stacking context, usually from a highly stylized choice like a transform or filter, forces the issue."
+alternatives:
+  - option: "Bump z-index whenever something needs to sit on top"
+    pros:
+      - "Immediate fix for the symptom"
+    cons:
+      - "Numbers escalate without bound"
+      - "No shared meaning, every value is a guess"
+      - "Overlays compete unpredictably"
+  - option: "Componentize z-index into global named layers (e.g. one shared value for all dropdowns)"
+    pros:
+      - "Consistent ordering, right up until a layer has to nest"
+    cons:
+      - "Breaks the moment a dropdown opens inside a modal that must outrank other dropdowns"
+      - "Pushes teams into recalculating values with math, which explodes once multiple modals stack"
+      - "Global coupling between unrelated components"
+reasoning: "z-index escalation is a symptom of solving a layout problem with the wrong tool. Most stacking is really just two elements occupying the same space, which CSS Grid expresses directly by assigning them the same cell. They overlap and order by source, no stacking context is created, and no explicit `position` is needed to place them. Trying to componentize z-index into shared layers only postpones the problem: a dropdown given one global value works until it has to open inside a modal that outranks it, and the fix becomes recalculating numbers with math that explodes once modals stack. The browser's top layer sidesteps that entirely, stacking promoted elements in the order they appear. That keeps z-index for what it is actually for: the rare unintended stacking contexts spun up by highly stylized choices like transforms and filters."
+whyItMattered: >-
+  When everything is `z-index: 9999`, nothing is. Treating overlap as a grid
+  problem, and promoting must-be-on-top elements to the browser's
+  [top layer](https://developer.mozilla.org/en-US/docs/Glossary/Top_layer)
+  where they stack in the order they appear, keeps layering predictable and
+  saves z-index for the few cases that genuinely need it.
+tags:
+  - "CSS"
+  - "layout"
+  - "best-practices"
+---

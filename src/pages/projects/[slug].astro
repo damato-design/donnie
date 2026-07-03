@@ -1,26 +1,229 @@
 ---
-import { getCollection, render } from 'astro:content';
-import Section from '@components/Section.astro';
-import Image from '@components/Image.astro'
-export const partial = true;
+/**
+ * Case Study Detail Page
+ * 
+ * Dynamic route that displays a comprehensive project case study following a structured
+ * narrative format. Presents the complete story of a project from problem identification
+ * through to measurable impact and learnings.
+ * 
+ * Narrative Structure (enforced order):
+ * 1. Overview - High-level project summary
+ * 2. Problem - Challenge being addressed
+ * 3. Constraints - Limitations and boundaries
+ * 4. Approach - Solution strategy
+ * 5. Key Decisions - Technical choices with reasoning and alternatives
+ * 6. Tech Stack - Technologies used
+ * 7. Result & Impact - Quantitative metrics and qualitative outcomes
+ * 8. Learnings - Insights and takeaways
+ * 
+ * Features:
+ * - Static path generation for all project entries
+ * - Structured case study presentation
+ * - Impact metrics grid (when available)
+ * - Reading time calculation
+ * - Structured data for SEO
+ * - Optional additional markdown content
+ * - Scroll-to-top functionality
+ * - Back navigation to projects list
+ * 
+ * Route: /projects/[slug]
+ * 
+ * @page
+ */
 
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import StructuredData from '@components/StructuredData.astro';
+import ScrollToTop from '@components/ScrollToTop.astro';
+import BackLink from '@components/BackLink.astro';
+import Section from '@components/Section.astro';
+import SplitTable from '@components/SplitTable.astro';
+import DetailList from '@components/DetailList.astro';
+import Typography from '@components/Typography.astro';
+import { getCollection, getEntry, render } from 'astro:content';
+import { calculateReadingTime, formatReadingTime } from '@utils/readingTime';
+
+/**
+ * Generates static paths for all project entries
+ * 
+ * Queries the projects content collection and creates a route for each entry
+ * using the entry ID as the slug parameter.
+ * 
+ * @returns Array of path objects with params
+ */
 export async function getStaticPaths() {
-    const entries = await getCollection('projects');
-    return entries.map((entry) => {
-        return {
-            params: { slug: entry.id },
-            props: { entry },
-        }
-    });
+  const projects = await getCollection('projects');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+  }));
 }
 
-const { entry } = Astro.props;
-const { title, ...rest } = entry.data;
-const { Content } = await render(entry);
+const { slug } = Astro.params;
+
+/**
+ * Retrieves the specific project entry by slug
+ * 
+ * Redirects to 404 if the project is not found.
+ */
+const project = await getEntry('projects', slug!);
+
+if (!project) {
+  return Astro.redirect('/404');
+}
+
+// Render the content (v6-compatible method)
+const { Content } = await render(project);
+
+const {
+  title,
+  role,
+  year,
+  outcomeSummary,
+  overview,
+  problem,
+  constraints,
+  approach,
+  keyDecisions,
+  techStack,
+  impact,
+  learnings,
+} = project.data;
+
+/**
+ * Calculates reading time from all case study content
+ * 
+ * Combines all text sections including overview, problem, approach, decisions,
+ * impact, learnings, and optional markdown body to estimate total reading time.
+ */
+const allText = [
+  overview,
+  problem,
+  approach,
+  ...constraints,
+  ...keyDecisions.map(d => `${d.decision} ${d.reasoning} ${d.alternatives?.join(' ') || ''}`),
+  impact.qualitative,
+  ...learnings,
+  project.body || '',
+].join(' ');
+const readingTime = formatReadingTime(calculateReadingTime(allText));
 ---
 
-<Section>
-    <h2 slot="leading">{ title }</h2>
-    <Image { ...rest } />
-    <Content/>
-</Section>
+<BaseLayout>
+  <SEO 
+    slot="head"
+    title={`${title} - Case Study`}
+    description={outcomeSummary}
+    type="article"
+  />
+
+  <StructuredData
+    type="Project"
+    data={{
+      title,
+      outcomeSummary,
+      problem,
+      impact: impact.qualitative,
+      techStack,
+      year,
+    }}
+  />
+
+    <!-- Case Study Header -->
+    <header>
+      <Typography tagName="h1">{title}</Typography>
+      <Typography>
+        {role} · {year} · {readingTime}
+      </Typography>
+      <Typography tagName="p">{outcomeSummary}</Typography>
+    </header>
+
+    <!-- Overview Section -->
+    <Section title="Overview">
+      <Typography tagName="p">{overview}</Typography>
+    </Section>
+
+    <!-- Problem Section -->
+    <Section title="Problem">
+      <Typography tagName="blockquote">{problem}</Typography>
+    </Section>
+
+    <!-- Constraints Section -->
+    <Section title="Constraints">
+      <ul>
+        {constraints.map((constraint) => (
+          <Typography tagName="li">{constraint}</Typography>
+        ))}
+      </ul>
+    </Section>
+
+    <!-- Approach Section -->
+    <Section title="Approach">
+      <Typography tagName="p">{approach}</Typography>
+    </Section>
+
+    <!-- Key Decisions Section -->
+    <Section title="Key Decisions">
+      <ul class="decisions-list">
+        {keyDecisions.map((decision) => (
+          <li>
+            <SplitTable
+              title={decision.decision}
+              leftLabel="Reasoning"
+              rightLabel="Alternatives"
+            >
+              <Fragment slot="left">
+                <p>{decision.reasoning}</p>
+              </Fragment>
+              <DetailList slot="right" items={decision.alternatives} />
+            </SplitTable>
+          </li>
+        ))}
+      </ul>
+    </Section>
+
+    <!-- Tech Stack Section -->
+    <Section title="Tech Stack">
+      <ul>
+        {techStack.map((tech) => (
+          <Typography tagName="li">{tech}</Typography>
+        ))}
+      </ul>
+    </Section>
+
+    <!-- Result/Impact Section -->
+    <Section title="Result & Impact">
+      {impact.metrics && impact.metrics.length > 0 && (
+        <ul>
+          {impact.metrics.map((metric) => (
+            <Typography tagName="li"><strong>{metric.label}</strong>: {metric.value}</Typography>
+          ))}
+        </ul>
+      )}
+
+      <Typography tagName="p">{impact.qualitative}</Typography>
+    </Section>
+
+    <Section title="Learnings">
+      <ul class="learnings-list">
+        {learnings.map((learning) => (
+          <Typography tagName="li">{learning}</Typography>
+        ))}
+      </ul>
+    </Section>
+
+    <Section>
+      <Content />
+    </Section>
+
+    <BackLink href="/projects" text="All projects" />
+
+  <ScrollToTop />
+</BaseLayout>
+
+<style>
+  .decisions-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+</style>

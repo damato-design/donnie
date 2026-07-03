@@ -1,0 +1,37 @@
+---
+/**
+ * DetailList Component
+ *
+ * Renders the contents of one `SplitTable` cell: a simple bulleted list of
+ * points. The cell's column label supplies the heading, so the list itself is
+ * unlabelled. Used for both the Pros / Cons cells in `Alternatives` and the
+ * Alternatives cell of a project's Key Decisions.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <DetailList slot="left" items={alt.pros} />
+ * ```
+ */
+
+interface Props {
+  /** The points to list; an empty or omitted list renders an empty list */
+  items?: string[];
+}
+
+const { items = [] } = Astro.props;
+---
+
+ <ul class="detail-list">
+  {items.map((item) => (
+    <li>{item}</li>
+  ))}
+</ul>
+
+<style>
+  ul {
+    padding-left: 16px;
+    margin-block: 1em;
+  }
+</style>

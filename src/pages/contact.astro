@@ -1,0 +1,57 @@
+---
+/**
+ * Contact Page
+ *
+ * Minimal, intentional contact page with clear visual hierarchy and zone-based layout.
+ * Prioritizes booking a call as the primary contact method, with social channels as the
+ * secondary path. Email is intentionally not surfaced here.
+ *
+ * Layout Structure:
+ * - Zone 1 (Primary): Cal.com booking CTA
+ * - Zone 2 (Secondary): Social media links (only shown if configured)
+ *
+ * Features:
+ * - Clean, distraction-free design
+ * - Prominent "book a call" CTA
+ * - Automatic filtering of configured social links
+ * - Responsive layout
+ * - Clear visual hierarchy
+ *
+ * Route: /contact
+ *
+ * @page
+ */
+
+import BaseLayout from "@layouts/BaseLayout.astro";
+import SEO from "@components/SEO.astro";
+import Hero from "@components/Hero.astro";
+import Media from "@components/Media.astro";
+import Typography from "@components/Typography.astro";
+import Button from "@components/Button.astro";
+import ButtonGroup from "@components/ButtonGroup.astro";
+import { siteConfig } from "../config";
+import { pagesConfig } from "../pages.config";
+import friends from '@assets/friends.jpg';
+
+---
+
+<BaseLayout>
+  <SEO
+    slot="head"
+    title={pagesConfig.contact.title}
+    description={pagesConfig.contact.description}
+    type="website"
+  />
+
+  <!-- Zone 1: Book a call (primary) -->
+  <Hero>
+    <Typography tagName="h2">
+      Let's break bread,<br> not instances
+    </Typography>
+    <Typography tagName="p">People are what make the work fulfilling. If you're interested in growing the design community and sharing knowledge, let's connect!</Typography>
+    <ButtonGroup>
+      <Button href="https://cal.com/donnie-damato" variant="primary" external>Schedule a chat</Button>
+    </ButtonGroup>
+    <Media slot="aside" src={friends.src} alt={`Friends of ${siteConfig.author.name}`} maxWidth="460px" />
+  </Hero>
+</BaseLayout>

@@ -1,0 +1,35 @@
+---
+title: "Prove the Design in Black and White Before Adding Color"
+context: "A visually appealing interface earns goodwill: the Aesthetic-Usability Effect means users forgive real usability problems when something looks nice, so color can quietly mask a design that does not actually work. At the same time the industry reaches for ever-larger color palettes and treats color as the thing that makes an interface good, when it is closer to the finish than the foundation."
+decision: "Treat color as the finish, not the foundation. Establish that a design works in black and white, as a wireframe, before any color is applied: if it does not work without color, color will not save it. Keep palettes small, most interfaces need roughly ten colors or fewer, and never let color be the only carrier of meaning. Pair status and distinctions with text, shape, or position so colorblind and blind users are not excluded, and present data as a table first, with charts layered on as progressive enhancement."
+alternatives:
+  - option: "Jump straight to high-fidelity, full-color mockups ('wirecutting')"
+    pros:
+      - "Looks impressive early; easy to win buy-in on aesthetics"
+    cons:
+      - "Hides usability problems behind visual polish"
+      - "Reworking structure later costs far more than fixing a wireframe"
+  - option: "Large, expressive color systems"
+    pros:
+      - "Beautiful, flexible, expressive"
+    cons:
+      - "More choices mean more decision paralysis (Hick's Law)"
+      - "Beauty often comes at the cost of contrast, so accessibility suffers"
+  - option: "Encode meaning in color alone (e.g. red for error)"
+    pros:
+      - "Compact and immediate for sighted users with typical color vision"
+    cons:
+      - "Fails colorblind and blind users entirely"
+      - "Color meanings differ across cultures"
+reasoning: "Form follows function: usability and structure come first, and color is the stain applied after the piece is built. The Aesthetic-Usability Effect is exactly why the discipline matters, a pretty surface buys tolerance for problems that should have been fixed, so testing in grayscale keeps the team honest about whether the thing works at all. Smaller palettes cut both the decision load and the contrast failures that large, beautiful palettes invite (Open Color, for one, ranks poorly on contrast, the price of beauty). And because perception of color varies, including for me, since I am colorblind, meaning has to remain legible without it."
+whyItMattered: >-
+  Color is at once the easiest place to hide a structural problem and the least
+  forgiving. Designing in black and white first, keeping the palette small, and
+  never leaning on hue alone is what keeps an interface usable for the widest
+  audience: the same creativity-within-constraints bet the rest of the system
+  makes, fewer colors doing more.
+tags:
+  - "color"
+  - "accessibility"
+  - "design-process"
+---

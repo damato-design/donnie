@@ -1,80 +1,103 @@
 ---
-import Head from "@components/Head.astro";
-import PrimaryNav from "@components/PrimaryNav.astro";
-import SecondaryNav from "@components/SecondaryNav.astro";
-import Main from "@components/Main.astro";
-import Rugged from "@components/Rugged.astro";
-import List from '@components/List.astro';
+/**
+ * Home Page
+ * 
+ * Case-study-first portfolio homepage that immediately showcases real impact and outcomes
+ * rather than generic taglines. Features a hero section, a decisions preview, testimonials,
+ * and clear calls-to-action.
+ * 
+ * Design Philosophy:
+ * - Lead with tangible results and case studies
+ * - Document decision-making process transparently
+ * - Demonstrate value through real project outcomes
+ * - Provide multiple entry points (projects, decisions, journey)
+ * 
+ * Sections:
+ * 1. Hero - Value statement with portrait
+ * 2. Introduction - Brief personal introduction with journey link
+ * 3. Decisions - A preview of architectural/technical decisions
+ * 4. Testimonials - Social proof from colleagues and clients
+ * 5. Thinking - Problems and topics of interest
+ * 6. CTA - Call-to-action for work opportunities
+ *
+ * Features:
+ * - Decisions preview (first 2)
+ * - Testimonials integration
+ * - Structured data for SEO (WebSite and Person)
+ * - Responsive grid layout
+ * - Multiple CTAs for different user intents
+ * 
+ * Route: /
+ * 
+ * @page
+ */
 
-const primary = {
-	Expertise: '/expertise',
-	Projects: '/projects',
-	Media: '/media',
-	Connect: '/connect'
-}
+import BaseLayout from '@layouts/BaseLayout.astro';
+import SEO from '@components/SEO.astro';
+import StructuredData from '@components/StructuredData.astro';
+// import Testimonials from '@components/Testimonials.astro';
+import Hero from '@components/Hero.astro';
+import PageHeader from '@components/PageHeader.astro';
+import Media from '@components/Media.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
+import Button from '@components/Button.astro';
+import Typography from '@components/Typography.astro';
+import { siteConfig } from '../config';
+import portrait from '../assets/donnie.png';
 ---
 
-<!doctype html>
-<html lang="en">
-  <Head {...Astro.props} />
-  <body>
-    <PrimaryNav/>
-	<SecondaryNav/>
-	<Main/>
-	<Rugged/>
-    <script async defer src="https://scripts.withcabin.com/hello.js"></script>
-  </body>
-</html>
+<BaseLayout>
+  <SEO 
+    slot="head"
+    title={`${siteConfig.author.name} - ${siteConfig.author.title}`}
+    description={siteConfig.description}
+    type="website"
+    noSuffix
+  />
 
-<style>
-	body {
-		display: flex;
-		gap: 1px;
-		height: 100vh;
-		background-color: color-mix(in oklch, var(--bg), var(--fg) 20%);
-		overflow: hidden;
-	}
-	
-	@media (max-width: 900px) {
-		body {
-			flex-direction: column;
-			height: auto;
-			min-height: 100vh;
-			overflow: auto;
-		}
-	}
+  <!-- Structured Data for Homepage -->
+  <StructuredData type="WebSite" />
+  <StructuredData type="Person" />
+    <!-- CASE-FIRST HERO -->
+    <Hero>
+      <Typography tagName="h1">Donnie <br/> D'Amato</Typography>
+      <Typography>UX Architect improving design systems and AI model behavior.</Typography>
+      <ButtonGroup>
+        <Button href="/projects" variant="primary">Explore my work</Button>
+        <Button href="/decisions" variant="secondary">Follow my thinking</Button>
+      </ButtonGroup>
+      <Media slot="aside" src={portrait.src} alt={`Portrait of ${siteConfig.author.name}`} />
+    </Hero>
 
-</style>
+    <!-- Introduction -->
+    <PageHeader>
+      <Typography tagName="p">
+        Hey, I'm {siteConfig.author.name}, a {siteConfig.author.title.toLowerCase()} who finds creativity within constraints, with a background spanning design, front-end engineering, and higher education. For over a decade I've worked across the design systems practice, from token architecture and governance to the strategic frameworks that bring coherence across an organization. Now I'm bringing that same discipline to a new frontier: shaping how AI behaves with the rigor we expect from a best in class interface.
+      </Typography>
+    </PageHeader>
 
-<script>
-	const $audio = document.getElementById('audio-player');
+    <!-- Testimonials -->
+    <!-- <Testimonials limit={3} /> -->
 
-	function allowMotion($parent, $child) {
-		if (localStorage.getItem('motion-toggle') === 'false') return $child;
+    <!-- What I Think About -->
+    <section class="thinking">
+      <Typography tagName="h2">Problems I Enjoy Solving</Typography>
+      <ul>
+        <Typography tagName='li'><strong>Translating an organization's intent into reusable guidelines</strong>, the kind that once shaped components and tokens, now shaping how AI behaves: its voice, tone, trust, and safety</Typography>
+        <Typography tagName='li'><strong>Pioneering systems where including every user advances the business</strong>; serving more people and growing it become the same winning move</Typography>
+        <Typography tagName='li'><strong>Teaching the next generation</strong> through writing, speaking, and the classroom; sharing the thinking openly so the whole practice matures faster</Typography>
+      </ul>
+    </section>
 
-		$parent.addEventListener('animationend', () => {
-			$child.remove();
-			$parent.classList.remove('tearout');
-		});
-		$parent.classList.add('tearout');
-
-		return { remove: Function.prototype }
-	}
-
-	document.addEventListener('click', (ev: Event) => {
-		const $elem = ev.target as HTMLAnchorElement;
-		if (!$elem || !$elem.dataset.target) return;
-		ev.preventDefault();
-		const target = $elem.dataset.target as string;
-		const $host = document.getElementById(target) as HTMLElement;
-		const $content = $host.firstElementChild;
-
-		fetch($elem.href).then((res) => res.text()).then((str) => {
-			$audio?.play();
-			$host.scrollIntoView({ behavior: 'smooth' });
-			const remove = allowMotion($host, $content);
-			$host.insertAdjacentHTML('afterbegin', str);
-			remove?.remove();
-		});
-	});
-</script>
+    <!-- CTA -->
+    <section class="cta">
+      <Typography tagName="h2">Let's Work Together</Typography>
+      <Typography>
+        Looking for user experience leadership, design systems and token architecture, guidance on designing how AI behaves, or someone who documents their thinking and shares it openly? Let's talk.
+      </Typography>
+      <ButtonGroup>
+        <Button href="/projects" variant="primary">View My Work</Button>
+        <Button href="/contact" variant="secondary">Get in Touch</Button>
+      </ButtonGroup>
+    </section>
+</BaseLayout>
