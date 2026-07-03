@@ -14,6 +14,12 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   interpolate-size: allow-keywords;
+  background-color: var(--bgcolor);
+  color: color(from var(--bgcolor) xyz-d65
+		clamp(0, (.36 / y - 1) * infinity, 1)
+		clamp(0, (.36 / y - 1) * infinity, 1)
+		clamp(0, (.36 / y - 1) * infinity, 1)
+	);
 }
 
 /* Smooth in-page anchor scrolling (e.g. the scroll-to-top control), opt-out for
@@ -26,12 +32,6 @@ html {
 
 body {
   margin: 0;
-  background-color: var(--bgcolor);
-  color: color(from var(--bgcolor) xyz-d65
-		clamp(0, (.36 / y - 1) * infinity, 1)
-		clamp(0, (.36 / y - 1) * infinity, 1)
-		clamp(0, (.36 / y - 1) * infinity, 1)
-	);
   font-family: "LINE Seed JP", sans-serif;
   line-height: 1.4;
   background-image: radial-gradient(circle, currentColor .5px, transparent .5px);
