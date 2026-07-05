@@ -68,7 +68,10 @@ const blobRotate = `${Math.round(Math.random() * 360)}deg`;
       grid-column: 1 / -1;
       grid-row: 1;
       rotate: var(--blob-rotate);
-      max-height: 400px;
+      aspect-ratio: 2;
+      overflow: hidden;
+      width: 100%;
+      scale: 2;
     }
   }
 
