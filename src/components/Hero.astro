@@ -33,10 +33,15 @@ interface Props {}
 
 /** Whether custom right-column content was provided */
 const hasAside = Astro.slots.has("aside");
+import Blob from '@assets/blob.svg';
+
+/** Randomize the blob's rotation so each render sits at a slightly different angle */
+const blobRotate = `${Math.round(Math.random() * 360)}deg`;
+
 ---
 
-<section class="hero">
-  
+<section class="hero" style={`--blob-rotate: ${blobRotate}`}>
+  <Blob/>
 
   {
     hasAside && (
@@ -58,6 +63,13 @@ const hasAside = Astro.slots.has("aside");
     grid-template-columns: repeat(5, 1fr);
     align-items: center;
     font-size: 1.4em;
+
+    & svg {
+      grid-column: 1 / -1;
+      grid-row: 1;
+      rotate: var(--blob-rotate);
+      max-height: 400px;
+    }
   }
 
   .hero-content {
@@ -71,6 +83,11 @@ const hasAside = Astro.slots.has("aside");
     grid-column: 2 / -1;
     display: flex;
     justify-content: end;
+    isolation: isolate;
+
+    & :where(img, video) {
+      border-radius: 16% 84% 12% 88% / 83% 26% 74% 17%;
+    }
   }
 
   @media (max-width: 600px) {
