@@ -57,10 +57,10 @@ const isActive = (href: string) => {
         <li class="nav-item">
           <a 
             href={item.href} 
-            class:list={['nav-link', { 'nav-link--active': isActive(item.href) }]}
+            class="nav-link"
             aria-current={isActive(item.href) ? 'page' : undefined}
           >
-            {item.label}
+            <span>{item.label}</span>
           </a>
         </li>
       ))}
@@ -70,7 +70,6 @@ const isActive = (href: string) => {
 
 <style>
   .site-nav {
-    border-bottom: 1px solid currentColor;
     background: oklch(from var(--bgcolor) calc(l + .05) c h);
   }
 
@@ -107,14 +106,17 @@ const isActive = (href: string) => {
   }
 
   .nav-link {
-    display: inline-flex;
     white-space: nowrap;
+    display: inline-flex;
     padding: 16px;
     background: oklch(from var(--bgcolor) calc(l + .05) c h);
     color: currentColor;
+  }
 
-    &[aria-current="page"] {
-      filter: invert(1);
+  .nav-link[aria-current="page"] {
+    background-color: currentColor;
+    span {
+      color: var(--bgcolor);
     }
   }
 </style>

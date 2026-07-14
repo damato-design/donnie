@@ -79,32 +79,41 @@ const tagAttrs =
   ]}
   {...tagAttrs}
   {...rest}
-><slot name="icon" /><slot />{arrow && <ArrowIcon />}</Tag>
+>
+  <span>
+    <slot name="icon" />
+    <slot />
+    {arrow && <ArrowIcon />}
+  </span>
+</Tag>
 
 <style>
   .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
     font-family: inherit;
-    font-size: 0.9375rem;
+    font-size: 0.7em;
     line-height: inherit;
     text-decoration: none;
     font-weight: bolder;
     letter-spacing: 2px;
     border: 1px solid transparent;
     cursor: pointer;
-    transition: opacity 0.2s ease, border-color 0.2s ease, color 0.2s ease,
-      background 0.2s ease;
     background: var(--bgcolor);
     color: currentColor;
-    border-color: currentColor;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+    }
   }
 
   .btn--primary {
-    filter: invert(1);
+    background-color: currentColor;
+    span {
+      color: var(--bgcolor);
+    }
   }
 
   .btn--disabled {
