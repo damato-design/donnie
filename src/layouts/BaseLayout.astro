@@ -67,6 +67,33 @@ import "@styles/global.css";
 
     <ClientRouter />
 
+    <script>
+      /**
+       * Kick autoplay videos into playing after every page load, including the
+       * client-side navigations driven by <ClientRouter /> (View Transitions).
+       *
+       * On a real page load the browser autoplays a muted <video autoplay> as
+       * it parses it. But when the ClientRouter swaps a freshly-fetched page
+       * into the live document, that video node is *inserted* rather than
+       * parsed, so the browser neither starts its autoplay nor, in many cases,
+       * begins fetching the source at all, the media stays blank until a manual
+       * refresh. This listener lives on `document` (which survives every swap),
+       * so it is attached once and runs on each navigation: it forces an
+       * unstarted source to load, then plays.
+       */
+      function playAutoplayVideos() {
+        document
+          .querySelectorAll<HTMLVideoElement>('video[autoplay]')
+          .forEach((video) => {
+            if (!video.paused) return;
+            if (video.readyState === 0) video.load();
+            video.play().catch(() => {});
+          });
+      }
+
+      document.addEventListener('astro:page-load', playAutoplayVideos);
+    </script>
+
     <script is:inline defer src="https://scripts.withcabin.com/hello.js"></script>
 
     <style>
