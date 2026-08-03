@@ -45,7 +45,7 @@ export const siteConfig = {
    *
    * Default meta description for SEO and social sharing.
    */
-  description: 'User Experience Architect based in New York, author of Mise en Mode, and international speaker who finds creativity within constraints, bridging design and engineering with thoughtful systems.',
+  description: 'User Experience Architect based in New York, author of Mise en Mode, and international speaker who bridges design and engineering.',
 
   /**
    * Author information

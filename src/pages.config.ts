@@ -63,7 +63,7 @@ export const pagesConfig = {
    */
   projects: {
     title: 'Projects - Case Studies',
-    description: 'Case studies at the intersection of design and engineering: design systems and theming alongside the products, experiments, and game design that shaped the practice.',
+    description: 'Case studies at the intersection of design and engineering: design systems, theming, and the products and experiments that shaped the practice.',
     heading: 'Projects',
     intro: 'Case studies from across my career at the intersection of design and engineering: design systems and theming at the core, plus the products, experiments, and even game design that shaped how I work. Each tells the story of the challenge, the constraints, the decisions, and what came of them.',
   },
