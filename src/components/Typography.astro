@@ -47,7 +47,7 @@ const shouldWrap = blockElements.includes(Tag);
   h1 {
     filter: url('#longshadow');
     transform: skewY(-4deg);
-    color: oklch(from var(--bgcolor) calc(l + .05) c h);
+    color: var(--bgcolor);
     pointer-events: none;
     line-height: 1;
     padding-block-end: 32px;
@@ -56,7 +56,7 @@ const shouldWrap = blockElements.includes(Tag);
   }
 
   .inline {
-    background: oklch(from var(--bgcolor) calc(l + .05) c h);
+    background: var(--bgcolor);
     padding: .25lh .5em;
     line-height: 1.7;
     box-decoration-break: clone;
