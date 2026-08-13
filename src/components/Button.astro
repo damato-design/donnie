@@ -53,10 +53,11 @@ interface Props {
 
 const {
   href,
-  variant = 'primary',
+  variant,
   external = false,
   disabled = false,
   arrow = false,
+  back = false,
   type = 'button',
   ...rest
 } = Astro.props;
@@ -74,13 +75,14 @@ const tagAttrs =
 <Tag
   class:list={[
     'btn',
-    `btn--${variant}`,
+    { [`btn--${variant}`]: variant },
     { 'btn--disabled': disabled },
   ]}
   {...tagAttrs}
   {...rest}
 >
   <span>
+    {back && <ArrowIcon direction="left" />}
     <slot name="icon" />
     <slot />
     {arrow && <ArrowIcon />}
@@ -95,16 +97,23 @@ const tagAttrs =
     text-decoration: none;
     font-weight: bolder;
     letter-spacing: 2px;
-    border: 1px solid;
     cursor: pointer;
-    background: var(--bgcolor);
     color: currentColor;
+    background: var(--bgcolor);
+    display: inline-flex;
 
     span {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+    }
+  }
+
+  .btn:where([class*="btn--"]) {
+    border: 1px solid;
+
+    span {
       padding: 12px 24px;
     }
   }

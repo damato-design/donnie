@@ -17,7 +17,7 @@
  * ```
  */
 
-import ArrowIcon from '@components/ArrowIcon.astro';
+import Button from '@components/Button.astro';
 
 interface Props {
   /** Target URL for the back navigation link */
@@ -30,25 +30,7 @@ interface Props {
 const { href, text } = Astro.props;
 ---
 
-<div class="back-link-container">
-  <a href={href} class="back-link">
-    <ArrowIcon direction="left" />
-    {text}
-  </a>
-</div>
+<Button href={href} back>
+  {text}
+</Button>
 
-<style>
-  .back-link-container {
-    margin-top: 32px;
-    padding-block: 32px;
-    border-top: 1px solid currentColor;
-  }
-
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9375rem;
-    transition: color 0.2s ease;
-  }
-</style>

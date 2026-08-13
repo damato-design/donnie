@@ -35,7 +35,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import StructuredData from '@components/StructuredData.astro';
 import ScrollToTop from '@components/ScrollToTop.astro';
-import BackLink from '@components/BackLink.astro';
+import Button from '@components/Button.astro';
 import Section from '@components/Section.astro';
 import SplitTable from '@components/SplitTable.astro';
 import DetailList from '@components/DetailList.astro';
@@ -215,7 +215,9 @@ const readingTime = formatReadingTime(calculateReadingTime(allText));
       <Content />
     </Section>
 
-    <BackLink href="/projects" text="All projects" />
+    <Button href="/projects" back>
+      All projects
+    </Button>
 
   <ScrollToTop />
 </BaseLayout>

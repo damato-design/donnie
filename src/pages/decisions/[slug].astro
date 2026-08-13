@@ -25,7 +25,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import SEO from '@components/SEO.astro';
 import ScrollToTop from '@components/ScrollToTop.astro';
-import BackLink from '@components/BackLink.astro';
+import Button from '@components/Button.astro';
 import Section from '@components/Section.astro';
 import Alternatives from '@components/Alternatives.astro';
 import TagList from '@components/TagList.astro';
@@ -103,7 +103,9 @@ const whyItMatteredHtml = await renderInlineMarkdown(decision.data.whyItMattered
         </section>
       )}
 
-      <BackLink href="/decisions" text="All decisions" />
+      <Button href="/decisions" back>
+        All decisions
+      </Button>
     </article>
   <ScrollToTop />
 
