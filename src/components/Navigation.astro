@@ -18,6 +18,7 @@
  * ```
  */
 import { siteConfig } from '../config';
+import Button from '@components/Button.astro';
 
 const currentPath = Astro.url.pathname;
 
@@ -55,13 +56,12 @@ const isActive = (href: string) => {
     <ul class="nav-list">
       {navItems.map((item) => (
         <li class="nav-item">
-          <a 
-            href={item.href} 
-            class="nav-link"
+          <Button
+            href={item.href}
             aria-current={isActive(item.href) ? 'page' : undefined}
           >
-            <span>{item.label}</span>
-          </a>
+            {item.label}
+          </Button>
         </li>
       ))}
     </ul>
@@ -96,7 +96,6 @@ const isActive = (href: string) => {
     list-style: none;
     margin: 0;
     padding: 0;
-    letter-spacing: 2px;
     min-width: max-content;
   }
 
@@ -105,18 +104,23 @@ const isActive = (href: string) => {
     margin: 0;
   }
 
-  .nav-link {
+  /* Nav items are Buttons carrying no `variant`, so they stay borderless and
+     the nav owns only what the primitive has no prop for: the hit area and the
+     current-page inversion (the same swap `btn--primary` makes, minus its
+     border and padding, which would resize the active item). */
+  .nav-list :global(.btn) {
     white-space: nowrap;
-    display: inline-flex;
-    padding: 16px;
-    background: var(--bgcolor);
-    color: currentColor;
   }
 
-  .nav-link[aria-current="page"] {
+  .nav-list :global(.btn span) {
+    padding: 16px;
+  }
+
+  .nav-list :global(.btn[aria-current="page"]) {
     background-color: currentColor;
-    span {
-      color: var(--bgcolor);
-    }
+  }
+
+  .nav-list :global(.btn[aria-current="page"] span) {
+    color: var(--bgcolor);
   }
 </style>

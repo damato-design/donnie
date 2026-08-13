@@ -102,7 +102,7 @@ To refresh this without a code change, a **Netlify Scheduled Function**
   there is no global `.page-container`/`.page-header` utility.
 - Key components: `SEO.astro`, `StructuredData.astro` (JSON-LD, fully config-driven),
   `Navigation.astro`, `Testimonials.astro`, the unified **`Card` pattern** below (plus
-  `CardList` for listings), `PageStats`, `ForwardLink`, `PageContainer`,
+  `CardList` for listings), `PageStats`, `PageContainer`,
   `PageHeader`, and the **Hero pattern** below.
 - **Components own their styling; no consumer `class` prop.** A component does not accept a
   `class`/`className` escape hatch — it carries its own base class (`.card`, `.btn`, `.label`,

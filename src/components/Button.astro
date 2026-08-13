@@ -92,11 +92,7 @@ const tagAttrs =
 <style>
   .btn {
     font-family: inherit;
-    font-size: 0.7em;
     line-height: inherit;
-    text-decoration: none;
-    font-weight: bolder;
-    letter-spacing: 2px;
     cursor: pointer;
     color: currentColor;
     background: var(--bgcolor);
@@ -112,6 +108,10 @@ const tagAttrs =
 
   .btn:where([class*="btn--"]) {
     border: 1px solid;
+    text-decoration: none;
+    font-weight: bolder;
+    font-size: 0.7em;
+    letter-spacing: 2px;
 
     span {
       padding: 12px 24px;
