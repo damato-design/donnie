@@ -11,26 +11,24 @@ constraints:
   - "Lightweight enough to install as a PWA"
 approach: "The first launch asks for your location once; from then on, opening the saved line uses your geo position to find the closest station and show the next trains in both directions in real time, with nothing to navigate."
 keyDecisions:
-  - decision: "Give each line its own branded subdomain, parsed at the edge"
-    reasoning: "Visiting a line's own subdomain is all that's needed; the line code is parsed at the edge to make the server requests and serve the page back as HTML, branded to match that line."
+  - decision: "Give each line its own branded app instead of one app with a line picker"
+    reasoning: "Riders take the same line every day. Saving the one you ride means the choice is already made by the time you open it, and the page arrives branded like the signage in the station you are standing in."
     alternatives:
       - "A single app with in-app line selection"
-  - decision: "Use the native Geolocation API to pick the nearest station"
-    reasoning: "Automatically choosing the closest station removes a manual selection step."
+  - decision: "Let the device pick the nearest station"
+    reasoning: "Asking for location once removes the selection step forever after, which is the difference between checking the time and operating an app."
     alternatives:
       - "Manual station selection"
 techStack:
   - "Progressive Web App"
-  - "Geolocation API"
-  - "AWS"
-  - "Edge functions"
-  - "Real-time data"
+  - "Real-time transit data"
+  - "Single-purpose design"
 impact:
-  qualitative: "willarrive.in showed how far you can cut interaction cost by combining geolocation, real-time data, and a per-line PWA into a single-purpose tool."
+  qualitative: "willarrive.in showed how far you can cut interaction cost when a tool is allowed to do one thing: location, live arrivals, and a saved line collapse into a screen with nothing to operate."
 learnings:
   - "Aggressively cutting interaction cost can redefine a familiar experience"
-  - "The data you need is often already on the page; reading the network requests can be all it takes"
-  - "The flip side: APIs should restrict which origins can call them and never expose a key the client can read, since an unguarded key is effectively open to anyone"
+  - "The data you need is often already published somewhere; the constraint is usually access, not availability"
+  - "The flip side: anything a browser can read is effectively public, which is worth knowing from both sides of the request"
 status: archived
 ---
 

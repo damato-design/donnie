@@ -3,50 +3,45 @@ title: "Compass, UX Engineering & Design Systems"
 role: "Senior UX Engineer"
 year: 2017
 duration: "2017–2019"
-outcomeSummary: "Built and grew Compass's design system from a prototype component library into a cross-organizational resource, owned the CSS across Compass.com, and pushed the platform forward with early CSS Grid, a Storybook-to-Sketch pipeline, and web component / React interop."
-overview: "At the real-estate tech company Compass, I grew from a frontend engineer into the UX Engineer role, owned the CSS across Compass.com, and founded the design systems practice, turning repeated prototype work into a shared component library and team."
-problem: "As the sole engineer reporting into the design organization, I was remaking the same assets for every new prototype. There was no shared component library, and engineering teams had no vetted source of truth for building production versions of approved designs."
+outcomeSummary: "Founded Compass's design systems practice: turned repeated prototype work into a component library the engineering organization trusted, kept the design and code libraries in lockstep, and grew a solo effort into a cross-functional team whose work still ships today."
+overview: "At the real-estate tech company Compass, I grew from a frontend engineer into the UX Engineer role, the only engineer inside the design organization, and founded the design systems practice, turning repeated prototype work into a shared library and a team."
+problem: "As the sole engineer reporting into the design organization, I was remaking the same assets for every new prototype. There was no shared component library, and engineering teams had no vetted source of truth for building production versions of approved designs, so approved work drifted on its way to production and every team solved the same problems again."
 constraints:
-  - "A single engineer embedded in a design org"
-  - "Teams were migrating from Angular to React, so the codebase spanned multiple frameworks at once"
+  - "A single person embedded in a design org, with no mandate over engineering teams"
+  - "Teams were migrating between frameworks, so no single technology choice could serve everyone"
   - "Deliverables had to work on both legacy and modern apps"
-approach: "I built a component library grounded in the design org's real needs, which became a trusted resource for engineering. Owning the CSS across Compass.com, I put CSS Grid into production early and paired html-sketchapp with Storybook to generate Sketch symbols straight from coded components, keeping the design library in sync with the source of truth in code. I explored the interoperability of web components and React so one library could serve teams regardless of framework, delivered a framework-agnostic global navigation renderable on client or server and embeddable in legacy and modern apps."
+approach: "I built the component library out of the design org's real, repeated needs, which is what made engineering treat it as a trusted resource rather than another team's side project. To stop design and code from drifting apart, I generated the Sketch symbol library directly from the coded components, so designers and engineers picked from the same set of parts. And because teams were mid-migration between frameworks, I delivered shared pieces, most visibly a global navigation, in a form any team could adopt without rewriting their app, so one nav shipped everywhere instead of being rebuilt per product."
 keyDecisions:
-  - decision: "Make the global navigation framework-agnostic and client/server renderable"
-    reasoning: "Applications were built by different teams in different ways; framework-agnostic delivery was the only way to inject one nav everywhere."
+  - decision: "Make the global navigation adoptable by every team regardless of how their app was built"
+    reasoning: "Applications were owned by different teams working in different ways, and none of them reported to me. Delivering something framework-agnostic meant adoption was a small ask rather than a migration, which is the only way one nav reaches everywhere."
     alternatives:
-      - "A React-only component"
-      - "Per-app reimplementations of the nav"
-  - decision: "Generate Sketch symbols from coded components with html-sketchapp and Storybook"
-    reasoning: "Driving the design library from production components keeps design and engineering working from one source of truth instead of drifting apart."
+      - "Ship it for the newest framework only"
+      - "Let each team reimplement the nav"
+  - decision: "Drive the design library from the coded components"
+    reasoning: "Generating Sketch symbols from production components meant designers and engineers argued from one source of truth. It removed a recurring class of disagreement about which artifact was correct."
     alternatives:
       - "Hand-maintain a parallel Sketch symbol library"
       - "Let design and code references diverge"
-  - decision: "Explore web components for cross-framework interop"
-    reasoning: "Teams were moving from Angular to React, so a framework-agnostic core could serve every team from one library instead of per-framework reimplementations."
+  - decision: "Ground the library in the design org's repeated needs, not a wish list"
+    reasoning: "Starting from work the design org actually did every week meant the first version already earned its keep, which is what gave engineering a reason to adopt it voluntarily."
     alternatives:
-      - "Ship a React-only library"
-      - "Reimplement components per framework"
+      - "Design a comprehensive library up front"
+      - "Wait for engineering to request components"
 techStack:
-  - "JavaScript"
-  - "CSS"
-  - "CSS Grid"
-  - "Storybook"
-  - "html-sketchapp"
-  - "Web Components"
-  - "React"
   - "Component libraries"
-  - "Universal rendering"
+  - "Design and code parity"
+  - "Cross-framework delivery"
 impact:
   metrics:
     - label: "Team"
       value: "Grew from 1 to a cross-functional design systems team"
     - label: "Longevity"
       value: "Much of the work still ships on the site and app today"
-  qualitative: "The library and global navigation became foundational shared resources, and the design systems team established a durable practice that outlasted my tenure."
+  qualitative: "The library and global navigation became foundational shared resources across product teams, and the design systems team established a durable practice that outlasted my tenure."
 learnings:
-  - "Design systems gain trust when grounded in the design org's real, repeated needs"
-  - "Framework-agnostic delivery is essential in a heterogeneous codebase"
+  - "A system earns trust when it is grounded in the design org's real, repeated needs rather than an abstract ideal"
+  - "Adoption follows the size of the ask; a shared piece any team can drop in beats a better one that requires a migration"
+  - "A practice only outlasts you once it is a team rather than a person"
 status: completed
 ---
 
@@ -54,6 +49,6 @@ I started at Compass as a frontend engineer. Within three weeks I was helping bu
 
 Supporting the design org meant remaking the same assets for every prototype, so I built a component library. Around then I also adopted an in-house idea called Intents, a semantic approach to design tokens that I would carry forward and keep developing for years.
 
-When I started, Compass was largely an Angular app, but teams were increasingly adopting React. That growing mix is what drew me to web components: a single, framework-agnostic library could serve everyone from one source. React, though, did not initially play nicely with web components, so much of my research toward the end of my tenure went into making that interop work no matter the framework.
+The company was mid-migration between frameworks while I was there, and that mix shaped how I thought about delivery: if a shared resource only works for the teams who already moved, it is not shared. Much of my later research there went into making one library usable no matter what a team had chosen.
 
-Beyond the library, I mentored engineers in the brand and marketing department and took ownership of older pages that had lost their maintainers, migrating them onto newer, more maintainable technologies.
+Beyond the library, I mentored engineers in the brand and marketing department and took ownership of older pages that had lost their maintainers, bringing them back under active care.

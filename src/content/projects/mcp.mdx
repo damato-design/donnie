@@ -2,46 +2,43 @@
 title: "Personal MCP Server, Live Content for AI Assistants"
 role: "Creator"
 year: 2026
-outcomeSummary: "A remote Model Context Protocol server that gathers my thoughts, projects, and writing in one place, so when people ask an AI to 'behave like Donnie' the answer comes from my actual content, almost like asking me directly without scheduling time with me."
-overview: "mcp.damato.design is a Model Context Protocol (MCP) server that turns the damato.design ecosystem (expertise, projects, media, blog, and design system docs) into structured, queryable resources for AI clients. Building it was also how I taught myself to create an MCP server."
-problem: "People increasingly ask LLMs to 'behave like Donnie,' but the model answers from whatever it happened to train on, which is often outdated, incomplete, or simply invented. I wanted a single place holding my thoughts, projects, and writing, so an AI can respond as accurately as if you had asked me directly, without scheduling time with me."
+outcomeSummary: "A service that gathers my thoughts, projects, and writing in one place, so when people ask an AI to 'behave like Donnie' the answer comes from my actual content, almost like asking me directly without scheduling time with me."
+overview: "mcp.damato.design turns the damato.design ecosystem (expertise, projects, media, blog, and design system docs) into structured content an AI assistant can actually read, so the model answers from my work instead of its impression of it."
+problem: "People increasingly ask AI assistants to 'behave like Donnie,' but the model answers from whatever it happened to train on, which is often outdated, incomplete, or simply invented. Being represented badly by a tool other people trust is a real problem, and I wanted a single place holding my thoughts, projects, and writing so an AI can respond as accurately as if you had asked me directly."
 constraints:
-  - "Had to work across many MCP clients (Claude Desktop, Cursor, Cline, Windsurf, Zed, Continue)"
-  - "Content lives across several subdomains and should stay the single source of truth"
-  - "Remote and zero-install for consumers, with no per-client custom code"
-approach: "I built a remote HTTP MCP server that dynamically pulls each subdomain's llms.txt and exposes its entries as MCP resources under a {subdomain}://{category}/{slug} URI scheme. Clients connect over a single URL via mcp-remote, the server caches fetched content for performance, and it publishes a standard server card for discovery."
+  - "Had to work across the many AI clients people already use, with no per-client custom work"
+  - "Content lives across several subdomains and those sites should stay the single source of truth"
+  - "Zero install for whoever connects to it"
+approach: "Rather than copy my content into a new store, the server reads what my sites already publish and exposes each piece as something an assistant can request by name. That keeps the published sites authoritative: nothing to sync, nothing to go stale. Anyone connects with a single URL and gets the same answers I would give, drawn from the same words I actually wrote."
 keyDecisions:
-  - decision: "Source content from each site's llms.txt rather than a separate database"
-    reasoning: "The published sites stay the single source of truth, so the server never drifts from what is live and needs no separate content pipeline."
+  - decision: "Source content from what the sites already publish rather than a separate store"
+    reasoning: "The published sites stay the single source of truth, so the server never drifts from what is live and there is no second copy of my thinking to maintain."
     alternatives:
       - "Maintain a separate content store or CMS for the server"
-      - "Hardcode resources in the server"
-  - decision: "Expose a small, predictable surface (list_resources, get_resource, get_llms_txt) over a semantic URI scheme, aligned to the emerging standards"
-    reasoning: "Following the emerging MCP and llms.txt conventions rather than inventing a bespoke surface keeps the server interoperable across clients, and a bounded, well-named surface is easy for an AI to navigate, mirroring how I think about bounded, semantic token systems."
+      - "Hardcode the content into the server"
+  - decision: "Expose a small, predictably named surface aligned to emerging standards"
+    reasoning: "Following the conventions the ecosystem is settling on, rather than inventing my own, keeps it usable in whatever client someone already has. A bounded, well-named surface is easy for an AI to navigate, mirroring how I think about bounded, semantic token systems."
     alternatives:
-      - "A single catch-all tool"
-      - "Many narrow per-category tools"
-  - decision: "Serve remotely over HTTP instead of a local stdio server"
-    reasoning: "Consumers connect with one URL and no install or build step, and improvements ship server-side."
+      - "A single catch-all entry point"
+      - "Many narrow, category-specific ones"
+  - decision: "Host it centrally instead of asking people to run it themselves"
+    reasoning: "Consumers connect with one URL and no setup, and improvements reach everyone at once instead of waiting for each person to update."
     alternatives:
-      - "Distribute a local stdio server users run themselves"
+      - "Distribute something each person installs and runs locally"
 techStack:
-  - "TypeScript"
-  - "Node.js"
-  - "MCP"
-  - "MCP SDK"
-  - "JSON-RPC"
+  - "Model Context Protocol"
   - "llms.txt"
+  - "Content architecture"
 impact:
-  qualitative: "AI assistants can now answer questions about my work and design systems thinking from my actual, current content, and the same llms.txt sources power both the websites and the server, so there is nothing extra to keep in sync."
+  qualitative: "AI assistants can now answer questions about my work and design systems thinking from my actual, current content, and the same published sources power both the websites and the server, so there is nothing extra to keep in sync."
 learnings:
-  - "Treating published llms.txt as the source of truth keeps an AI integration honest and low-maintenance"
-  - "A bounded, well-named resource and tool surface matters as much for AI consumers as for human ones"
-  - "Hands-on MCP work is the fastest way to understand where generative tools actually fit around a design system"
-  - "Running a remote MCP server carries a real, ongoing hosting cost, enough to pause a personal project, which is its own lesson in what it takes to keep generative infrastructure live"
+  - "Treating already-published content as the source of truth keeps an AI integration honest and low-maintenance"
+  - "A bounded, well-named surface matters as much for AI consumers as for human ones"
+  - "Hands-on work is the fastest way to understand where generative tools actually fit around a design system"
+  - "Keeping this kind of service live carries a real, ongoing cost, enough to pause a personal project, which is its own lesson in what generative infrastructure asks of a team"
 status: ongoing
 ---
 
-The honest reason it exists: people kept asking AIs to act like me, and I wanted those answers to come from something real. Building it also taught me how an MCP server actually works.
+The honest reason it exists: people kept asking AIs to act like me, and I wanted those answers to come from something real. It also gave me a firsthand feel for how these tools reach for context, which is the same question I ask about a design system: can someone find the right thing by name, or do they guess?
 
-In practice, resources read like `donnie://projects/miseenmode` or `blog://posts/truly-semantic`, and an `ask-damato` prompt lets a client ask for my answer specifically when several servers are connected. Point any MCP client at `https://mcp.damato.design/` to connect, though it is paused for now to keep hosting costs down.
+In practice an assistant asks for a piece of my work the way you would name it, `donnie://projects/miseenmode` or `blog://posts/truly-semantic`, and an `ask-damato` prompt lets a client ask for my answer specifically when several sources are connected. Point any compatible client at `https://mcp.damato.design/` to connect, though it is paused for now to keep hosting costs down.

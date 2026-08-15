@@ -4,57 +4,59 @@ role: "Principal, UX Platform · Design Systems Lead"
 year: 2019
 duration: "2019–present"
 teamSize: 6
-outcomeSummary: "Lead UXCore, GoDaddy's React design system: replaced statically generated palettes with CSS Custom Properties theming and a semantic Intent token system that themes across 20M+ customers, and rebuilt the component library in place toward composable primitives."
-overview: "Leading the team behind UXCore, GoDaddy's React design system: its component library and the theming layer that styles it across the company's brands and locales."
-problem: "UXCore had two problems to solve. Brand styling came from a long-standing system that statically generated dozens of CSS palettes, one set per brand and localization permutation, so any brand update was slow, risky, and expensive. The component library itself had grown as a contributor model with no one saying no, so one-off components of questionable value kept accumulating across the organization. Both had to be fixed carefully, because I had arrived just after a React migration and a painful color and typography restyle, two breaking changes that had already shaken partner trust."
+outcomeSummary: "Lead UXCore, GoDaddy's design system, and the cross-organization adoption that makes it real: aligned brand, localization, and accessibility stakeholders on one semantic Intent vocabulary now theming across 20M+ customers, and moved dozens of product teams onto a composable component library without asking any of them to migrate."
+overview: "Leading the team behind UXCore, GoDaddy's design system, and the relationships across product, brand, and localization that decide whether a system is used or worked around."
+problem: "UXCore had two problems, and both were as much organizational as technical. Brand styling came from a long-standing system that generated a separate set of palettes for every brand and localization permutation, so any brand update was slow, risky, expensive, and touched every team that owned a surface. The component library had grown under a contributor model with no one empowered to say no, so one-off components of questionable value kept accumulating across the organization. Both had to be fixed carefully, because I had arrived just after a React migration and a painful color and typography restyle, two breaking changes that had already shaken partner trust. There was no goodwill left to spend on another disruption."
 constraints:
   - "Stability was paramount; partners had little appetite for more disruption"
-  - "Theming had to support brand, localization, and accessibility variations"
+  - "Theming had to satisfy brand, localization, and accessibility stakeholders at once"
+  - "Adoption could not be mandated; product teams had to choose the system"
   - "Changes had to roll out without blocking dozens of product teams"
-approach: "The work came in two units. The first was the theming system: brand styling had shipped as statically generated CSS palettes, so I replaced it with CSS variables and a naming convention, the Intents, served through an API, making theming flexible at runtime instead of regenerated for every permutation. The second was the component library: rather than ship a replacement teams would have to adopt, I rebuilt UXCore in place, a ship of Theseus, swapping the components teams already used piece by piece toward a small set of highly composable primitives, so they kept the same library while it changed underneath them."
+approach: "The work came in two units, and each was mostly a coordination problem. The first was theming: brand styling had shipped as statically generated palettes, one set per brand and locale permutation, so I replaced it with a single semantic vocabulary, the Intents, served centrally and applied at runtime. The hard part was getting brand, localization, accessibility, and product leadership to agree on one naming convention all of them could live inside, then teaching it to the designers and engineers who would use it daily. The second was the component library: rather than ship a replacement teams would have to adopt, I rebuilt UXCore in place, a ship of Theseus, swapping the components teams already used piece by piece toward a small set of composable primitives, so they kept the same library while it changed underneath them. Running alongside both was the partner relationship itself: triaging every incoming request within a day, pairing with teams on calls, and negotiating what belonged in the system and what did not."
 keyDecisions:
-  - decision: "Use CSS Custom Properties for runtime theming instead of generating static CSS palettes"
-    reasoning: "Custom Properties were now broadly supported and let a single stylesheet retheme at runtime, served through an API, eliminating the combinatorial palette generation."
+  - decision: "Replace per-brand, per-locale palette generation with one centrally served theming layer"
+    reasoning: "Every brand change had been a coordination tax paid by every team with a surface. Consolidating to a single themed layer moved that cost into one place my team owned, so brand and localization partners had one conversation to have instead of dozens."
     alternatives:
-      - "Continue generating static CSS per brand/locale"
-      - "Sass-based theme compilation"
-  - decision: "Adopt a semantic 'Intent' token system"
-    reasoning: "Naming tokens by purpose (action, surface, text), priority, and property aimed to keep the system predictable and bounded rather than sprawling into hundreds of one-off values, though holding that line in practice proved harder than the design."
+      - "Continue generating static palettes per brand and locale"
+      - "Let each product team own its own theming"
+  - decision: "Adopt a semantic 'Intent' token system as shared language"
+    reasoning: "Naming tokens by purpose (action, surface, text), priority, and property gave designers, engineers, and brand stakeholders one vocabulary to argue in, which is what makes a decision durable across teams. Holding the vocabulary bounded in practice proved harder than designing it."
     alternatives:
-      - "Expose raw primitive tokens directly to consumers"
-      - "Per-component theming APIs"
-  - decision: "Rebuild the library in place toward curated, composable primitives"
-    reasoning: "The contributor model accepted nearly everything because no one was saying no, so I was brought in to set a quality bar and move the library toward a small set of composable primitives. Teams were averse to adopting yet another new library, even one objectively better designed and built than what they had, so instead of shipping a replacement, we swapped the components they already used piece by piece. The library they imported stayed the same while its internals were rebuilt underneath them, delivering the composable direction with no migration."
+      - "Expose raw primitive values directly to consumers"
+      - "Per-team theming APIs"
+  - decision: "Rebuild the library in place rather than ask teams to migrate"
+    reasoning: "Teams were averse to adopting yet another new library, even one objectively better than what they had, and I had no mandate to force it. So instead of shipping a replacement and spending a year selling it, we swapped the components they already used piece by piece. The import they depended on stayed the same while its internals were rebuilt underneath them, which delivered the composable direction with no migration ask and no trust spent."
     alternatives:
       - "Keep accepting contributed components as-is"
-      - "Ship a new library and migrate every team"
+      - "Ship a new library and run a company-wide migration"
       - "Freeze UXCore and start fresh"
+  - decision: "Set and defend a quality bar for what enters the system"
+    reasoning: "An open contributor model with no one saying no had filled the library with one-off components. Establishing the bar meant having the uncomfortable conversations directly with contributing teams, then giving them a path (composition, or support from my team) rather than only a refusal."
+    alternatives:
+      - "Accept all contributions and curate later"
+      - "Close contribution entirely"
 techStack:
-  - "React"
-  - "CSS Custom Properties"
-  - "Theming API"
   - "Design Tokens"
-  - "Intent tokens"
+  - "Scoped theming"
   - "Composable components"
-  - "TypeScript"
 impact:
   metrics:
     - label: "Theming model"
-      value: "Dozens of generated CSS palettes replaced by a single runtime-themed layer"
+      value: "Dozens of generated palettes replaced by a single layer one team owns"
     - label: "Token surface"
       value: "~500 semantic Intent tokens theming across 20M+ customers"
     - label: "Support response"
       value: "Partner requests triaged within ~24 hours"
-  qualitative: "The Intent system gave designers and engineers a shared semantic language for theming, and the move toward composable primitives steadily reduced the maintenance burden of a sprawling contributor-driven library."
+  qualitative: "The Intent system gave designers, engineers, and brand partners a shared semantic language to make decisions in, and rebuilding in place moved dozens of product teams toward composable primitives without a single migration project on anyone's roadmap."
 learnings:
-  - "A bounded vocabulary only stays bounded if adopters know how to generalize; teams kept minting component-specific Intents for very particular cases, and the set ballooned to around 500, far past the small set intended"
-  - "An open contributor model needs someone empowered to say no; without a quality bar, a component library fills with one-off pieces"
-  - "Fast, human support (triage within a day) keeps partner teams unblocked and trusting the system"
-  - "Teams resist adopting a new library even when it is objectively better; meeting them where they are by rebuilding in place beats shipping a superior replacement they would refuse"
-  - "Deprecation is as much design system work as creation"
+  - "Teams resist adopting a new system even when it is objectively better; meeting them where they are beats shipping a superior replacement they would refuse"
+  - "An open contributor model needs someone empowered to say no, and that person needs a relationship with contributors good enough to survive saying it"
+  - "Fast, human support (triage within a day) is adoption work; keeping partner teams unblocked is what keeps them trusting the system"
+  - "A shared vocabulary only stays bounded if adopters know how to generalize; teams kept minting component-specific Intents for very particular cases, and the set ballooned to around 500, far past what was intended"
+  - "Deprecation is as much design system work as creation, and most of it is negotiation"
 status: ongoing
 ---
 
-The Intent token system was an idea I had adopted at my previous company and kept developing. The aim was a small, bounded vocabulary, but adoption pulled the other way: teams minted component-specific Intents for very particular cases rather than generalizing, and the set grew to around 500. That token bloat, too many tokens for too-specific things, is the very problem that later led me to Mise en Mode.
+The Intent token system was an idea I had adopted at my previous company and kept developing. The aim was a small, bounded vocabulary that designers and engineers could share. Adoption pulled the other way: teams minted component-specific Intents for very particular cases rather than generalizing, and the set grew to around 500. That taught me something I have carried since, that a system's vocabulary is only as bounded as the education and the governance around it, and that token bloat is the very problem that later led me to Mise en Mode.
 
-Support turned out to be the largest part of the role: triaging each request and taking the right action, whether opening a low-priority ticket or pairing on a call, so I never block partners while still steering them toward the best experience.
+Support turned out to be the largest part of the role, and the most valuable. Every request from a partner team was a decision about the relationship as much as the code: whether to open a low-priority ticket, pair on a call, or push back and explain why the system would not go there. Triaging within a day meant I never blocked a team, which bought the credibility to steer them toward the better experience rather than mandate it.
