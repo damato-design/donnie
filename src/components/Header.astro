@@ -1,0 +1,215 @@
+---
+/**
+ * Header
+ *
+ * The dashboard's header bar: a `space-between` flex row carrying a list of
+ * links at one end and a single standalone action at the other. `Layout` renders
+ * two of them, the masthead and the connect bar, which are the same bar with
+ * their halves swapped.
+ *
+ * This replaced `Nav.astro` and `Contact.astro`, which carried byte-identical
+ * layout CSS and the same markup in opposite orders.
+ *
+ * **It knows nothing about which bar it is.** It imports no config: which list
+ * a bar carries and which grid area it occupies are decided where it is
+ * rendered. A `HeaderLink` is deliberately the same shape as a `siteConfig.nav`
+ * or `siteConfig.social` entry, so those lists are handed straight in with no
+ * mapping.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <Header
+ *   name="nav"
+ *   label="Main navigation"
+ *   action={{ href: '/', label: siteConfig.title, logo: true }}
+ *   links={siteConfig.nav}
+ * />
+ * ```
+ */
+
+import Icon, { type IconName } from '@components/Icon.astro';
+import Logo from '@assets/logo.svg';
+
+/** One link in a header bar. */
+export interface HeaderLink {
+  /** Destination. A site path, or an absolute URL for an external link. */
+  href: string;
+  /**
+   * Link text. When `icon` or `logo` draws the label instead, this becomes the
+   * link's accessible name (`aria-label`) and its tooltip, so a link is never
+   * left unnamed. The wordmark used to be exactly that: an unlabelled link.
+   */
+  label: string;
+  /** Draw this glyph in place of the label. */
+  icon?: IconName;
+  /** Draw the wordmark in place of the label. */
+  logo?: boolean;
+}
+
+interface Props {
+  /**
+   * Which shell panel this bar is. It is the class `global.css` assigns a
+   * `grid-area` to, next to the template that names it.
+   */
+  name: 'nav' | 'contact';
+
+  /** Accessible name for the `<nav>` wrapping the list. */
+  label: string;
+
+  /**
+   * The links, rendered as a list. `readonly`, so a list can be handed straight
+   * from `siteConfig` (which is `as const`) without being copied to satisfy the
+   * type. An entry with a blank `href` is skipped.
+   */
+  links: readonly HeaderLink[];
+
+  /**
+   * The standalone link at the other end of the row.
+   *
+   * Its position is not configurable: a `logo` action leads, because a bar whose
+   * action is the wordmark is a masthead, and every other action follows the
+   * list.
+   */
+  action: HeaderLink;
+
+  /**
+   * The listed links are the author's own profiles elsewhere, so each gets
+   * `rel="me"`.
+   *
+   * **This is load-bearing, not decorative.** `rel="me"` is the IndieWeb
+   * identity assertion: it claims the destination is another profile of the
+   * same person as this page. Mastodon's verified checkmark reads it, following
+   * the link back from the site listed in a profile's fields, so removing it
+   * quietly un-verifies the account.
+   *
+   * It is a property of the bar rather than of each link, since it is true of
+   * every link in such a list and of none anywhere else, which is also what
+   * lets `siteConfig.social` be handed over with no mapping.
+   *
+   * Unlike the rest of this component's behaviour it cannot be derived: nothing
+   * about a URL says whose profile it is (the site links to `mode.place` and
+   * `wireframe.ds.house` too, and those are not `rel="me"`), and this component
+   * reads no config, so it has to be asserted at the call site.
+   */
+  profiles?: boolean;
+}
+
+const { name, label, links, action, profiles = false } = Astro.props;
+
+/**
+ * Whether a link points at the page being rendered.
+ *
+ * `Astro.url` is right here in the render scope, so this is resolved where
+ * `aria-current` is written rather than threaded in as a prop. Home matches the
+ * exact root only; every other item matches on prefix, so a detail page
+ * (`/projects/foo`) still highlights its section. An external link is never
+ * current, which is what keeps this off the social profiles and the booking
+ * link.
+ */
+const currentPath = Astro.url.pathname;
+const isExternal = (link: HeaderLink) => /^https?:\/\//.test(link.href);
+const isCurrent = (link: HeaderLink) =>
+  !isExternal(link) &&
+  (link.href === '/' ? currentPath === '/' : currentPath.startsWith(link.href));
+
+/**
+ * The row's two halves, in DOM order. Ordering them here rather than with CSS
+ * `order` keeps reading and tab order matching what is on screen.
+ *
+ * The wordmark leads: an action that draws the logo is a masthead's, and a
+ * masthead opens with it. Anything else follows the list.
+ */
+const parts = action.logo ? (['action', 'list'] as const) : (['list', 'action'] as const);
+
+/** Attributes every link in the bar shares, whatever it draws. */
+const attrs = (link: HeaderLink, me = false) => ({
+  href: link.href,
+  target: isExternal(link) ? '_blank' : undefined,
+  // `me` marks the author's own profile; a new tab still needs `noopener`.
+  rel:
+    [me && 'me', isExternal(link) && 'noopener noreferrer'].filter(Boolean).join(' ') || undefined,
+  'aria-current': isCurrent(link) ? ('page' as const) : undefined,
+  // A link whose label is drawn rather than written needs it as an a11y name.
+  ...(link.icon || link.logo ? { 'aria-label': link.label, title: link.label } : {}),
+});
+---
+
+<header class:list={['header', name, 'dash-surface']}>
+  {parts.map((part) =>
+    part === 'action' ? (
+      <a {...attrs(action)}>
+        {action.logo ? <Logo /> : action.icon ? <Icon name={action.icon} /> : action.label}
+      </a>
+    ) : (
+      <nav aria-label={label}>
+        <ul>
+          {links.filter((link) => link.href).map((link) => (
+            <li>
+              <a class:list={[(link.icon || link.logo) && 'glyph']} {...attrs(link, profiles)}>
+                {link.logo ? (
+                  <Logo />
+                ) : link.icon ? (
+                  <Icon name={link.icon} size="1.25rem" />
+                ) : (
+                  link.label
+                )}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )
+  )}
+</header>
+
+<style>
+  /* Placement and the dark surface come from global.css (`.dash-surface` and
+     the `body > .nav` / `body > .contact` rules); only the bar's own layout
+     lives here. */
+  .header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-between;
+    align-items: center;
+
+    /* The standalone action at one end of the row. */
+    & > a {
+      padding: 16px;
+      line-height: 1;
+      text-decoration: none;
+      background: black;
+      color: red;
+    }
+
+    svg {
+      width: 1em;
+    }
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* A link that draws a glyph instead of text is boxed like the action, since
+     it has no word to carry the emphasis. */
+  .glyph {
+    display: inline-flex;
+    padding: 12px;
+    line-height: 0;
+    background: black;
+    color: red;
+  }
+
+  a[aria-current='page'] {
+    font-weight: bolder;
+  }
+</style>

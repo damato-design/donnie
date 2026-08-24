@@ -3,9 +3,13 @@
  * Layout
  *
  * The dashboard shell, and the only layout: `global.css` lays `<body>` out as a
- * named grid and this file fills each area. `Nav`, `Contact`, and `Toc` are the
- * same on every page, so the layout renders them itself; the page-specific
+ * named grid and this file fills each area. The two `Header` bars and `Toc` are
+ * the same on every page, so the layout renders them itself; the page-specific
  * panels arrive through slots.
+ *
+ * This is the composition root: the header bars are assembled here, from
+ * `siteConfig`, rather than by `Header` itself, which knows nothing about which
+ * of the two it is.
  *
  * The page header panel (`Grid`) is data, not markup: the page passes its
  * content as the `grid` prop and the layout renders the panel. `Square` is the
@@ -19,10 +23,9 @@
 import { ClientRouter } from "astro:transitions";
 import { Font } from 'astro:assets';
 import { siteConfig } from "@/config";
-import Nav from '@components/Nav.astro';
+import Header from '@components/Header.astro';
 import Square from '@components/Square.astro';
 import Main from '@components/Main.astro';
-import Contact from '@components/Contact.astro';
 import Grid, { type GridProps } from '@components/Grid.astro';
 import Toc from '@components/Toc.astro'
 import type { MarkdownHeading } from 'astro';
@@ -45,6 +48,7 @@ interface Props {
 }
 
 const { grid, headings, tocMaxDepth } = Astro.props;
+
 ---
 
 <!doctype html>
@@ -57,9 +61,12 @@ const { grid, headings, tocMaxDepth } = Astro.props;
     <!-- SEO tags injected via slot -->
     <slot name="head" />
 
-    <!-- Display face for headings and titles, applied in global.css -->
+    <!-- The site's three faces: display, body, and the icon subset. All are
+         declared under `fonts:` in astro.config.mjs and applied in global.css
+         (Kentish, Raleway) or Icon.astro (RemixIcon). -->
     <Font cssVariable="--font-kentish" preload />
     <Font cssVariable="--font-raleway" preload />
+    <Font cssVariable="--font-remixicon" preload />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -98,8 +105,22 @@ const { grid, headings, tocMaxDepth } = Astro.props;
     <!-- <script is:inline defer src="https://scripts.withcabin.com/hello.js"></script> -->
   </head>
   <body>
-    <Nav />
-    <Contact />
+    <!-- The two header bars. `Header` is the same component both times; which
+         list it carries and which grid area it lands in are decided here, at the
+         composition root, from siteConfig. -->
+    <Header
+      name="nav"
+      label="Main navigation"
+      action={{ href: '/', label: siteConfig.title, logo: true }}
+      links={siteConfig.nav}
+    />
+    <Header
+      name="contact"
+      label="Social profiles"
+      profiles
+      action={{ href: siteConfig.scheduling, label: 'Schedule a chat' }}
+      links={siteConfig.social}
+    />
     <Square>
       <slot name="media" />
     </Square>

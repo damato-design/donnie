@@ -15,7 +15,7 @@
  * flex row). Visual variants are `primary` (filled) and `secondary` (outline).
  * Set `arrow` to append the standard trailing forward arrow (e.g. card CTAs) or
  * `back` to prepend the leading back arrow (e.g. a detail page's "All projects");
- * fill the `icon` slot to prepend a leading icon (e.g. a Slides/Video glyph).
+ * fill the `icon` slot to prepend an `<Icon>` (e.g. a Slides/Video glyph).
  *
  * @component
  * @slot default - Button label / icon content.
@@ -27,13 +27,13 @@
  * <Button href="https://cal.com/x" variant="secondary" external>Book a call</Button>
  * <Button href="/projects/x" variant="secondary" arrow>View case study</Button>
  * <Button href="https://slides.example" variant="secondary" external>
- *   <SomeIcon slot="icon" />Slides
+ *   <Icon slot="icon" name="slides" />Slides
  * </Button>
  * <Button variant="secondary" disabled aria-label="Previous page">…</Button>
  * ```
  */
 
-import ArrowIcon from '@components/ArrowIcon.astro';
+import Icon from '@components/Icon.astro';
 import type { HTMLAttributes } from 'astro/types';
 
 /**
@@ -89,10 +89,10 @@ const tagAttrs =
   {...rest}
 >
   <span>
-    {back && <ArrowIcon direction="left" />}
+    {back && <Icon name="arrow-left" />}
     <slot name="icon" />
     <slot />
-    {arrow && <ArrowIcon />}
+    {arrow && <Icon name="arrow-right" />}
   </span>
 </Tag>
 
@@ -102,7 +102,7 @@ const tagAttrs =
     line-height: inherit;
     cursor: pointer;
     color: currentColor;
-    background: var(--bgcolor);
+    background: transparent;
     display: inline-flex;
 
     span {
@@ -125,10 +125,15 @@ const tagAttrs =
     }
   }
 
+  /* Filled: the surface and the ink swap. Both are real colours (see
+     `--dash-ink` / `--dash-ground` in global.css); `currentColor` cannot do
+     this on its own, because the label inherits it too. */
   .btn--primary {
-    background-color: currentColor;
+    background-color: var(--dash-ink);
+    border-color: var(--dash-ink);
+
     span {
-      color: var(--bgcolor);
+      color: var(--dash-ground);
     }
   }
 

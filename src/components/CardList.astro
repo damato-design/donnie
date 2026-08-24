@@ -11,6 +11,9 @@
  * records. It works by setting the custom properties `Card` reads, so the list
  * never has to reach into the card's own styles.
  *
+ * Pages do not usually compose this directly: `EntryList` does, from a page's
+ * array of items. Reach for it when a listing genuinely needs bespoke cards.
+ *
  * @component
  *
  * @slot default - The `<li><Card/></li>` items.

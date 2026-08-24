@@ -55,8 +55,8 @@ export const ogCard = {
 
 /**
  * How a page's address is shown on its card: host and path, no scheme, no
- * trailing slash. `page` is a `gridContent` key, whose `home` entry is the site
- * root; `site` is `Astro.site` (`context.site` in an endpoint), the single
+ * trailing slash. `page` is a `pages` collection id, whose `home` entry is the
+ * site root; `site` is `Astro.site` (`context.site` in an endpoint), the single
  * source for the origin.
  */
 export function ogUrl(page: string, site: URL | undefined): string {

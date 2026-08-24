@@ -74,12 +74,14 @@ export default defineConfig({
   /**
    * Fonts
    *
-   * Kentish is the display face, used for headings and titles (see `global.css`).
-   * Body copy is deliberately left to the system stack for now.
+   * Three families, and no others anywhere on the site: **Kentish**, the display
+   * face for headings and titles; **Raleway**, the body face; and **RemixIcon**,
+   * the icon face every glyph on the site is drawn from (see `Icon.astro`).
+   * `global.css` applies the first two; `Icon.astro` applies the third.
    *
-   * Astro serves the file itself, so it lives in `src/`, not `public/`: files in
-   * `public/` are copied into the build output and would ship twice. `<Font>` in
-   * the layout head emits the `@font-face` and the preload link.
+   * Astro serves the files itself, so they live in `src/`, not `public/`: files
+   * in `public/` are copied into the build output and would ship twice. `<Font>`
+   * in the layout head emits the `@font-face` and the preload link.
    */
   fonts: [
     {
@@ -133,7 +135,42 @@ export default defineConfig({
           },
         ],
       },
-    }
+    },
+    {
+      // Remix Icon (https://remixicon.com), the source of every glyph on the
+      // site: the nav/contact brand marks, the button arrows, the disclosure
+      // and scroll-to-top chevrons, and the speaking page's slides/video marks.
+      // `Icon.astro` owns the name -> codepoint mapping.
+      //
+      // The shipped file is a *subset*: the full remixicon.woff2 is 185KB for
+      // ~3000 glyphs, of which this site draws ten. Regenerate it after adding
+      // a name to `Icon.astro` by taking the new codepoints from
+      // `node_modules/remixicon/fonts/remixicon.glyph.json` (the `remixicon`
+      // devDependency exists only for that file) and running:
+      //
+      //   pyftsubset node_modules/remixicon/fonts/remixicon.woff2 \
+      //     --unicodes=EA4E,EA60,EA6C,EA78,EDCB,EEB6,EF24,F00B,F158,F499 \
+      //     --flavor=woff2 --layout-features= --no-hinting --desubroutinize \
+      //     --output-file=src/assets/fonts/RemixIcon-Subset.woff2
+      //
+      // No non-woff2 source is needed: the OG cards carry no icons, so satori
+      // never has to read this face (see src/lib/og.ts).
+      provider: fontProviders.local(),
+      name: 'RemixIcon',
+      cssVariable: '--font-remixicon',
+      // Nothing sensible can stand in for a glyph face, and the icons are
+      // decorative, so a failed load should draw nothing rather than tofu.
+      fallbacks: [],
+      options: {
+        variants: [
+          {
+            src: ['./src/assets/fonts/RemixIcon-Subset.woff2'],
+            weight: 400,
+            style: 'normal',
+          },
+        ],
+      },
+    },
   ],
 
   /** Shiki syntax highlighting for code blocks in MDX bodies. */

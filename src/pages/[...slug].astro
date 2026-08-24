@@ -1,0 +1,217 @@
+---
+/**
+ * Every page of the site.
+ *
+ * One rest route generating three kinds of page from three collections:
+ *
+ *   /                     `src/content/index.mdx`
+ *   /projects             `src/content/projects/index.mdx`   (and the four others)
+ *   /projects/<slug>      `src/content/projects/<slug>.mdx`
+ *   /decisions/<slug>     `src/content/decisions/<slug>.mdx`
+ *
+ * The content tree mirrors the URL tree one for one, so a route's source is
+ * wherever the URL says it is.
+ *
+ * They are one route because they are one page: the same shell, the same header
+ * panel, the same SEO block, the same media slot. What differs is only where
+ * each region's content comes from, which is what `kind` selects below. Before
+ * this there were six `index.astro` files and two `[slug].astro` files, each
+ * re-wiring `Layout`, `SEO`, and the panel by hand.
+ *
+ * The narrower routes still win: `404.astro`, `robots.txt.ts`, `llms.txt.ts`,
+ * the per-collection `[slug].md.ts` mirrors, and everything under `/og` are all
+ * more specific than a rest parameter, so none of them are shadowed.
+ *
+ * @page
+ */
+
+import type { GetStaticPaths, InferGetStaticPropsType, MarkdownHeading } from 'astro';
+import { render } from 'astro:content';
+import Layout from '@layouts/Layout.astro';
+import SEO from '@components/SEO.astro';
+import StructuredData from '@components/StructuredData.astro';
+import Listing from '@components/Listing.astro';
+import Media from '@components/Media.astro';
+import EditableStyle from '@components/EditableStyle.astro';
+import TagList from '@components/TagList.astro';
+import Button from '@components/Button.astro';
+import ScrollToTop from '@components/ScrollToTop.astro';
+import { sorted } from '@utils/collections';
+import { buildListing, type Listing as ListingData } from '@utils/listings';
+import { pageGrid, projectGrid, decisionGrid, type PageEntry } from '@/grid.config';
+import { siteConfig } from '@/config';
+import uxdx from '@assets/uxdx.jpg';
+
+/**
+ * One path per top-level page and per detail entry.
+ *
+ * A page's id *is* its route, with `home` as the site root, so adding
+ * `src/content/whatever/index.mdx` publishes `/whatever` with a panel, an SEO
+ * block, and an Open Graph card, without touching this file.
+ */
+export const getStaticPaths = (async () => {
+  const [pages, projects, decisions] = await Promise.all([
+    sorted('pages'),
+    sorted('projects'),
+    sorted('decisions'),
+  ]);
+
+  return [
+    ...pages.map((entry) => ({
+      params: { slug: entry.id === 'home' ? undefined : entry.id },
+      props: { kind: 'page' as const, entry },
+    })),
+    ...projects.map((entry) => ({
+      params: { slug: `projects/${entry.id}` },
+      props: { kind: 'project' as const, entry },
+    })),
+    ...decisions.map((entry) => ({
+      params: { slug: `decisions/${entry.id}` },
+      props: { kind: 'decision' as const, entry },
+    })),
+  ];
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const props = Astro.props as Props;
+const { kind, entry } = props;
+
+/**
+ * The panel, the SEO block, the media, and the TOC, resolved per kind.
+ *
+ * `tocDepth` is 2 on the detail pages because their level-3 headings are
+ * one-sentence key-decision / alternative titles that would swamp the panel;
+ * the listings keep the default 3, which covers a section heading plus its
+ * cards.
+ */
+let grid, seo, headings: MarkdownHeading[] | undefined, listing: ListingData | undefined;
+let tocDepth: number | undefined;
+
+if (kind === 'page') {
+  const page = entry as PageEntry;
+  grid = await pageGrid(page);
+  seo = { ...page.data.seo, type: 'website' as const };
+
+  const rendered = await render(page);
+  const bodyHeadings = rendered.headings;
+
+  if (page.data.listing) {
+    const built = await buildListing(page.data.listing);
+    listing = built.listing;
+    // The generated listing comes first in `<main>`, so its headings do too.
+    headings = [...built.headings, ...bodyHeadings];
+  } else {
+    headings = bodyHeadings;
+  }
+} else if (kind === 'project') {
+  grid = projectGrid(entry);
+  seo = {
+    title: `${entry.data.title} - Case Study`,
+    description: entry.data.outcomeSummary,
+    noSuffix: false,
+    type: 'article' as const,
+  };
+  headings = (await render(entry)).headings;
+  tocDepth = 2;
+} else {
+  grid = decisionGrid(entry);
+  seo = {
+    title: `${entry.data.title} - Decision Record`,
+    description: entry.data.context,
+    noSuffix: false,
+    type: 'article' as const,
+  };
+  headings = (await render(entry)).headings;
+  tocDepth = 2;
+}
+
+/** The body. Every kind renders one, even when it is empty (the listings). */
+const { Content } = await render(entry);
+
+/**
+ * A detail page falls back to whatever its section's listing page shows, so the
+ * section reads as one place: `EditableStyle` for projects, the stage photo for
+ * decisions. An entry with its own `image` overrides that.
+ */
+const detailImage = kind === 'project' || kind === 'decision' ? entry.data.image : undefined;
+const detailAlt = detailImage ? (entry.data.imageAlt ?? entry.data.title) : undefined;
+---
+
+<Layout grid={grid} headings={headings} tocMaxDepth={tocDepth}>
+  <Fragment slot="head">
+    <SEO
+      title={seo.title}
+      description={seo.description}
+      noSuffix={seo.noSuffix}
+      type={seo.type}
+    />
+    {/* The site root is what `WebSite` and `Person` describe, so they belong to
+        being the root rather than to anything the page authored. */}
+    {kind === 'page' && entry.id === 'home' && (
+      <Fragment>
+        <StructuredData type="WebSite" />
+        <StructuredData type="Person" />
+      </Fragment>
+    )}
+    {kind === 'project' && (
+      <StructuredData
+        type="Project"
+        data={{
+          title: entry.data.title,
+          outcomeSummary: entry.data.outcomeSummary,
+          techStack: entry.data.techStack,
+          year: entry.data.year,
+        }}
+      />
+    )}
+  </Fragment>
+
+  <Fragment slot="media">
+    {kind === 'page' && entry.data.image && (
+      <Media src={entry.data.image} alt={entry.data.imageAlt ?? entry.data.title} />
+    )}
+    {kind === 'page' && entry.data.video && (
+      <Media
+        src={entry.data.video}
+        alt={entry.data.videoAlt ?? entry.data.title}
+        controls={false}
+        autoplay
+        loop
+        muted
+        playsinline
+      />
+    )}
+    {/* The two media a frontmatter field cannot express. */}
+    {kind === 'page' && entry.data.embed === 'editable-style' && <EditableStyle />}
+    {kind === 'page' && entry.data.embed === 'mode-book' && (
+      <Fragment>
+        <mode-book></mode-book>
+        <script is:inline type="module" src="https://mode.place/mode-book.js"></script>
+      </Fragment>
+    )}
+
+    {kind === 'project' &&
+      (detailImage ? <Media src={detailImage} alt={detailAlt} /> : <EditableStyle />)}
+    {kind === 'decision' && (
+      <Media
+        src={detailImage ?? uxdx}
+        alt={detailAlt ?? `${siteConfig.author.name} on stage`}
+      />
+    )}
+  </Fragment>
+
+  <Fragment slot="main">
+    {listing && <Listing listing={listing} />}
+
+    {kind === 'project' && <TagList items={entry.data.techStack} />}
+    {kind === 'decision' && <TagList items={entry.data.tags ?? []} />}
+
+    <Content />
+
+    {kind === 'project' && <Button href="/projects" back>All projects</Button>}
+    {kind === 'decision' && <Button href="/decisions" back>All decisions</Button>}
+
+    {kind !== 'page' && <ScrollToTop />}
+  </Fragment>
+</Layout>

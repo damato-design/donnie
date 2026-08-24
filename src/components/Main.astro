@@ -1,12 +1,22 @@
-<style>
-    main {
-        background: var(--dash-bg);
-        background-attachment: fixed;
-        color: var(--dash-fg);
-        padding: var(--grid-padding);
-    }
-</style>
+---
+/**
+ * Main
+ *
+ * The dashboard's content panel: the `<main>` landmark the page's own content
+ * is slotted into, and the target of `ScrollToTop`'s `#top` anchor.
+ *
+ * It carries no styling of its own. `.main` places it in the shell's grid and
+ * gives it the content inset, `.dash-surface` paints it; both live in
+ * `global.css` beside the other panels (see "Panel surfaces" there).
+ *
+ * @component
+ *
+ * @slot default - The page's content.
+ */
 
-<main id="top">
+interface Props {}
+---
+
+<main id="top" class="main dash-surface">
     <slot/>
 </main>

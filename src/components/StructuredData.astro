@@ -1,50 +1,76 @@
 ---
 /**
- * StructuredData Component
- * 
- * Generates JSON-LD structured data for enhanced search engine understanding.
- * Supports WebSite, Project, Article, Person, and BreadcrumbList schema types.
- * Uses centralized configuration from src/config.ts
- * 
- * @param type - Schema.org type
- * @param data - Data object containing the structured data fields
+ * StructuredData
+ *
+ * Emits one JSON-LD block for search engines. Three shapes are used, and only
+ * three: `WebSite` and `Person` on the home page, and `CreativeWork` for a
+ * case study. (`Article` and `BreadcrumbList` branches were carried over from
+ * the theme, never used, and are gone; add one back when a page actually needs
+ * it, with typed props like the ones below.)
+ *
+ * Identity comes from `siteConfig` and the origin from `Astro.site`, so nothing
+ * about the author is restated at a call site. `WebSite` and `Person` therefore
+ * take no data at all; `Project` takes only the fields of the case study it
+ * describes.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <StructuredData type="WebSite" />
+ * <StructuredData type="Person" />
+ * <StructuredData type="Project" data={{ title, outcomeSummary, techStack, year }} />
+ * ```
  */
 import { siteConfig } from '@/config';
 
-interface Props {
-  type: 'WebSite' | 'Project' | 'Article' | 'Person' | 'BreadcrumbList';
-  data?: Record<string, any>;
+/** The fields of a case study that end up in its `CreativeWork` block. */
+interface ProjectData {
+  /** Project title. */
+  title: string;
+  /** Brief summary of outcomes and impact. */
+  outcomeSummary: string;
+  /** Technologies and frameworks used. */
+  techStack: string[];
+  /** Year the project was completed. */
+  year: number;
 }
 
-const { type, data = {} } = Astro.props;
+/**
+ * A discriminated union rather than `Record<string, any>`: each shape declares
+ * exactly what it needs, so a call site that forgets a field is a build error
+ * and one that passes a stale field (this component used to read `data.problem`
+ * and `data.impact`, dropped from the schema years ago) no longer type-checks.
+ */
+type Props =
+  | { type: 'WebSite' | 'Person'; data?: never }
+  | { type: 'Project'; data: ProjectData };
+
+const props = Astro.props;
 
 // Site root from Astro (`site:` in astro.config.mjs); always defined.
 const siteURL = Astro.site!;
+const context = 'https://schema.org';
 
-// Build social links array from config
-const socialLinks = Object.values(siteConfig.social).filter(Boolean);
+/** The author, as the sub-object three of these blocks embed. */
+const person = {
+  '@type': 'Person',
+  name: siteConfig.author.name,
+  jobTitle: siteConfig.author.title,
+  url: siteURL.href,
+} as const;
 
-/**
- * Generate JSON-LD structured data based on type
- */
-function generateStructuredData(type: string, data: Record<string, any>) {
-  const baseContext = 'https://schema.org';
-  
-  switch (type) {
+function build(props: Props) {
+  switch (props.type) {
     case 'WebSite':
       return {
-        '@context': baseContext,
+        '@context': context,
         '@type': 'WebSite',
-        name: data.name || siteConfig.title,
-        description: data.description || siteConfig.description,
-        url: data.url || siteURL.href,
+        name: siteConfig.title,
+        description: siteConfig.description,
+        url: siteURL.href,
         inLanguage: siteConfig.language,
-        author: {
-          '@type': 'Person',
-          name: siteConfig.author.name,
-          jobTitle: siteConfig.author.title,
-          url: siteURL.href,
-        },
+        author: person,
         potentialAction: {
           '@type': 'SearchAction',
           target: {
@@ -57,100 +83,29 @@ function generateStructuredData(type: string, data: Record<string, any>) {
         },
       };
 
-    case 'Project':
-      return {
-        '@context': baseContext,
-        '@type': 'CreativeWork',
-        name: data.title,
-        description: data.description || data.outcomeSummary,
-        author: {
-          '@type': 'Person',
-          name: data.authorName || siteConfig.author.name,
-        },
-        dateCreated: data.year ? `${data.year}-01-01` : undefined,
-        keywords: data.techStack?.join(', '),
-        about: data.problem,
-        result: data.impact,
-      };
-    
-    case 'Article':
-      return {
-        '@context': baseContext,
-        '@type': 'Article',
-        headline: data.title,
-        description: data.description,
-        author: {
-          '@type': 'Person',
-          name: data.authorName || siteConfig.author.name,
-          url: siteURL.href,
-        },
-        datePublished: data.publishDate?.toISOString(),
-        dateModified: data.updatedDate?.toISOString() || data.publishDate?.toISOString(),
-        image: data.image || new URL('/og/writing.png', siteURL).href,
-        publisher: {
-          '@type': 'Person',
-          name: siteConfig.author.name,
-          url: siteURL.href,
-        },
-        mainEntityOfPage: {
-          '@type': 'WebPage',
-          '@id': data.url || Astro.url.href,
-        },
-        keywords: data.tags?.join(', '),
-        inLanguage: siteConfig.language,
-      };
-    
     case 'Person':
       return {
-        '@context': baseContext,
-        '@type': 'Person',
-        name: data.name || siteConfig.author.name,
-        jobTitle: data.jobTitle || siteConfig.author.title,
-        description: data.description || siteConfig.author.bio,
-        url: data.url || siteURL.href,
-        sameAs: data.socialLinks || socialLinks,
-        email: data.email || siteConfig.author.email,
-        image: data.image,
-        knowsAbout: data.skills || [],
+        '@context': context,
+        ...person,
+        description: siteConfig.author.bio,
+        email: siteConfig.author.email,
+        sameAs: siteConfig.social.map((profile) => profile.href).filter(Boolean),
       };
 
-    case 'BreadcrumbList':
+    case 'Project': {
+      const { title, outcomeSummary, techStack, year } = props.data;
       return {
-        '@context': baseContext,
-        '@type': 'BreadcrumbList',
-        itemListElement: data.items?.map((item: { name: string; url: string }, index: number) => ({
-          '@type': 'ListItem',
-          position: index + 1,
-          name: item.name,
-          item: item.url.startsWith('http') ? item.url : new URL(item.url, siteURL).href,
-        })),
+        '@context': context,
+        '@type': 'CreativeWork',
+        name: title,
+        description: outcomeSummary,
+        author: { '@type': 'Person', name: siteConfig.author.name },
+        dateCreated: `${year}-01-01`,
+        keywords: techStack.join(', '),
       };
-    
-    default:
-      return null;
-  }
-}
-
-const structuredData = generateStructuredData(type, data);
-
-// Remove undefined values from the structured data
-function cleanObject(obj: any): any {
-  if (obj === null || obj === undefined) return null;
-  if (typeof obj !== 'object') return obj;
-  if (Array.isArray(obj)) return obj.map(cleanObject).filter(item => item !== undefined);
-  
-  const cleaned: any = {};
-  for (const [key, value] of Object.entries(obj)) {
-    if (value !== undefined && value !== null) {
-      cleaned[key] = cleanObject(value);
     }
   }
-  return cleaned;
 }
-
-const cleanedData = cleanObject(structuredData);
 ---
 
-{cleanedData && (
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(cleanedData, null, 2)} />
-)}
+<script is:inline type="application/ld+json" set:html={JSON.stringify(build(props), null, 2)} />

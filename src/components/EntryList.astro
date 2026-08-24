@@ -1,0 +1,109 @@
+---
+/**
+ * EntryList
+ *
+ * A listing of collection entries as cards. Every card listing on the site is
+ * the same shape (an eyebrow, a title, a summary, a `TagList`, and one or two
+ * links out), so this composes `CardList` + `Card` + `TagList` + `ButtonGroup`
+ * once instead of once per page. Projects, decisions, and writing each render
+ * one of these; speaking renders one per year group.
+ *
+ * Items are **data, not markup**: `utils/listings.ts` maps a collection's
+ * entries to `EntryItem`s and passes them through, which is also what lets the
+ * same array drive the table of contents (`cardHeadings` there), so a TOC link
+ * and the `id` it jumps to cannot drift apart.
+ *
+ * There is no empty state: every listing on the site is populated, and the
+ * pages whose lists are conditional (speaking's per-year groups) only build a
+ * list once they have entries for it.
+ *
+ * @component
+ *
+ * @example
+ * ```ts
+ * // in utils/listings.ts
+ * const items: EntryItem[] = (await sorted('projects')).map(({ id, data }) => ({
+ *   slug: `project-${id}`,
+ *   meta: `${data.role} · ${data.year}`,
+ *   title: data.title,
+ *   description: data.outcomeSummary,
+ *   tags: data.techStack,
+ *   cta: [{ label: 'View case study', href: `/projects/${id}`, arrow: true }],
+ * }));
+ * ```
+ */
+
+import Card from '@components/Card.astro';
+import CardList from '@components/CardList.astro';
+import TagList from '@components/TagList.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
+import Button from '@components/Button.astro';
+import Icon, { type IconName } from '@components/Icon.astro';
+
+/** One link under a card. */
+export interface EntryCta {
+  /** Link text. */
+  label: string;
+  /** Destination. */
+  href: string;
+  /** Open in a new tab. */
+  external?: boolean;
+  /** Append the standard trailing forward arrow. */
+  arrow?: boolean;
+  /** Prepend a glyph (the speaking page's slides/video marks). */
+  icon?: IconName;
+}
+
+/** One card in the listing. */
+export interface EntryItem {
+  /** Anchor target for the card, and the TOC slug that jumps to it. */
+  slug: string;
+  /** Eyebrow line above the title (a date, a role and year, a read count). */
+  meta?: string;
+  /** Card heading. */
+  title: string;
+  /** Card summary. */
+  description: string;
+  /** Tags, rendered as a `TagList`. */
+  tags?: string[];
+  /** The card's links out. */
+  cta: EntryCta[];
+}
+
+interface Props {
+  /** The cards, in the order they should appear. */
+  items: EntryItem[];
+  /** Tighten the cards (see `CardList`). */
+  compact?: boolean;
+}
+
+const { items, compact = false } = Astro.props;
+---
+
+<CardList compact={compact}>
+  {items.map((item) => (
+    <li>
+      <Card id={item.slug}>
+        {item.meta && <Fragment slot="meta">{item.meta}</Fragment>}
+        <Fragment slot="title">{item.title}</Fragment>
+        <Fragment slot="description">{item.description}</Fragment>
+
+        <TagList slot="tags" items={item.tags ?? []} />
+
+        <ButtonGroup slot="cta">
+          {item.cta.map((cta) => (
+            <Button
+              href={cta.href}
+              variant="secondary"
+              external={cta.external}
+              arrow={cta.arrow}
+            >
+              {cta.icon && <Icon slot="icon" name={cta.icon} />}
+              {cta.label}
+            </Button>
+          ))}
+        </ButtonGroup>
+      </Card>
+    </li>
+  ))}
+</CardList>

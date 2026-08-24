@@ -18,18 +18,6 @@ export function formatMonthYear(date: Date): string {
 }
 
 /**
- * Formats a date as "Mon Year" (e.g. "Jun 2024").
- *
- * Used in compact contexts such as related-content lists.
- */
-export function formatMonthShortYear(date: Date): string {
-  return new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short',
-  }).format(date);
-}
-
-/**
  * Formats a date as "Month Day, Year" (e.g. "June 15, 2024").
  *
  * Used by article/writing entries where the exact day matters.

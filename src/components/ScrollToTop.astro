@@ -23,6 +23,7 @@
  */
 
 import Button from '@components/Button.astro';
+import Icon from '@components/Icon.astro';
 ---
 
 <Button
@@ -32,9 +33,7 @@ import Button from '@components/Button.astro';
   aria-label="Scroll to top"
   title="Scroll to top"
 >
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="18 15 12 9 6 15"></polyline>
-  </svg>
+  <Icon name="chevron-up" size="1.25rem" />
 </Button>
 
 <style>

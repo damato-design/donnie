@@ -4,6 +4,7 @@
  * Defines every content collection and its Zod schema.
  *
  * Collections:
+ * - pages: The top-level pages themselves (home + the five listings)
  * - projects: Case studies with the narrative in the MDX body
  * - decisions: Architectural and technical decision records
  * - journey: Career timeline entries
@@ -23,6 +24,8 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import type { Loader } from 'astro/loaders';
 import type { SchemaContext } from 'astro/content/config';
+import type { CtaLink, GridProps } from '@components/Grid.astro';
+import { siteConfig } from '@/config';
 
 /**
  * Page-header frontmatter, shared by the two collections with detail pages
@@ -38,8 +41,9 @@ import type { SchemaContext } from 'astro/content/config';
  * `title` is deliberately not overridable here: it is the entry's `title`, which
  * the listing card and SEO also read, so the panel can't drift from them.
  *
- * The regions mirror `GridProps` in `Grid.astro`; `grid.config.ts` merges these
- * over the computed defaults (see `projectGrid`/`decisionGrid` there).
+ * The regions mirror `GridProps` in `Grid.astro`, and the two structured ones
+ * are pinned to it with `satisfies` rather than described twice; `grid.config.ts`
+ * merges these over the computed defaults (see `projectGrid`/`decisionGrid`).
  *
  * @param image - Astro's schema-context helper, which resolves a path relative
  *   to the MDX file into `ImageMetadata` so the image goes through
@@ -62,7 +66,13 @@ const panelFields = ({ image }: SchemaContext) => ({
   /** Supporting copy under the headline. Overrides the computed byline. */
   description: z.string().optional(),
 
-  /** The panel's link row. Replaces the default row wholesale. */
+  /**
+   * The panel's link row. Replaces the default row wholesale.
+   *
+   * `satisfies` ties the schema to `CtaLink` rather than restating it: adding a
+   * field to the panel's own type without adding it here is a build error, so
+   * frontmatter and the component can't drift.
+   */
   cta: z
     .array(
       z.object({
@@ -72,7 +82,7 @@ const panelFields = ({ image }: SchemaContext) => ({
         href: z.string(),
         /** Open in a new tab (adds the matching `rel`). */
         external: z.boolean().optional(),
-      })
+      }) satisfies z.ZodType<CtaLink>
     )
     .optional(),
 
@@ -84,10 +94,137 @@ const panelFields = ({ image }: SchemaContext) => ({
       /** What the figure counts. */
       label: z.string(),
     })
-    .optional(),
+    .optional() satisfies z.ZodType<GridProps['metric']>,
 
   /** The panel's intro paragraph. Overrides the entry's summary/context. */
   anecdote: z.string().optional(),
+});
+
+/**
+ * Named destinations, so a page's frontmatter can point at a configured value
+ * instead of copying it. `href: '@scheduling'` resolves to
+ * `siteConfig.scheduling`; anything else is passed through as written.
+ *
+ * This exists because YAML cannot reference `config.ts`. Without it, moving the
+ * page panels into content would have meant pasting the booking URL into two
+ * MDX files and letting them drift from the one in `siteConfig`.
+ */
+const namedLinks = {
+  '@scheduling': siteConfig.scheduling,
+} as const;
+
+/** One link in a panel's CTA row, with `@name` destinations resolved. */
+const ctaSchema = z.object({
+  /** Link text. */
+  label: z.string(),
+  /** A site path, an absolute URL, or a `@name` from `namedLinks`. */
+  href: z.string().transform((href) => namedLinks[href as keyof typeof namedLinks] ?? href),
+  /** Open in a new tab (adds the matching `rel`). */
+  external: z.boolean().optional(),
+});
+
+/**
+ * The panel's headline metric.
+ *
+ * Two forms, because most of them are live counts rather than authored figures:
+ * `{ count: 'projects', label: 'projects' }` is resolved against the collection
+ * at build time, so the number can never go stale, while
+ * `{ value: 25, label: 'years' }` is for a figure nothing can count.
+ */
+const metricSchema = z.union([
+  z.object({
+    /** A figure nothing can count. A string keeps approximations like "~500". */
+    value: z.union([z.string(), z.number()]),
+    label: z.string(),
+  }),
+  z.object({
+    /** Collection to count at build time. */
+    count: z.enum(['projects', 'decisions', 'journey', 'writing', 'speaking']),
+    label: z.string(),
+  }),
+]);
+
+/**
+ * Pages Collection
+ *
+ * The site's top-level pages as content: the home page and the five collection
+ * listings. Each entry's **id is its route** (`projects.mdx` -> `/projects`,
+ * `home.mdx` -> `/`), its frontmatter is the page header panel plus the SEO
+ * block, and its body is whatever prose `<main>` carries beyond the generated
+ * listing (which is all of it on the home page, and none of it on the others).
+ *
+ * `src/pages/[...slug].astro` renders every one of them, which is why there are
+ * no per-section `index.astro` files and no `pages.config.ts`.
+ *
+ * Identity still lives in `config.ts`: a field left out here falls back to the
+ * configured value (see the `.default()`s below), and a CTA can point at one
+ * through `namedLinks` rather than copying it.
+ */
+const pagesCollection = defineCollection({
+  loader: glob({
+    // The site root, then one per section. `*/index.mdx` matches exactly one
+    // directory deep, so a collection's own entries are never caught by it.
+    pattern: ['index.mdx', '*/index.mdx'],
+    base: './src/content',
+    /**
+     * The entry's id is its route: `index.mdx` is the site root and every
+     * `<section>/index.mdx` is `/<section>`. The root would otherwise be the
+     * empty string, which is no use as a key, so it is named `home`.
+     */
+    generateId: ({ entry }) => entry.replace(/\/?index\.mdx$/, '') || 'home',
+  }),
+  schema: ({ image }) => z.object({
+    /** The panel's <h1>. Defaults to the site title, which is what home wants. */
+    title: z.string().default(siteConfig.title),
+
+    /** The promotional headline, rendered as the panel's <h2>. */
+    headline: z.string().optional(),
+
+    /**
+     * Supporting copy under the headline. A `
+` is a deliberate line break.
+     * Defaults to the site description, which is what home wants.
+     */
+    description: z.string().default(siteConfig.description),
+
+    /** The panel's link row. */
+    cta: z.array(ctaSchema).optional(),
+
+    /** The panel's headline metric. */
+    metric: metricSchema.optional(),
+
+    /** The panel's intro paragraph. */
+    intro: z.string().optional(),
+
+    /** Meta tags. Both fields fall back to the site's own. */
+    seo: z
+      .object({
+        title: z.string().default(`${siteConfig.author.name} - ${siteConfig.author.title}`),
+        description: z.string().default(siteConfig.description),
+        /** Skip the " | <author>" suffix (home represents the site itself). */
+        noSuffix: z.boolean().default(false),
+      })
+      .default({
+        title: `${siteConfig.author.name} - ${siteConfig.author.title}`,
+        description: siteConfig.description,
+        noSuffix: false,
+      }),
+
+    /**
+     * The `Square` panel's media. Exactly one of these, or none for a bare
+     * panel. `image` is resolved relative to this MDX file and goes through
+     * `astro:assets`; `video` is a remote URL; `embed` names one of the two
+     * pieces of markup a frontmatter field cannot express.
+     */
+    image: image().optional(),
+    imageAlt: z.string().optional(),
+    video: z.string().optional(),
+    videoAlt: z.string().optional(),
+    embed: z.enum(['editable-style', 'mode-book']).optional(),
+
+    /** The collection listing to render into `<main>`, if any. */
+    listing: z.enum(['projects', 'decisions', 'journey', 'writing', 'speaking']).optional(),
+  }),
 });
 
 /**
@@ -103,7 +240,7 @@ const panelFields = ({ image }: SchemaContext) => ({
  * plus the optional `panelFields` overrides above.
  */
 const projectsCollection = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/projects' }),
+  loader: glob({ pattern: ['**/*.mdx', '!index.mdx'], base: './src/content/projects' }),
   schema: (context) => z.object({
     /** Project title. Renders as the detail page's <h1>. */
     title: z.string(),
@@ -137,7 +274,7 @@ const projectsCollection = defineCollection({
  * tags), and SEO/JSON-LD, plus the optional `panelFields` overrides above.
  */
 const decisionsCollection = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/decisions' }),
+  loader: glob({ pattern: ['**/*.mdx', '!index.mdx'], base: './src/content/decisions' }),
   schema: (context) => z.object({
     /** Decision title. Renders as the detail page's <h1>. */
     title: z.string(),
@@ -160,7 +297,7 @@ const decisionsCollection = defineCollection({
  * learning experiences, and career transitions.
  */
 const journeyCollection = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/journey' }),
+  loader: glob({ pattern: ['**/*.mdx', '!index.mdx'], base: './src/content/journey' }),
   schema: z.object({
     /** Date of the timeline entry */
     date: z.coerce.date(),
@@ -292,7 +429,7 @@ const writingCollection = defineCollection({
  * Conference talks, meetup presentations, podcast appearances, and workshops.
  */
 const speakingCollection = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/speaking' }),
+  loader: glob({ pattern: ['**/*.mdx', '!index.mdx'], base: './src/content/speaking' }),
   schema: z.object({
     /** Talk title */
     title: z.string(),
@@ -333,6 +470,7 @@ const speakingCollection = defineCollection({
  * types behind `getCollection`/`getEntry`.
  */
 export const collections = {
+  pages: pagesCollection,
   projects: projectsCollection,
   decisions: decisionsCollection,
   journey: journeyCollection,

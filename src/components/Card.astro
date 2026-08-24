@@ -71,12 +71,14 @@ const hasDescription = Astro.slots.has('description');
 <style>
   /* `--card-padding` / `--card-title-size` let a listing shell (CardList's
      `compact`) tighten its cards without reaching into these styles. */
+  /* No background of its own: the card sits directly on `main`'s surface and is
+     drawn by its rule alone, so the shell's texture runs through the listing
+     rather than being interrupted by a box per entry. */
   .card {
     display: flex;
     flex-direction: column;
     align-items: start;
     padding: var(--card-padding, 1.5rem 1.75rem);
-    background: var(--bgcolor);
     border: 1px solid;
 
     & > span {

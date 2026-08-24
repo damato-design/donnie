@@ -6,10 +6,19 @@
   --dash-bg: linear-gradient(135deg, #111111, #0c0c0c);
   --dash-fg: #a4a4a4;
 
-  /* Surface colour the <main> content components paint against (Card, Section,
-     Button). Placeholder: it tracks the dashboard background until those
-     components are restyled for the new shell. */
-  --bgcolor: var(--dash-bg);
+  /* The dashboard surfaces are gradients, which is fine as a `background` and
+     useless anywhere a real *colour* is required: as a `color`, as a `border`,
+     or under a control that has to be opaque against the shell. `--dash-ink`
+     and `--dash-ground` are that pair, the two ends of the dark surface, and
+     they are what the content components inside <main> (Card, Button,
+     TimelineEntry) paint with.
+
+     This replaced `--bgcolor`, a placeholder that aliased `--dash-bg` and so
+     silently resolved to a gradient. `color: var(--bgcolor)` is an invalid
+     declaration, which is why a filled Button used to render identical to an
+     outlined one. */
+  --dash-ink: var(--dash-fg);
+  --dash-ground: #0f0f0f;
 
   /* Tempo for the panel choreography at the bottom of this file. One duration
      and one stagger step drive all four panels, so retiming the sequence is a
@@ -127,18 +136,48 @@ body > .grid {
 
 body > .main {
   grid-area: main;
-  padding: var(--grid-padding);
 }
 
 body > .toc {
   grid-area: toc;
 }
 
-:where(h1) {
-  font-size: .6em;
-  font-weight: normal;
-  text-transform: uppercase;
-  letter-spacing: .5em;
+/* Panel surfaces
+   ==========================================================================
+   The shell paints exactly two kinds of surface, and every panel is one of
+   them:
+
+     .dash-surface   the dark frame around the page (nav, contact, main, toc)
+     .grid-surface   the red identity panels (square, and Grid's own regions)
+
+   Both are `background-attachment: fixed`, so every panel samples one
+   viewport-sized gradient rather than starting its own. That is what makes the
+   2px seams read as gaps cut out of a single sheet rather than as borders
+   between separate boxes, and it is why a panel must never set `background`
+   shorthand of its own.
+
+   Each panel component carries its surface class; the declarations live here so
+   there is one copy of each rather than one per component. */
+.dash-surface,
+.grid-surface {
+  background-attachment: fixed;
+}
+
+.dash-surface {
+  background-image: var(--dash-bg);
+  color: var(--dash-fg);
+}
+
+.grid-surface {
+  background-image: var(--grid-bg);
+  color: var(--grid-fg);
+}
+
+/* The panels that inset their content. `.square` is deliberately absent: its
+   media fills the box edge to edge. */
+body > :is(.nav, .contact, .main, .toc),
+.grid > * {
+  padding: var(--grid-padding);
 }
 
 a {

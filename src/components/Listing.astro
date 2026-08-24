@@ -1,0 +1,91 @@
+---
+/**
+ * Listing
+ *
+ * Renders whichever collection listing a page named in its frontmatter. The
+ * data and the matching table-of-contents headings both come from
+ * `buildListing` in `utils/listings.ts`; this file is only the layout for each
+ * of its four shapes.
+ *
+ * There is no empty state anywhere: every listing on the site is populated, and
+ * speaking's per-year groups only exist once they have talks.
+ *
+ * @component
+ */
+
+import EntryList from '@components/EntryList.astro';
+import TimelineEntry from '@components/TimelineEntry.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
+import Button from '@components/Button.astro';
+import type { Listing } from '@utils/listings';
+
+interface Props {
+  /** The resolved listing, tagged by layout. */
+  listing: Listing;
+}
+
+const { listing } = Astro.props;
+---
+
+{listing.kind === 'cards' && <EntryList items={listing.items} compact={listing.compact} />}
+
+{listing.kind === 'groups' &&
+  listing.groups.map(([year, items]) => (
+    <section>
+      <h2 id={`year-${year}`}>{year}</h2>
+      <EntryList items={items} />
+    </section>
+  ))}
+
+{listing.kind === 'timeline' && (
+  <div class="journey-timeline">
+    {listing.items.map(({ slug, date, title, description, skills, Content }) => (
+      <TimelineEntry id={slug} date={date} title={title} description={description} skills={skills}>
+        <Content />
+      </TimelineEntry>
+    ))}
+  </div>
+)}
+
+{listing.kind === 'articles' && (
+  <Fragment>
+    <h2 id="top-articles">Top {listing.shown} Articles</h2>
+    <EntryList items={listing.items} />
+
+    <section class="see-all">
+      <p>
+        That's the {listing.shown} most-read. The full chronological archive of all{' '}
+        {listing.total} posts lives on the blog.
+      </p>
+      <ButtonGroup>
+        <Button href={listing.blogUrl} variant="primary" external arrow>
+          Read everything on the blog
+        </Button>
+      </ButtonGroup>
+    </section>
+  </Fragment>
+)}
+
+<style>
+  /*
+   * Two-column timeline: a fixed 32px rail on the left, entries on the right.
+   * The continuous vertical line is a gradient stripe (no element) painted into
+   * the rail — a 2px line centered at 16px, starting at the first dot's center.
+   * Each entry paints its own dot (see TimelineEntry.astro).
+   */
+  .journey-timeline {
+    --y-offset: 27px;
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    background: linear-gradient(currentColor, currentColor) no-repeat 12px var(--y-offset, 0px) / 2px 100%;
+    margin-inline-start: -12px;
+  }
+
+  .see-all {
+    margin-block-start: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1rem;
+  }
+</style>

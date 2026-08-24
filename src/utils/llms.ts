@@ -16,15 +16,32 @@
  * @module utils/llms
  */
 
+import type { APIRoute, GetStaticPaths } from 'astro';
 import type { CollectionEntry } from 'astro:content';
+import { sorted } from '@utils/collections';
+
+/**
+ * The collections with a per-entry markdown mirror, and the one list of them.
+ * `writing` is absent: those entries are previews of posts that live on the
+ * blog, with no body to mirror.
+ */
+export const MIRRORED = ['projects', 'decisions', 'journey', 'speaking'] as const;
+
+/** One of those collections. */
+export type MirroredCollection = (typeof MIRRORED)[number];
+
+/** One entry from any of those collections. */
+export type MirroredEntry = CollectionEntry<MirroredCollection>;
 
 /**
  * Joins non-empty blocks with a blank line between them.
  *
  * Falsy parts are dropped, so a renderer can pass an optional block as `''`
  * (or `cond && block`) without worrying about stray blank lines.
+ *
+ * Exported because `llms.txt.ts` assembles its document the same way.
  */
-function blocks(...parts: Array<string | false | null | undefined>): string {
+export function blocks(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join('\n\n');
 }
 
@@ -116,4 +133,65 @@ export function renderSpeaking(entry: CollectionEntry<'speaking'>): string {
     links ? blocks('Links:', links) : '',
     body(entry)
   );
+}
+
+/**
+ * Renders any entry from a collection that has a markdown mirror.
+ *
+ * The four renderers above differ in what they serialize, but nothing outside
+ * this module needs to pick between them: the entry already knows which
+ * collection it came from. `writing` is absent because those entries are
+ * previews of posts that live on the blog, with no body to mirror.
+ */
+export function renderEntry(entry: MirroredEntry): string {
+  switch (entry.collection) {
+    case 'projects':
+      return renderProject(entry);
+    case 'decisions':
+      return renderDecision(entry);
+    case 'journey':
+      return renderJourney(entry);
+    case 'speaking':
+      return renderSpeaking(entry);
+  }
+}
+
+/** A plain-text (markdown) response, the one form every machine route returns. */
+export function textResponse(body: string): Response {
+  return new Response(`${body.trimEnd()}\n`, {
+    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+  });
+}
+
+/**
+ * The whole of the markdown-mirror route: one file per entry of every mirrored
+ * collection, at `/<collection>/<slug>.md`.
+ *
+ * The rest parameter is what lets a single route cover all four, since the
+ * collection is just the first segment of the path it emits. `src/pages/` needs
+ * no per-collection folder as a result, and adding a collection to `MIRRORED`
+ * is the whole of publishing its mirrors.
+ *
+ * ```ts
+ * export const { getStaticPaths, GET } = mdMirror();
+ * ```
+ */
+export function mdMirror(): {
+  getStaticPaths: GetStaticPaths;
+  GET: APIRoute<{ entry: MirroredEntry }>;
+} {
+  return {
+    getStaticPaths: async () => {
+      const collections = await Promise.all(
+        MIRRORED.map(async (collection) =>
+          (await sorted(collection)).map((entry) => ({
+            params: { slug: `${collection}/${entry.id}` },
+            props: { entry },
+          }))
+        )
+      );
+      return collections.flat();
+    },
+    GET: ({ props }) => textResponse(renderEntry(props.entry)),
+  };
 }

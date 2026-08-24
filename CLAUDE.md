@@ -36,17 +36,28 @@ and the tooling.
 ## Architecture
 
 ### Identity is config-driven (single source, no env)
+**`src/config.ts` imports nothing, and must stay that way.** `content.config.ts` reads it
+during `astro sync`, which runs outside the component graph, so a runtime import of an `.astro`
+file there would drag a component into content collection generation. Config holds *data*;
+the modules that consume it hold the shaping into component props (the panel builders in
+`grid.config.ts`; `Layout` for the header bars). Don't move an adapter into `config.ts`, and
+don't give `config.ts` an import.
+
+Where config needs to name something a component owns, it uses a **plain string plus `as
+const`** rather than importing the type: `siteConfig.social[].icon` is `'github'`, which is a
+literal type, so `Header` assigning it to `IconName` still catches a typo at build time without
+the dependency.
 Author name, title, bio, email, location, social links, and site metadata are **plain
 literals** in `src/config.ts` (`siteConfig`). Identity uses no env vars; edit `siteConfig`
 directly to change it. (The project uses **no `.env` files at all**. Its only env var is
 `CABIN_API_KEY`, a build-time secret for blog analytics that the host supplies, unrelated to
 identity; see "Build-time data" below.) `siteConfig` flows into SEO,
-`StructuredData.astro`, `Nav.astro`, `Contact.astro`, etc. Nav lives in `siteConfig.nav`, and
-the Cal.com booking URL in `siteConfig.scheduling`.
+`StructuredData.astro`, `Header.astro`, etc. Nav lives in `siteConfig.nav`, and the Cal.com
+booking URL in `siteConfig.scheduling`.
 
-There is **no `/contact` page**. It was replaced by `Contact.astro`, a bar the layout renders
-on every page (social links + "Schedule a chat"), so `siteConfig.nav` has no Connect entry and
-`pagesConfig` has no `contact` key.
+There is **no `/contact` page**. It was replaced by the connect bar the layout renders on every
+page (social links + "Schedule a chat"), so `siteConfig.nav` has no Connect entry and there is
+no `contact` page entry.
 
 The **site URL is not in `siteConfig`** — it comes from Astro's built-in `Astro.site`, set by
 `site:` in `astro.config.mjs` (the single source). Build any URL variant with
@@ -54,32 +65,113 @@ The **site URL is not in `siteConfig`** — it comes from Astro's built-in `Astr
 `Astro.url` is the current page URL (used for canonical/OG tags). Don't reintroduce a
 `siteConfig.url` or manual trailing-slash juggling.
 
-Static page titles/headings/intros live in `src/pages.config.ts` (`pagesConfig`).
+**The pages are content, not code.** There is no `pages.config.ts` and no `gridContent`
+literal: the home page and the five listings are MDX entries in `src/content/pages/`, one per
+route, and their frontmatter carries the whole page header panel plus the SEO block. See
+"Pages are content" below.
 
-The **page header panel's copy** lives in `src/grid.config.ts` (`gridContent`): one
-`GridProps`-shaped entry per top-level page (headline, description, CTA row, metric,
-anecdote), reading `pagesConfig`/`siteConfig` rather than restating them. Every page passes
-its entry straight through (`grid={gridContent.projects}`), and the **Open Graph card renders
-the same entry**, so a card can't advertise something the page no longer says. Every metric
-is a plain collection count, so `gridContent` resolves those itself with `getCollection` and
-the pages keep only the sorting their listings need. Don't move panel copy back into a page.
-
-**Detail pages get their panel from the same module**, one step later: `projectGrid(entry)`
-and `decisionGrid(entry)` derive a `GridProps` from a collection entry (the role/year byline
-with reading time, the tech-stack or tag count as the metric, the summary or context as the
-anecdote) and then merge the entry's own optional `panelFields` frontmatter over it, region by
-region, via `withOverrides`. So `[slug].astro` is just `grid={projectGrid(project)}`: no panel
-copy, no reading-time math, and an MDX file can change any region of its own header without
-touching a page. Keep new panel derivations here rather than inlining them in a route.
+`src/grid.config.ts` is now purely the **assembler**: it turns an entry into `GridProps` and
+nothing more. Three entry points, `pageGrid(entry)` for a top-level page and
+`projectGrid(entry)` / `decisionGrid(entry)` for the detail pages, which derive a panel from
+the entry (the role/year byline with reading time, the tech-stack or tag count as the metric,
+the summary or context as the anecdote) and then merge the entry's own optional `panelFields`
+frontmatter over it, region by region, via `withOverrides`. The **Open Graph card calls the
+same function on the same entry**, so a card can't advertise something the page no longer
+says. Keep new panel derivations here rather than inlining them in a route.
 
 Both are imported through the **`@/*` path alias** (`@/config`, `@/pages.config`), alongside
 the existing `@components/*`, `@layouts/*`, `@utils/*`, `@assets/*`, `@styles/*` aliases in
 `tsconfig.json`. Don't reach for `../../config` or a bare `src/config` specifier.
 
+### Pages are content, and the tree is the site
+`src/content/` mirrors the URL tree one for one, so a route's source is wherever the URL says
+it is:
+
+```
+src/content/
+  index.mdx                 /
+  projects/
+    index.mdx               /projects
+    gridless.mdx            /projects/gridless
+  decisions/
+    index.mdx               /decisions
+    modes-over-themes.mdx   /decisions/modes-over-themes
+  journey/index.mdx         /journey          (entries have no page of their own)
+  speaking/index.mdx        /speaking
+  writing/index.mdx         /writing          (articles come from the blog feed)
+```
+
+The home page and the five listings are **MDX entries** in the `pages` collection, and an
+entry's **id is its route**. Adding `src/content/whatever/index.mdx` publishes `/whatever` with
+a header panel, an SEO block, an Open Graph card, and a card mapping, without touching a single
+`.astro` file.
+
+Two loader details make that layout work, and both are load-bearing:
+
+- The `pages` loader globs **`['index.mdx', '*/index.mdx']` from `src/content`**, one directory
+  deep, so a section's own entries are never caught by it. Its `generateId` strips the
+  `index.mdx` (`projects/index.mdx` -> `projects`) and names the root `home`, since an empty
+  string is no use as a key.
+- Every entry collection globs **`['**/*.mdx', '!index.mdx']`**, because it now shares its
+  folder with that section's page. Without the negation, `projects/index.mdx` would be loaded
+  as a case study and fail the schema.
+
+Frontmatter is the page header panel plus the SEO block: `title`, `headline`, `description`,
+`cta[]`, `metric`, `intro` (the panel's anecdote), `seo: { title, description, noSuffix }`, the
+media (see below), and `listing`. The **body is `<main>`'s prose**: all of it on the home page,
+none of it on the listings. Because it is MDX, a body can `import` components and read
+`siteConfig` (the home page's closing CTA does both).
+
+Three things keep this from re-introducing the duplication it could:
+
+- **`metric` is resolved, not authored.** `{ count: 'projects', label: 'projects' }` names a
+  collection and `pageGrid` counts it at build time, so the number can never go stale.
+  `{ value: 25, label: 'years' }` is the other form, for a figure nothing can count.
+- **`cta.href` accepts a `@name`.** `href: '@scheduling'` resolves through `namedLinks` in
+  `content.config.ts` to `siteConfig.scheduling`, because YAML can't reference `config.ts` and
+  pasting the booking URL into two MDX files is exactly how it drifts. Add a name there rather
+  than a literal here.
+- **Omitted fields fall back to `siteConfig`.** `title` defaults to `siteConfig.title`,
+  `description` and `seo.description` to `siteConfig.description`, and `seo.title` to
+  `<name> - <author title>`, which is why `home.mdx` declares none of them.
+
+The `Square` media is one of four: `image` (+ `imageAlt`, resolved relative to the MDX file so
+it goes through `astro:assets`), `video` (+ `videoAlt`, a remote URL), or `embed`, an enum
+naming the two pieces of markup frontmatter cannot express (`editable-style`, `mode-book`).
+
+### One route (`src/pages/[...slug].astro`)
+Every page of the site is this file. It builds its paths from three collections (`pages`,
+`projects`, `decisions`) and switches on `kind` for the four things that actually differ: where
+the panel comes from, where the SEO block comes from, which media renders, and what goes in
+`<main>`. Everything else, the shell, the TOC wiring, the structured data, is written once.
+
+A page's `<main>` is its **listing** (if its frontmatter names one) followed by its **body**.
+`buildListing(name)` in `src/utils/listings.ts` resolves a listing into the data
+`Listing.astro` renders *and* the `headings` `Layout` needs before `<main>` exists, from one
+call, so a TOC link and the card `id` it jumps to are built from the same array. Four shapes,
+because four of the five genuinely differ: `cards` (projects, decisions), `groups` (speaking's
+years), `timeline` (journey's rail), and `articles` (writing's top-N plus its closing CTA). A
+new listing is a builder there plus a branch in `Listing.astro`, never a new route.
+
+### Collection ordering (`src/utils/collections.ts`)
+Every collection has **exactly one canonical order**, defined by the `comparators` map here and
+reached through **`sorted(collection)`**. Pages and `/llms.txt` both call it, so a listing and
+its machine-readable mirror can't fall out of order (they used to carry a comparator each).
+`count(collection)` backs every page header metric, and **`entryPaths(collection)`** is the
+`getStaticPaths` every per-entry route uses.
+
+The orders: projects by `year` descending; decisions **alphabetically by title** (the records
+have no date, and filename order was never a decision anyone made); journey, speaking, and
+writing by date descending. `/writing` re-ranks by Cabin read count on top of that, and falls
+back to exactly this order when analytics is missing.
+
 ### Content collections (`src/content.config.ts`)
 All content is MDX in `src/content/<collection>/`, validated by Zod — **except `writing`**,
 which has no local files and is fetched at build time from the blog feed (see "Build-time data"
 below). Collections:
+
+- **pages** — the top-level pages themselves, as each section's `index.mdx` plus the root's;
+  see "Pages are content, and the tree is the site" above.
 
 **projects and decisions keep their substance in the MDX body as markdown**, not in
 frontmatter (see "Markdown-first bodies" below). Their frontmatter is deliberately thin: only
@@ -104,8 +196,11 @@ what something *other than the prose* has to read.
     back to whatever its listing page puts in `Square`** (`EditableStyle` for projects,
     `uxdx.jpg` for decisions), so a section reads as one place. `imageAlt` defaults to the
     entry title.
-  - The rest mirror `GridProps` region for region, and `grid.config.ts` merges them over the
-    computed panel in `projectGrid`/`decisionGrid` (see "The dashboard shell"). A present
+  - The rest mirror `GridProps` region for region, and the two structured ones (`cta`,
+    `metric`) are pinned to it with `satisfies z.ZodType<…>` rather than described twice, so
+    adding a field to the panel's own type without adding it here is a build error.
+    `grid.config.ts` merges them over the computed panel in `projectGrid`/`decisionGrid`
+    (see "The dashboard shell"). A present
     field replaces its region **wholesale**: a `cta` array is the whole row, not an addition
     to the default one. `title` is deliberately **not** overridable, since the listing card
     and SEO read the same field.
@@ -118,8 +213,10 @@ what something *other than the prose* has to read.
   can use the loader context: `meta` persists the feed's ETag between builds (an unchanged feed
   costs a 304), `parseData` validates each document as it is stored, and `logger` reports through
   Astro's build output. Keep it that way if you extend it.
-- **speaking** — `title, description, event, eventUrl?, date, location, type(conference|
-  meetup|podcast|workshop|webinar), slides?, video?, duration?, topics?`.
+- **speaking** — `title, description, eventUrl?, date, location, type(conference|meetup|
+  podcast|workshop|webinar), slides?, video?, duration?, topics?`. The page itself renders only
+  `title`, `description`, `date`, `location`, `topics`, and the `slides`/`video` links; `type`,
+  `duration`, and `eventUrl` exist for the `.md` mirror and `/llms.txt`.
 
 There is no **testimonials** collection. Its `Testimonials.astro` renderer, schema, and three
 placeholder entries were all deleted; don't reintroduce it without real, attributable quotes.
@@ -160,15 +257,53 @@ To refresh this without a code change, a **Netlify Scheduled Function**
 named CSS grid, and each panel is a component the layout places into one area:
 
 ```
-'nav     contact'   Nav.astro      Contact.astro
+'nav     contact'   Header.astro   Header.astro
 'square  grid'      Square.astro   Grid.astro
 'main    toc'       <main>         Toc.astro
 ```
 
-**Placement lives in `global.css`, not in the components.** Each panel carries a plain class
-(`.nav`, `.contact`, `.square`, `.grid`, `.main`, `.toc`) and `global.css` assigns its
-`grid-area` next to the `grid-template-areas` that names it. There is no `area` prop and no
+**Placement and surface live in `global.css`, not in the components.** Each panel carries a
+plain class (`.nav`, `.contact`, `.square`, `.grid`, `.main`, `.toc`) and `global.css` assigns
+its `grid-area` next to the `grid-template-areas` that names it. There is no `area` prop and no
 inline `style="grid-area: …"`; a new panel gets a class and a rule.
+
+Each panel *also* carries one of two **surface classes**, and paints through it rather than
+declaring its own background: **`.dash-surface`** for the dark frame around the page (nav,
+contact, main, toc) and **`.grid-surface`** for the red identity panels (square, and `Grid`'s
+three regions). Both are `background-attachment: fixed`, so every panel samples one
+viewport-sized gradient and the 2px seams read as gaps cut out of a single sheet. A panel must
+never set `background` shorthand of its own, and the content inset (`--grid-padding`) is applied
+by one rule in `global.css` too, not per component. `Main.astro` is therefore styleless: it is
+`<main id="top" class="main dash-surface">` and nothing else.
+
+**`Header` is rendered twice**, once as the masthead and once as the connect bar. They are the
+same bar: a `space-between` flex row with a list of links at one end and a standalone action at
+the other.
+
+**`Header` knows nothing about which bar it is, and imports no config.** Which list a bar
+carries, which grid area it lands in (`name`), and whether its links are the author's own
+profiles (`profiles`, which adds `rel="me"`) are decided in `Layout`, the composition root. A
+`HeaderLink` is deliberately the same shape as a `siteConfig.nav` or `siteConfig.social` entry,
+so those lists are passed straight through with no mapping:
+
+```astro
+<Header name="nav" label="Main navigation"
+  action={{ href: '/', label: siteConfig.title, logo: true }} links={siteConfig.nav} />
+```
+
+Three things are **derived rather than declared**, so nothing has to state them:
+
+- **External-ness.** An absolute URL opens in a new tab and gets `rel="noopener noreferrer"`;
+  a site path does not. There is no `external` field anywhere.
+- **Which end the action sits at.** A `logo` action leads, because a bar whose action is the
+  wordmark is a masthead; every other action follows the list. There is no `actionFirst`.
+- **`aria-current`.** `Astro.url` is in the component's own render scope, so `Header` computes
+  it where it writes it and `Layout` passes no path. Home matches the exact root, everything
+  else matches on prefix (so `/projects/foo` highlights Projects), and an external link is
+  never current.
+
+A link draws text, an `Icon` glyph, or the wordmark; when it draws rather than writes its
+label, that label becomes the link's `aria-label` and `title`, so no link is left unnamed.
 
 `Layout` renders every panel itself and takes the page-specific ones as **props**: `grid`
 (required, the page header's content) and `headings`/`tocMaxDepth` (the table of contents). Only
@@ -212,11 +347,17 @@ inline `style="grid-area: …"`; a new panel gets a class and a rule.
   - Building a mixed page's array in document order is what makes the nesting work: speaking
     does `years.flatMap((year) => [yearHeading, ...talksInThatYear])`.
 
-`global.css` holds the grid areas, the `--grid-*`/`--dash-*` palette, and a short list of
-element defaults the `<main>` content needs (`blockquote`, markdown `table` borders, the
-`<details>` animation `Disclosure` relies on). **`--bgcolor` is a placeholder**: `Card`,
-`Button`, and friends still paint against it, and it currently just tracks `--dash-bg` until
-those components are restyled for the shell.
+`global.css` holds the grid areas, the two **surface classes** below, the `--grid-*`/`--dash-*`
+palette, and a short list of element defaults the `<main>` content needs (`blockquote`, markdown
+`table` borders, the `<details>` animation `Disclosure` relies on).
+
+**A surface is a gradient; a colour is a colour.** `--dash-bg`/`--grid-bg` are gradients, valid
+only as a `background`. Where a real colour is needed (a `color`, a `border`, a control that has
+to be opaque against the shell) use **`--dash-ink`** and **`--dash-ground`**, the two ends of the
+dark surface, which is what `Card`, `Button`, and `TimelineEntry` paint with. These replaced
+`--bgcolor`, a placeholder that aliased `--dash-bg` and therefore resolved to a gradient
+wherever a colour was expected: `color: var(--bgcolor)` is an invalid declaration, which is why
+a filled `Button` used to render identical to an outlined one.
 
 > **Slot gotcha.** `Astro.slots.has(name)` reflects what the *immediate caller* wrote, so it is
 > only trustworthy when the component is composed directly by the page. A layout that forwards a
@@ -227,11 +368,14 @@ those components are restyled for the shell.
 > reserve slots for regions that genuinely hold markup (`head`, `media`, `main`).
 
 ### Pages & components
-- `src/pages/` — `index.astro` (home), then one folder per collection, each with an
-  `index.astro` listing: `projects/` and `decisions/` (which also have a `[slug].astro` detail
-  page), `journey/`, `speaking/`, and `writing/` (a single curated page, no pagination). Plus
-  `404.astro` and the machine-readable routes (`llms.txt.ts`, `robots.txt.ts`,
-  `og/[page].png.ts`, and a `[slug].md.ts` per collection).
+- `src/pages/` holds **two rest routes and nothing per-section**. `[...slug].astro` generates
+  the home page, the five listings, and every project and decision detail page, because they
+  are the same page with different sources for each region (see "One route" below), and
+  `[...slug].md.ts` generates every markdown mirror. The two never collide: one emits
+  `/projects/gridless`, the other `/projects/gridless.md`. Alongside them sit `404.astro`,
+  `llms.txt.ts`, `robots.txt.ts`, and `og/`, all narrower than a rest parameter and so never
+  shadowed by one. **There are no `projects/`, `decisions/`, `journey/`, or `speaking/`
+  folders under `src/pages/`**; don't reintroduce one to add a route.
 - **`og/index.astro` is a development surface, not a page of the site.** It renders
   `OgImage.astro` as live HTML at 1200x630 for every card, so the template can be iterated
   on with hot reload instead of a satori render per change. It is therefore the **one page
@@ -251,11 +395,17 @@ those components are restyled for the shell.
   sizzle reel). That makes the media a constant, so it lives in `duotone.ts` beside the blend
   rather than in a map, `renderOgPng` takes a bare `GridProps`, and both routes derive their
   card list straight from `Object.entries(gridContent)`. There is no `og/_pages.ts`.
-- Components: `SEO`, `StructuredData` (JSON-LD, config-driven), the shell panels above, the
-  **`Card` pattern** below (plus `CardList`), `Button`/`ButtonGroup`/`ArrowIcon`, `TagList`/
-  `Label`, `Media`, `TimelineEntry`/`Disclosure`, `ScrollToTop`, `EditableStyle`, and
-  `OgImage` (used **only** by the OG-image pipeline in `src/lib/og.ts` and its `/og` preview,
-  not by any page stylesheet).
+- Components: `SEO`, `StructuredData` (JSON-LD, config-driven), the shell panels above
+  (`Header` twice, `Square`, `Grid`, `Main`, `Toc`/`TocList`), the **`Card` pattern** below
+  (`EntryList` over `CardList` over `Card`), `Button`/`ButtonGroup`, `Icon`, `TagList`/`Label`,
+  `Media`, `TimelineEntry`/`Disclosure`, `ScrollToTop`, `EditableStyle`, and `OgImage` (used
+  **only** by the OG-image pipeline in `src/lib/og.ts` and its `/og` preview, not by any page
+  stylesheet).
+- **`Icon` is the only glyph primitive.** It replaced `ArrowIcon` and `SocialIcon` (which were
+  the same component with different path data) plus the SVGs that sat inline in `Disclosure`,
+  `ScrollToTop`, and the speaking page. It renders `<i class="icon" data-icon="…" aria-hidden>`
+  and draws from the RemixIcon subset; the name to codepoint map is the one list of `content`
+  rules in `Icon.astro`. **Don't inline an SVG path** at a call site.
 - **`OgImage` is the dashboard shell redrawn in satori's CSS subset**, not a card design of
   its own: `Square` on the left at 55%, `Grid` on the right (eyebrow `title`, Kentish
   `headline`, description, page URL, then the metric + anecdote row), with `Props extends
@@ -283,6 +433,12 @@ those components are restyled for the shell.
   page-specific ancestor to avoid bleed. `Card`'s (and `TimelineEntry`'s) optional **`id`** is
   not an exception to this: it identifies the card as an anchor target for the TOC, it does not
   style it.
+- **`StructuredData` emits three shapes and no more**: `WebSite` and `Person` (home) and
+  `Project` (a case study, as `CreativeWork`). Its props are a **discriminated union on
+  `type`**, so `Project` must be handed exactly the case study's fields and the others take no
+  data at all. The theme's `Article` and `BreadcrumbList` branches, the `Record<string, any>`
+  props, and the per-field `data.x || fallback` overrides (several reading schema fields that
+  no longer exist) are gone; add a shape back only when a page needs it, typed the same way.
 - **Props are typed, never `[key: string]: unknown`.** A component that forwards extra
   attributes extends Astro's own element types instead of an index signature, which silently
   disables prop checking: `interface Props extends Omit<HTMLAttributes<'a'>, 'href' | 'type'>`
@@ -294,13 +450,22 @@ those components are restyled for the shell.
   (optimized formats, `srcset`, intrinsic dimensions) and a plain element for a string path or a
   remote URL, which is the only route for video and audio. `image.layout: 'constrained'` in
   `astro.config.mjs` makes those images responsive by default.
-- **Fonts go through Astro's Fonts API, never hand-rolled `@font-face`.** There are exactly two
-  families, both declared in `astro.config.mjs` under `fonts:` (local provider, files in
+- **Fonts go through Astro's Fonts API, never hand-rolled `@font-face`.** There are exactly three
+  families, all declared in `astro.config.mjs` under `fonts:` (local provider, files in
   `src/assets/fonts/`) and emitted by `<Font>` in `Layout`'s head: **Kentish**, the display face
-  (`--font-kentish`), which `global.css` applies to `:is(h1,h2,h3,h4,h5,h6)` only, and
-  **Raleway**, the body face (`--font-raleway`), set on `body`. **No other font is used
+  (`--font-kentish`), which `global.css` applies to `:is(h1,h2,h3,h4,h5,h6)` only;
+  **Raleway**, the body face (`--font-raleway`), set on `body`; and **RemixIcon**
+  (`--font-remixicon`), the icon face, applied only by `Icon.astro`. **No other font is used
   anywhere**, on the pages or on the OG cards. Font files live in `src/`, not `public/`: Astro
   copies them into the build itself, so `public/` would ship them twice.
+  - **RemixIcon is a subset**, not the shipped package: the full `remixicon.woff2` is 185KB for
+    ~3000 glyphs, and `src/assets/fonts/RemixIcon-Subset.woff2` is 1.7KB for the ten this site
+    draws. Adding a glyph means adding its `content` rule in `Icon.astro` **and** regenerating
+    the subset; the `pyftsubset` command and the codepoint list are in the `fonts:` comment.
+    The `remixicon` devDependency exists only to supply `remixicon.glyph.json` (the name to
+    codepoint map) and the source woff2; nothing imports it at build time.
+  - The card fonts are unaffected: **OG cards carry no icons**, so satori never has to read
+    this face, which is why it needs no non-woff2 source.
   - Kentish has only weight 400, so the heading rule pins `font-weight: 400` and
     `font-synthesis-weight: none` to stop browsers faking a bold. Adding a real bold means a
     second `variant` in the config, then relaxing that pin. Raleway is variable across
@@ -347,12 +512,18 @@ Date formatting lives in `src/utils/formatDate.ts` and is applied at the call si
   layout. Callers map their items into `<li><Card/></li>` in the default slot. Its one prop is
   **`compact`**, which tightens the cards by setting the custom properties `Card` reads
   (`--card-padding`, `--card-title-size`), so the list never reaches into the card's own styles;
-  `Card` falls back to its defaults when they're unset. There is **no empty state**: every
-  listing is populated, and an outer guard covers the cases that aren't (e.g. speaking's per-year
-  lists, which only exist when they have talks).
-- Used directly on: projects, decisions, writing (listings) and speaking (one `CardList` per
-  year group), all via `CardList`; `TimelineEntry` renders a `Card` for its content area
-  inside the dot/line rail on `/journey`.
+  `Card` falls back to its defaults when they're unset. There is **no empty state** anywhere:
+  every listing is populated, and speaking's per-year groups only exist once they have talks.
+- **`EntryList.astro` is what everything composes**, not `CardList`/`Card` directly. Every card
+  listing on the site is the same shape (eyebrow, title, summary, `TagList`, one or two links
+  out), so `utils/listings.ts` maps a collection's entries to **`EntryItem[]`** and passes them
+  through: `{ slug, meta?, title, description, tags?, cta: EntryCta[] }`, where a `cta` is
+  `{ label, href, external?, arrow?, icon? }`. Items are **data, not markup**, which is what
+  lets the same array also drive the table of contents (`cardHeadings` there), so a TOC link
+  and the card `id` it jumps to cannot drift apart.
+- Used by `Listing.astro` for projects, decisions, writing (one `EntryList`) and speaking (one
+  per year group). `TimelineEntry` renders a `Card` for its content area inside the dot/line
+  rail on `/journey`, which is the one listing whose entries aren't cards from a list of items.
 - Block content (a flex row with `<time>`/labels) must go in the `badge` or default slot,
   **not** `meta` (which is wrapped in an inline span).
 
@@ -446,8 +617,22 @@ were displayed literally back when the same text was a YAML string.
 frontmatter header plus `entry.body` verbatim, while `renderJourney`/`renderSpeaking` still
 serialize structured fields. Keep that in step when a schema changes.
 
+That module also owns the **routes**, not just the renderers. `renderEntry(entry)` picks the
+right renderer off `entry.collection`; `textResponse(text)` is the one plain-text `Response`
+every machine route returns (`llms.txt`, `robots.txt`, and the mirrors); and **`mdMirror()`**
+is the whole of `src/pages/[...slug].md.ts`, one line for all four collections at once:
+`export const { getStaticPaths, GET } = mdMirror();`. The collection is only the first segment
+of the emitted path, so the rest parameter covers every mirror from one route. **`MIRRORED`**
+there is the one list of which collections have mirrors (`writing` is absent: those entries
+are previews of posts on the blog, with no body to mirror), and adding a collection to it is
+the whole of publishing its mirrors.
+
 ## Adding content (typical task)
-1. Add an MDX file under the right `src/content/<collection>/`; match an existing file's
+0. **A new top-level page** is `src/content/<route>/index.mdx`, nothing more: its id becomes
+   its route and it picks up the shell, the panel, the SEO tags, and an OG card automatically.
+   Use `@scheduling` and `{ count: … }` rather than pasting a URL or a number.
+1. Add an MDX file under the right `src/content/<collection>/`, named for the slug it should
+   have (`index.mdx` is that section's page, not an entry); match an existing file's
    frontmatter exactly (schemas are strict — required arrays may be empty but must be valid).
 2. For **projects and decisions**, write the substance as markdown in the **body**, following
    the section order in "Markdown-first bodies" above. Required frontmatter is only the five
@@ -455,5 +640,11 @@ serialize structured fields. Keep that in step when a schema changes.
    `headline`, `description`, `cta`, `metric`, `anecdote`) is optional and normally left out,
    so the header derives from the entry. Add one only to change that region for this entry.
    For `journey` and `speaking`, it's still all frontmatter.
-3. Projects are sorted by `year` (newest first); set `year` accordingly.
+3. Ordering is `src/utils/collections.ts`'s business, not the page's: projects sort by `year`
+   (newest first), so set `year` accordingly; decisions sort alphabetically by `title`.
 4. `npm run build` and confirm a green build (no schema errors), then spot-check `dist/`.
+
+**A YAML gotcha worth knowing**: a `: ` inside an unquoted scalar is a parse error, and the
+panel copy is full of them. The page entries use folded block scalars (`>-`) for prose and
+literal ones (`|-`) where a `
+` is a deliberate line break in the panel.

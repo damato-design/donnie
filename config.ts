@@ -8,14 +8,10 @@
  * reads it during `astro sync`, which runs outside the component graph, so a
  * runtime import of an `.astro` file here would drag a component into content
  * collection generation. That is why the components that read this config own
- * the adapters that shape it into their props (the panel builders in
- * `grid.config.ts`; `Layout` for the header bars) rather than this module
- * owning them. Data belongs here; anything that has to know a component's prop
- * types does not.
- *
- * The lists below are shaped so they need no adapter at all: a `nav` or
- * `social` entry is already a valid `HeaderLink`, and `Layout` hands them
- * straight to `Header`.
+ * the adapters that shape it into their props (`headerBars` in `Header.astro`,
+ * the panel builders in `grid.config.ts`) rather than this module owning them.
+ * Data belongs here; anything that has to know a component's prop types does
+ * not.
  *
  * The site URL is intentionally NOT stored here: it comes from Astro's built-in
  * `Astro.site` (set by `site:` in astro.config.mjs), and any variant is built with
@@ -94,13 +90,6 @@ export const siteConfig = {
    * than an imported `IconName`, to keep this module import-free (see above);
    * `as const` makes it a literal type, so a typo still fails to compile where
    * `Header` assigns it to `IconName`.
-   *
-   * These are read by `Header` (the connect bar, which marks them `rel="me"`)
-   * and by `StructuredData` (JSON-LD `sameAs`), which is why they are a plain
-   * list here rather than part of a header-shaped structure. Both are identity
-   * claims: this list is "profiles that are me", not "links I like", so an
-   * external link that is not Donnie's own account does not belong in it. Nothing about a new tab is recorded: an absolute
-   * URL opens in one, which `Header` derives.
    */
   social: [
     { label: 'LinkedIn', icon: 'linkedin', href: 'https://linkedin.com/in/fauxserious' },

@@ -18,8 +18,10 @@
  * entirely when absent; the anecdote spans the full row when there is no metric
  * beside it.
  *
- * `Layout` renders this, not the page: every page has exactly one, so the page
+ * `Layout` renders this, not the page: every page has exactly one, so the route
  * passes its content as `Layout`'s `grid` prop and never imports this component.
+ * That content is assembled in `grid.config.ts`, from a `pages` entry's
+ * frontmatter or from the collection entry a detail page renders.
  *
  * @component
  *
@@ -32,7 +34,7 @@
  *     description: 'A weekday live show.',
  *     cta: [{ label: 'Watch now', href: 'https://wireframe.ds.house', external: true }],
  *     metric: { value: 24, label: 'talks' },
- *     anecdote: pagesConfig.speaking.intro,
+ *     anecdote: 'I regularly speak at conferences and on podcasts…',
  *   }}
  * >
  * ```
@@ -78,7 +80,7 @@ const { title, headline, description, cta, metric, anecdote } = Astro.props;
 ---
 
 <section class="grid">
-    <div class="identity">
+    <div class="identity grid-surface">
         <h1>{title}</h1>
         {headline && <h2>{headline}</h2>}
         {description && <p>{description}</p>}
@@ -95,13 +97,13 @@ const { title, headline, description, cta, metric, anecdote } = Astro.props;
         )}
     </div>
     {metric && (
-        <div class="metric">
+        <div class="metric grid-surface">
             <output>{metric.value}</output>
             <span>{metric.label}</span>
         </div>
     )}
     {anecdote && (
-        <div class="anecdote">
+        <div class="anecdote grid-surface">
             <p>{anecdote}</p>
         </div>
     )}
@@ -114,11 +116,9 @@ const { title, headline, description, cta, metric, anecdote } = Astro.props;
         grid-template-rows: auto 1fr;
         gap: var(--grid-gap);
 
+        /* The regions paint via `.grid-surface` and are inset by `.grid > *`,
+           both in global.css. */
         & > * {
-            background-image: var(--grid-bg);
-            background-attachment: fixed;
-            color: var(--grid-fg);
-            padding: var(--grid-padding);
             transition: transform 1s ease;
         }
 
@@ -131,14 +131,6 @@ const { title, headline, description, cta, metric, anecdote } = Astro.props;
         }
     }
 
-    /* The topographic contours over the panel's gradient. `.grid > *` above
-       already paints `--grid-bg`, so that layer is restated here rather than
-       replaced: a bare `background-image` on this rule would drop it. Position
-       and size match the `html` background in global.css, and the inherited
-       `background-attachment: fixed` anchors both layers to the viewport, so the
-       panel's contours line up with the page's instead of reading as a second,
-       unrelated pattern. Set `background-attachment: scroll` here to give the
-       panel its own composition scaled to the square. */
     /* The three regions are captured individually across navigations. The name
        is declared here (it belongs to the element), the motion it drives lives
        in global.css under "View transition choreography". */
@@ -149,6 +141,13 @@ const { title, headline, description, cta, metric, anecdote } = Astro.props;
         display: flex;
         flex-direction: column;
         justify-content: center;
+
+        h1 {
+            font-size: .6em;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: .5em;
+        }
 
         h2 {
             font-size: min(3.5em, 12vw);
