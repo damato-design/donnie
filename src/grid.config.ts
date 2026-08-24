@@ -14,8 +14,9 @@
  * - `decisionGrid(entry)` a decision record, likewise
  *
  * The `metric` is resolved here rather than authored: a page's frontmatter
- * names the collection to count (`{ count: 'projects' }`) and the number comes
- * from the collection at build time, so it can never go stale.
+ * names the collection to count (`{ count: 'projects' }`) or the blog figure to
+ * read (`{ stat: 'countries' }`) and the number is fetched at build time, so it
+ * can never go stale.
  *
  * @module grid.config
  */
@@ -24,6 +25,7 @@ import { type CollectionEntry } from 'astro:content';
 import type { GridProps } from '@components/Grid.astro';
 import { siteConfig } from '@/config';
 import { count, sorted } from '@utils/collections';
+import { getBlogStat } from '@utils/analytics';
 import { calculateReadingTime, formatReadingTime } from '@utils/readingTime';
 
 /** A top-level page entry. Its id is its route (`home` is the site root). */
@@ -42,10 +44,29 @@ export async function getPages(): Promise<Map<string, PageEntry>> {
 }
 
 /**
+ * Resolves a page's authored metric into the figure the panel renders.
+ *
+ * `{ count: 'projects' }` is counted from the collection, `{ stat: 'countries' }`
+ * is read from the blog's Cabin analytics, and `{ value: 25 }` is passed through.
+ * A `stat` resolves to `undefined` when analytics is unavailable (no
+ * `CABIN_API_KEY`, Cabin down), which drops the metric region rather than
+ * printing a figure the build could not actually measure.
+ */
+async function resolveMetric(metric: PageEntry['data']['metric']): Promise<GridProps['metric']> {
+  if (!metric) return undefined;
+  if ('count' in metric) return { value: await count(metric.count), label: metric.label };
+  if ('stat' in metric) {
+    const value = await getBlogStat(metric.stat);
+    return value === undefined ? undefined : { value, label: metric.label };
+  }
+  return metric;
+}
+
+/**
  * The header panel for a top-level page.
  *
- * Straight from frontmatter, except the metric: `{ count: 'projects' }` is
- * resolved against the collection, while `{ value: 25 }` is passed through.
+ * Straight from frontmatter, except the metric, which is resolved at build time
+ * (see `resolveMetric`).
  */
 export async function pageGrid(entry: PageEntry): Promise<GridProps> {
   const { title, headline, description, cta, metric, intro } = entry.data;
@@ -55,11 +76,7 @@ export async function pageGrid(entry: PageEntry): Promise<GridProps> {
     headline,
     description,
     cta,
-    metric: metric
-      ? 'count' in metric
-        ? { value: await count(metric.count), label: metric.label }
-        : metric
-      : undefined,
+    metric: await resolveMetric(metric),
     anecdote: intro,
   };
 }

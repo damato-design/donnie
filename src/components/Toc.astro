@@ -43,12 +43,6 @@ const { headings = [], maxDepth = 3 } = Astro.props;
 const items = buildTocTree(headings, maxDepth);
 ---
 
-<style>
-    h2 {
-        margin-block-start: 0;
-    }
-</style>
-
 {items.length > 0 && (
     <section class="toc dash-surface">
         <h2>On this page</h2>

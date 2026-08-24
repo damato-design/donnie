@@ -185,6 +185,10 @@ a {
   text-underline-offset: .15em;
 }
 
+:where(ul) {
+  padding-left: 1em;
+}
+
 img {
   max-width: 100%;
   height: auto;

@@ -126,20 +126,34 @@ const ctaSchema = z.object({
 /**
  * The panel's headline metric.
  *
- * Two forms, because most of them are live counts rather than authored figures:
+ * Three forms, because most of them are live figures rather than authored ones:
  * `{ count: 'projects', label: 'projects' }` is resolved against the collection
- * at build time, so the number can never go stale, while
- * `{ value: 25, label: 'years' }` is for a figure nothing can count.
+ * at build time and `{ stat: 'reads', label: 'reads' }` against the Cabin
+ * analytics for the blog, so neither number can go stale, while
+ * `{ value: 25, label: 'years' }` is for a figure nothing can measure.
+ *
+ * A `stat` is the only form that can come up empty: analytics is additive and
+ * fails soft, so the panel drops the metric region when Cabin is unreachable
+ * (see `pageGrid` in `grid.config.ts`).
  */
 const metricSchema = z.union([
   z.object({
-    /** A figure nothing can count. A string keeps approximations like "~500". */
+    /** A figure nothing can measure. A string keeps approximations like "~500". */
     value: z.union([z.string(), z.number()]),
     label: z.string(),
   }),
   z.object({
     /** Collection to count at build time. */
     count: z.enum(['projects', 'decisions', 'journey', 'writing', 'speaking']),
+    label: z.string(),
+  }),
+  z.object({
+    /**
+     * Build-time blog figure to read from Cabin (see `utils/analytics.ts`):
+     * `countries` is how many countries the blog has been read from, `reads` is
+     * its total page views, compacted for display ("18k").
+     */
+    stat: z.enum(['countries', 'reads']),
     label: z.string(),
   }),
 ]);
@@ -213,14 +227,14 @@ const pagesCollection = defineCollection({
     /**
      * The `Square` panel's media. Exactly one of these, or none for a bare
      * panel. `image` is resolved relative to this MDX file and goes through
-     * `astro:assets`; `video` is a remote URL; `embed` names one of the two
-     * pieces of markup a frontmatter field cannot express.
+     * `astro:assets`; `video` is a remote URL; `embed` names the one
+     * piece of markup a frontmatter field cannot express.
      */
     image: image().optional(),
     imageAlt: z.string().optional(),
     video: z.string().optional(),
     videoAlt: z.string().optional(),
-    embed: z.enum(['editable-style', 'mode-book']).optional(),
+    embed: z.enum(['mode-book']).optional(),
 
     /** The collection listing to render into `<main>`, if any. */
     listing: z.enum(['projects', 'decisions', 'journey', 'writing', 'speaking']).optional(),

@@ -52,12 +52,28 @@ export interface PageStat {
 export interface BlogAnalytics {
   /** Per-post stats keyed by path (`/posts/<slug>`). */
   pages: Map<string, PageStat>;
+  /** Distinct countries the blog has been read from (`scope=core`). */
+  countries: number;
+  /** Total page views across the whole blog (`scope=core`). */
+  reads: number;
 }
+
+/**
+ * A build-time blog figure a page's metric can name (`{ stat: 'countries' }` in
+ * a page's `index.mdx`; see `metricSchema` in `content.config.ts`).
+ */
+export type BlogStat = 'countries' | 'reads';
 
 /** Shape of a `scope=pages` row (only the fields we use). */
 interface CabinPageRow {
   path: string;
   page_views: number;
+}
+
+/** Shape of the `scope=core` response (only the fields we use). */
+interface CabinCore {
+  summary?: { page_views?: number };
+  countries?: unknown[];
 }
 
 /** Today's date as `YYYY-MM-DD` (build date). */
@@ -88,6 +104,22 @@ function extractRows(raw: unknown): CabinPageRow[] {
   return [];
 }
 
+/** Calls the Cabin API for one scope, returning parsed JSON. */
+async function fetchCabin(scope: 'core' | 'pages', apiKey: string): Promise<unknown> {
+  const url = new URL(CABIN_API_URL);
+  url.searchParams.set('domain', CABIN_DOMAIN);
+  url.searchParams.set('date_from', ALL_TIME_FROM);
+  url.searchParams.set('date_to', today());
+  url.searchParams.set('scope', scope);
+  url.searchParams.set('limit_lists', '250');
+
+  const response = await fetch(url, { headers: { 'x-api-key': apiKey } });
+  if (!response.ok) {
+    throw new Error(`Cabin ${scope} request failed: ${response.status} ${response.statusText}`);
+  }
+  return response.json();
+}
+
 /** Module-level memo so multiple callers in one build share a single fetch. */
 let cached: Promise<BlogAnalytics | null> | undefined;
 
@@ -107,26 +139,35 @@ export function getBlogAnalytics(): Promise<BlogAnalytics | null> {
       return null;
     }
 
-    const url = new URL(CABIN_API_URL);
-    url.searchParams.set('domain', CABIN_DOMAIN);
-    url.searchParams.set('date_from', ALL_TIME_FROM);
-    url.searchParams.set('date_to', today());
-    url.searchParams.set('scope', 'pages');
-    url.searchParams.set('limit_lists', '250');
-
     try {
-      const response = await fetch(url, { headers: { 'x-api-key': apiKey } });
-      if (!response.ok) {
-        throw new Error(`Cabin pages request failed: ${response.status} ${response.statusText}`);
-      }
+      const [pagesRaw, coreRaw] = await Promise.all([
+        fetchCabin('pages', apiKey),
+        // The country count is additive to a page that already ranks by reads,
+        // so its failure degrades to zero rather than rejecting the pair and
+        // costing the rankings too.
+        fetchCabin('core', apiKey).catch((error) => {
+          console.warn(
+            `[analytics] Cabin core fetch failed; the site-wide figures will be omitted. ${
+              error instanceof Error ? error.message : error
+            }`
+          );
+          return null;
+        }),
+      ]);
 
       const pages = new Map<string, PageStat>();
-      for (const row of extractRows(await response.json())) {
+      for (const row of extractRows(pagesRaw)) {
         if (!row?.path) continue;
         pages.set(normalizePath(row.path), { reads: row.page_views ?? 0 });
       }
 
-      return { pages } satisfies BlogAnalytics;
+      const core = (coreRaw ?? {}) as CabinCore;
+
+      return {
+        pages,
+        countries: core.countries?.length ?? 0,
+        reads: core.summary?.page_views ?? 0,
+      } satisfies BlogAnalytics;
     } catch (error) {
       console.warn(
         `[analytics] Cabin fetch failed; Writing page will render without analytics. ${
@@ -138,6 +179,30 @@ export function getBlogAnalytics(): Promise<BlogAnalytics | null> {
   })();
 
   return cached;
+}
+
+/**
+ * One named build-time figure for a page header's metric, or `undefined` when
+ * analytics is unavailable (no key, Cabin down) or the figure is zero.
+ *
+ * `undefined` is the signal to drop the metric region entirely: the panel has no
+ * honest placeholder for "we could not reach Cabin", and a "0 countries" line is
+ * worse than no line. `grid.config.ts` omits the region on that value.
+ */
+export async function getBlogStat(name: BlogStat): Promise<string | number | undefined> {
+  const analytics = await getBlogAnalytics();
+  if (!analytics) return undefined;
+
+  const stats: Record<BlogStat, number> = {
+    countries: analytics.countries,
+    reads: analytics.reads,
+  };
+  const value = stats[name];
+  if (!value) return undefined;
+
+  // Reads run to five figures and the metric is read at a glance, so they are
+  // compacted ("18k"); a country count is two digits and stays exact.
+  return name === 'reads' ? formatReads(value) : value;
 }
 
 /**

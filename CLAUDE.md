@@ -126,7 +126,12 @@ Three things keep this from re-introducing the duplication it could:
 
 - **`metric` is resolved, not authored.** `{ count: 'projects', label: 'projects' }` names a
   collection and `pageGrid` counts it at build time, so the number can never go stale.
-  `{ value: 25, label: 'years' }` is the other form, for a figure nothing can count.
+  `{ stat: 'countries', label: 'countries' }` is the same idea against the blog's Cabin
+  analytics (`getBlogStat()`, which also serves `reads`, the blog's total page views,
+  compacted to "18k"); it is the one form that can come up empty, and
+  `resolveMetric` drops the whole metric region when analytics is unavailable rather than
+  printing a figure the build could not measure. `{ value: 25, label: 'years' }` is the
+  authored form, for a figure nothing can measure.
 - **`cta.href` accepts a `@name`.** `href: '@scheduling'` resolves through `namedLinks` in
   `content.config.ts` to `siteConfig.scheduling`, because YAML can't reference `config.ts` and
   pasting the booking URL into two MDX files is exactly how it drifts. Add a name there rather
@@ -137,7 +142,7 @@ Three things keep this from re-introducing the duplication it could:
 
 The `Square` media is one of four: `image` (+ `imageAlt`, resolved relative to the MDX file so
 it goes through `astro:assets`), `video` (+ `videoAlt`, a remote URL), or `embed`, an enum
-naming the two pieces of markup frontmatter cannot express (`editable-style`, `mode-book`).
+naming the one piece of markup frontmatter cannot express (`mode-book`).
 
 ### One route (`src/pages/[...slug].astro`)
 Every page of the site is this file. It builds its paths from three collections (`pages`,
@@ -193,7 +198,7 @@ what something *other than the prose* has to read.
     `(context) => …` form: `image()` resolves a path **relative to the MDX file**
     (`../../assets/thing.jpg`) into `ImageMetadata`, so a per-entry image goes through
     `astro:assets` like every other local image. Without `image`, the detail page **falls
-    back to whatever its listing page puts in `Square`** (`EditableStyle` for projects,
+    back to whatever its listing page puts in `Square`** (`donnie.png` for projects,
     `uxdx.jpg` for decisions), so a section reads as one place. `imageAlt` defaults to the
     entry title.
   - The rest mirror `GridProps` region for region, and the two structured ones (`cta`,
@@ -231,18 +236,33 @@ last build") and both **fail soft** so a green build never depends on a third pa
 - **Blog feed** — the `writing` collection loader fetches `blog.damato.design/standard-site.json`
   and maps each post to a preview entry (`url = <siteUrl>/posts/<slug>`).
 - **Cabin analytics** — `src/utils/analytics.ts` (`getBlogAnalytics()`) fetches per-post read
-  counts (`scope=pages`) from the Cabin API for `blog.damato.design`, authorized by the **build
-  secret** `CABIN_API_KEY` (read from `process.env`; set in Netlify, never committed, not
-  `PUBLIC_`-prefixed, and there is no `.env` file). A missing key or any error returns `null` and
-  the page renders without analytics. `getPageStat()` joins Cabin's `/posts/<slug>` rows to
-  entries by path. The `scope=core` call (site-wide reads, country count) and per-post dwell time
-  were removed along with the UI that showed them; don't reintroduce either.
+  counts (`scope=pages`) plus the site-wide totals (`scope=core`: distinct countries and total
+  page views) from the Cabin API for `blog.damato.design`, authorized by the **build secret**
+  `CABIN_API_KEY` (read from `process.env`; set in Netlify, never committed, not
+  `PUBLIC_`-prefixed, and there is no `.env` file). A missing key or any error returns `null`
+  and the page renders without analytics. `getPageStat()` joins Cabin's `/posts/<slug>` rows to
+  entries by path, and `getBlogStat()` serves the named figures a page's `metric` can ask for
+  (`countries` and `reads`). The two scopes fail **independently**: `core` degrades to zeroes
+  on its own so the rankings never pay for its failure, and a zero figure is treated as no
+  figure, so the panel never prints a number the build could not measure.
+  **Per-post dwell time stays gone** (it measured time-on-page, not reading length, and read as
+  misleading). The `scope=core` figures came back in 2026, the country count as the Writing
+  panel's metric.
+
+  **Analytics is invisible locally unless the key is present**, which is what
+  `npx netlify dev` is for: it injects the linked site's env vars, so the per-post read lines
+  and the panel metric render the same as they do in a deploy. A plain `npm run dev`/`build`
+  logs `CABIN_API_KEY is not set` and renders without them. **Never stub a number to see them**;
+  a placeholder figure on this page is a false claim about real traffic.
 
 `writing/index.astro` shows the **top 10 posts by Cabin reads** (ties break by date; falls back
 to most-recent-by-date when analytics is `null`). Each card's `meta` is `<date> · <N> reads`,
-so analytics still drives both the ranking and the per-card counts. The panel's metric is a
-plain article count; the former reach line (`<reads> · read in <N> countries`) was dropped when
-`PageStats` gave way to `Grid`'s single value+label metric. A closing CTA links to the full
+so analytics still drives both the ranking and the per-card counts. The panel's metric is the
+**country count** (`{ stat: 'countries' }` in `writing/index.mdx`), which is why the page has
+no article count in its header; `{ stat: 'reads' }` would put the blog's total there instead,
+since `Grid` carries **one** value+label metric and the two can't both occupy it. The former
+reach line (`<reads> · read in <N> countries`) stays gone with the `PageStats` component that
+held it. A closing CTA links to the full
 chronological archive on the blog. **Do not** reintroduce pagination or per-post dwell time (both
 removed — dwell time measured time-on-page, not reading length, and read as misleading).
 
@@ -390,15 +410,14 @@ a filled `Button` used to render identical to an outlined one.
   preview carries the PNG's own pixels (which is also why it is a megabyte and a half of
   inline base64, fine for a page only ever opened locally).
 - **Every card shows the same portrait**, the one the home page's `Square` carries: what
-  distinguishes a card is the content on the right, and half the pages put something
-  unrasterizable in `Square` anyway (`EditableStyle`, the `<mode-book>` embed, a streaming
-  sizzle reel). That makes the media a constant, so it lives in `duotone.ts` beside the blend
+  distinguishes a card is the content on the right, and some pages put something
+  unrasterizable in `Square` anyway (the `<mode-book>` embed, a streaming sizzle reel). That makes the media a constant, so it lives in `duotone.ts` beside the blend
   rather than in a map, `renderOgPng` takes a bare `GridProps`, and both routes derive their
   card list straight from `Object.entries(gridContent)`. There is no `og/_pages.ts`.
 - Components: `SEO`, `StructuredData` (JSON-LD, config-driven), the shell panels above
   (`Header` twice, `Square`, `Grid`, `Main`, `Toc`/`TocList`), the **`Card` pattern** below
   (`EntryList` over `CardList` over `Card`), `Button`/`ButtonGroup`, `Icon`, `TagList`/`Label`,
-  `Media`, `TimelineEntry`/`Disclosure`, `ScrollToTop`, `EditableStyle`, and `OgImage` (used
+  `Media`, `TimelineEntry`/`Disclosure`, `ScrollToTop`, and `OgImage` (used
   **only** by the OG-image pipeline in `src/lib/og.ts` and its `/og` preview, not by any page
   stylesheet).
 - **`Icon` is the only glyph primitive.** It replaced `ArrowIcon` and `SocialIcon` (which were

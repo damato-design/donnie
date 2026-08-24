@@ -32,7 +32,6 @@ import SEO from '@components/SEO.astro';
 import StructuredData from '@components/StructuredData.astro';
 import Listing from '@components/Listing.astro';
 import Media from '@components/Media.astro';
-import EditableStyle from '@components/EditableStyle.astro';
 import TagList from '@components/TagList.astro';
 import Button from '@components/Button.astro';
 import ScrollToTop from '@components/ScrollToTop.astro';
@@ -41,6 +40,7 @@ import { buildListing, type Listing as ListingData } from '@utils/listings';
 import { pageGrid, projectGrid, decisionGrid, type PageEntry } from '@/grid.config';
 import { siteConfig } from '@/config';
 import uxdx from '@assets/uxdx.jpg';
+import portrait from '@assets/donnie.png';
 
 /**
  * One path per top-level page and per detail entry.
@@ -131,7 +131,7 @@ const { Content } = await render(entry);
 
 /**
  * A detail page falls back to whatever its section's listing page shows, so the
- * section reads as one place: `EditableStyle` for projects, the stage photo for
+ * section reads as one place: the portrait for projects, the stage photo for
  * decisions. An entry with its own `image` overrides that.
  */
 const detailImage = kind === 'project' || kind === 'decision' ? entry.data.image : undefined;
@@ -182,8 +182,7 @@ const detailAlt = detailImage ? (entry.data.imageAlt ?? entry.data.title) : unde
         playsinline
       />
     )}
-    {/* The two media a frontmatter field cannot express. */}
-    {kind === 'page' && entry.data.embed === 'editable-style' && <EditableStyle />}
+    {/* The one medium a frontmatter field cannot express. */}
     {kind === 'page' && entry.data.embed === 'mode-book' && (
       <Fragment>
         <mode-book></mode-book>
@@ -191,8 +190,12 @@ const detailAlt = detailImage ? (entry.data.imageAlt ?? entry.data.title) : unde
       </Fragment>
     )}
 
-    {kind === 'project' &&
-      (detailImage ? <Media src={detailImage} alt={detailAlt} /> : <EditableStyle />)}
+    {kind === 'project' && (
+      <Media
+        src={detailImage ?? portrait}
+        alt={detailAlt ?? `Portrait of ${siteConfig.author.name}`}
+      />
+    )}
     {kind === 'decision' && (
       <Media
         src={detailImage ?? uxdx}

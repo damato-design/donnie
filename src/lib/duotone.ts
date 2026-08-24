@@ -24,8 +24,8 @@ const assetsDir = join(process.cwd(), 'src/assets');
 /**
  * The portrait every card carries, the one the home page's own `Square` shows.
  * All six cards share it: what distinguishes a card is the content on the
- * right, and half the pages put something unrasterizable in `Square` anyway
- * (`EditableStyle`, the `<mode-book>` embed, a streaming sizzle reel).
+ * right, and some pages put something unrasterizable in `Square` anyway
+ * (the `<mode-book>` embed, a streaming sizzle reel).
  */
 const CARD_MEDIA = 'stageworthy.png';
 
