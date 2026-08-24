@@ -21,7 +21,7 @@
 
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { siteConfig } from '../config';
+import { siteConfig } from '@/config';
 import { isoDate } from '@utils/llms';
 
 /** Joins non-empty blocks with a blank line between them. */

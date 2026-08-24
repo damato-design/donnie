@@ -1,117 +1,142 @@
 /**
  * Astro Configuration
- * 
- * Main configuration file for the Astro site. Defines build settings, integrations,
- * environment variables schema, image optimization, and markdown processing.
- * 
- * Configuration Sections:
- * - Output mode: Static site generation (SSG)
- * - Integrations: MDX for rich content, Sitemap for SEO
- * - Environment variables: Type-safe schema with defaults
- * - Image optimization: Sharp-based processing with responsive sizes
- * - Markdown: Syntax highlighting with Shiki
- * 
- * Setup:
- * 1. Copy .env.example to .env
- * 2. Set SITE_URL and other environment variables
- * 3. Run `npm run dev` for development or `npm run build` for production
- * 
+ *
+ * Static site generation with MDX content and a generated sitemap.
+ *
+ * The site's identity (name, bio, social links, nav) is not configured here: it
+ * lives as plain literals in `src/config.ts`. This project uses no `.env` files;
+ * the one build-time secret (`CABIN_API_KEY`, for the Writing page's analytics)
+ * is provided by the host's environment.
+ *
  * @see https://astro.build/config
  */
 
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
-/**
- * Astro configuration object
- * 
- * Defines all build-time settings, integrations, and optimizations for the site.
- * 
- * @see https://astro.build/config
- */
 export default defineConfig({
-  /**
-   * Output mode: Static Site Generation (SSG)
-   * 
-   * Generates static HTML files at build time for optimal performance
-   * and hosting flexibility. All pages are pre-rendered.
-   */
+  /** Static Site Generation: every page is pre-rendered at build time. */
   output: 'static',
-  
+
   /**
-   * Astro integrations
-   * 
-   * - MDX: Enables MDX support for rich content authoring with JSX components
-   * - Sitemap: Automatically generates sitemap.xml for search engines
+   * - MDX: content collections are authored as MDX
+   * - Sitemap: generates sitemap.xml / sitemap-index.xml
    */
   integrations: [
     mdx(),
     sitemap(),
   ],
-  
+
   /**
    * Site URL
    *
-   * Base URL for the site, exposed at runtime as `Astro.site`.
-   * Required for:
-   * - Sitemap generation
-   * - Canonical URLs
-   * - Open Graph tags
-   * - RSS feeds
-   *
-   * Build URL variants with `new URL('/path', Astro.site)`.
+   * The single source for the site's origin, exposed as `Astro.site` (and
+   * `context.site` in endpoints). Build any variant with
+   * `new URL('/path', Astro.site)`. Required by the sitemap, canonical URLs,
+   * and Open Graph tags.
    */
   site: 'https://donnie.damato.design',
 
-  /**
-   * Dev toolbar
-   *
-   * Disabled: the in-browser Astro dev toolbar is turned off during `npm run dev`.
-   */
+  /** The in-browser Astro dev toolbar is off during `npm run dev`. */
   devToolbar: {
     enabled: false,
   },
 
   /**
-   * Image optimization configuration
-   * 
-   * Uses Astro's built-in Sharp-based image service for automatic optimization.
-   * 
-   * Features:
-   * - Automatic format conversion (AVIF, WebP, PNG, JPEG)
-   * - Responsive image generation with srcset
-   * - Build-time optimization for static images
-   * - Memory-safe processing with pixel limits
-   * 
-   * The limitInputPixels setting prevents memory issues when processing
-   * very large images (~16K x 16K pixels maximum).
+   * Image optimization
+   *
+   * Astro's default Sharp service handles format conversion and `srcset`
+   * generation; only the overrides are declared here.
+   *
+   * - `layout: 'constrained'` makes `<Image>` responsive by default: it emits
+   *   `srcset`/`sizes` so the image scales down with its container but never
+   *   renders above its intrinsic size.
+   * - `responsiveStyles` adds the small global stylesheet those layouts need.
+   * - `limitInputPixels` caps source images at ~16K x 16K to avoid memory
+   *   blowups during the build.
    */
   image: {
+    layout: 'constrained',
+    responsiveStyles: true,
     service: {
       entrypoint: 'astro/assets/services/sharp',
       config: {
-        // Limit concurrent image processing to avoid memory issues
-        limitInputPixels: 268402689, // ~16K x 16K pixels
-      }
+        limitInputPixels: 268402689,
+      },
     },
-    // Remote image patterns (currently empty - add patterns as needed)
-    remotePatterns: [],
   },
-  
+
   /**
-   * Markdown configuration
-   * 
-   * Configures markdown processing and syntax highlighting.
-   * 
-   * Shiki Configuration:
-   * - Theme: GitHub Dark for consistent code highlighting
-   * - Wrap: Enables line wrapping for long code lines
+   * Fonts
+   *
+   * Kentish is the display face, used for headings and titles (see `global.css`).
+   * Body copy is deliberately left to the system stack for now.
+   *
+   * Astro serves the file itself, so it lives in `src/`, not `public/`: files in
+   * `public/` are copied into the build output and would ship twice. `<Font>` in
+   * the layout head emits the `@font-face` and the preload link.
    */
+  fonts: [
+    {
+      provider: fontProviders.local(),
+      name: 'Kentish',
+      cssVariable: '--font-kentish',
+      // The system faces the browser falls back to while Kentish loads, and if
+      // it fails. Astro folds these into the `--font-kentish` variable.
+      fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+      options: {
+        variants: [
+          {
+            // woff2 first, so that is what browsers download. The ttf is here
+            // for the OG card renderer: satori reads ttf/otf/woff but not
+            // woff2, and sourcing it from this same declaration keeps the card
+            // and the site on one font (see src/lib/og.ts).
+            src: [
+              './src/assets/fonts/Kentish-Regular.woff2',
+              './src/assets/fonts/Kentish-Regular.ttf',
+            ],
+            weight: 400,
+            style: 'normal',
+          },
+        ],
+      },
+    },
+    {
+      provider: fontProviders.local(),
+      name: 'Raleway',
+      cssVariable: '--font-raleway',
+      fallbacks: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+      options: {
+        variants: [
+          {
+            // Two sources for one face. Browsers take the variable font (listed
+            // first) and vary its wght axis; satori cannot parse a variable
+            // font at all, so `loadSiteFamily` skips past it to the static
+            // Regular. Keeping both in one declaration is what stops the pages
+            // and the OG card drifting onto different faces (see src/lib/og.ts).
+            src: [
+              './src/assets/fonts/Raleway-Variable.ttf',
+              './src/assets/fonts/Raleway-Regular.ttf',
+            ],
+            // The axis range, not a single weight. This font's default instance
+            // is Thin 100, so declaring a bare `400` left browsers free to paint
+            // the default master; the range makes `font-weight: 400` land on
+            // wght 400, and gives `<strong>` a real 700 instead of a synthesized
+            // one.
+            weight: '100 900',
+            style: 'normal',
+          },
+        ],
+      },
+    }
+  ],
+
+  /** Shiki syntax highlighting for code blocks in MDX bodies. */
   markdown: {
     shikiConfig: {
       theme: 'github-dark',
-      wrap: true
-    }
-  }
+      wrap: true,
+    },
+  },
 });

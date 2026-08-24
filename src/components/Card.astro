@@ -40,47 +40,53 @@
  * ```
  */
 
-import Typography from '@components/Typography.astro';
+interface Props {
+  /**
+   * Anchor target for the card, so a listing can offer a table of contents that
+   * jumps to it. This is the one attribute the card accepts: it identifies the
+   * card, it does not style it (see the no-`class` rule in CLAUDE.md). It sits
+   * on the `<article>` rather than the title so the jump lands at the top of the
+   * card, and so it still works on a card with no `title` slot.
+   */
+  id?: string;
+}
 
-interface Props {}
+const { id } = Astro.props;
 
 const hasMeta = Astro.slots.has('meta');
 const hasTitle = Astro.slots.has('title');
 const hasDescription = Astro.slots.has('description');
 ---
 
-<article class="card">
+<article class="card" id={id}>
   <slot name="badge" />
-  {hasMeta && <Typography tagName="span"><slot name="meta" /></Typography>}
-  {hasTitle && <Typography tagName="h3"><slot name="title" /></Typography>}
-  {hasDescription && <Typography tagName="p"><slot name="description" /></Typography>}
+  {hasMeta && <span><slot name="meta" /></span>}
+  {hasTitle && <h3><slot name="title" /></h3>}
+  {hasDescription && <p><slot name="description" /></p>}
   <slot name="tags" />
   <slot />
   <slot name="cta" />
 </article>
 
 <style>
+  /* `--card-padding` / `--card-title-size` let a listing shell (CardList's
+     `compact`) tighten its cards without reaching into these styles. */
   .card {
     display: flex;
     flex-direction: column;
     align-items: start;
-    padding: 1.5rem 1.75rem;
+    padding: var(--card-padding, 1.5rem 1.75rem);
     background: var(--bgcolor);
     border: 1px solid;
 
-    & > :global(:where(h3, p, li) span) {
-      display: contents;
-      line-height: inherit;
-    }
-
-    & > :global(span) {
+    & > span {
       font-size: .8em;
       padding-block-end: 8px;
     }
 
-    & > :global(h3) {
+    & > h3 {
       margin: 0;
-      font-size: 2em;
+      font-size: var(--card-title-size, 2em);
       line-height: 1;
     }
   }

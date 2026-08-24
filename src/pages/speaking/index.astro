@@ -27,21 +27,18 @@
  * @page
  */
 
-import BaseLayout from '@layouts/BaseLayout.astro';
+import Layout from '@layouts/Layout.astro';
 import SEO from '@components/SEO.astro';
 import Card from '@components/Card.astro';
 import CardList from '@components/CardList.astro';
 import TagList from '@components/TagList.astro';
-import PageStats from '@components/PageStats.astro';
-import PageHeader from '@components/PageHeader.astro';
-import Hero from '@components/Hero.astro';
 import Media from '@components/Media.astro';
-import Typography from '@components/Typography.astro';
 import Button from '@components/Button.astro';
 import ButtonGroup from '@components/ButtonGroup.astro';
 import { getCollection } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
 import { formatMonthYear } from '@utils/formatDate';
-import { pagesConfig } from '../pages.config';
+import { pagesConfig } from '@/pages.config';
 
 /**
  * Queries all speaking entries from the content collection
@@ -89,55 +86,67 @@ const years = Object.keys(talksByYear)
 const totalTalks = sortedTalks.length;
 
 /**
- * Count of conference talks specifically for statistics display
- * 
- * Highlights conference speaking experience as a key metric.
+ * Table of contents for `<main>`: each year, with its talks nested underneath.
+ *
+ * `<main>` here is authored in Astro rather than markdown, so there is no
+ * `render()` to slug anything; this array is the single source for the TOC
+ * links, the `id`s on the year headings, and the `id`s on the talk cards. It is
+ * built in document order (a year, then that year's talks) because the tree is
+ * nested by walking the list.
  */
-const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').length;
+const headings: MarkdownHeading[] = years.flatMap((year) => [
+  { depth: 2, slug: `year-${year}`, text: String(year) },
+  ...talksByYear[year].map((talk) => ({
+    depth: 3,
+    slug: `talk-${talk.id}`,
+    text: talk.data.title,
+  })),
+]);
 ---
 
-<BaseLayout>
-  <SEO 
+<Layout
+  headings={headings}
+  grid={{
+    title: pagesConfig.speaking.heading,
+    headline: 'Catch me live on Wireframe',
+    description:
+      'A weekday live show: candid design talk, new approaches, and the occasional spicy hot take with guests from the community.',
+    cta: [
+      { label: 'Be on the show', href: 'https://wireframe.ds.house#guest', external: true },
+      { label: 'Watch now', href: 'https://wireframe.ds.house', external: true },
+    ],
+    metric: { value: totalTalks, label: 'talks' },
+    anecdote: pagesConfig.speaking.intro,
+  }}
+>
+  <SEO
     slot="head"
     title={pagesConfig.speaking.title}
     description={pagesConfig.speaking.description}
     type="website"
   />
 
-    <Hero>
-      <Typography tagName="h2">Catch me live on <em>Wireframe</em></Typography>
-      <Typography tagName="p">A weekday live show: candid design talk, new approaches, and the occasional spicy hot take with guests from the community.</Typography>
-      <ButtonGroup>
-        <Button href="https://wireframe.ds.house#guest" variant="primary" external>Be on the show</Button>
-        <Button href="https://wireframe.ds.house" variant="secondary" external>Watch now</Button>
-      </ButtonGroup>
-      <Media
-        slot="aside"
-        src="https://wireframe.ds.house/wireframe-sizzle.webm"
-        alt="Wireframe show sizzle reel"
-        controls={false}
-        autoplay
-        loop
-        muted
-        playsinline
-      />
-    </Hero>
+  <Media
+    slot="media"
+    src="https://wireframe.ds.house/wireframe-sizzle.webm"
+    alt="Wireframe show sizzle reel"
+    controls={false}
+    autoplay
+    loop
+    muted
+    playsinline
+  />
 
-    <PageHeader>
-      <Typography tagName="h1">{pagesConfig.speaking.heading}</Typography>
-      <Typography tagName="p">{pagesConfig.speaking.intro}</Typography>
-      <PageStats text={`${totalTalks} talks · ${conferenceCount} conferences`} />
-    </PageHeader>
-
+  <Fragment slot="main">
     {years.length > 0 ? (
       <div>
         {years.map((year) => (
           <section>
-            <Typography tagName="h2">{year}</Typography>
+            <h2 id={`year-${year}`}>{year}</h2>
             <CardList>
               {talksByYear[year].map((talk) => (
                 <li>
-                  <Card>
+                  <Card id={`talk-${talk.id}`}>
                     <Fragment slot="meta">{formatMonthYear(talk.data.date)} · {talk.data.location}</Fragment>
                     <Fragment slot="title">{talk.data.title}</Fragment>
                     <Fragment slot="description">{talk.data.description}</Fragment>
@@ -174,4 +183,5 @@ const conferenceCount = sortedTalks.filter(t => t.data.type === 'conference').le
     ) : (
       <p class="empty-state">No speaking engagements yet.</p>
     )}
-</BaseLayout>
+  </Fragment>
+</Layout>

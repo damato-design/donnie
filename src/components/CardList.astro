@@ -1,13 +1,52 @@
-<ul>
-  <slot/>
+---
+/**
+ * CardList
+ *
+ * The listing shell every card listing sits in: it owns the `<ul>` wrapper and
+ * its layout, so call sites only map their items into `<li><Card/></li>` in the
+ * default slot.
+ *
+ * `compact` tightens the cards inside it (smaller padding, smaller titles) for
+ * listings whose entries are a title plus a line of copy, like the decision
+ * records. It works by setting the custom properties `Card` reads, so the list
+ * never has to reach into the card's own styles.
+ *
+ * @component
+ *
+ * @slot default - The `<li><Card/></li>` items.
+ *
+ * @example
+ * ```astro
+ * <CardList compact>
+ *   {items.map((item) => <li><Card>...</Card></li>)}
+ * </CardList>
+ * ```
+ */
+
+interface Props {
+  /** Tighten the cards in this list (smaller padding and titles). */
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<ul class:list={['card-list', { 'card-list--compact': compact }]}>
+  <slot />
 </ul>
 
 <style>
-  ul {
+  .card-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
+  }
+
+  /* Consumed by Card, which falls back to its own defaults when unset. */
+  .card-list--compact {
+    --card-padding: 1rem 1.25rem;
+    --card-title-size: 1.25em;
   }
 </style>

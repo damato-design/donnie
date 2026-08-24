@@ -3,7 +3,7 @@
  * SEO Component
  * 
  * Generates comprehensive meta tags for SEO, Open Graph, and Twitter Cards.
- * Should be placed in the "head" slot of BaseLayout.
+ * Should be placed in the "head" slot of Layout.
  * 
  * Features:
  * - Page title with site name suffix
@@ -17,17 +17,17 @@
  * 
  * @example
  * ```astro
- * <BaseLayout>
- *   <SEO 
+ * <Layout>
+ *   <SEO
  *     slot="head"
- *     title="About Me" 
+ *     title="About Me"
  *     description="Learn more about my background"
  *   />
- *   <div>Content</div>
- * </BaseLayout>
+ *   <div slot="main">Content</div>
+ * </Layout>
  * ```
  */
-import { siteConfig } from '../config';
+import { siteConfig } from '@/config';
 
 interface Props {
   /** Page title (will be suffixed with author name unless noSuffix is true) */
@@ -76,7 +76,7 @@ const currentURL = canonicalURL || Astro.url.href;
 // /projects/foo) reuse their section's image; everything else falls back to
 // the home card. These slugs must match `getStaticPaths` in
 // src/pages/og/[page].png.ts.
-const topLevelOg = ['projects', 'decisions', 'journey', 'writing', 'speaking', 'contact'];
+const topLevelOg = ['projects', 'decisions', 'journey', 'writing', 'speaking'];
 const ogSegment = Astro.url.pathname.replace(/^\/+/, '').split('/')[0];
 const ogSlug = topLevelOg.includes(ogSegment) ? ogSegment : 'home';
 

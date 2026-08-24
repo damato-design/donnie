@@ -1,45 +1,31 @@
 ---
 /**
  * Decision Detail Page
- * 
- * Dynamic route that displays the full decision record for a specific decision entry.
- * Presents a structured view of the decision-making process including context, the
- * decision made, alternatives considered with pros/cons, reasoning, and optional
- * additional content.
- * 
- * Features:
- * - Static path generation for all decision entries
- * - Structured decision presentation (Context → Decision → Alternatives → Reasoning)
- * - Alternatives comparison with pros/cons lists
- * - Tag display
- * - Optional markdown body content
- * - SEO optimization with article type
- * - Scroll-to-top functionality
- * - Back navigation to decisions list
- * 
+ *
+ * Dynamic route that displays a decision record. The record itself (Decision →
+ * Alternatives Considered → Reasoning → Why it mattered) is authored as
+ * markdown in the entry's MDX body and rendered wholesale by <Content />; this
+ * page only supplies the header panel around it.
+ *
  * Route: /decisions/[slug]
- * 
+ *
  * @page
  */
 
-import BaseLayout from '@layouts/BaseLayout.astro';
+import Layout from '@layouts/Layout.astro';
 import SEO from '@components/SEO.astro';
 import ScrollToTop from '@components/ScrollToTop.astro';
 import Button from '@components/Button.astro';
-import Section from '@components/Section.astro';
-import Alternatives from '@components/Alternatives.astro';
 import TagList from '@components/TagList.astro';
-import Typography from '@components/Typography.astro';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
-import { renderInlineMarkdown } from '@utils/markdown';
 
 /**
  * Generates static paths for all decision entries
- * 
+ *
  * Queries the decisions content collection and creates a route for each entry
  * using the entry ID as the slug parameter.
- * 
+ *
  * @returns Array of path objects with params and props
  */
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -58,57 +44,43 @@ interface Props {
 }
 
 const { decision } = Astro.props;
-const { Content } = await render(decision);
 
-const whyItMatteredHtml = await renderInlineMarkdown(decision.data.whyItMattered);
+// `headings` is slugged by Astro's markdown pipeline and matches the `id`s it
+// emits, so it drives the table of contents with no extra work.
+const { Content, headings } = await render(decision);
+
+const { title, context, tags } = decision.data;
 ---
 
-<BaseLayout>
-  <SEO 
+{/* Capped at 2: the body's `###`s are one-sentence alternative titles. */}
+<Layout
+  headings={headings}
+  tocMaxDepth={2}
+  grid={{
+    title,
+    cta: [{ label: 'All decisions', href: '/decisions' }],
+    metric: tags?.length ? { value: tags.length, label: 'tags' } : undefined,
+    anecdote: context,
+  }}
+>
+  <SEO
     slot="head"
-    title={`${decision.data.title} - Decision Record`}
-    description={decision.data.context}
+    title={`${title} - Decision Record`}
+    description={context}
     type="article"
   />
 
+  <Fragment slot="main">
     <article class="decision-content">
-      <header class="decision-header">
-        <Typography tagName="h1">{decision.data.title}</Typography>
-        <TagList items={decision.data.tags ?? []} />
-      </header>
+      <TagList items={tags ?? []} />
 
-      <Section title="Context">
-        <Typography tagName="p">{decision.data.context}</Typography>
-      </Section>
-
-      <Section title="Decision">
-        <Typography tagName="blockquote">{decision.data.decision}</Typography>
-      </Section>
-
-      <Section title="Alternatives Considered">
-        <Alternatives alternatives={decision.data.alternatives} />
-      </Section>
-
-      <Section title="Reasoning">
-        <Typography tagName="p">{decision.data.reasoning}</Typography>
-      </Section>
-
-      <Section title="Why it mattered">
-        <Typography tagName="p"><Fragment set:html={whyItMatteredHtml} /></Typography>
-      </Section>
-
-      {decision.body && decision.body.trim().length > 0 && (
-        <section class="decision-body prose">
-          <Content />
-        </section>
-      )}
+      <Content />
 
       <Button href="/decisions" back>
         All decisions
       </Button>
     </article>
-  <ScrollToTop />
 
-  
-</BaseLayout>
-
+    <ScrollToTop />
+  </Fragment>
+</Layout>

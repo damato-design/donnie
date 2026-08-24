@@ -1,0 +1,75 @@
+---
+/**
+ * Square
+ *
+ * The dashboard's media panel: a 1:1 box with a randomly rotated decorative
+ * blob, over which the page's media is stacked. This is where the old `Hero`'s
+ * `aside` content now lives (a portrait, a sizzle reel, an embedded web
+ * component, ...).
+ *
+ * The blob and the slotted media share a single grid cell, so the media sits on
+ * top of the blob rather than below it. With an empty slot the panel is just
+ * the blob.
+ *
+ * @component
+ *
+ * @slot default - The page's media (an <img>, <video>, or embed).
+ */
+
+---
+
+
+<style>
+    /* Captured as a single unit across navigations (blob and media together).
+       The motion this name drives lives in global.css under "View transition
+       choreography". */
+    .square {
+        view-transition-name: square;
+        aspect-ratio: 1;
+        width: 100%;
+        background: var(--grid-bg);
+        background-attachment: fixed;
+        color: var(--grid-fg);
+        overflow: hidden;
+        display: grid;
+        grid-template-areas: 'stack';
+
+        & > * {
+            grid-area: stack;
+            min-width: 0;
+        }
+
+        & > svg {
+            rotate: var(--blob-rotate);
+            scale: 2;
+            translate: 25% 25%;
+            color: #feff7a;
+        }
+    }
+
+    @media (max-width: 800px) {
+        .square {
+            display: none;
+        }
+    }
+
+    .square-media {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        isolation: isolate;
+        background: inherit;
+
+        & :global(:where(img, video)) {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+</style>
+
+<section class="square">
+    <div class="square-media">
+        <slot/>
+    </div>
+</section>

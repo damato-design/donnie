@@ -45,7 +45,7 @@ export const siteConfig = {
    *
    * Default meta description for SEO and social sharing.
    */
-  description: 'User Experience Architect in New York, author of Mise en Mode, and international speaker who bridges design and engineering.',
+  description: 'Focused on improving the practice of design systems and AI model behavior.',
 
   /**
    * Author information
@@ -91,8 +91,16 @@ export const siteConfig = {
   },
   
   /**
+   * Scheduling link
+   *
+   * The primary "get in touch" action. Surfaced by the Contact bar on every
+   * page, which replaced the former /contact page.
+   */
+  scheduling: 'https://cal.com/donnie-damato',
+
+  /**
    * Navigation links
-   * 
+   *
    * Main site navigation structure. Order determines display order in the nav bar.
    * Add or remove items to customize navigation.
    */
@@ -102,7 +110,6 @@ export const siteConfig = {
     { label: 'Journey', href: '/journey' },
     { label: 'Writing', href: '/writing' },
     { label: 'Speaking', href: '/speaking' },
-    { label: 'Connect', href: '/contact' },
   ],
 } as const;
 

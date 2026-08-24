@@ -60,16 +60,19 @@ interface Props {
   
   /** Optional array of skills or technologies associated with this entry */
   skills?: string[];
+
+  /** Optional anchor target, forwarded to the card so a TOC can jump to it. */
+  id?: string;
 }
 
-const { date, title, type, description, skills } = Astro.props;
+const { date, title, type, description, skills, id } = Astro.props;
 
 const formattedDate = formatMonthYear(date);
 ---
 
 <article class="timeline-entry">
   <div class="timeline-content" data-type={type}>
-    <Card>
+    <Card id={id}>
       <Fragment slot="meta">{formattedDate}</Fragment>
       <Fragment slot="title">{title}</Fragment>
       <Fragment slot="description">{description}</Fragment>

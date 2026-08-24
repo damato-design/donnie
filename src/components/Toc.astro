@@ -1,0 +1,66 @@
+---
+/**
+ * Toc
+ *
+ * The dashboard's table-of-contents panel: an in-page nav built from the
+ * headings of whatever is inside `<main>`.
+ *
+ * Headings arrive as Astro's own `MarkdownHeading[]`, in document order. For the
+ * MDX-backed detail pages that array comes straight from `render(entry)`, which
+ * slugs every heading and emits a matching `id` in the rendered HTML, so the
+ * anchors work with nothing else to do. Pages whose `<main>` is authored in
+ * `.astro` build the same shape by hand and put the matching `id` on their
+ * headings or (via `<Card id>`) on their cards.
+ *
+ * The flat list is nested by `buildTocTree`, so a page whose `<main>` mixes
+ * section headings with cards shows each heading with its cards underneath.
+ *
+ * The panel renders nothing at all when there are no headings, so a page can opt
+ * out simply by passing none.
+ *
+ * @component
+ */
+
+import type { MarkdownHeading } from 'astro';
+import { buildTocTree } from '@utils/toc';
+import TocList from '@components/TocList.astro';
+
+interface Props {
+  /** Headings of the current page's `<main>` content, in document order. */
+  headings?: MarkdownHeading[];
+
+  /**
+   * Deepest level to list. The default of 3 covers a section heading plus the
+   * cards under it. The MDX detail pages pass 2, because their level-3 headings
+   * are full sentences (one per key decision / alternative) that would swamp
+   * the panel.
+   */
+  maxDepth?: number;
+}
+
+const { headings = [], maxDepth = 3 } = Astro.props;
+
+const items = buildTocTree(headings, maxDepth);
+---
+
+<style>
+    .toc {
+        padding: var(--grid-padding);
+        background: var(--dash-bg);
+        background-attachment: fixed;
+        color: var(--dash-fg);
+    }
+
+    h2 {
+        margin-block-start: 0;
+    }
+</style>
+
+{items.length > 0 && (
+    <section class="toc">
+        <h2>On this page</h2>
+        <nav aria-label="Table of contents">
+            <TocList items={items} />
+        </nav>
+    </section>
+)}

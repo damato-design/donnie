@@ -6,10 +6,10 @@
  * `.md` mirrors under each collection, e.g. `/projects/<slug>.md`). They power
  * the MCP project at https://github.com/damato-design/mcp.
  *
- * Unlike the original theme's `media` collection, this site keeps the substance
- * of each entry in its frontmatter (overview, problem, decisions, ...), so these
- * renderers serialize the structured fields, not just `entry.body`. The body, when
- * present, is appended last as the first-person "story behind it".
+ * Projects and decisions keep their substance in the MDX body as markdown, so
+ * those renderers emit a small frontmatter header and then the body verbatim.
+ * Journey and speaking entries are still mostly structured fields, so those
+ * renderers serialize them and append the body last.
  *
  * Output deliberately avoids em dashes to match the site's editorial rule.
  *
@@ -44,68 +44,33 @@ export function isoDate(date: Date): string {
 }
 
 /**
- * Renders a project case study as a full markdown document, mirroring the
- * narrative order of the HTML detail page.
+ * Renders a project case study as a full markdown document: the frontmatter
+ * header, then the body, which already carries the whole narrative as markdown
+ * (Overview through Learnings, closing with the story behind it).
  */
 export function renderProject(entry: CollectionEntry<'projects'>): string {
   const d = entry.data;
 
-  const metrics = d.impact.metrics?.length
-    ? bullets(d.impact.metrics.map((m) => `**${m.label}:** ${m.value}`))
-    : '';
-
-  const decisions = d.keyDecisions
-    .map((dec) =>
-      blocks(
-        `### ${dec.decision}`,
-        dec.reasoning,
-        dec.alternatives?.length
-          ? blocks('Alternatives considered:', bullets(dec.alternatives))
-          : ''
-      )
-    )
-    .join('\n\n');
-
   return blocks(
     `# ${d.title}`,
     `> ${d.outcomeSummary}`,
-    bullets([`**Role:** ${d.role}`, `**Year:** ${d.year}`, `**Status:** ${d.status}`]),
-    blocks('## Overview', d.overview),
-    blocks('## Problem', d.problem),
-    blocks('## Constraints', bullets(d.constraints)),
-    blocks('## Approach', d.approach),
-    blocks('## Key Decisions', decisions),
-    blocks('## Tech Stack', bullets(d.techStack)),
-    blocks('## Result & Impact', metrics, d.impact.qualitative),
-    blocks('## Learnings', bullets(d.learnings)),
+    bullets([`**Role:** ${d.role}`, `**Year:** ${d.year}`]),
+    d.techStack.length ? `Tech stack: ${d.techStack.join(', ')}` : '',
     body(entry)
   );
 }
 
 /**
- * Renders a decision record (ADR) as a full markdown document: context,
- * decision, the alternatives with their pros/cons, reasoning, and reflection.
+ * Renders a decision record (ADR) as a full markdown document: the context from
+ * frontmatter, then the body, which already carries the decision, alternatives,
+ * reasoning, and reflection as markdown.
  */
 export function renderDecision(entry: CollectionEntry<'decisions'>): string {
   const d = entry.data;
 
-  const alternatives = d.alternatives
-    .map((alt) =>
-      blocks(
-        `### ${alt.option}`,
-        alt.pros?.length ? blocks('Pros:', bullets(alt.pros)) : '',
-        alt.cons?.length ? blocks('Cons:', bullets(alt.cons)) : ''
-      )
-    )
-    .join('\n\n');
-
   return blocks(
     `# ${d.title}`,
     blocks('## Context', d.context),
-    blocks('## Decision', d.decision),
-    blocks('## Alternatives', alternatives),
-    blocks('## Reasoning', d.reasoning),
-    blocks('## Why it mattered', d.whyItMattered),
     d.tags?.length ? `Tags: ${d.tags.join(', ')}` : '',
     body(entry)
   );

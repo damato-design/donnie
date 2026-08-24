@@ -22,7 +22,9 @@
      background-size, so the dots are a repeating 12px SVG tile instead. If
      satori ignores it, the solid background-color above remains as a fallback. */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23262626' fill-opacity='0.18'/%3E%3C/svg%3E");
-  font-family: 'LINE Seed JP', sans-serif;
+  /* The site's body face, sourced from the same `fonts:` declaration the pages
+     use (see src/lib/og.ts). */
+  font-family: 'Raleway', sans-serif;
 }
 
 .og-body {
@@ -43,7 +45,9 @@
 
 .og-title {
   display: flex;
-  font-family: 'BBH Hegarty', sans-serif;
+  /* The site's display face, sourced from the same `fonts:` declaration the
+     pages use (see src/lib/og.ts). */
+  font-family: 'Kentish', sans-serif;
   font-size: 80px;
   line-height: 1.05;
   /* Sentinel fill. satori can't reference the site's `#longshadow` SVG filter,

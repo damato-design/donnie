@@ -1,0 +1,207 @@
+---
+/**
+ * Grid
+ *
+ * The dashboard's page-header panel: one block carrying the page's identity
+ * (title, headline, description, CTAs), a single headline metric, and a short
+ * anecdote. It is the only page-header primitive; there is no separate hero or
+ * intro component.
+ *
+ * Every region is a **prop**, so a page can pass frontmatter (or a config entry,
+ * or a collection field) straight in. Nothing is slotted, and no region accepts
+ * markup: they are plain strings the component renders as text. A deliberate
+ * line break is a `\n` in the string, honored by `white-space: pre-line`.
+ *
+ * The heading is owned here, not by the call site: `title` renders the page's
+ * single `<h1>` and `headline` renders an `<h2>`, so content inside `<main>`
+ * starts at `<h2>`. Every region except `title` is optional and is omitted
+ * entirely when absent; the anecdote spans the full row when there is no metric
+ * beside it.
+ *
+ * `Layout` renders this, not the page: every page has exactly one, so the page
+ * passes its content as `Layout`'s `grid` prop and never imports this component.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <Layout
+ *   grid={{
+ *     title: 'Speaking',
+ *     headline: 'Catch me live on Wireframe',
+ *     description: 'A weekday live show.',
+ *     cta: [{ label: 'Watch now', href: 'https://wireframe.ds.house', external: true }],
+ *     metric: { value: 24, label: 'talks' },
+ *     anecdote: pagesConfig.speaking.intro,
+ *   }}
+ * >
+ * ```
+ */
+
+/** One link in the CTA row. */
+export interface CtaLink {
+  /** Link text. */
+  label: string;
+  /** Destination. */
+  href: string;
+  /** Open in a new tab (adds the matching `rel`). */
+  external?: boolean;
+}
+
+/** The panel's content. Exported so `Layout` can type its `grid` prop. */
+export interface GridProps {
+  /** The page name, rendered as the page's <h1>. */
+  title: string;
+
+  /** The promotional headline, rendered as an <h2>. */
+  headline?: string;
+
+  /** Supporting copy under the headline. */
+  description?: string;
+
+  /** One or two links, laid out in a row. */
+  cta?: CtaLink[];
+
+  /** The headline metric: a number and what it counts. Omit for no metric. */
+  metric?: {
+    value: string | number;
+    label: string;
+  };
+
+  /** The page intro paragraph. */
+  anecdote?: string;
+}
+
+type Props = GridProps;
+
+const { title, headline, description, cta, metric, anecdote } = Astro.props;
+---
+
+<section class="grid">
+    <div class="identity">
+        <h1>{title}</h1>
+        {headline && <h2>{headline}</h2>}
+        {description && <p>{description}</p>}
+        {cta?.length && (
+            <div class="cta">
+                {cta.map((link) => (
+                    <a
+                        href={link.href}
+                        target={link.external ? '_blank' : undefined}
+                        rel={link.external ? 'noopener noreferrer' : undefined}
+                    >{link.label}</a>
+                ))}
+            </div>
+        )}
+    </div>
+    {metric && (
+        <div class="metric">
+            <output>{metric.value}</output>
+            <span>{metric.label}</span>
+        </div>
+    )}
+    {anecdote && (
+        <div class="anecdote">
+            <p>{anecdote}</p>
+        </div>
+    )}
+</section>
+
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto 1fr;
+        gap: var(--grid-gap);
+
+        & > * {
+            background-image: var(--grid-bg);
+            background-attachment: fixed;
+            color: var(--grid-fg);
+            padding: var(--grid-padding);
+            transition: transform 1s ease;
+        }
+
+        :where(:first-child) {
+            margin-block-start: 0;
+        }
+
+        :where(:last-child) {
+            margin-block-end: 0;
+        }
+    }
+
+    /* The topographic contours over the panel's gradient. `.grid > *` above
+       already paints `--grid-bg`, so that layer is restated here rather than
+       replaced: a bare `background-image` on this rule would drop it. Position
+       and size match the `html` background in global.css, and the inherited
+       `background-attachment: fixed` anchors both layers to the viewport, so the
+       panel's contours line up with the page's instead of reading as a second,
+       unrelated pattern. Set `background-attachment: scroll` here to give the
+       panel its own composition scaled to the square. */
+    /* The three regions are captured individually across navigations. The name
+       is declared here (it belongs to the element), the motion it drives lives
+       in global.css under "View transition choreography". */
+    .identity {
+        view-transition-name: identity;
+        aspect-ratio: 1;
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        h2 {
+            font-size: 4em;
+            margin-block: 8px;
+            font-family: var(--font-kentish);
+            font-weight: normal;
+        }
+    }
+
+    /* A `\n` in the headline or description is an intentional line break. */
+    .identity h2,
+    .identity p {
+        white-space: pre-line;
+        max-width: 30ch;
+    }
+
+    .metric {
+        view-transition-name: metric;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        align-items: center;
+        line-height: 1;
+
+        output {
+            font-size: 2em;
+            font-family: var(--font-kentish);
+        }
+
+        span {
+            font-size: .8em;
+            text-transform: uppercase;
+            font-weight: bolder;
+        }
+    }
+
+    .anecdote {
+        view-transition-name: anecdote;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-size: .8em;
+    }
+
+    /* Without a metric beside it, the anecdote takes the whole row. */
+    .grid:not(:has(.metric)) .anecdote {
+        grid-column: 1 / -1;
+    }
+
+    .cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--grid-padding);
+    }
+</style>

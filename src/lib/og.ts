@@ -11,8 +11,9 @@
  *
  * OgImage's styles live in `OgImage.css`, which `juice` inlines onto the markup
  * (satori needs styles on the elements, not in a stylesheet). The portrait is
- * read from `src/assets/` (alongside the fonts) and embedded as a base64 data
- * URI so satori can resolve it without a network fetch.
+ * read from `src/assets/` and embedded as a base64 data URI so satori can
+ * resolve it without a network fetch. The two fonts are not read from disk at
+ * all: both come from the site's `fonts:` declaration (see `loadSiteFamily`).
  *
  * satori can't reference the site's `#longshadow` SVG filter via CSS, so after
  * satori produces the SVG we splice the real filter in (`applyLongShadow`):
@@ -26,6 +27,8 @@ import { html as toReactNode } from 'satori-html';
 import { Resvg } from '@resvg/resvg-js';
 import juice from 'juice';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
+import { fontData, experimental_getFontFileURL } from 'astro:assets';
+import type { CssVariable } from 'astro:assets';
 import OgImage from '../components/OgImage.astro';
 import LongShadow from '../components/LongShadow.astro';
 import ogImageCss from '../components/OgImage.css?raw';
@@ -92,19 +95,115 @@ function getContainer() {
 
 type SatoriFont = Parameters<typeof satori>[1]['fonts'][number];
 
+/**
+ * Formats satori can parse. Notably **not** woff2, which is what the site serves
+ * to browsers, so a family used here must also declare a ttf/otf/woff source.
+ */
+const SATORI_FORMATS = new Set(['truetype', 'opentype', 'woff']);
+
+/** sfnt signatures: TrueType (0x00010000 and 'true') and CFF ('OTTO'). */
+const SFNT_SIGNATURES = new Set([0x00010000, 0x74727565, 0x4f54544f]);
+
+/**
+ * Whether the file is a **variable** font, i.e. carries an `fvar` table.
+ *
+ * satori's opentype.js fork throws parsing the variation tables, so a variable
+ * source has to be passed over in favour of a static one. This is a content
+ * check rather than a filename or format check because a variable and a static
+ * ttf are both `format('truetype')`: nothing in the declaration distinguishes
+ * them. A woff/woff2 wrapper is not inspected (the format filter has already
+ * excluded woff2, and the sfnt tables sit behind compression in a woff).
+ */
+function isVariableFont(data: Buffer): boolean {
+  if (data.length < 12 || !SFNT_SIGNATURES.has(data.readUInt32BE(0))) return false;
+  const numTables = data.readUInt16BE(4);
+  if (data.length < 12 + numTables * 16) return false;
+  for (let i = 0; i < numTables; i++) {
+    if (data.toString('ascii', 12 + i * 16, 16 + i * 16) === 'fvar') return true;
+  }
+  return false;
+}
+
+/**
+ * Loads a family the *site* declares in `astro.config.mjs` (`fonts:`), so the
+ * card and the pages can't drift onto different faces.
+ *
+ * `fontData` is keyed by the family's `cssVariable` and lists every variant's
+ * sources; `experimental_getFontFileURL` turns one of those into a URL that is
+ * fetchable right now (during prerendering Astro serves font files from a
+ * temporary local server).
+ *
+ * A variant's sources are listed browser-best-first, so this walks them in order
+ * and keeps the first file satori can actually read, skipping the woff2s (by
+ * format) and the variable fonts (by content). Variants with no readable source
+ * are skipped, and a family with none at all is a build error rather than a
+ * silent fallback to some other face.
+ *
+ * A variant's declared `weight` may be an axis range ('100 900') rather than a
+ * single value; that is meaningless to satori, which is being handed a static
+ * file, so an unparseable weight falls back to 400.
+ */
+async function loadSiteFamily(cssVariable: CssVariable, name: string): Promise<SatoriFont[]> {
+  const variants = fontData[cssVariable] ?? [];
+  const fonts: SatoriFont[] = [];
+
+  for (const variant of variants) {
+    let data: Buffer | undefined;
+
+    for (const source of variant.src) {
+      if (!source.format || !SATORI_FORMATS.has(source.format)) continue;
+
+      const url = experimental_getFontFileURL(source.url, undefined);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Could not fetch ${name} from ${url}: ${response.status} ${response.statusText}`);
+      }
+
+      const candidate = Buffer.from(await response.arrayBuffer());
+      if (isVariableFont(candidate)) continue;
+
+      data = candidate;
+      break;
+    }
+
+    if (!data) continue;
+
+    fonts.push({
+      name,
+      data,
+      weight: (Number(variant.weight) || 400) as SatoriFont['weight'],
+      style: (variant.style === 'italic' ? 'italic' : 'normal') as SatoriFont['style'],
+    });
+  }
+
+  if (fonts.length === 0) {
+    throw new Error(
+      `No satori-readable font file for "${name}" (${cssVariable}). satori reads neither woff2 nor ` +
+        `variable fonts, so add a *static* ttf, otf, or woff source alongside whatever the browsers ` +
+        `get, in the \`fonts:\` config in astro.config.mjs.`
+    );
+  }
+
+  return fonts;
+}
+
+/**
+ * The card's two fonts, both sourced from the site's own `fonts:` declaration so
+ * the card and the pages can't drift onto different faces: Kentish for the
+ * title, Raleway for the body copy. These are the only fonts the card uses.
+ *
+ * Note that the Raleway the config points at is a *static* instance. satori's
+ * opentype.js fork throws on a variable font's `fvar`/`gvar` tables, so the
+ * declaration must never be pointed back at a variable file.
+ */
 let fontCache: SatoriFont[] | undefined;
 async function loadFonts(): Promise<SatoriFont[]> {
   if (fontCache) return fontCache;
-  const [hegarty, regular, bold] = await Promise.all([
-    readFile(join(assetsDir, 'BBHHegarty-Regular.ttf')),
-    readFile(join(assetsDir, 'LINESeedJP-Regular.ttf')),
-    readFile(join(assetsDir, 'LINESeedJP-Bold.ttf')),
+  const [kentish, raleway] = await Promise.all([
+    loadSiteFamily('--font-kentish', 'Kentish'),
+    loadSiteFamily('--font-raleway', 'Raleway'),
   ]);
-  fontCache = [
-    { name: 'BBH Hegarty', data: hegarty, weight: 400, style: 'normal' },
-    { name: 'LINE Seed JP', data: regular, weight: 400, style: 'normal' },
-    { name: 'LINE Seed JP', data: bold, weight: 700, style: 'normal' },
-  ];
+  fontCache = [...kentish, ...raleway];
   return fontCache;
 }
 

@@ -1,0 +1,112 @@
+---
+/**
+ * Layout
+ *
+ * The dashboard shell, and the only layout: `global.css` lays `<body>` out as a
+ * named grid and this file fills each area. `Nav`, `Contact`, and `Toc` are the
+ * same on every page, so the layout renders them itself; the page-specific
+ * panels arrive through slots.
+ *
+ * The page header panel (`Grid`) is data, not markup: the page passes its
+ * content as the `grid` prop and the layout renders the panel. `Square` is the
+ * one panel that takes markup, so it keeps a slot.
+ *
+ * @slot head - SEO / structured data, rendered into <head>.
+ * @slot media - The page's media, stacked over Square's blob.
+ * @slot main - The page's content.
+ */
+
+import { ClientRouter } from "astro:transitions";
+import { Font } from 'astro:assets';
+import { siteConfig } from "@/config";
+import Nav from '@components/Nav.astro';
+import Square from '@components/Square.astro';
+import Main from '@components/Main.astro';
+import Contact from '@components/Contact.astro';
+import Grid, { type GridProps } from '@components/Grid.astro';
+import Toc from '@components/Toc.astro'
+import type { MarkdownHeading } from 'astro';
+import '@styles/global.css';
+
+interface Props {
+  /** Content of the page header panel. See `Grid`. */
+  grid: GridProps;
+
+  /**
+   * Headings of this page's `<main>` content, in document order, driving the
+   * table of contents. MDX-backed pages pass `render(entry)`'s `headings`
+   * straight through; pages authored in `.astro` build the same shape by hand.
+   * Omit for no TOC.
+   */
+  headings?: MarkdownHeading[];
+
+  /** Deepest table-of-contents level to list. See `Toc`. */
+  tocMaxDepth?: number;
+}
+
+const { grid, headings, tocMaxDepth } = Astro.props;
+---
+
+<!doctype html>
+<html lang={siteConfig.language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO tags injected via slot -->
+    <slot name="head" />
+
+    <!-- Display face for headings and titles, applied in global.css -->
+    <Font cssVariable="--font-kentish" preload />
+    <Font cssVariable="--font-raleway" preload />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <ClientRouter />
+
+    <script>
+      /**
+       * Kick autoplay videos into playing after every page load, including the
+       * client-side navigations driven by <ClientRouter /> (View Transitions).
+       *
+       * On a real page load the browser autoplays a muted <video autoplay> as
+       * it parses it. But when the ClientRouter swaps a freshly-fetched page
+       * into the live document, that video node is *inserted* rather than
+       * parsed, so the browser neither starts its autoplay nor, in many cases,
+       * begins fetching the source at all, the media stays blank until a manual
+       * refresh. This listener lives on `document` (which survives every swap),
+       * so it is attached once and runs on each navigation: it forces an
+       * unstarted source to load, then plays.
+       */
+      function playAutoplayVideos() {
+        document
+          .querySelectorAll<HTMLVideoElement>('video[autoplay]')
+          .forEach((video) => {
+            if (!video.paused) return;
+            if (video.readyState === 0) video.load();
+            video.play().catch(() => {});
+          });
+      }
+
+      document.addEventListener('astro:page-load', playAutoplayVideos);
+    </script>
+
+    <!-- <script is:inline defer src="https://scripts.withcabin.com/hello.js"></script> -->
+  </head>
+  <body>
+    <Nav />
+    <Contact />
+    <Square>
+      <slot name="media" />
+    </Square>
+    <Grid {...grid} />
+    <Main>
+      <slot name="main" />
+    </Main>
+    <Toc headings={headings} maxDepth={tocMaxDepth} />
+  </body>
+</html>

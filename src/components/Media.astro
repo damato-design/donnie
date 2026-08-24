@@ -2,15 +2,22 @@
 /**
  * Media
  *
- * Renders the right element for a given `src` by inspecting its file
- * extension: an image (`<img>`), a video (`<video>`), or audio (`<audio>`).
+ * Renders the right element for a given `src`: an image, a video, or audio.
  * This keeps call sites declarative, they pass a `src` and an `alt`/label and
  * don't have to know which element a particular file needs.
  *
- * `src` is a plain string path (e.g. a `/`-rooted public asset or an absolute
- * URL), not an imported `ImageMetadata`, so this does NOT run files through
- * Astro's build-time image optimization. Use `astro:assets` `<Image>` directly
- * when you need responsive/optimized imported images.
+ * `src` accepts either form:
+ *
+ * - An **imported local asset** (`ImageMetadata`, from `import img from
+ *   '@assets/x.png'`) renders through `astro:assets` `<Image>`, so it is
+ *   optimized at build time: modern formats, a generated `srcset`, and intrinsic
+ *   `width`/`height` so the panel doesn't shift as it loads.
+ * - A **plain string** path or URL (a `/`-rooted public asset, a remote file)
+ *   renders as-is. Remote files can't be optimized at build time, and video and
+ *   audio are never processed, so those always take this path.
+ *
+ * The file extension selects the element for string sources; an imported asset
+ * is always an image.
  *
  * Video and audio default to showing native `controls`; pass `controls={false}`
  * to opt out. Any other valid attribute (loading, width, height, autoplay,
@@ -29,16 +36,32 @@
  *
  * @example
  * ```astro
- * <Media src="/assets/cover.png" alt="Book cover" />
+ * import cover from '@assets/cover.png';
+ *
+ * <Media src={cover} alt="Book cover" />
  * <Media src="/media/talk.mp4" alt="Conference talk" poster="/media/talk.jpg" />
  * <Media src="/media/episode.mp3" alt="Podcast episode" />
- * <Media src="/media/sizzle.webm" alt="Sizzle reel" ratio="16/9" />
+ * <Media src="https://example.com/sizzle.webm" alt="Sizzle reel" ratio="16/9" />
  * ```
  */
 
-interface Props {
-  /** Path or URL to the media file. The extension selects the element. */
-  src: string;
+import { Image } from 'astro:assets';
+import type { HTMLAttributes } from 'astro/types';
+
+/**
+ * Attributes forwarded to whichever element is rendered. `<video>` carries the
+ * widest set, so it is the base; `crossorigin`, `width`, and `height` are
+ * redeclared or dropped because `<Image>` types them more narrowly than
+ * `<video>` does and one type has to satisfy every branch.
+ */
+interface Props
+  extends Omit<HTMLAttributes<'video'>, 'src' | 'controls' | 'crossorigin' | 'width' | 'height'> {
+  /** Explicit width. Imported assets carry their own, so this is rarely needed. */
+  width?: number | `${number}`;
+  /** Explicit height. Imported assets carry their own, so this is rarely needed. */
+  height?: number | `${number}`;
+  /** An imported local image, or a path/URL. The extension selects the element. */
+  src: ImageMetadata | string;
   /** Text alternative (img `alt`) / accessible label (aria-label for a/v). */
   alt?: string;
   /** Show native controls on video/audio (default: true; ignored for images). */
@@ -53,40 +76,45 @@ interface Props {
    * number is treated as pixels. Omit for the default full-width behavior.
    */
   maxWidth?: string | number;
-  /** Any other valid attribute, forwarded to the rendered element. */
-  [key: string]: unknown;
 }
 
 const { src, alt = '', controls = true, ratio, maxWidth, ...rest } = Astro.props;
 
-const ext = src.split(/[?#]/)[0].split('.').pop()?.toLowerCase() ?? '';
-
 const VIDEO = ['mp4', 'webm', 'ogv', 'mov', 'm4v'];
 const AUDIO = ['mp3', 'wav', 'ogg', 'oga', 'm4a', 'aac', 'flac'];
 
-const kind = VIDEO.includes(ext) ? 'video' : AUDIO.includes(ext) ? 'audio' : 'image';
+/** An imported asset is always an image; a string is classified by extension. */
+const ext = typeof src === 'string' ? (src.split(/[?#]/)[0].split('.').pop()?.toLowerCase() ?? '') : '';
+const kind =
+  typeof src !== 'string' ? 'asset' : VIDEO.includes(ext) ? 'video' : AUDIO.includes(ext) ? 'audio' : 'image';
 
 const Tag = kind === 'image' ? 'img' : kind;
-const mediaAttrs =
-  kind === 'image'
-    ? { src, alt }
-    : { src, controls, 'aria-label': alt || undefined };
 const max = maxWidth ? `min(${maxWidth}, 100%)` : '100%';
+const frameStyle = `aspect-ratio: ${ratio}; max-width: ${max}`;
 ---
 
 {
   ratio != null ? (
-    <div
-      class="media-frame"
-      style={`aspect-ratio: ${ratio}; max-width: ${max}`}
-    >
-      <Tag class="media" {...mediaAttrs} {...rest} />
+    <div class="media-frame" style={frameStyle}>
+      {kind === 'asset' ? (
+        <Image class="media" src={src as ImageMetadata} alt={alt} {...rest} />
+      ) : kind === 'image' ? (
+        <img class="media" src={src as string} alt={alt} {...rest} />
+      ) : (
+        <Tag class="media" src={src as string} controls={controls} aria-label={alt || undefined} {...rest} />
+      )}
     </div>
+  ) : kind === 'asset' ? (
+    <Image class="media" src={src as ImageMetadata} alt={alt} style={`width: ${max}`} {...rest} />
+  ) : kind === 'image' ? (
+    <img class="media" src={src as string} alt={alt} style={`max-width: ${max}`} {...rest} />
   ) : (
     <Tag
       class="media"
+      src={src as string}
+      controls={controls}
+      aria-label={alt || undefined}
       style={`max-width: ${max}`}
-      {...mediaAttrs}
       {...rest}
     />
   )
@@ -95,16 +123,10 @@ const max = maxWidth ? `min(${maxWidth}, 100%)` : '100%';
 <style>
   .media {
     display: block;
-    max-width: 100%;
-  }
-
-  img.media,
-  video.media {
-    height: auto;
-  }
-
-  audio.media {
-    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mix-blend-mode: overlay;
+    filter: grayscale(1);
   }
 
   /* Aspect-ratio frame: hold the box, center + contain the media inside it. */
@@ -116,13 +138,13 @@ const max = maxWidth ? `min(${maxWidth}, 100%)` : '100%';
     overflow: hidden;
   }
 
-  .media-frame .media {
+  /* `:global` because <Image> renders its <img> outside this component's scope. */
+  .media-frame > :global(:where(img, video, audio)) {
     max-width: 100%;
     max-height: 100%;
   }
 
-  .media-frame img.media,
-  .media-frame video.media {
+  .media-frame > :global(:where(img, video)) {
     height: auto;
     object-fit: contain;
   }

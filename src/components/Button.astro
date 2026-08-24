@@ -13,7 +13,8 @@
  *
  * Content is slotted, so an icon + label compose naturally (the button is a
  * flex row). Visual variants are `primary` (filled) and `secondary` (outline).
- * Set `arrow` to append the standard trailing forward arrow (e.g. card CTAs);
+ * Set `arrow` to append the standard trailing forward arrow (e.g. card CTAs) or
+ * `back` to prepend the leading back arrow (e.g. a detail page's "All projects");
  * fill the `icon` slot to prepend a leading icon (e.g. a Slides/Video glyph).
  *
  * @component
@@ -33,8 +34,14 @@
  */
 
 import ArrowIcon from '@components/ArrowIcon.astro';
+import type { HTMLAttributes } from 'astro/types';
 
-interface Props {
+/**
+ * Any other valid attribute (aria-label, id, title, data-*, ...) is forwarded to
+ * the rendered element. `<a>` is the base set; `href` and `type` are redeclared
+ * below because this component gives them narrower meanings.
+ */
+interface Props extends Omit<HTMLAttributes<'a'>, 'href' | 'type'> {
   /** Destination. Provided -> renders a link; omitted -> renders a <button>. */
   href?: string;
   /** Visual style. */
@@ -45,10 +52,10 @@ interface Props {
   disabled?: boolean;
   /** Append the standard trailing forward arrow after the label. */
   arrow?: boolean;
+  /** Prepend the standard leading back arrow before the label. */
+  back?: boolean;
   /** Button type when rendered as <button>. */
   type?: 'button' | 'submit' | 'reset';
-  /** Any other valid attributes (aria-label, id, ...). */
-  [key: string]: unknown;
 }
 
 const {

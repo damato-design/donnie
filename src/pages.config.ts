@@ -7,19 +7,24 @@
  * Usage:
  * ```astro
  * ---
- * import BaseLayout from '@layouts/BaseLayout.astro';
+ * import Layout from '@layouts/Layout.astro';
  * import SEO from '@components/SEO.astro';
- * import { pagesConfig } from '../pages.config';
+ * import { pagesConfig } from '@/pages.config';
  * ---
- * 
- * <BaseLayout>
- *   <SEO 
+ *
+ * <Layout
+ *   grid={{
+ *     title: pagesConfig.projects.heading,
+ *     anecdote: pagesConfig.projects.intro,
+ *   }}
+ * >
+ *   <SEO
  *     slot="head"
  *     title={pagesConfig.projects.title}
  *     description={pagesConfig.projects.description}
  *   />
- *   <!-- Page content -->
- * </BaseLayout>
+ *   <!-- Page content in the "main" slot -->
+ * </Layout>
  * ```
  * 
  * @module pages.config
@@ -106,15 +111,6 @@ export const pagesConfig = {
     description: 'Conference talks, panels, podcast appearances, and live sessions on design systems, design tokens, and theming.',
     heading: 'Speaking',
     intro: 'I regularly speak at conferences and on podcasts, panels, and live shows about design systems, design tokens, and theming. Here\'s a collection of my talks and appearances.',
-  },
-
-  /**
-   * Contact page (/contact)
-   */
-  contact: {
-    title: 'Connect - Get in Touch',
-    description: 'Get in touch to discuss design systems, collaborations, speaking, or teaching.',
-    heading: 'Let\'s Connect',
   },
 } as const;
 

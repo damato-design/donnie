@@ -1,7 +1,36 @@
-@property --bgcolor {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: Canvas;
+:root {
+  --grid-padding: 16px;
+  --grid-gap: 2px;
+  --grid-bg: linear-gradient(135deg, #501111, #951111);
+  --grid-fg: #f1f1f1;
+  --dash-bg: linear-gradient(135deg, #151515, #0c0c0c);
+  --dash-fg: #a4a4a4;
+
+  /* Surface colour the <main> content components paint against (Card, Section,
+     Button). Placeholder: it tracks the dashboard background until those
+     components are restyled for the new shell. */
+  --bgcolor: var(--dash-bg);
+
+  /* Tempo for the panel choreography at the bottom of this file. One duration
+     and one stagger step drive all four panels, so retiming the sequence is a
+     two-value edit. `--vt-enter` is how long the entering panels wait for the
+     leaving ones to clear; it overlaps them deliberately. */
+  --vt-duration: 300ms;
+  --vt-stagger: 50ms;
+  --vt-enter: 200ms;
+  --vt-ease: cubic-bezier(0.33, 0.85, 0.4, 1);
+
+  /* Clearance a sliding panel travels *beyond* its own footprint, so it starts
+     and ends off screen rather than parked in `body`'s centred gutter.
+     Measured against the viewport because the gutter is too.
+
+     The two axes are not symmetrical and are tuned by eye, not derived: the
+     block axis needs far more than the inline one to get `identity` (the
+     tallest panel, and the one sitting closest to the top edge) fully out of
+     frame. Raise a value if a panel is ever visible at rest before its
+     entrance; these only ever need to be generous, never exact. */
+  --vt-slide-inline: 50vw;
+  --vt-slide-block: 150vh;
 }
 
 *,
@@ -10,20 +39,34 @@
   box-sizing: border-box;
 }
 
+/* The topographic contour lines sit over the base gradient. The SVG carries no
+   width/height (only a viewBox), so it has no intrinsic size: `cover` gives it
+   one, and `fixed` sizes both layers to the viewport rather than stretching
+   them over the full document height. Its strokes are pure black, so it reads
+   as a subtle darker texture against the dark ground; `background-blend-mode`
+   is the knob to reach for if it needs more or less presence.
+
+   `background-color` is what fills the overscroll gutter: the root element's
+   background propagates to the canvas, but viewport-sized `fixed` image layers
+   stop at the viewport edge, so only the colour paints the rubber-band area.
+   `color-scheme: dark` tells the UA the same thing, which also darkens the
+   scrollbars and any native controls. */
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   interpolate-size: allow-keywords;
-  background-color: var(--bgcolor);
-  color: color(from var(--bgcolor) xyz-d65
-		clamp(0, (.36 / y - 1) * infinity, 1)
-		clamp(0, (.36 / y - 1) * infinity, 1)
-		clamp(0, (.36 / y - 1) * infinity, 1)
-	);
+  color-scheme: dark;
+  background-color: #111;
+  background-image:
+    url('../assets/topo.svg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: var(--dash-fg);
+  overflow-x: hidden;
 }
 
-/* Smooth in-page anchor scrolling (e.g. the scroll-to-top control), opt-out for
-   users who prefer reduced motion. */
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
@@ -31,28 +74,78 @@ html {
 }
 
 body {
-  margin: 0;
-  font-family: "LINE Seed JP", sans-serif;
-  line-height: 1.4;
-  background-image: radial-gradient(circle, currentColor .5px, transparent .5px);
-  background-attachment: fixed;
-  background-size: 6px 6px;
-  display: flex;
-  flex-direction: column;
+  margin: 0 auto;
   min-height: 100vh;
+  display: grid;
+  font-family: var(--font-raleway);
+  font-weight: 500;
+  background-color: #000;
+  line-height: 1.5;
+  gap: var(--grid-gap);
+  max-width: 1200px;
+  grid-template-columns: 55% auto;
+  grid-template-rows: auto auto 1fr;
+  grid-template-areas:
+    'nav contact'
+    'square grid'
+    'main toc';
 }
 
-/* Links */
+@media (max-width: 800px) {
+  body {
+    grid-template-columns: 1fr;
+    grid-template-rows: initial;
+    grid-auto-rows: auto;
+    grid-template-areas:
+    'nav'
+    'grid'
+    'toc'
+    'main'
+    'contact'
+    'square';
+  }
+}
+
+/* Each panel is placed here, next to the template that names the areas, rather
+   than carrying its own placement. `body > ` keeps these from matching a nested
+   element that happens to share a class name. */
+body > .nav {
+  grid-area: nav;
+}
+
+body > .contact {
+  grid-area: contact;
+}
+
+body > .square {
+  grid-area: square;
+}
+
+body > .grid {
+  grid-area: grid;
+}
+
+body > .main {
+  grid-area: main;
+  padding: var(--grid-padding);
+}
+
+body > .toc {
+  grid-area: toc;
+}
+
+:where(h1) {
+  font-size: .6em;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: .5em;
+}
+
 a {
   color: currentColor;
   text-underline-offset: .15em;
 }
 
-ul li {
-  margin-block: 16px;
-}
-
-/* Images */
 img {
   max-width: 100%;
   height: auto;
@@ -63,6 +156,23 @@ blockquote {
   border-left: 4px solid currentColor;
   padding-left: 16px;
   margin: 16px 0;
+}
+
+/* Markdown tables (the decision records' pros/cons and the case studies'
+   key decisions). Carries over the borders the former SplitTable component
+   owned, so authored tables don't render as unruled text. */
+table {
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  border: 1px solid;
+}
+
+th,
+td {
+  padding: 8px 16px;
+  vertical-align: top;
+  border: 1px solid currentColor;
 }
 
 /* Disclosure (native <details>/<summary>)
@@ -85,4 +195,149 @@ details::details-content {
 
 details[open]::details-content {
   height: auto;
+}
+
+/* View transition choreography
+   ==========================================================================
+   `<ClientRouter />` in Layout turns every navigation into a same-document
+   view transition. By default the whole page cross-fades as one snapshot
+   (`root`); naming an element lifts it out of that snapshot so it can be
+   animated on its own. Four panels are named, each in its own component:
+
+     square    Square.astro    slides in from the left
+     identity  Grid.astro      slides in from the top
+     metric    Grid.astro      slides in from the bottom
+     anecdote  Grid.astro      slides in from the right
+
+   The names are declared beside the elements they belong to; the motion lives
+   here because `::view-transition-*` are pseudo-elements on the document root,
+   not on any component, and because the sequencing is a cross-component
+   concern. `metric` and `anecdote` are optional regions: a page without one
+   registers no such name, and that panel simply sits out the transition.
+
+   Each direction is a single keyframe describing the *entrance*. The exit
+   replays it with `animation-direction: reverse`, so a panel always leaves the
+   way it arrived, and the exit order is the entrance order backwards (the
+   `--vt-stagger` multipliers below run 0,1,2,3 one way and 3,2,1,0 the other).
+
+   `animation-fill-mode: both` is load-bearing: `backwards` holds an entering
+   panel offscreen through its delay, `forwards` keeps a left one offscreen
+   after it lands. Without it panels flash in place at either end. */
+
+/* `100%` clears the panel's own box, the viewport unit clears whatever sits
+   between that box and the edge of the screen. The two together are why a
+   panel is genuinely off-screen at the start of its entrance instead of
+   visibly waiting in the gutter. */
+@keyframes slide-from-left {
+  from {
+    transform: translateX(calc(-100% - var(--vt-slide-inline)));
+  }
+}
+
+@keyframes slide-from-right {
+  from {
+    transform: translateX(calc(100% + var(--vt-slide-inline)));
+  }
+}
+
+@keyframes slide-from-top {
+  from {
+    transform: translateY(calc(-100% - var(--vt-slide-block)));
+  }
+}
+
+@keyframes slide-from-bottom {
+  from {
+    transform: translateY(calc(100% + var(--vt-slide-block)));
+  }
+}
+
+/* One tempo for every panel; only direction and delay differ below. */
+::view-transition-old(square),
+::view-transition-new(square),
+::view-transition-old(identity),
+::view-transition-new(identity),
+::view-transition-old(metric),
+::view-transition-new(metric),
+::view-transition-old(anecdote),
+::view-transition-new(anecdote) {
+  animation-duration: var(--vt-duration);
+  animation-timing-function: var(--vt-ease);
+  animation-fill-mode: both;
+}
+
+/* The group is the box the old and new snapshots animate inside. It only does
+   visible work when a panel changes size between pages (the anecdote, which
+   takes the full row on a page with no metric); matching its duration to the
+   full sequence keeps that resize from finishing early and snapping. */
+::view-transition-group(square),
+::view-transition-group(identity),
+::view-transition-group(metric),
+::view-transition-group(anecdote) {
+  animation-duration: calc(var(--vt-enter) + 3 * var(--vt-stagger) + var(--vt-duration));
+}
+
+/* Entering: square, identity, metric, anecdote. */
+::view-transition-new(square) {
+  animation-name: slide-from-left;
+  animation-delay: var(--vt-enter);
+}
+
+::view-transition-new(identity) {
+  animation-name: slide-from-top;
+  animation-delay: calc(var(--vt-enter) + 1 * var(--vt-stagger));
+}
+
+::view-transition-new(metric) {
+  animation-name: slide-from-bottom;
+  animation-delay: calc(var(--vt-enter) + 2 * var(--vt-stagger));
+}
+
+::view-transition-new(anecdote) {
+  animation-name: slide-from-right;
+  animation-delay: calc(var(--vt-enter) + 3 * var(--vt-stagger));
+}
+
+/* Leaving: the same keyframes reversed, in the opposite order. */
+::view-transition-old(anecdote) {
+  animation-name: slide-from-right;
+  animation-direction: reverse;
+  animation-delay: 0ms;
+}
+
+::view-transition-old(metric) {
+  animation-name: slide-from-bottom;
+  animation-direction: reverse;
+  animation-delay: calc(1 * var(--vt-stagger));
+}
+
+::view-transition-old(identity) {
+  animation-name: slide-from-top;
+  animation-direction: reverse;
+  animation-delay: calc(2 * var(--vt-stagger));
+}
+
+::view-transition-old(square) {
+  animation-name: slide-from-left;
+  animation-direction: reverse;
+  animation-delay: calc(3 * var(--vt-stagger));
+}
+
+/* Sliding panels are exactly the motion this opts out of. The root cross-fade
+   Astro sets up is left alone; it carries no movement. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(square),
+  ::view-transition-group(identity),
+  ::view-transition-group(metric),
+  ::view-transition-group(anecdote),
+  ::view-transition-old(square),
+  ::view-transition-new(square),
+  ::view-transition-old(identity),
+  ::view-transition-new(identity),
+  ::view-transition-old(metric),
+  ::view-transition-new(metric),
+  ::view-transition-old(anecdote),
+  ::view-transition-new(anecdote) {
+    animation: none;
+  }
 }

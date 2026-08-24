@@ -7,8 +7,8 @@
  */
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { renderOgPng, ogResponseHeaders } from '../../lib/og';
-import { pagesConfig } from '../../pages.config';
-import { siteConfig } from '../../config';
+import { pagesConfig } from '@/pages.config';
+import { siteConfig } from '@/config';
 
 /** Heading + description used on each generated card. */
 const ogPages: Record<string, { title: string; description: string }> = {
@@ -19,7 +19,6 @@ const ogPages: Record<string, { title: string; description: string }> = {
   journey: { title: pagesConfig.journey.heading, description: pagesConfig.journey.description },
   writing: { title: pagesConfig.writing.heading, description: pagesConfig.writing.description },
   speaking: { title: pagesConfig.speaking.heading, description: pagesConfig.speaking.description },
-  contact: { title: pagesConfig.contact.heading, description: pagesConfig.contact.description },
 };
 
 export const getStaticPaths = (() =>
