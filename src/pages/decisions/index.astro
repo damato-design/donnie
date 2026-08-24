@@ -29,6 +29,7 @@ import Media from '@components/Media.astro';
 import { getCollection } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
 import { pagesConfig } from '@/pages.config';
+import { gridContent } from '@/grid.config';
 import { siteConfig } from '@/config';
 import uxdx from '@assets/uxdx.jpg'
 
@@ -36,11 +37,6 @@ import uxdx from '@assets/uxdx.jpg'
  * Queries all decisions from the content collection
  */
 const allDecisions = await getCollection('decisions');
-
-/**
- * Total count of documented decisions for statistics display
- */
-const totalDecisions = allDecisions.length;
 
 /**
  * Table of contents for `<main>`: one entry per decision record.
@@ -58,15 +54,7 @@ const headings: MarkdownHeading[] = allDecisions.map((decision) => ({
 
 <Layout
   headings={headings}
-  grid={{
-    title: pagesConfig.decisions.heading,
-    headline: 'Stageworthy thinking',
-    description:
-      'My unglamorous research leads to provocative positions that push people to reconsider their own practice.',
-    cta: [{ label: 'Put me on your stage', href: siteConfig.scheduling, external: true }],
-    metric: { value: totalDecisions, label: 'decisions' },
-    anecdote: pagesConfig.decisions.intro,
-  }}
+  grid={gridContent.decisions}
 >
   <SEO
     slot="head"

@@ -9,19 +9,18 @@
  *   satori                                  -> SVG (with brand fonts)
  *   @resvg/resvg-js                         -> PNG buffer
  *
- * OgImage's styles live in `OgImage.css`, which `juice` inlines onto the markup
- * (satori needs styles on the elements, not in a stylesheet). The portrait is
- * read from `src/assets/` and embedded as a base64 data URI so satori can
- * resolve it without a network fetch. The two fonts are not read from disk at
- * all: both come from the site's `fonts:` declaration (see `loadSiteFamily`).
+ * The card is the dashboard shell (`Square` + `Grid`) drawn in the CSS subset
+ * satori understands, and it is handed the same `grid.config.ts` entry the real
+ * page header gets, so the two can't drift.
  *
- * satori can't reference the site's `#longshadow` SVG filter via CSS, so after
- * satori produces the SVG we splice the real filter in (`applyLongShadow`):
- * resvg supports the underlying filter primitives, and the title is found by a
- * sentinel fill color it carries from OgImage.css.
+ * OgImage's styles live in `OgImage.css`, which `juice` inlines onto the markup
+ * (satori needs styles on the elements, not in a stylesheet). The media is
+ * pre-blended by `src/lib/duotone.ts` and embedded as a base64 data URI, since
+ * satori supports neither the grayscale filter nor the blend mode the panel
+ * uses, and cannot fetch over the network anyway. The two fonts are not read
+ * from disk at all: both come from the site's `fonts:` declaration (see
+ * `loadSiteFamily`).
  */
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import satori from 'satori';
 import { html as toReactNode } from 'satori-html';
 import { Resvg } from '@resvg/resvg-js';
@@ -29,49 +28,14 @@ import juice from 'juice';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { fontData, experimental_getFontFileURL } from 'astro:assets';
 import type { CssVariable } from 'astro:assets';
-import OgImage from '../components/OgImage.astro';
-import LongShadow from '../components/LongShadow.astro';
+import OgImage, { ogCard } from '../components/OgImage.astro';
+import type { GridProps } from '../components/Grid.astro';
 import ogImageCss from '../components/OgImage.css?raw';
-
-const assetsDir = join(process.cwd(), 'src/assets');
-
-/** The sentinel fill `.og-title` carries so we can find it in satori's output. */
-const TITLE_SENTINEL = '#ff00ff';
-/** The real (hollow, near-background) title face the filter extrudes from. */
-const TITLE_FILL = '#ffffff';
-
-/**
- * The site's `#longshadow` filter, rendered from `LongShadow.astro` so it is
- * defined in exactly one place. resvg supports the underlying filter
- * primitives; the component carries a widened filter region so the diagonal
- * extrusion isn't clipped. Memoized per process (the markup is static).
- */
-let filterPromise: Promise<string> | undefined;
-function loadLongshadowFilter(container: AstroContainer): Promise<string> {
-  if (!filterPromise) {
-    filterPromise = container.renderToString(LongShadow).then((s) => s.trim());
-  }
-  return filterPromise;
-}
-
-/**
- * Splice the long-shadow filter into a satori-produced SVG and apply it to the
- * title. satori vectorizes each text block into a flat `<g>` of `<path>` glyphs;
- * the title's glyphs carry `TITLE_SENTINEL`, so we attach the filter to that
- * group and swap the sentinel for the real glyph fill. Other groups are left
- * untouched. (Groups aren't nested, so the per-group regex is unambiguous.)
- */
-function applyLongShadow(svg: string, filter: string): string {
-  const withDefs = svg.replace(/(<svg\b[^>]*>)/, `$1<defs>${filter}</defs>`);
-  return withDefs.replace(/<g\b[^>]*>((?:(?!<\/g>)[\s\S])*)<\/g>/g, (match, inner) => {
-    if (!inner.includes(TITLE_SENTINEL)) return match;
-    return `<g filter="url(#longshadow)">${inner.split(TITLE_SENTINEL).join(TITLE_FILL)}</g>`;
-  });
-}
+import { cardMedia } from './duotone';
 
 /** Short stand-in src rendered into the markup; the real data URI is injected
  *  onto the parsed <img> node afterward (see renderOgPng). */
-const PORTRAIT_PLACEHOLDER = 'portrait';
+const MEDIA_PLACEHOLDER = 'media';
 
 type VNode = { type?: string; props?: { src?: string; children?: unknown } };
 
@@ -190,7 +154,8 @@ async function loadSiteFamily(cssVariable: CssVariable, name: string): Promise<S
 /**
  * The card's two fonts, both sourced from the site's own `fonts:` declaration so
  * the card and the pages can't drift onto different faces: Kentish for the
- * title, Raleway for the body copy. These are the only fonts the card uses.
+ * headline and the metric, Raleway for everything else. These are the only fonts
+ * the card uses.
  *
  * Note that the Raleway the config points at is a *static* instance. satori's
  * opentype.js fork throws on a variable font's `fvar`/`gvar` tables, so the
@@ -207,32 +172,21 @@ async function loadFonts(): Promise<SatoriFont[]> {
   return fontCache;
 }
 
-let portraitPromise: Promise<string> | undefined;
-function loadPortrait(): Promise<string> {
-  if (!portraitPromise) {
-    portraitPromise = readFile(join(assetsDir, 'donnie.png')).then(
-      (buf) => `data:image/png;base64,${buf.toString('base64')}`,
-    );
-  }
-  return portraitPromise;
-}
-
-export async function renderOgPng({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}): Promise<Buffer> {
-  const [container, portrait, fonts] = await Promise.all([
+/**
+ * A card is a page header plus the address it points at: the `Square` media is
+ * the same on every one of them and comes from `cardMedia()`, so it is not a
+ * parameter. `url` comes from `ogUrl()` at the call site, which is where the
+ * page key and `context.site` are both in hand.
+ */
+export async function renderOgPng(grid: GridProps, url: string): Promise<Buffer> {
+  const [container, blended, fonts] = await Promise.all([
     getContainer(),
-    loadPortrait(),
+    cardMedia(),
     loadFonts(),
   ]);
-  const filter = await loadLongshadowFilter(container);
 
   const html = await container.renderToString(OgImage, {
-    props: { title, description, portrait: PORTRAIT_PLACEHOLDER, wordmark: 'donnie.damato.design' },
+    props: { ...grid, url, media: MEDIA_PLACEHOLDER },
   });
 
   // Astro escapes text nodes (e.g. an apostrophe becomes `&#39;`), and
@@ -248,14 +202,14 @@ export async function renderOgPng({
     .replace(/&amp;/g, '&');
 
   // satori-html's HTML parser is pathologically slow on the ~600KB base64
-  // portrait data URI (~20s), so OgImage renders a tiny placeholder src and we
-  // inject the real data URI onto the parsed <img> node here instead. satori
-  // itself decodes the image in ~70ms.
+  // data URI (~20s), so OgImage renders a tiny placeholder src and we inject
+  // the real data URI onto the parsed <img> node here instead. satori itself
+  // decodes the image in ~70ms.
   const markup = toReactNode(decoded);
-  setImgSrc(markup, portrait);
+  setImgSrc(markup, blended);
 
-  const svg = await satori(markup, { width: 1200, height: 630, fonts });
-  return new Resvg(applyLongShadow(svg, filter)).render().asPng();
+  const svg = await satori(markup, { width: ogCard.width, height: ogCard.height, fonts });
+  return new Resvg(svg).render().asPng();
 }
 
 export const ogResponseHeaders = {

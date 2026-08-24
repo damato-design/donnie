@@ -32,6 +32,7 @@ import Media from '@components/Media.astro';
 import { getCollection, render } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
 import { pagesConfig } from '@/pages.config';
+import { gridContent } from '@/grid.config';
 import { siteConfig } from '@/config';
 import building from '@assets/building.jpg';
 
@@ -80,15 +81,7 @@ const headings: MarkdownHeading[] = sortedJourneyEntries.map((entry) => ({
 
 <Layout
   headings={headings}
-  grid={{
-    title: pagesConfig.journey.heading,
-    headline: 'Always a builder',
-    description:
-      'Long before tokens and components, I was building things by hand with whatever was on the bench, learning that working within limits is what makes the work interesting. Same instinct, new materials.',
-    cta: [{ label: 'Recent projects', href: '/projects' }],
-    metric: { value: entriesWithContent.length, label: 'entries' },
-    anecdote: pagesConfig.journey.intro,
-  }}
+  grid={gridContent.journey}
 >
   <SEO
     slot="head"

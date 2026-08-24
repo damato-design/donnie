@@ -30,7 +30,7 @@ import EditableStyle from '@components/EditableStyle.astro';
 import { getCollection } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
 import { pagesConfig } from '@/pages.config';
-import { siteConfig } from '@/config';
+import { gridContent } from '@/grid.config';
 
 /**
  * Queries all projects from the content collection
@@ -41,11 +41,6 @@ const allProjects = await getCollection('projects');
  * Sorts projects by year (descending - newest first).
  */
 const sortedProjects = allProjects.sort((a, b) => b.data.year - a.data.year);
-
-/**
- * Total count of projects for statistics display
- */
-const totalProjects = sortedProjects.length;
 
 /**
  * Table of contents for `<main>`: one entry per case study, so the panel is a
@@ -64,14 +59,7 @@ const headings: MarkdownHeading[] = sortedProjects.map((project) => ({
 
 <Layout
   headings={headings}
-  grid={{
-    title: pagesConfig.projects.heading,
-    headline: 'Finding creativity within constraints',
-    description: "Real innovation isn't abundant options,\nit's the discipline to do more with less.",
-    cta: [{ label: 'Work with me', href: siteConfig.scheduling, external: true }],
-    metric: { value: totalProjects, label: 'projects' },
-    anecdote: pagesConfig.projects.intro,
-  }}
+  grid={gridContent.projects}
 >
   <SEO
     slot="head"

@@ -39,6 +39,7 @@ import { getCollection } from 'astro:content';
 import type { MarkdownHeading } from 'astro';
 import { formatMonthYear } from '@utils/formatDate';
 import { pagesConfig } from '@/pages.config';
+import { gridContent } from '@/grid.config';
 
 /**
  * Queries all speaking entries from the content collection
@@ -81,11 +82,6 @@ const years = Object.keys(talksByYear)
   .sort((a, b) => b - a);
 
 /**
- * Total count of all speaking engagements for statistics display
- */
-const totalTalks = sortedTalks.length;
-
-/**
  * Table of contents for `<main>`: each year, with its talks nested underneath.
  *
  * `<main>` here is authored in Astro rather than markdown, so there is no
@@ -106,18 +102,7 @@ const headings: MarkdownHeading[] = years.flatMap((year) => [
 
 <Layout
   headings={headings}
-  grid={{
-    title: pagesConfig.speaking.heading,
-    headline: 'Catch me live on Wireframe',
-    description:
-      'A weekday live show: candid design talk, new approaches, and the occasional spicy hot take with guests from the community.',
-    cta: [
-      { label: 'Be on the show', href: 'https://wireframe.ds.house#guest', external: true },
-      { label: 'Watch now', href: 'https://wireframe.ds.house', external: true },
-    ],
-    metric: { value: totalTalks, label: 'talks' },
-    anecdote: pagesConfig.speaking.intro,
-  }}
+  grid={gridContent.speaking}
 >
   <SEO
     slot="head"

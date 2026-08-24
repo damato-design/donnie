@@ -4,78 +4,165 @@
  * Authored as a plain stylesheet (plain class selectors, no Astro scoping) so
  * the renderer can inline it onto the markup with `juice` before handing it to
  * satori (see src/lib/og.ts). satori only understands a flexbox subset of CSS,
- * so: every multi-child element sets `display: flex`, colors are hard-coded
- * hex (no contrast-color()/oklch() tokens), and there are no filters/transforms.
+ * so: every multi-child element sets `display: flex`, colors are hard-coded hex
+ * (no custom properties, no oklch()), and there are no blend modes or filters.
  *
- * Brand colors: bg #f7f7f7, fg #262626, muted #525252, accent #3b82f6.
+ * This is the dashboard shell's own styling, restated in that subset. The
+ * values come from `global.css` and `Grid.astro`, resolved to px against the
+ * site's 16px base: the site's own `body` is `max-width: 1200px`, the same
+ * width as the card, so the panels here are drawn at 1:1 with the real page
+ * rather than at some scaled-up "card" size. When a value below is a resolved
+ * `em`, the comment names the rule it came from.
+ *
+ * Brand colors: page/seams #000, panel gradient #501111 -> #951111,
+ * foreground #f1f1f1 (--grid-fg).
  */
 
 .og-root {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  flex-direction: row;
   width: 1200px;
   height: 630px;
-  padding: 80px;
-  background-color: #f7f7f7;
-  /* The site's dot grid. satori can't tile a CSS radial-gradient via
-     background-size, so the dots are a repeating 12px SVG tile instead. If
-     satori ignores it, the solid background-color above remains as a fallback. */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Ccircle cx='1' cy='1' r='1' fill='%23262626' fill-opacity='0.18'/%3E%3C/svg%3E");
-  /* The site's body face, sourced from the same `fonts:` declaration the pages
-     use (see src/lib/og.ts). */
+  /* Shows through the seams, as `html`'s background does on the site. */
+  background-color: #000000;
+  gap: 2px; /* --grid-gap */
+  /* The site's body face and weight, sourced from the same `fonts:`
+     declaration the pages use (see src/lib/og.ts). */
   font-family: 'Raleway', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #f1f1f1; /* --grid-fg */
 }
 
-.og-body {
+/* `body { grid-template-columns: 55% auto }` in global.css. The percentage
+   resolves against the card's 1200px, so the square is 660px and `.og-grid`
+   takes the 538px remainder. */
+.og-square {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  flex: 1;
+  flex: 0 0 55%;
+  overflow: hidden;
 }
 
-.og-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-right: 64px;
-  flex: 1;
-}
-
-.og-title {
-  display: flex;
-  /* The site's display face, sourced from the same `fonts:` declaration the
-     pages use (see src/lib/og.ts). */
-  font-family: 'Kentish', sans-serif;
-  font-size: 80px;
-  line-height: 1.05;
-  /* Sentinel fill. satori can't reference the site's `#longshadow` SVG filter,
-     so the renderer (src/lib/og.ts) post-processes satori's output SVG: it
-     finds the title text by this unique color, swaps it for the real hollow
-     glyph fill, and attaches `filter="url(#longshadow)"`. */
-  color: #ff00ff;
-}
-
-.og-description {
-  display: flex;
-  font-size: 30px;
-  line-height: 1.4;
-  color: #525252;
-  margin-top: 28px;
-  max-width: 620px;
-}
-
-.og-portrait {
-  width: 380px;
-  height: 415px;
+/* Already grayscaled and overlay-blended onto the panel gradient at exactly
+   this size (src/lib/duotone.ts), because satori can do neither. */
+.og-media {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.og-wordmark {
+/* One gradient for the whole right column rather than one per region. On the
+   site `.grid > *` paints `--grid-bg` with `background-attachment: fixed`, so
+   every panel samples a single viewport-sized gradient; satori has no
+   `background-attachment`, and repainting the gradient per region would step
+   visibly at each seam. Painting it once here and drawing the seams as borders
+   is the same picture. */
+.og-grid {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-image: linear-gradient(135deg, #501111, #951111);
+}
+
+/* `.identity` in Grid.astro: on the site it is `aspect-ratio: 1` over the
+   538px column, i.e. ~538 of the ~630px the two rows share, which is what
+   `flex: 1` above a content-sized bottom row lands on here. */
+.og-identity {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  padding: 16px; /* --grid-padding */
+}
+
+/* The page's <h1>: `:where(h1)` in global.css, `.6em` of the 16px base with
+   `.5em` of tracking (which is .5 of *its own* 9.6px). */
+.og-eyebrow {
+  display: flex;
+  font-size: 9.6px;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 4.8px;
+}
+
+/* `.identity h2`: Kentish is a display face whose lowercase glyphs are the
+   decorative capitals, which is why the panel lowercases the text rather than
+   uppercasing it. */
+.og-headline {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Kentish', sans-serif;
+  font-size: 64px; /* 4em */
+  font-weight: normal;
+  line-height: 1.05;
+  text-transform: lowercase;
+  text-shadow: 1px 1px #951111;
+  margin: 8px 0;
+}
+
+/* `.identity p` is capped at `30ch`, a unit satori has no concept of, and one
+   that resolves against the element's own font-size. 30ch of 16px Raleway is
+   ~282px in a browser, but satori is measuring the static Regular where the
+   page uses weight 500, and its advances run a little wider; 320px is the same
+   measure in the face this card is actually drawn with, and is what keeps the
+   home card's description to the two lines the panel gives it. */
+.og-description {
+  display: flex;
+  flex-direction: column;
+  max-width: 320px;
+  margin: 16px 0;
+}
+
+/* Where the panel puts its CTA links, the card puts the page's address: a PNG
+   has nothing to click, so the destination is the useful half. Underlined, so
+   it keeps the row's weight in the composition. */
+.og-url {
+  display: flex;
+  text-decoration: underline;
+}
+
+/* `.metric` and `.anecdote` share the bottom row; the seams between them and
+   above them are the 2px the rest of the shell uses. */
+.og-bottom {
   display: flex;
   flex-direction: row;
+  border-top: 2px solid #000000;
+}
+
+.og-metric {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-end;
-  font-size: 28px;
+  gap: 8px;
+  padding: 16px;
+  line-height: 1;
+  border-right: 2px solid #000000;
+}
+
+.og-metric-value {
+  display: flex;
+  font-family: 'Kentish', sans-serif;
+  font-size: 32px; /* 2em */
+}
+
+/* The panel sets `font-weight: bolder`, but satori is given one static Raleway
+   (weight 400) and does no synthetic bolding, so the thickening is done with a
+   sub-pixel shadow in the glyph color, which is what a browser's faux-bold
+   does. Drop this line if a real bold face is ever added to `fonts:`. */
+.og-metric-label {
+  display: flex;
+  font-size: 12.8px; /* .8em */
+  text-transform: uppercase;
+  text-shadow: 0.6px 0 #f1f1f1;
+}
+
+.og-anecdote {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  padding: 16px;
+  font-size: 12.8px; /* .8em */
 }

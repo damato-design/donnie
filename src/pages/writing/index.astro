@@ -28,6 +28,7 @@ import type { MarkdownHeading } from 'astro';
 import { formatLongDate } from '@utils/formatDate';
 import { getBlogAnalytics, getPageStat, formatReads, MIN_READS } from '@utils/analytics';
 import { pagesConfig } from '@/pages.config';
+import { gridContent } from '@/grid.config';
 
 /** How many top posts to feature. The rest live on the blog. */
 const TOP_N = 10;
@@ -96,15 +97,7 @@ const headings: MarkdownHeading[] = [
 
 <Layout
   headings={headings}
-  grid={{
-    title: pagesConfig.writing.heading,
-    headline: 'Now in print:\nMise en Mode',
-    description:
-      'My book on rebuilding design token architecture from first principles. Stop adding tokens, start expressing modes.',
-    cta: [{ label: 'Read the book', href: 'https://mode.place', external: true }],
-    metric: { value: totalArticles, label: 'articles' },
-    anecdote: pagesConfig.writing.intro,
-  }}
+  grid={gridContent.writing}
 >
   <SEO
     slot="head"

@@ -19,6 +19,7 @@ import Button from '@components/Button.astro';
 import ButtonGroup from '@components/ButtonGroup.astro';
 import type { MarkdownHeading } from 'astro';
 import { siteConfig } from '@/config';
+import { gridContent } from '@/grid.config';
 import portrait from '@assets/stageworthy.png';
 
 /**
@@ -31,25 +32,9 @@ const headings: MarkdownHeading[] = [
   { depth: 2, slug: 'lets-work-together', text: "Let's Work Together" },
 ];
 const [thinking, cta] = headings;
-
-/** The panel's intro paragraph, built from config so the identity stays in one place. */
-const anecdote = 'UX Architect improving design systems and AI model behavior.';
 ---
 
-<Layout
-  headings={headings}
-  grid={{
-    title: siteConfig.author.name,
-    headline: 'Experience Architect',
-    description: siteConfig.description,
-    cta: [
-      { label: 'Explore my work', href: '/projects' },
-      { label: 'Follow my thinking', href: '/decisions' },
-    ],
-    metric: { value: 25, label: 'years' },
-    anecdote,
-  }}
->
+<Layout headings={headings} grid={gridContent.home}>
   <Fragment slot="head">
     <SEO
       title={`${siteConfig.author.name} - ${siteConfig.author.title}`}

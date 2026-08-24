@@ -56,6 +56,14 @@ The **site URL is not in `siteConfig`** — it comes from Astro's built-in `Astr
 
 Static page titles/headings/intros live in `src/pages.config.ts` (`pagesConfig`).
 
+The **page header panel's copy** lives in `src/grid.config.ts` (`gridContent`): one
+`GridProps`-shaped entry per top-level page (headline, description, CTA row, metric,
+anecdote), reading `pagesConfig`/`siteConfig` rather than restating them. Every page passes
+its entry straight through (`grid={gridContent.projects}`), and the **Open Graph card renders
+the same entry**, so a card can't advertise something the page no longer says. Every metric
+is a plain collection count, so `gridContent` resolves those itself with `getCollection` and
+the pages keep only the sorting their listings need. Don't move panel copy back into a page.
+
 Both are imported through the **`@/*` path alias** (`@/config`, `@/pages.config`), alongside
 the existing `@components/*`, `@layouts/*`, `@utils/*`, `@assets/*`, `@styles/*` aliases in
 `tsconfig.json`. Don't reach for `../../config` or a bare `src/config` specifier.
@@ -120,7 +128,9 @@ To refresh this without a code change, a **Netlify Scheduled Function**
 (URL in the `BUILD_HOOK_URL` env var) to trigger a rebuild. There is no GitHub Action.
 
 ### The dashboard shell (`src/layouts/Layout.astro`)
-`Layout` is the **only** layout, and every page uses it. `global.css` lays `<body>` out as a
+`Layout` is the **only** layout, and every page of the site uses it (the lone exception is
+`og/index.astro`, the OG card development preview; see "Pages & components").
+`global.css` lays `<body>` out as a
 named CSS grid, and each panel is a component the layout places into one area:
 
 ```
@@ -196,11 +206,51 @@ those components are restyled for the shell.
   page), `journey/`, `speaking/`, and `writing/` (a single curated page, no pagination). Plus
   `404.astro` and the machine-readable routes (`llms.txt.ts`, `robots.txt.ts`,
   `og/[page].png.ts`, and a `[slug].md.ts` per collection).
+- **`og/index.astro` is a development surface, not a page of the site.** It renders
+  `OgImage.astro` as live HTML at 1200x630 for every card, so the template can be iterated
+  on with hot reload instead of a satori render per change. It is therefore the **one page
+  that doesn't use `Layout`** (the shell would style the card out from under itself); it is
+  `noindex`, and `astro.config.mjs` passes `sitemap()` a `filter` that drops `/og/`.
+  Because the browser is not satori, the page re-creates the two things the renderer does
+  after Astro is finished, and its file comment says so: it injects `OgImage.css` with
+  `is:inline` (it is a `juice` stylesheet, not a scoped one), and points the card's literal
+  `'Kentish'`/`'Raleway'` families at the `--font-*` variables, since Astro's Fonts API emits
+  **hashed** `@font-face` family names that those literals never match in a browser. The
+  duotone media needs no such treatment: both paths call the same `cardMedia()`, so the
+  preview carries the PNG's own pixels (which is also why it is a megabyte and a half of
+  inline base64, fine for a page only ever opened locally).
+- **Every card shows the same portrait**, the one the home page's `Square` carries: what
+  distinguishes a card is the content on the right, and half the pages put something
+  unrasterizable in `Square` anyway (`EditableStyle`, the `<mode-book>` embed, a streaming
+  sizzle reel). That makes the media a constant, so it lives in `duotone.ts` beside the blend
+  rather than in a map, `renderOgPng` takes a bare `GridProps`, and both routes derive their
+  card list straight from `Object.entries(gridContent)`. There is no `og/_pages.ts`.
 - Components: `SEO`, `StructuredData` (JSON-LD, config-driven), the shell panels above, the
   **`Card` pattern** below (plus `CardList`), `Button`/`ButtonGroup`/`ArrowIcon`, `TagList`/
   `Label`, `Media`, `TimelineEntry`/`Disclosure`, `ScrollToTop`, `EditableStyle`, and
-  `OgImage`/`LongShadow` (used **only** by the OG-image pipeline in `src/lib/og.ts`, not by
-  any page stylesheet).
+  `OgImage` (used **only** by the OG-image pipeline in `src/lib/og.ts` and its `/og` preview,
+  not by any page stylesheet).
+- **`OgImage` is the dashboard shell redrawn in satori's CSS subset**, not a card design of
+  its own: `Square` on the left at 55%, `Grid` on the right (eyebrow `title`, Kentish
+  `headline`, description, page URL, then the metric + anecdote row), with `Props extends
+  Omit<GridProps, 'cta'>` so it is handed what the panel is handed.
+  - **Where the panel puts its CTA links, the card puts the page's address.** Nothing in a
+    PNG is clickable, so a "Explore my work" label is a dead end; the destination is the half
+    worth showing. `ogUrl(page, site)` (exported from `OgImage.astro`, so both routes share
+    it) formats it as host plus path, no scheme, and `home` resolves to the bare host. The
+    origin comes from `Astro.site` / `context.site`, never a literal.
+  - Three things can't survive the translation, each commented in the files: the panel
+    gradient is painted **once** on the right column with the 2px seams drawn as borders
+    (satori has no `background-attachment: fixed`, and per-region gradients step at every
+    seam); a `\n` becomes a `<div>` per line rather than `white-space: pre-line`; and the
+    duotone media arrives **pre-blended** from `src/lib/duotone.ts`, which reproduces
+    `Media`'s `grayscale(1)` + `mix-blend-mode: overlay` with sharp, because satori supports
+    neither filters nor blend modes.
+  - Values in `OgImage.css` are `global.css`'s `em`s resolved against the site's 16px base,
+    which works because the card's 1200px is also `body`'s `max-width`: the card is the page
+    at 1:1, not a scaled-up variant.
+  - There is **no long-shadow treatment and no wordmark** on the card; `LongShadow.astro` and
+    the magenta-sentinel post-processing in `og.ts` were deleted with them.
 - **Components own their styling; no consumer `class` prop.** A component does not accept a
   `class`/`className` escape hatch — it carries its own base class (`.card`, `.btn`, `.label`,
   ...) and pages hook onto that from their own scoped styles via `:global`, scoped under a
