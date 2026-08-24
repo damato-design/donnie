@@ -64,6 +64,14 @@ the same entry**, so a card can't advertise something the page no longer says. E
 is a plain collection count, so `gridContent` resolves those itself with `getCollection` and
 the pages keep only the sorting their listings need. Don't move panel copy back into a page.
 
+**Detail pages get their panel from the same module**, one step later: `projectGrid(entry)`
+and `decisionGrid(entry)` derive a `GridProps` from a collection entry (the role/year byline
+with reading time, the tech-stack or tag count as the metric, the summary or context as the
+anecdote) and then merge the entry's own optional `panelFields` frontmatter over it, region by
+region, via `withOverrides`. So `[slug].astro` is just `grid={projectGrid(project)}`: no panel
+copy, no reading-time math, and an MDX file can change any region of its own header without
+touching a page. Keep new panel derivations here rather than inlining them in a route.
+
 Both are imported through the **`@/*` path alias** (`@/config`, `@/pages.config`), alongside
 the existing `@components/*`, `@layouts/*`, `@utils/*`, `@assets/*`, `@styles/*` aliases in
 `tsconfig.json`. Don't reach for `../../config` or a bare `src/config` specifier.
@@ -77,12 +85,30 @@ below). Collections:
 frontmatter (see "Markdown-first bodies" below). Their frontmatter is deliberately thin: only
 what something *other than the prose* has to read.
 
-- **projects** — case studies. Frontmatter is only `title, role, year, outcomeSummary,
-  techStack[]`. `title`/`role`/`year`/`outcomeSummary` feed the page header panel and the
-  listing card, `outcomeSummary` doubles as the SEO description, `techStack` is the card's
-  `TagList` and the panel's metric, and `year` sorts the listing (newest first).
-- **decisions** — ADR-style. Frontmatter is only `title, context, tags?`; `context` doubles as
-  the card copy and the SEO description.
+- **projects** — case studies. Required frontmatter is only `title, role, year,
+  outcomeSummary, techStack[]`. `title`/`role`/`year`/`outcomeSummary` feed the page header
+  panel and the listing card, `outcomeSummary` doubles as the SEO description, `techStack` is
+  the card's `TagList` and the panel's metric, and `year` sorts the listing (newest first).
+- **decisions** — ADR-style. Required frontmatter is only `title, context, tags?`; `context`
+  doubles as the card copy and the SEO description.
+- **Both also take `panelFields`**, the shared block of **optional page-header overrides**
+  defined once in `content.config.ts` and spread into each schema, so the same key means the
+  same thing in both: `image?, imageAlt?, headline?, description?, cta?, metric?, anecdote?`.
+  A detail page **derives** its whole header from the entry, and these only *override* a
+  region of that derivation, so an entry never restates what the page already computes.
+  Normally every one of them is absent.
+  - `image?`/`imageAlt?` are `Square`'s media, and the reason both schemas take the
+    `(context) => …` form: `image()` resolves a path **relative to the MDX file**
+    (`../../assets/thing.jpg`) into `ImageMetadata`, so a per-entry image goes through
+    `astro:assets` like every other local image. Without `image`, the detail page **falls
+    back to whatever its listing page puts in `Square`** (`EditableStyle` for projects,
+    `uxdx.jpg` for decisions), so a section reads as one place. `imageAlt` defaults to the
+    entry title.
+  - The rest mirror `GridProps` region for region, and `grid.config.ts` merges them over the
+    computed panel in `projectGrid`/`decisionGrid` (see "The dashboard shell"). A present
+    field replaces its region **wholesale**: a `cta` array is the whole row, not an addition
+    to the default one. `title` is deliberately **not** overridable, since the listing card
+    and SEO read the same field.
 - **journey** — timeline entries: `date, title, type(milestone|learning|transition),
   description, skills?`. Rendered chronologically on `/journey`.
 - **writing** — **not authored locally**: `blogFeedLoader` in `content.config.ts` pulls posts at
@@ -424,8 +450,10 @@ serialize structured fields. Keep that in step when a schema changes.
 1. Add an MDX file under the right `src/content/<collection>/`; match an existing file's
    frontmatter exactly (schemas are strict — required arrays may be empty but must be valid).
 2. For **projects and decisions**, write the substance as markdown in the **body**, following
-   the section order in "Markdown-first bodies" above. Frontmatter is only the five/three
-   fields the panel, card, and SEO read. For `journey` and `speaking`, it's still all
-   frontmatter.
+   the section order in "Markdown-first bodies" above. Required frontmatter is only the five
+   /three fields the panel, card, and SEO read; the `panelFields` block (`image`, `imageAlt`,
+   `headline`, `description`, `cta`, `metric`, `anecdote`) is optional and normally left out,
+   so the header derives from the entry. Add one only to change that region for this entry.
+   For `journey` and `speaking`, it's still all frontmatter.
 3. Projects are sorted by `year` (newest first); set `year` accordingly.
 4. `npm run build` and confirm a green build (no schema errors), then spot-check `dist/`.

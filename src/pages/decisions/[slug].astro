@@ -17,8 +17,12 @@ import SEO from '@components/SEO.astro';
 import ScrollToTop from '@components/ScrollToTop.astro';
 import Button from '@components/Button.astro';
 import TagList from '@components/TagList.astro';
+import Media from '@components/Media.astro';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
+import { decisionGrid } from '@/grid.config';
+import { siteConfig } from '@/config';
+import uxdx from '@assets/uxdx.jpg';
 
 /**
  * Generates static paths for all decision entries
@@ -49,25 +53,30 @@ const { decision } = Astro.props;
 // emits, so it drives the table of contents with no extra work.
 const { Content, headings } = await render(decision);
 
-const { title, context, tags } = decision.data;
+const { title, context, tags, image, imageAlt } = decision.data;
 ---
 
-{/* Capped at 2: the body's `###`s are one-sentence alternative titles. */}
+{/* The panel is derived from the entry and overridden by its frontmatter; both
+    live in grid.config.ts beside the listing pages' panels.
+    TOC capped at 2: the body's `###`s are one-sentence alternative titles. */}
 <Layout
   headings={headings}
   tocMaxDepth={2}
-  grid={{
-    title,
-    cta: [{ label: 'All decisions', href: '/decisions' }],
-    metric: tags?.length ? { value: tags.length, label: 'tags' } : undefined,
-    anecdote: context,
-  }}
+  grid={decisionGrid(decision)}
 >
   <SEO
     slot="head"
     title={`${title} - Decision Record`}
     description={context}
     type="article"
+  />
+
+  {/* A record can carry its own `image`; without one the panel shows what the
+      /decisions listing shows, so the section reads as one place. */}
+  <Media
+    slot="media"
+    src={image ?? uxdx}
+    alt={image ? (imageAlt ?? title) : `${siteConfig.author.name} on stage`}
   />
 
   <Fragment slot="main">

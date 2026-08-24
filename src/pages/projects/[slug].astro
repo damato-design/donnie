@@ -19,10 +19,11 @@ import StructuredData from '@components/StructuredData.astro';
 import ScrollToTop from '@components/ScrollToTop.astro';
 import TagList from '@components/TagList.astro';
 import Button from '@components/Button.astro';
+import Media from '@components/Media.astro';
+import EditableStyle from '@components/EditableStyle.astro';
 import { getCollection, render } from 'astro:content';
 import type { GetStaticPaths } from 'astro';
-import { calculateReadingTime, formatReadingTime } from '@utils/readingTime';
-import { siteConfig } from '@/config';
+import { projectGrid } from '@/grid.config';
 
 /**
  * Generates static paths for all project entries
@@ -54,26 +55,16 @@ const { project } = Astro.props;
 // emits, so it drives the table of contents with no extra work.
 const { Content, headings } = await render(project);
 
-const { title, role, year, outcomeSummary, techStack } = project.data;
-
-/** Reading time for the case study, which lives entirely in the body. */
-const readingTime = formatReadingTime(calculateReadingTime(project.body ?? ''));
+const { title, year, outcomeSummary, techStack, image, imageAlt } = project.data;
 ---
 
-{/* Capped at 2: the body's `###`s are one-sentence key-decision titles. */}
+{/* The panel is derived from the entry and overridden by its frontmatter; both
+    live in grid.config.ts beside the listing pages' panels.
+    TOC capped at 2: the body's `###`s are one-sentence key-decision titles. */}
 <Layout
   headings={headings}
   tocMaxDepth={2}
-  grid={{
-    title,
-    description: `${role} · ${year} · ${readingTime}`,
-    cta: [
-      { label: 'All projects', href: '/projects' },
-      { label: 'Work with me', href: siteConfig.scheduling, external: true },
-    ],
-    metric: { value: techStack.length, label: 'technologies' },
-    anecdote: outcomeSummary,
-  }}
+  grid={projectGrid(project)}
 >
   <Fragment slot="head">
     <SEO
@@ -90,6 +81,12 @@ const readingTime = formatReadingTime(calculateReadingTime(project.body ?? ''));
         year,
       }}
     />
+  </Fragment>
+
+  {/* A case study can carry its own `image`; without one the panel shows what
+      the /projects listing shows, so the section reads as one place. */}
+  <Fragment slot="media">
+    {image ? <Media src={image} alt={imageAlt ?? title} /> : <EditableStyle />}
   </Fragment>
 
   <Fragment slot="main">

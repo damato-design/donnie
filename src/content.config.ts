@@ -22,6 +22,73 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import type { Loader } from 'astro/loaders';
+import type { SchemaContext } from 'astro/content/config';
+
+/**
+ * Page-header frontmatter, shared by the two collections with detail pages
+ * (`projects` and `decisions`) so the same key means the same thing in both.
+ *
+ * A detail page derives its whole header from the entry: `Square`'s media, and
+ * `Grid`'s headline, description, CTA row, metric, and anecdote. These fields
+ * are **overrides** on that derivation, and every one of them is optional. Left
+ * out (the normal case), a region keeps the value the page computes, so nothing
+ * has to be restated in frontmatter just to render. Set one, and it wins for
+ * that region only; the rest still come from the entry.
+ *
+ * `title` is deliberately not overridable here: it is the entry's `title`, which
+ * the listing card and SEO also read, so the panel can't drift from them.
+ *
+ * The regions mirror `GridProps` in `Grid.astro`; `grid.config.ts` merges these
+ * over the computed defaults (see `projectGrid`/`decisionGrid` there).
+ *
+ * @param image - Astro's schema-context helper, which resolves a path relative
+ *   to the MDX file into `ImageMetadata` so the image goes through
+ *   `astro:assets`.
+ */
+const panelFields = ({ image }: SchemaContext) => ({
+  /**
+   * Media for this entry's `Square` panel, as a path relative to the MDX file
+   * (e.g. `../../assets/thing.jpg`). Left out, the detail page falls back to
+   * whatever its listing page shows.
+   */
+  image: image().optional(),
+
+  /** Text alternative for `image`. Defaults to the entry title. */
+  imageAlt: z.string().optional(),
+
+  /** Promotional headline, rendered as the panel's <h2>. No default. */
+  headline: z.string().optional(),
+
+  /** Supporting copy under the headline. Overrides the computed byline. */
+  description: z.string().optional(),
+
+  /** The panel's link row. Replaces the default row wholesale. */
+  cta: z
+    .array(
+      z.object({
+        /** Link text. */
+        label: z.string(),
+        /** Destination, a site path or an absolute URL. */
+        href: z.string(),
+        /** Open in a new tab (adds the matching `rel`). */
+        external: z.boolean().optional(),
+      })
+    )
+    .optional(),
+
+  /** The headline metric. Overrides the computed count. */
+  metric: z
+    .object({
+      /** The figure itself. A string keeps approximations like "~500". */
+      value: z.union([z.string(), z.number()]),
+      /** What the figure counts. */
+      label: z.string(),
+    })
+    .optional(),
+
+  /** The panel's intro paragraph. Overrides the entry's summary/context. */
+  anecdote: z.string().optional(),
+});
 
 /**
  * Projects (Case Studies) Collection
@@ -32,11 +99,12 @@ import type { Loader } from 'astro/loaders';
  *
  * Frontmatter holds only what something other than the prose needs to read:
  * the page header panel (title, role, year, outcomeSummary), the listing card
- * (role, year, outcomeSummary, techStack), the year sort, and SEO/JSON-LD.
+ * (role, year, outcomeSummary, techStack), the year sort, and SEO/JSON-LD,
+ * plus the optional `panelFields` overrides above.
  */
 const projectsCollection = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/projects' }),
-  schema: z.object({
+  schema: (context) => z.object({
     /** Project title. Renders as the detail page's <h1>. */
     title: z.string(),
 
@@ -51,6 +119,9 @@ const projectsCollection = defineCollection({
 
     /** Technologies and frameworks used. Renders as the card/detail TagList. */
     techStack: z.array(z.string()),
+
+    // Optional page-header overrides, identical in shape to `decisions`.
+    ...panelFields(context),
   }),
 });
 
@@ -63,11 +134,11 @@ const projectsCollection = defineCollection({
  *
  * Frontmatter holds only what something other than the prose needs to read:
  * the page header panel (title, context), the listing card (title, context,
- * tags), and SEO/JSON-LD.
+ * tags), and SEO/JSON-LD, plus the optional `panelFields` overrides above.
  */
 const decisionsCollection = defineCollection({
   loader: glob({ pattern: '**/*.mdx', base: './src/content/decisions' }),
-  schema: z.object({
+  schema: (context) => z.object({
     /** Decision title. Renders as the detail page's <h1>. */
     title: z.string(),
 
@@ -76,6 +147,9 @@ const decisionsCollection = defineCollection({
 
     /** Optional tags for categorization. Renders as the card/detail TagList. */
     tags: z.array(z.string()).optional(),
+
+    // Optional page-header overrides, identical in shape to `projects`.
+    ...panelFields(context),
   }),
 });
 
