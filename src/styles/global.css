@@ -3,7 +3,7 @@
   --grid-gap: 2px;
   --grid-bg: linear-gradient(135deg, #501111, #951111);
   --grid-fg: #f1f1f1;
-  --dash-bg: linear-gradient(135deg, #151515, #0c0c0c);
+  --dash-bg: linear-gradient(135deg, #111111, #0c0c0c);
   --dash-fg: #a4a4a4;
 
   /* Surface colour the <main> content components paint against (Card, Section,
@@ -56,7 +56,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   interpolate-size: allow-keywords;
   color-scheme: dark;
-  background-color: #111;
+  background-color: #000;
   background-image:
     url('../assets/topo.svg');
   background-position: center;
@@ -79,7 +79,7 @@ body {
   display: grid;
   font-family: var(--font-raleway);
   font-weight: 500;
-  background-color: #000;
+  background-color: inherit;
   line-height: 1.5;
   gap: var(--grid-gap);
   max-width: 1200px;
