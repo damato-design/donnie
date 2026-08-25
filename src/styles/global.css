@@ -5,7 +5,15 @@
   --grid-fg: #f1f1f1;
   --dash-bg: linear-gradient(135deg, #111111, #0c0c0c);
   --dash-fg: #a4a4a4;
-  --accent-color: #a80000;
+  /* The highlight the dark shell paints text with: the header's booking link,
+     the current nav item, `strong`, list markers, link hover. It is text on a
+     dark surface, so it is pinned to the lightest red that still reads as the
+     brand's: #a80000 was 2.66:1 against the `.btn` black in the header bars,
+     well under the 4.5:1 minimum, while this clears it against both grounds
+     (5.25:1 on #000, 4.68:1 on the #111 end of `--dash-bg`). Darkening it again
+     re-breaks the contrast audit; the deep maroons live in `--grid-bg`, which is
+     a background and answers to no such floor. */
+  --accent-color: #ff0000;
 
   /* The dashboard surfaces are gradients, which is fine as a `background` and
      useless anywhere a real *colour* is required: as a `color`, as a `border`,

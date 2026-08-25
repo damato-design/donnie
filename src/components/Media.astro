@@ -23,6 +23,14 @@
  * to opt out. Any other valid attribute (loading, width, height, autoplay,
  * loop, muted, poster, ...) is forwarded to the rendered element.
  *
+ * **Images load eagerly, at high priority.** Every call site puts its media in
+ * `Square`, which is above the fold on every page, so this image is the page's
+ * Largest Contentful Paint element. `<Image>`'s default `loading="lazy"` makes
+ * the browser discover it only after layout and fetch it at low priority, which
+ * is exactly the LCP delay Lighthouse flags. Both are plain attributes rather
+ * than `<Image>`'s `priority` shorthand, so a call site can still override
+ * either one through `...rest`.
+ *
  * Sizing belongs to the panel, not to this component: every call site drops its
  * media into `Square`, which is a fixed 1:1 box that centers and clips whatever
  * it is given. The `grayscale` + `overlay` pair below is what turns the photo
@@ -82,9 +90,23 @@ const Tag = kind === 'image' ? 'img' : kind;
 
 {
   kind === 'asset' ? (
-    <Image class="media" src={src as ImageMetadata} alt={alt} {...rest} />
+    <Image
+      class="media"
+      src={src as ImageMetadata}
+      alt={alt}
+      loading="eager"
+      fetchpriority="high"
+      {...rest}
+    />
   ) : kind === 'image' ? (
-    <img class="media" src={src as string} alt={alt} {...rest} />
+    <img
+      class="media"
+      src={src as string}
+      alt={alt}
+      loading="eager"
+      fetchpriority="high"
+      {...rest}
+    />
   ) : (
     <Tag class="media" src={src as string} controls={controls} aria-label={alt || undefined} {...rest} />
   )
