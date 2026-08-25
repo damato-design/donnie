@@ -25,11 +25,15 @@ and the tooling.
 - `npm run build` — runs **`astro check` (type check) && `astro build`**. A green build is
   the bar; it validates every content collection against its Zod schema.
 - `npm run preview` — preview the built `dist/`.
+- Code blocks in MDX bodies are highlighted by **Shiki** (`github-dark`, `wrap: true`), set
+  under `markdown:` in `astro.config.mjs`.
 
 ### Environment gotchas (Windows)
 - **Use the PowerShell tool for git and npm.** The Bash tool fails on git invocations here
   with an `fnm` "can't find the necessary environment variables" error. Bash is fine for
   read-only POSIX text processing (grep/loops over `dist/`), but run git/npm via PowerShell.
+  A Bash command that *starts with* `cd` re-runs the shell profile and hits the same error, so
+  run Bash from the repo root with relative paths rather than `cd`-ing first.
 - When scripting file rewrites in PowerShell, write UTF-8 **without BOM**
   (`New-Object System.Text.UTF8Encoding($false)` + `[System.IO.File]::WriteAllText`).
 
@@ -66,9 +70,10 @@ The **site URL is not in `siteConfig`** — it comes from Astro's built-in `Astr
 `siteConfig.url` or manual trailing-slash juggling.
 
 **The pages are content, not code.** There is no `pages.config.ts` and no `gridContent`
-literal: the home page and the five listings are MDX entries in `src/content/pages/`, one per
-route, and their frontmatter carries the whole page header panel plus the SEO block. See
-"Pages are content" below.
+literal: the home page and the five listings are MDX entries in the **`pages` collection**,
+which is not a folder of its own but `src/content/index.mdx` plus one `<section>/index.mdx`
+each (see "Pages are content" below). Their frontmatter carries the whole page header panel
+plus the SEO block.
 
 `src/grid.config.ts` is now purely the **assembler**: it turns an entry into `GridProps` and
 nothing more. Three entry points, `pageGrid(entry)` for a top-level page and
@@ -79,7 +84,11 @@ frontmatter over it, region by region, via `withOverrides`. The **Open Graph car
 same function on the same entry**, so a card can't advertise something the page no longer
 says. Keep new panel derivations here rather than inlining them in a route.
 
-Both are imported through the **`@/*` path alias** (`@/config`, `@/pages.config`), alongside
+It also exports **`getPages()`**, the `Map` of every top-level page keyed by route id. That is
+what replaced `gridContent`'s keys: `SEO` and both `/og` routes read it, so a new `index.mdx`
+gets an Open Graph card and a card mapping with no further edit.
+
+Both are imported through the **`@/*` path alias** (`@/config`, `@/grid.config`), alongside
 the existing `@components/*`, `@layouts/*`, `@utils/*`, `@assets/*`, `@styles/*` aliases in
 `tsconfig.json`. Don't reach for `../../config` or a bare `src/config` specifier.
 
@@ -120,7 +129,8 @@ Frontmatter is the page header panel plus the SEO block: `title`, `headline`, `d
 `cta[]`, `metric`, `intro` (the panel's anecdote), `seo: { title, description, noSuffix }`, the
 media (see below), and `listing`. The **body is `<main>`'s prose**: all of it on the home page,
 none of it on the listings. Because it is MDX, a body can `import` components and read
-`siteConfig` (the home page's closing CTA does both).
+`siteConfig`; today none of them do (the home page's closing "Let's Work Together" section is
+plain prose, and its `siteConfig` import is left over and unused).
 
 Three things keep this from re-introducing the duplication it could:
 
@@ -138,9 +148,10 @@ Three things keep this from re-introducing the duplication it could:
   than a literal here.
 - **Omitted fields fall back to `siteConfig`.** `title` defaults to `siteConfig.title`,
   `description` and `seo.description` to `siteConfig.description`, and `seo.title` to
-  `<name> - <author title>`, which is why `home.mdx` declares none of them.
+  `<name> - <author title>`, which is why the home entry (`src/content/index.mdx`, id `home`)
+  declares none of them.
 
-The `Square` media is one of four: `image` (+ `imageAlt`, resolved relative to the MDX file so
+The `Square` media is one of three: `image` (+ `imageAlt`, resolved relative to the MDX file so
 it goes through `astro:assets`), `video` (+ `videoAlt`, a remote URL), or `embed`, an enum
 naming the one piece of markup frontmatter cannot express (`mode-book`).
 
@@ -150,7 +161,9 @@ Every page of the site is this file. It builds its paths from three collections 
 the panel comes from, where the SEO block comes from, which media renders, and what goes in
 `<main>`. Everything else, the shell, the TOC wiring, the structured data, is written once.
 
-A page's `<main>` is its **listing** (if its frontmatter names one) followed by its **body**.
+A page's `<main>` is its **listing** (if its frontmatter names one) followed by its **body**. A
+detail page wraps that body in three more things the route owns rather than the content: the
+entry's `TagList` above it, a `back` `Button` to the listing below it, and `ScrollToTop`.
 `buildListing(name)` in `src/utils/listings.ts` resolves a listing into the data
 `Listing.astro` renders *and* the `headings` `Layout` needs before `<main>` exists, from one
 call, so a TOC link and the card `id` it jumps to are built from the same array. Four shapes,
@@ -255,7 +268,8 @@ last build") and both **fail soft** so a green build never depends on a third pa
   logs `CABIN_API_KEY is not set` and renders without them. **Never stub a number to see them**;
   a placeholder figure on this page is a false claim about real traffic.
 
-`writing/index.astro` shows the **top 10 posts by Cabin reads** (ties break by date; falls back
+`writingListing()` in `utils/listings.ts` (there is no `writing/index.astro`) builds the
+**top 10 posts by Cabin reads** (ties break by date; falls back
 to most-recent-by-date when analytics is `null`). Each card's `meta` is `<date> · <N> reads`,
 so analytics still drives both the ranking and the per-card counts. The panel's metric is the
 **country count** (`{ stat: 'countries' }` in `writing/index.mdx`), which is why the page has
@@ -265,6 +279,10 @@ reach line (`<reads> · read in <N> countries`) stays gone with the `PageStats` 
 held it. A closing CTA links to the full
 chronological archive on the blog. **Do not** reintroduce pagination or per-post dwell time (both
 removed — dwell time measured time-on-page, not reading length, and read as misleading).
+
+Separately from those two build-time fetches, `Layout`'s head loads Cabin's client script
+(`scripts.withcabin.com/hello.js`) on every page, which is what measures *this* site. Nothing in
+the build reads it: the figures on `/writing` are the **blog's**, not this site's.
 
 To refresh this without a code change, a **Netlify Scheduled Function**
 (`netlify/functions/weekly-rebuild.mjs`, weekly cron) POSTs to a Netlify build hook
@@ -332,7 +350,8 @@ label, that label becomes the link's `aria-label` and `title`, so no link is lef
 
 - **`Grid`** is the page-header panel and the *only* page-header primitive (it replaced the
   former `Hero`, `PageHeader`, and `PageStats`, all deleted). It is **entirely props, no slots**,
-  so a page passes frontmatter or a `pagesConfig` entry straight through `Layout`'s `grid` prop:
+  so a page passes frontmatter (or a panel derived from an entry) straight through `Layout`'s
+  `grid` prop:
   `title` (the page's single `<h1>`), `headline` (an `<h2>`), `description`, `cta`, `metric`
   (`{ value, label }`), and `anecdote`. Content inside `<main>` therefore starts at `<h2>`. Every
   region except `title` is optional and omitted when absent; the anecdote spans the full row when
@@ -356,10 +375,11 @@ label, that label becomes the link's `aria-label` and `title`, so no link is lef
     `<Layout headings={headings}>`. Astro slugs each heading and emits the matching `id`. Both
     detail pages pass `tocMaxDepth={2}`, because their `###`s are one-sentence key-decision /
     alternative titles that would swamp the panel.
-  - **Pages authored in `.astro`** have no `render()` to slug anything, so they declare the
-    array by hand, and it is the *single source* for the TOC link and for the `id` on the
-    target, so the two can't drift. Anchors land on an `<h2 id={…}>` or, for a card, on
-    `<Card id={…}>` (`TimelineEntry` forwards its `id` through to the card).
+  - **A generated listing has no `render()`** to slug anything, so `utils/listings.ts` builds
+    that part of the array by hand (`cardHeadings`) from the very `EntryItem[]` the cards are
+    drawn from, which is what stops a TOC link and its target drifting. Anchors land on an
+    `<h2 id={…}>` or, for a card, on `<Card id={…}>` (`TimelineEntry` forwards its `id` through
+    to the card). A page with both gets the listing's headings first, then its body's.
   - **`depth` describes the TOC's structure, not the rendered element.** Card titles are always
     `<h3>`s, but a card is `depth: 3` when it sits under a section heading (speaking's talks
     under their year, writing's articles under "Top N Articles") and `depth: 2` when the page
@@ -367,17 +387,25 @@ label, that label becomes the link's `aria-label` and `title`, so no link is lef
   - Building a mixed page's array in document order is what makes the nesting work: speaking
     does `years.flatMap((year) => [yearHeading, ...talksInThatYear])`.
 
-`global.css` holds the grid areas, the two **surface classes** below, the `--grid-*`/`--dash-*`
-palette, and a short list of element defaults the `<main>` content needs (`blockquote`, markdown
-`table` borders, the `<details>` animation `Disclosure` relies on).
+`global.css` holds the grid areas and every panel's placement, the two **surface classes**
+below, the palette, the topographic texture on `html`, the `--vt-*` tempo and the whole
+view-transition choreography it drives, and a short list of element defaults the `<main>`
+content needs (`blockquote`, markdown `table` borders, the `<details>` animation `Disclosure`
+relies on).
+
+**It defines no type scale.** `body` is Raleway at weight 500 and *nothing* sizes a heading, so
+the `<h2>`/`<h3>`s in `<main>` sit at the browser's defaults and every other font size on the
+site is declared by the component that needs one (see "Plain HTML elements" below). Worth
+knowing before changing a size: a card's `<h3>` is `2em`, which is larger than the section
+`<h2>` above it on `/speaking` and `/writing`.
 
 **A surface is a gradient; a colour is a colour.** `--dash-bg`/`--grid-bg` are gradients, valid
-only as a `background`. Where a real colour is needed (a `color`, a `border`, a control that has
-to be opaque against the shell) use **`--dash-ink`** and **`--dash-ground`**, the two ends of the
-dark surface, which is what `Card`, `Button`, and `TimelineEntry` paint with. These replaced
-`--bgcolor`, a placeholder that aliased `--dash-bg` and therefore resolved to a gradient
-wherever a colour was expected: `color: var(--bgcolor)` is an invalid declaration, which is why
-a filled `Button` used to render identical to an outlined one.
+only as a `background`; `--dash-fg`/`--grid-fg` are the colours that belong with them, and the
+two surface classes always set the pair together. A component that needs a colour of its own
+takes **`--accent-color`** (link hover, `<strong>`, `Card`'s underline, `Button`'s text and
+border, the timeline dot) or **`--dark-color`** (the dot's ring, `Header`). Those two, plus
+`--grid-padding` and `--grid-gap`, are the whole of what a component reads from `:root`; there
+is no separate ink/ground pair.
 
 > **Slot gotcha.** `Astro.slots.has(name)` reflects what the *immediate caller* wrote, so it is
 > only trustworthy when the component is composed directly by the page. A layout that forwards a
@@ -422,10 +450,11 @@ a filled `Button` used to render identical to an outlined one.
   distinguishes a card is the content on the right, and some pages put something
   unrasterizable in `Square` anyway (the `<mode-book>` embed, a streaming sizzle reel). That makes the media a constant, so it lives in `duotone.ts` beside the blend
   rather than in a map, `renderOgPng` takes a bare `GridProps`, and both routes derive their
-  card list straight from `Object.entries(gridContent)`. There is no `og/_pages.ts`.
+  card list from **`getPages()`** in `grid.config.ts`. There is no `og/_pages.ts`.
 - Components: `SEO`, `StructuredData` (JSON-LD, config-driven), the shell panels above
-  (`Header` twice, `Square`, `Grid`, `Main`, `Toc`/`TocList`), the **`Card` pattern** below
-  (`EntryList` over `CardList` over `Card`), `Button`/`ButtonGroup`, `Icon`, `TagList`/`Label`,
+  (`Header` twice, `Square`, `Grid`, `Main`, `Toc`/`TocList`), `Listing` (the four listing
+  layouts), the **`Card` pattern** below (`EntryList` over `CardList` over `Card`),
+  `Button`/`ButtonGroup`, `Icon`, `TagList`/`Label`,
   `Media`, `TimelineEntry`/`Disclosure`, `ScrollToTop`, and `OgImage` (used
   **only** by the OG-image pipeline in `src/lib/og.ts` and its `/og` preview, not by any page
   stylesheet).
@@ -470,8 +499,10 @@ a filled `Button` used to render identical to an outlined one.
 - **Props are typed, never `[key: string]: unknown`.** A component that forwards extra
   attributes extends Astro's own element types instead of an index signature, which silently
   disables prop checking: `interface Props extends Omit<HTMLAttributes<'a'>, 'href' | 'type'>`
-  (`Button`), `HTMLAttributes<'video'>` (`Media`). Every component declares a `Props` interface,
-  including slot-only ones, so a stale prop at a call site is a build error.
+  (`Button`), `HTMLAttributes<'video'>` (`Media`). Every component that takes a prop declares a
+  `Props` interface, so a stale prop at a call site is a build error. A purely slot-driven one
+  needs none: `ButtonGroup` and `CardList` declare no `Props` at all (`Square` still carries an
+  empty one).
 - **Local images go through `astro:assets`.** Import the asset and pass the `ImageMetadata`
   itself (`import portrait from '@assets/donnie.png'` → `<Media src={portrait} …/>`), never
   `portrait.src`, which skips Sharp entirely. `Media` renders `<Image>` for an imported asset
@@ -481,8 +512,10 @@ a filled `Button` used to render identical to an outlined one.
 - **Fonts go through Astro's Fonts API, never hand-rolled `@font-face`.** There are exactly three
   families, all declared in `astro.config.mjs` under `fonts:` (local provider, files in
   `src/assets/fonts/`) and emitted by `<Font>` in `Layout`'s head: **Kentish**, the display face
-  (`--font-kentish`), which `global.css` applies to `:is(h1,h2,h3,h4,h5,h6)` only;
-  **Raleway**, the body face (`--font-raleway`), set on `body`; and **RemixIcon**
+  (`--font-kentish`), applied by **`Grid` alone** (the panel's `headline` `<h2>` and the metric's
+  `<output>`), *not* by any global heading rule; **Raleway**, the body face (`--font-raleway`),
+  set on `body` at weight 500 and inherited by everything else, card headings included; and
+  **RemixIcon**
   (`--font-remixicon`), the icon face, applied only by `Icon.astro`. **No other font is used
   anywhere**, on the pages or on the OG cards. Font files live in `src/`, not `public/`: Astro
   copies them into the build itself, so `public/` would ship them twice.
@@ -494,10 +527,10 @@ a filled `Button` used to render identical to an outlined one.
     codepoint map) and the source woff2; nothing imports it at build time.
   - The card fonts are unaffected: **OG cards carry no icons**, so satori never has to read
     this face, which is why it needs no non-woff2 source.
-  - Kentish has only weight 400, so the heading rule pins `font-weight: 400` and
-    `font-synthesis-weight: none` to stop browsers faking a bold. Adding a real bold means a
-    second `variant` in the config, then relaxing that pin. Raleway is variable across
-    `100 900`, so body copy needs no such pin and `<strong>` gets a real 700.
+  - Kentish has only weight 400, and `Grid` sets `font-weight: normal` everywhere it uses it,
+    so nothing asks a browser to fake a bold. Adding a real bold means a second `variant` in the
+    config. Raleway is variable across `100 900`, so `body`'s 500 and `<strong>`'s 700 both land
+    on real masters rather than synthesized ones.
   - **The OG cards read the same declarations**, they don't keep their own copies: `og.ts`'s
     `loadSiteFamily()` pulls a family out of `fontData` (from `astro:assets`, keyed by the
     `cssVariable`) and fetches the file via `experimental_getFontFileURL()`, which Astro serves
@@ -566,18 +599,29 @@ than every heading, tag, and paragraph read out as one link. A linked card there
   rail on `/journey`, which is the one listing whose entries aren't cards from a list of items.
 - Block content (a flex row with `<time>`/labels) must go in the `badge` or default slot,
   **not** `meta` (which is wrapped in an inline span).
+- **`TagList` renders its items as `#PascalCase` hashtags**, via `toHashtag` in
+  `src/utils/hashtag.ts`. Author a tag, topic, skill, or tech-stack entry as plain readable text
+  ("CSS Custom Properties"); the `#` and the casing are added at render time, so the same value
+  still reads correctly in the `.md` mirrors and `/llms.txt`.
 
 ### Button group pattern (`src/components/ButtonGroup.astro`, `Button.astro`)
-`Button` is the action primitive (filled `primary`/outline `secondary`, `sm` size, optional
-`arrow` prop that appends the shared `ArrowIcon`). **Whenever you place one or two buttons,
-wrap them in `<ButtonGroup>`** — the slot-driven flex wrapper that owns their layout (gap +
-wrapping); it carries its own scoped `.button-group` style and accepts no `class`. Used for
-section CTAs, and the slides/video links in a speaking card's body (secondary `Button`s).
-`ScrollToTop` is its own specialized control and does **not** use `ButtonGroup`.
-(`ButtonGroup` replaced the former single-purpose `CardCta`.)
+`Button` is the action primitive, and there is **one treatment, not a set of variants**: an
+outline control at `0.8em` in `--accent-color`. It takes **no `variant` and no `size` prop**;
+the theme's filled `primary` / outline `secondary` split is gone, so don't pass one (it would
+fail `astro check`). Which element it renders is derived: `<a>` with an `href`, `<button>`
+without one, and a non-navigable `<span aria-disabled>` when a link is `disabled`. `arrow`
+appends the trailing forward arrow, `back` prepends the leading back arrow (both are `Icon`,
+not the deleted `ArrowIcon`), and the `icon` slot prepends any other glyph.
 
-**`Grid`'s own `cta` slot is the exception**: it lays its children out itself and takes plain
-`<a>` elements, so don't wrap those in a `ButtonGroup` or a `Button`.
+**Where two or more buttons sit together, wrap them in `<ButtonGroup>`** — the slot-driven flex
+wrapper that owns their layout (gap + wrapping); it carries its own scoped `.button-group` style
+and accepts no `class`. In practice that is one place: the slides/video links in a speaking
+card's body (`EntryList`). A lone button is composed bare, which is what the detail pages'
+"All projects" / "All decisions" back links do. `ScrollToTop` wraps a `Button` of its own and
+does **not** use `ButtonGroup`. (`ButtonGroup` replaced the former single-purpose `CardCta`.)
+
+**`Grid` has no slots at all**, so its CTA row is not an exception here: `cta` is a `CtaLink[]`
+prop and the panel renders the plain `<a>`s itself. There is nowhere to put a `Button` in it.
 
 ## Content & editorial conventions
 
