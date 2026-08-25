@@ -98,8 +98,8 @@ const panelFields = ({ image }: SchemaContext) => ({
     .object({
       /** The figure itself. A string keeps approximations like "~500". */
       value: z.union([z.string(), z.number()]),
-      /** What the figure counts. */
-      label: z.string(),
+      /** What the figure counts. Omit for a bare figure. */
+      label: z.string().optional(),
     })
     .optional() satisfies z.ZodType<GridProps['metric']>,
 

@@ -124,25 +124,25 @@ function withOverrides(defaults: GridProps, overrides: PanelOverrides): GridProp
 /**
  * The header panel for one case study.
  *
- * Derived from the entry: the role/year byline (with the body's reading time),
- * a link back to the listing plus the booking link, the tech-stack count as the
- * metric, the outcome summary as the anecdote, and the section's backdrop. Any
- * of those regions can be replaced from the MDX frontmatter, and `headline`
- * exists only there.
+ * Derived from the entry: the role byline with the body's reading time, a link
+ * back to the listing plus the booking link, the year as the metric (which is
+ * why the byline no longer repeats it), the outcome summary as the anecdote,
+ * and the section's backdrop. Any of those regions can be replaced from the MDX
+ * frontmatter, and `headline` exists only there.
  */
 export async function projectGrid(entry: CollectionEntry<'projects'>): Promise<GridProps> {
-  const { title, role, year, outcomeSummary, techStack } = entry.data;
+  const { title, role, year, outcomeSummary } = entry.data;
   const readingTime = formatReadingTime(calculateReadingTime(entry.body ?? ''));
 
   return withOverrides(
     {
       title,
-      description: `${role} · ${year} · ${readingTime}`,
+      description: `${role} · ${readingTime}`,
       cta: [
         { label: 'All projects', href: '/projects' },
         { label: 'Work with me', href: siteConfig.scheduling, external: true },
       ],
-      metric: { value: techStack.length, label: 'technologies' },
+      metric: { value: year },
       anecdote: outcomeSummary,
       backdrop: await sectionBackdrop('projects'),
     },
@@ -153,19 +153,21 @@ export async function projectGrid(entry: CollectionEntry<'projects'>): Promise<G
 /**
  * The header panel for one decision record.
  *
- * Derived from the entry: a link back to the listing, the tag count as the
- * metric (dropped when the record has no tags), the context as the anecdote,
- * and the section's backdrop. Any of those regions can be replaced from the MDX
- * frontmatter, and `headline`/`description` exist only there.
+ * Derived from the entry: a link back to the listing, the context as the
+ * anecdote, and the section's backdrop. There is deliberately **no** derived
+ * metric: a decision record has no figure worth a headline (the tag count was
+ * one the panel could compute, not one that meant anything), so the region is
+ * dropped unless the entry's frontmatter names one. Any of these regions can be
+ * replaced from the MDX frontmatter, and `headline`/`description` exist only
+ * there.
  */
 export async function decisionGrid(entry: CollectionEntry<'decisions'>): Promise<GridProps> {
-  const { title, context, tags } = entry.data;
+  const { title, context } = entry.data;
 
   return withOverrides(
     {
       title,
       cta: [{ label: 'All decisions', href: '/decisions' }],
-      metric: tags?.length ? { value: tags.length, label: 'tags' } : undefined,
       anecdote: context,
       backdrop: await sectionBackdrop('decisions'),
     },

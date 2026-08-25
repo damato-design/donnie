@@ -69,10 +69,10 @@ export interface GridProps {
   /** One or two links, laid out in a row. */
   cta?: CtaLink[];
 
-  /** The headline metric: a number and what it counts. Omit for no metric. */
+  /** The headline metric: a number and, optionally, what it counts. Omit for no metric. */
   metric?: {
     value: string | number;
-    label: string;
+    label?: string;
   };
 
   /** The page intro paragraph. */
@@ -129,7 +129,7 @@ const backdropUrl = backdrop
     {metric && (
         <div class="metric grid-surface">
             <output>{metric.value}</output>
-            <span>{metric.label}</span>
+            {metric.label && <span>{metric.label}</span>}
         </div>
     )}
     {anecdote && (
@@ -217,7 +217,6 @@ const backdropUrl = backdrop
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 8px;
         align-items: center;
         line-height: 1;
 
@@ -230,6 +229,7 @@ const backdropUrl = backdrop
             font-size: .8em;
             text-transform: uppercase;
             font-weight: bolder;
+            margin-block-start: 8px;
         }
     }
 

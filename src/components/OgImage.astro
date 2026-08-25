@@ -117,7 +117,7 @@ const lines = (text: string): string[] => text.split('\n');
         {metric && (
           <div class="og-metric">
             <div class="og-metric-value">{metric.value}</div>
-            <div class="og-metric-label">{metric.label}</div>
+            {metric.label && <div class="og-metric-label">{metric.label}</div>}
           </div>
         )}
         {anecdote && <div class="og-anecdote">{anecdote}</div>}
