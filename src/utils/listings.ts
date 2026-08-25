@@ -42,7 +42,7 @@ export interface TimelineItem {
 
 /** What `Listing.astro` is handed, tagged by how it should be laid out. */
 export type Listing =
-  | { kind: 'cards'; items: EntryItem[]; compact: boolean }
+  | { kind: 'cards'; items: EntryItem[] }
   | { kind: 'groups'; groups: [number, EntryItem[]][] }
   | { kind: 'timeline'; items: TimelineItem[] }
   | { kind: 'articles'; items: EntryItem[]; total: number; shown: number; blogUrl: string };
@@ -72,7 +72,7 @@ async function projectsListing() {
     href: `/projects/${id}`,
   }));
 
-  return { listing: { kind: 'cards', items, compact: false } as const, headings: cardHeadings(items) };
+  return { listing: { kind: 'cards', items } as const, headings: cardHeadings(items) };
 }
 
 async function decisionsListing() {
@@ -84,7 +84,7 @@ async function decisionsListing() {
     href: `/decisions/${id}`,
   }));
 
-  return { listing: { kind: 'cards', items, compact: true } as const, headings: cardHeadings(items) };
+  return { listing: { kind: 'cards', items } as const, headings: cardHeadings(items) };
 }
 
 async function journeyListing() {

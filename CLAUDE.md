@@ -543,10 +543,12 @@ than every heading, tag, and paragraph read out as one link. A linked card there
 `.card--link` rule, so it stays clickable.
 
 - `CardList.astro` is the listing shell: it owns the `<ul class="card-list">` wrapper and its
-  layout. Callers map their items into `<li><Card/></li>` in the default slot. Its one prop is
-  **`compact`**, which tightens the cards by setting the custom properties `Card` reads
-  (`--card-padding`, `--card-title-size`), so the list never reaches into the card's own styles;
-  `Card` falls back to its defaults when they're unset. There is **no empty state** anywhere:
+  layout. Callers map their items into `<li><Card/></li>` in the default slot. It takes **no
+  props**: a card heading is the same size on every page, so there is no per-listing size knob.
+  (The former **`compact`** flag was deleted: it set `--card-padding`, which `Card` never read,
+  and `--card-title-size`, which made the decisions listing's headings 1.25em against every
+  other listing's 2em. Don't reintroduce a variant here; if a listing genuinely needs different
+  cards it gets its own shell.) There is **no empty state** anywhere:
   every listing is populated, and speaking's per-year groups only exist once they have talks.
 - **`EntryList.astro` is what everything composes**, not `CardList`/`Card` directly. Every card
   listing on the site is the same shape (eyebrow, title, summary, `TagList`, and a

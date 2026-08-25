@@ -79,14 +79,12 @@ export interface EntryItem {
 interface Props {
   /** The cards, in the order they should appear. */
   items: EntryItem[];
-  /** Tighten the cards (see `CardList`). */
-  compact?: boolean;
 }
 
-const { items, compact = false } = Astro.props;
+const { items } = Astro.props;
 ---
 
-<CardList compact={compact}>
+<CardList>
   {items.map((item) => (
     <li>
       <Card id={item.slug} href={item.href} external={item.external}>

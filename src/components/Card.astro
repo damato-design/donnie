@@ -78,8 +78,6 @@ const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : 
 </article>
 
 <style>
-  /* `--card-padding` / `--card-title-size` let a listing shell (CardList's
-     `compact`) tighten its cards without reaching into these styles. */
   /* No background of its own: the card sits directly on `main`'s surface and is
      drawn by its rule alone, so the shell's texture runs through the listing
      rather than being interrupted by a box per entry. */
@@ -98,7 +96,7 @@ const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : 
 
     & > h3 {
       margin: 0;
-      font-size: var(--card-title-size, 2em);
+      font-size: 2em;
       line-height: 1;
 
       & > a {
