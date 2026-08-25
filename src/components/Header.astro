@@ -139,7 +139,7 @@ const attrs = (link: HeaderLink, me = false) => ({
 <header class:list={['header', name, 'dash-surface']}>
   {parts.map((part) =>
     part === 'action' ? (
-      <a {...attrs(action)}>
+      <a {...attrs(action)} class="btn">
         {action.logo ? <Logo /> : action.icon ? <Icon name={action.icon} /> : action.label}
       </a>
     ) : (
@@ -147,7 +147,7 @@ const attrs = (link: HeaderLink, me = false) => ({
         <ul>
           {links.filter((link) => link.href).map((link) => (
             <li>
-              <a class:list={[(link.icon || link.logo) && 'glyph']} {...attrs(link, profiles)}>
+              <a class:list={[(link.icon || link.logo) && 'btn']} {...attrs(link, profiles)}>
                 {link.logo ? (
                   <Logo />
                 ) : link.icon ? (
@@ -175,18 +175,20 @@ const attrs = (link: HeaderLink, me = false) => ({
     justify-content: space-between;
     align-items: center;
 
-    /* The standalone action at one end of the row. */
-    & > a {
-      padding: 16px;
-      line-height: 1;
+    a {
       text-decoration: none;
-      background: black;
-      color: red;
     }
 
     svg {
       width: 1em;
     }
+  }
+
+  .btn {
+    padding: 16px;
+    line-height: 1;
+    text-decoration: none;
+    background: black;
   }
 
   ul {
@@ -196,20 +198,15 @@ const attrs = (link: HeaderLink, me = false) => ({
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 16px;
+
+    /** Slashes between the navigation items */
+    li:not(:has(.btn)):not(:last-child):after {
+      content: '/';
+      margin-inline: 16px;
+    }
   }
 
-  /* A link that draws a glyph instead of text is boxed like the action, since
-     it has no word to carry the emphasis. */
-  .glyph {
-    display: inline-flex;
-    padding: 12px;
-    line-height: 0;
-    background: black;
-    color: red;
-  }
-
-  a[aria-current='page'] {
-    font-weight: bolder;
+  a:is([aria-current='page'], [href*="cal.com"]) {
+    color: var(--accent-color);
   }
 </style>

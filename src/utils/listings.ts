@@ -69,7 +69,7 @@ async function projectsListing() {
     title: data.title,
     description: data.outcomeSummary,
     tags: data.techStack,
-    cta: [{ label: 'View case study', href: `/projects/${id}`, arrow: true }],
+    href: `/projects/${id}`,
   }));
 
   return { listing: { kind: 'cards', items, compact: false } as const, headings: cardHeadings(items) };
@@ -81,7 +81,7 @@ async function decisionsListing() {
     title: data.title,
     description: data.context,
     tags: data.tags,
-    cta: [{ label: 'Read decision', href: `/decisions/${id}`, arrow: true }],
+    href: `/decisions/${id}`,
   }));
 
   return { listing: { kind: 'cards', items, compact: true } as const, headings: cardHeadings(items) };
@@ -114,7 +114,9 @@ async function speakingListing() {
       title,
       description,
       tags: topics,
-      cta: [
+      // A talk has no page of its own, so the card links nowhere; its slides
+      // and video are rendered in the card's body instead.
+      links: [
         ...(slides ? [{ label: 'Slides', href: slides, external: true, icon: 'slides' as const }] : []),
         ...(video ? [{ label: 'Video', href: video, external: true, icon: 'video' as const }] : []),
       ],
@@ -165,7 +167,8 @@ async function writingListing() {
     title: data.title,
     description: data.description,
     tags: data.tags,
-    cta: [{ label: 'Read the article', href: data.url, external: true, arrow: true }],
+    href: data.url,
+    external: true,
   }));
 
   const heading: MarkdownHeading = {

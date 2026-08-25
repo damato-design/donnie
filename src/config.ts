@@ -61,6 +61,20 @@ export const siteConfig = {
   description: 'Focused on improving the practice of design systems and AI model behavior.',
 
   /**
+   * Browser chrome color
+   *
+   * The dark end of the dashboard shell, used wherever a browser or an OS paints
+   * around the page rather than inside it: the `theme-color` meta tag and the web
+   * app manifest's `theme_color`/`background_color` (so an installed app's splash
+   * screen is the shell, not a white flash before it).
+   *
+   * It lives here because those two consumers are in different files and drifted
+   * apart once already. It is a plain colour, not one of `global.css`'s `--dash-*`
+   * gradients, since neither consumer can resolve a CSS variable or a gradient.
+   */
+  themeColor: '#0a0a0a',
+
+  /**
    * Author information
    *
    * Personal details used throughout the site for attribution,

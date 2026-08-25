@@ -18,11 +18,20 @@
  * The panel renders nothing at all when there are no headings, so a page can opt
  * out simply by passing none.
  *
+ * The panel is a native `<details>`, and it carries **no `open` attribute**:
+ * that is what makes it collapsed by default on mobile, where the list sits
+ * between the page header and `<main>` and would otherwise push the content it
+ * indexes off the screen. On desktop it has a column of its own, so the styles
+ * below force `::details-content` open and make the summary inert (cursor,
+ * pointer events, no chevron), leaving it reading as the panel's heading. The
+ * open/close animation is the shared one in `global.css`.
+ *
  * @component
  */
 
 import type { MarkdownHeading } from 'astro';
 import { buildTocTree } from '@utils/toc';
+import Icon from '@components/Icon.astro';
 import TocList from '@components/TocList.astro';
 
 interface Props {
@@ -44,10 +53,70 @@ const items = buildTocTree(headings, maxDepth);
 ---
 
 {items.length > 0 && (
-    <section class="toc dash-surface">
-        <h2>On this page</h2>
+    <details class="toc dash-surface">
+        <summary>
+            <h2>On this page</h2>
+            <span class="toc-indicator"><Icon name="chevron-down" /></span>
+        </summary>
         <nav aria-label="Table of contents">
             <TocList items={items} />
         </nav>
-    </section>
+    </details>
 )}
+
+<style>
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1ch;
+    /* Desktop: a heading, not a control. */
+    cursor: default;
+    pointer-events: none;
+  }
+
+  summary h2 {
+    margin-block: 0.83em;
+  }
+
+  /* The chevron only means something where the panel can actually collapse. */
+  .toc-indicator {
+    display: none;
+    transition: transform 0.2s ease;
+  }
+
+  /* Desktop has a column for the list, so it is always open regardless of the
+     element's own state: `global.css` collapses `::details-content` for every
+     `<details>` on the page, and this is the panel that opts out. */
+  .toc::details-content {
+    height: auto;
+    content-visibility: visible;
+  }
+
+  @media (max-width: 800px) {
+    summary {
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .toc-indicator {
+      display: inline-flex;
+    }
+
+    .toc[open] .toc-indicator {
+      transform: rotate(180deg);
+    }
+
+    /* Hand the collapsing back to the element's own state (and to the shared
+       animation in `global.css`). */
+    .toc::details-content {
+      height: 0;
+      content-visibility: hidden;
+    }
+
+    .toc[open]::details-content {
+      height: auto;
+      content-visibility: visible;
+    }
+  }
+</style>

@@ -3,9 +3,9 @@
  * EntryList
  *
  * A listing of collection entries as cards. Every card listing on the site is
- * the same shape (an eyebrow, a title, a summary, a `TagList`, and one or two
- * links out), so this composes `CardList` + `Card` + `TagList` + `ButtonGroup`
- * once instead of once per page. Projects, decisions, and writing each render
+ * the same shape (an eyebrow, a title, a summary, a `TagList`, and a
+ * destination), so this composes `CardList` + `Card` + `TagList` once instead
+ * of once per page. Projects, decisions, and writing each render
  * one of these; speaking renders one per year group.
  *
  * Items are **data, not markup**: `utils/listings.ts` maps a collection's
@@ -28,7 +28,7 @@
  *   title: data.title,
  *   description: data.outcomeSummary,
  *   tags: data.techStack,
- *   cta: [{ label: 'View case study', href: `/projects/${id}`, arrow: true }],
+ *   href: `/projects/${id}`,
  * }));
  * ```
  */
@@ -40,16 +40,14 @@ import ButtonGroup from '@components/ButtonGroup.astro';
 import Button from '@components/Button.astro';
 import Icon, { type IconName } from '@components/Icon.astro';
 
-/** One link under a card. */
-export interface EntryCta {
+/** A supplementary link in a card's body (the speaking page's slides/video). */
+export interface EntryLink {
   /** Link text. */
   label: string;
   /** Destination. */
   href: string;
   /** Open in a new tab. */
   external?: boolean;
-  /** Append the standard trailing forward arrow. */
-  arrow?: boolean;
   /** Prepend a glyph (the speaking page's slides/video marks). */
   icon?: IconName;
 }
@@ -66,8 +64,16 @@ export interface EntryItem {
   description: string;
   /** Tags, rendered as a `TagList`. */
   tags?: string[];
-  /** The card's links out. */
-  cta: EntryCta[];
+  /** Where the card goes. Given one, the whole card is clickable. */
+  href?: string;
+  /** Open the card's link in a new tab. */
+  external?: boolean;
+  /**
+   * Extra links rendered in the card's body, for entries whose material lives
+   * in more than one place (a talk's slides and video). They sit above the
+   * card's own hit area, so they stay clickable on a linked card.
+   */
+  links?: EntryLink[];
 }
 
 interface Props {
@@ -83,26 +89,23 @@ const { items, compact = false } = Astro.props;
 <CardList compact={compact}>
   {items.map((item) => (
     <li>
-      <Card id={item.slug}>
+      <Card id={item.slug} href={item.href} external={item.external}>
         {item.meta && <Fragment slot="meta">{item.meta}</Fragment>}
         <Fragment slot="title">{item.title}</Fragment>
         <Fragment slot="description">{item.description}</Fragment>
 
         <TagList slot="tags" items={item.tags ?? []} />
 
-        <ButtonGroup slot="cta">
-          {item.cta.map((cta) => (
-            <Button
-              href={cta.href}
-              variant="secondary"
-              external={cta.external}
-              arrow={cta.arrow}
-            >
-              {cta.icon && <Icon slot="icon" name={cta.icon} />}
-              {cta.label}
-            </Button>
-          ))}
-        </ButtonGroup>
+        {item.links?.length ? (
+          <ButtonGroup>
+            {item.links.map((link) => (
+              <Button href={link.href} variant="secondary" external={link.external}>
+                {link.icon && <Icon slot="icon" name={link.icon} />}
+                {link.label}
+              </Button>
+            ))}
+          </ButtonGroup>
+        ) : null}
       </Card>
     </li>
   ))}

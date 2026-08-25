@@ -5,6 +5,7 @@
   --grid-fg: #f1f1f1;
   --dash-bg: linear-gradient(135deg, #111111, #0c0c0c);
   --dash-fg: #a4a4a4;
+  --accent-color: #a80000;
 
   /* The dashboard surfaces are gradients, which is fine as a `background` and
      useless anywhere a real *colour* is required: as a `color`, as a `border`,
@@ -187,6 +188,14 @@ a {
 
 :where(ul) {
   padding-left: 1em;
+
+  li::marker {
+    color: var(--accent-color);
+  }
+}
+
+strong, a:hover {
+  color: var(--accent-color);
 }
 
 img {

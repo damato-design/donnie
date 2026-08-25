@@ -7,10 +7,12 @@
  * per-type variants: differences are expressed purely through which slots a
  * call site fills.
  *
- * The card itself is NOT a link. For accessibility, the only interactive
- * element is whatever the call site puts in the `cta` slot (typically a
- * <ButtonGroup> holding a forward <Button>), so a whole block of headings and
- * tags is never wrapped in a single anchor.
+ * Given an `href` the whole card is clickable. The anchor wraps the `title`
+ * slot alone and its `::after` is stretched over the card, so the accessible
+ * name is the title rather than the card's every heading, tag, and paragraph
+ * read out in one link. A linked card therefore needs a `title` slot; anything
+ * else interactive inside it stays clickable, because it is lifted above the
+ * overlay.
  *
  * The meta / title / description wrappers are only rendered when their slot is
  * filled, so the card also works as a styled shell (passing bespoke markup in
@@ -20,22 +22,18 @@
  *
  * @slot badge - Optional badge/label row at top (e.g. status, type)
  * @slot meta - Metadata line (date, role, category, etc.)
- * @slot title - Card heading/title
+ * @slot title - Card heading/title, and the link text when `href` is set
  * @slot description - Card description or summary text
  * @slot tags - Container for a TagList
- * @slot default - Bespoke content between tags and the CTA (e.g. a talk's event
- *   line and slides/video links, or a timeline disclosure)
- * @slot cta - Optional call-to-action at the bottom (typically a <ButtonGroup>)
+ * @slot default - Bespoke content below the tags (e.g. a talk's slides/video
+ *   links, or a timeline disclosure)
  *
  * @example
  * ```astro
- * <Card>
+ * <Card href="/projects/gridless">
  *   <Fragment slot="meta">January 2024</Fragment>
  *   <Fragment slot="title">Card Title</Fragment>
  *   <Fragment slot="description">Card description text</Fragment>
- *   <ButtonGroup slot="cta">
- *     <Button href="/example" variant="secondary" arrow>Read more</Button>
- *   </ButtonGroup>
  * </Card>
  * ```
  */
@@ -49,23 +47,34 @@ interface Props {
    * card, and so it still works on a card with no `title` slot.
    */
   id?: string;
+
+  /** Destination. Provided -> the whole card is clickable (needs a `title`). */
+  href?: string;
+
+  /** Open the card's link in a new tab. */
+  external?: boolean;
 }
 
-const { id } = Astro.props;
+const { id, href, external = false } = Astro.props;
 
 const hasMeta = Astro.slots.has('meta');
 const hasTitle = Astro.slots.has('title');
 const hasDescription = Astro.slots.has('description');
+
+const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
 ---
 
-<article class="card" id={id}>
+<article class:list={['card', { 'card--link': href }]} id={id}>
   <slot name="badge" />
   {hasMeta && <span><slot name="meta" /></span>}
-  {hasTitle && <h3><slot name="title" /></h3>}
+  {hasTitle && (
+    <h3>
+      {href ? <a href={href} {...linkAttrs}><slot name="title" /></a> : <slot name="title" />}
+    </h3>
+  )}
   {hasDescription && <p><slot name="description" /></p>}
   <slot name="tags" />
   <slot />
-  <slot name="cta" />
 </article>
 
 <style>
@@ -78,18 +87,51 @@ const hasDescription = Astro.slots.has('description');
     display: flex;
     flex-direction: column;
     align-items: start;
-    padding: var(--card-padding, 1.5rem 1.75rem);
-    border: 1px solid;
+    margin-inline: calc(var(--grid-padding) * -1);
+    padding: var(--grid-padding);
+
+    &:hover {
+      background: #151515;
+    }
 
     & > span {
       font-size: .8em;
       padding-block-end: 8px;
+      opacity: .7;
     }
 
     & > h3 {
       margin: 0;
       font-size: var(--card-title-size, 2em);
       line-height: 1;
+
+      & > a {
+        color: inherit;
+        text-decoration: none;
+
+        /* The stretched hit area: the whole card, from the title's own link. */
+        &::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+        }
+
+        &:hover,
+        &:focus-visible {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  /* Only a linked card positions itself, so the overlay has something to fill. */
+  .card--link {
+    position: relative;
+    cursor: pointer;
+
+    /* Anything else interactive sits above the overlay and stays clickable. */
+    & :where(a, button, details, summary):not(h3 > a) {
+      position: relative;
     }
   }
 </style>

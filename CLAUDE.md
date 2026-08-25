@@ -393,9 +393,18 @@ a filled `Button` used to render identical to an outlined one.
   are the same page with different sources for each region (see "One route" below), and
   `[...slug].md.ts` generates every markdown mirror. The two never collide: one emits
   `/projects/gridless`, the other `/projects/gridless.md`. Alongside them sit `404.astro`,
-  `llms.txt.ts`, `robots.txt.ts`, and `og/`, all narrower than a rest parameter and so never
-  shadowed by one. **There are no `projects/`, `decisions/`, `journey/`, or `speaking/`
-  folders under `src/pages/`**; don't reintroduce one to add a route.
+  `llms.txt.ts`, `robots.txt.ts`, `site.webmanifest.ts`, and `og/`, all narrower than a rest
+  parameter and so never shadowed by one. **There are no `projects/`, `decisions/`, `journey/`,
+  or `speaking/` folders under `src/pages/`**; don't reintroduce one to add a route.
+- **The web app manifest is generated, not a file in `public/`.** `site.webmanifest.ts` builds
+  it from `siteConfig` (name, description, `language`, and **`themeColor`**, the one source for
+  both `theme_color`/`background_color` and `Layout`'s `theme-color` meta tag) and returns it as
+  `application/manifest+json`, so it is the one machine route that doesn't use `textResponse`.
+  A static copy in `public/` can't read config, which is how it drifted into a white
+  `theme_color` against the dark shell. `id`/`start_url`/`scope` are relative, so no origin is
+  stated. The icons are all `purpose: 'any'` **on purpose**: the mark is drawn edge to edge, and
+  a `maskable` entry without artwork honoring the 80% safe zone would have Android crop the
+  glyph rather than letterbox it.
 - **`og/index.astro` is a development surface, not a page of the site.** It renders
   `OgImage.astro` as live HTML at 1200x630 for every card, so the template can be iterated
   on with hot reload instead of a satori render per change. It is therefore the **one page
@@ -522,10 +531,16 @@ a filled `Button` used to render identical to an outlined one.
 There is **one** card component. It is slot-driven and has no per-type variants: a call
 site composes a card by filling slots — `badge` (top label row, rendered raw), `meta`
 (eyebrow, wrapped in a span so it must be inline text), `title`, `description`, `tags`
-(a `TagList`), the default slot (bespoke content), and an optional `cta`. The card itself is
-**not** a link; the only interactive element is whatever goes in the `cta` slot (typically a
-`<ButtonGroup>` holding a forward `<Button … arrow>`, see the Button group pattern below).
+(a `TagList`), and the default slot (bespoke content).
 Date formatting lives in `src/utils/formatDate.ts` and is applied at the call site.
+
+**Given an `href` (plus an optional `external`), the whole card is clickable.** There is no
+`cta` slot. The anchor wraps the **`title` slot alone** and its `::after` is stretched over
+the card, so the hit area is the whole card while the accessible name stays the title, rather
+than every heading, tag, and paragraph read out as one link. A linked card therefore needs a
+`title`, and only a linked card is `position: relative`. Anything else interactive inside it
+(a talk's slides/video buttons, the journey disclosure) is lifted above that overlay by the
+`.card--link` rule, so it stays clickable.
 
 - `CardList.astro` is the listing shell: it owns the `<ul class="card-list">` wrapper and its
   layout. Callers map their items into `<li><Card/></li>` in the default slot. Its one prop is
@@ -534,10 +549,14 @@ Date formatting lives in `src/utils/formatDate.ts` and is applied at the call si
   `Card` falls back to its defaults when they're unset. There is **no empty state** anywhere:
   every listing is populated, and speaking's per-year groups only exist once they have talks.
 - **`EntryList.astro` is what everything composes**, not `CardList`/`Card` directly. Every card
-  listing on the site is the same shape (eyebrow, title, summary, `TagList`, one or two links
-  out), so `utils/listings.ts` maps a collection's entries to **`EntryItem[]`** and passes them
-  through: `{ slug, meta?, title, description, tags?, cta: EntryCta[] }`, where a `cta` is
-  `{ label, href, external?, arrow?, icon? }`. Items are **data, not markup**, which is what
+  listing on the site is the same shape (eyebrow, title, summary, `TagList`, and a
+  destination), so `utils/listings.ts` maps a collection's entries to **`EntryItem[]`** and
+  passes them through: `{ slug, meta?, title, description, tags?, href?, external?,
+  links?: EntryLink[] }`, where `href` makes the card itself the link and a `links` entry is
+  `{ label, href, external?, icon? }`, rendered as a `ButtonGroup` in the card's body. Only
+  speaking uses `links` (a talk has no page of its own, so its card links nowhere and its
+  slides/video sit in the body); projects, decisions, and writing use `href`.
+  Items are **data, not markup**, which is what
   lets the same array also drive the table of contents (`cardHeadings` there), so a TOC link
   and the card `id` it jumps to cannot drift apart.
 - Used by `Listing.astro` for projects, decisions, writing (one `EntryList`) and speaking (one
@@ -551,7 +570,7 @@ Date formatting lives in `src/utils/formatDate.ts` and is applied at the call si
 `arrow` prop that appends the shared `ArrowIcon`). **Whenever you place one or two buttons,
 wrap them in `<ButtonGroup>`** — the slot-driven flex wrapper that owns their layout (gap +
 wrapping); it carries its own scoped `.button-group` style and accepts no `class`. Used for
-section CTAs, and each card's `cta` slot (a single secondary `sm` `Button` with `arrow`).
+section CTAs, and the slides/video links in a speaking card's body (secondary `Button`s).
 `ScrollToTop` is its own specialized control and does **not** use `ButtonGroup`.
 (`ButtonGroup` replaced the former single-purpose `CardCta`.)
 
