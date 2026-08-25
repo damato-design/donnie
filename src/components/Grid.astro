@@ -190,6 +190,7 @@ const backdropUrl = backdrop
             text-transform: uppercase;
             letter-spacing: .5em;
             max-width: 60ch;
+            text-wrap: pretty;
         }
 
         h2 {
@@ -211,6 +212,7 @@ const backdropUrl = backdrop
     .identity p {
         white-space: pre-line;
         max-width: 30ch;
+        text-wrap: pretty;
     }
 
     .metric {
@@ -240,6 +242,7 @@ const backdropUrl = backdrop
         flex-direction: column;
         justify-content: center;
         font-size: .8em;
+        text-wrap: pretty;
     }
 
     /* Without a metric beside it, the anecdote takes the whole row. */
@@ -251,5 +254,6 @@ const backdropUrl = backdrop
         display: flex;
         flex-wrap: wrap;
         gap: var(--grid-padding);
+        margin-block-start: var(--grid-padding);
     }
 </style>
