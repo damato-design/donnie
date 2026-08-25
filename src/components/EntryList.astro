@@ -99,7 +99,7 @@ const { items, compact = false } = Astro.props;
         {item.links?.length ? (
           <ButtonGroup>
             {item.links.map((link) => (
-              <Button href={link.href} variant="secondary" external={link.external}>
+              <Button href={link.href} external={link.external}>
                 {link.icon && <Icon slot="icon" name={link.icon} />}
                 {link.label}
               </Button>

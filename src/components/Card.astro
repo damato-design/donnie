@@ -87,12 +87,8 @@ const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : 
     display: flex;
     flex-direction: column;
     align-items: start;
-    margin-inline: calc(var(--grid-padding) * -1);
-    padding: var(--grid-padding);
+    margin-block: var(--grid-padding);
 
-    &:hover {
-      background: #151515;
-    }
 
     & > span {
       font-size: .8em;
@@ -119,6 +115,7 @@ const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : 
         &:hover,
         &:focus-visible {
           text-decoration: underline;
+          text-decoration-color: var(--accent-color);
         }
       }
     }

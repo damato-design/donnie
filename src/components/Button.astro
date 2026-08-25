@@ -44,8 +44,6 @@ import type { HTMLAttributes } from 'astro/types';
 interface Props extends Omit<HTMLAttributes<'a'>, 'href' | 'type'> {
   /** Destination. Provided -> renders a link; omitted -> renders a <button>. */
   href?: string;
-  /** Visual style. */
-  variant?: 'primary' | 'secondary';
   /** Open link in a new tab. */
   external?: boolean;
   /** Disabled state (non-interactive). */
@@ -60,7 +58,6 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'href' | 'type'> {
 
 const {
   href,
-  variant,
   external = false,
   disabled = false,
   arrow = false,
@@ -82,7 +79,6 @@ const tagAttrs =
 <Tag
   class:list={[
     'btn',
-    { [`btn--${variant}`]: variant },
     { 'btn--disabled': disabled },
   ]}
   {...tagAttrs}
@@ -104,36 +100,19 @@ const tagAttrs =
     color: currentColor;
     background: transparent;
     display: inline-flex;
-
-    span {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-  }
-
-  .btn:where([class*="btn--"]) {
     border: 1px solid;
+    color: var(--accent-color);
     text-decoration: none;
     font-weight: bolder;
-    font-size: 0.7em;
+    font-size: 0.8em;
     letter-spacing: 2px;
 
     span {
-      padding: 12px 24px;
-    }
-  }
-
-  /* Filled: the surface and the ink swap. Both are real colours (see
-     `--dash-ink` / `--dash-ground` in global.css); `currentColor` cannot do
-     this on its own, because the label inherits it too. */
-  .btn--primary {
-    background-color: var(--dash-ink);
-    border-color: var(--dash-ink);
-
-    span {
-      color: var(--dash-ground);
+      display: inline-flex;
+      padding: 8px 16px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
   }
 
