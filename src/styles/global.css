@@ -151,6 +151,7 @@ body > .toc {
 .grid-surface {
   background-image: var(--grid-bg);
   color: var(--grid-fg);
+  contain: paint;
 }
 
 /* The panels that inset their content. `.square` is deliberately absent: its
@@ -162,7 +163,7 @@ body > :is(.nav, .contact, .main, .toc),
 
 a {
   color: currentColor;
-  text-underline-offset: .15em;
+  text-underline-offset: .12em;
 }
 
 :where(ul) {
