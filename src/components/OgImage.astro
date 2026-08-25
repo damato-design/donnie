@@ -64,7 +64,13 @@ export function ogUrl(page: string, site: URL | undefined): string {
   return pathname === '/' ? host : `${host}${pathname}`;
 }
 
-interface Props extends Omit<GridProps, 'cta'> {
+/**
+ * `cta` and `backdrop` are dropped rather than translated: nothing in a PNG is
+ * clickable (the card shows the page's address instead), and satori supports
+ * neither multi-layer backgrounds nor blend modes, which is the whole of what
+ * the panel's backdrop is.
+ */
+interface Props extends Omit<GridProps, 'cta' | 'backdrop'> {
   /**
    * The duotone media `src`. The renderer passes a short placeholder and
    * injects the real data URI onto the parsed node afterward (for performance,

@@ -21,7 +21,7 @@
  * @module grid.config
  */
 
-import { type CollectionEntry } from 'astro:content';
+import { getEntry, type CollectionEntry } from 'astro:content';
 import type { GridProps } from '@components/Grid.astro';
 import { siteConfig } from '@/config';
 import { count, sorted } from '@utils/collections';
@@ -69,7 +69,7 @@ async function resolveMetric(metric: PageEntry['data']['metric']): Promise<GridP
  * (see `resolveMetric`).
  */
 export async function pageGrid(entry: PageEntry): Promise<GridProps> {
-  const { title, headline, description, cta, metric, intro } = entry.data;
+  const { title, headline, description, cta, metric, intro, backdrop } = entry.data;
 
   return {
     title,
@@ -78,7 +78,19 @@ export async function pageGrid(entry: PageEntry): Promise<GridProps> {
     cta,
     metric: await resolveMetric(metric),
     anecdote: intro,
+    backdrop,
   };
+}
+
+/**
+ * The artwork a section's own page puts behind its panel.
+ *
+ * A detail page has no backdrop of its own, so it borrows its section's, the
+ * same way it borrows that page's `Square` media: a case study should read as
+ * part of `/projects`, not as its own place. An entry's `backdrop` overrides it.
+ */
+async function sectionBackdrop(section: 'projects' | 'decisions') {
+  return (await getEntry('pages', section))?.data.backdrop;
 }
 
 /**
@@ -105,6 +117,7 @@ function withOverrides(defaults: GridProps, overrides: PanelOverrides): GridProp
     cta: overrides.cta ?? defaults.cta,
     metric: overrides.metric ?? defaults.metric,
     anecdote: overrides.anecdote ?? defaults.anecdote,
+    backdrop: overrides.backdrop ?? defaults.backdrop,
   };
 }
 
@@ -113,10 +126,11 @@ function withOverrides(defaults: GridProps, overrides: PanelOverrides): GridProp
  *
  * Derived from the entry: the role/year byline (with the body's reading time),
  * a link back to the listing plus the booking link, the tech-stack count as the
- * metric, and the outcome summary as the anecdote. Any of those regions can be
- * replaced from the MDX frontmatter, and `headline` exists only there.
+ * metric, the outcome summary as the anecdote, and the section's backdrop. Any
+ * of those regions can be replaced from the MDX frontmatter, and `headline`
+ * exists only there.
  */
-export function projectGrid(entry: CollectionEntry<'projects'>): GridProps {
+export async function projectGrid(entry: CollectionEntry<'projects'>): Promise<GridProps> {
   const { title, role, year, outcomeSummary, techStack } = entry.data;
   const readingTime = formatReadingTime(calculateReadingTime(entry.body ?? ''));
 
@@ -130,6 +144,7 @@ export function projectGrid(entry: CollectionEntry<'projects'>): GridProps {
       ],
       metric: { value: techStack.length, label: 'technologies' },
       anecdote: outcomeSummary,
+      backdrop: await sectionBackdrop('projects'),
     },
     entry.data
   );
@@ -139,11 +154,11 @@ export function projectGrid(entry: CollectionEntry<'projects'>): GridProps {
  * The header panel for one decision record.
  *
  * Derived from the entry: a link back to the listing, the tag count as the
- * metric (dropped when the record has no tags), and the context as the
- * anecdote. Any of those regions can be replaced from the MDX frontmatter, and
- * `headline`/`description` exist only there.
+ * metric (dropped when the record has no tags), the context as the anecdote,
+ * and the section's backdrop. Any of those regions can be replaced from the MDX
+ * frontmatter, and `headline`/`description` exist only there.
  */
-export function decisionGrid(entry: CollectionEntry<'decisions'>): GridProps {
+export async function decisionGrid(entry: CollectionEntry<'decisions'>): Promise<GridProps> {
   const { title, context, tags } = entry.data;
 
   return withOverrides(
@@ -152,6 +167,7 @@ export function decisionGrid(entry: CollectionEntry<'decisions'>): GridProps {
       cta: [{ label: 'All decisions', href: '/decisions' }],
       metric: tags?.length ? { value: tags.length, label: 'tags' } : undefined,
       anecdote: context,
+      backdrop: await sectionBackdrop('decisions'),
     },
     entry.data
   );

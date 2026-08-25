@@ -10,7 +10,10 @@
  * Every region is a **prop**, so a page can pass frontmatter (or a config entry,
  * or a collection field) straight in. Nothing is slotted, and no region accepts
  * markup: they are plain strings the component renders as text. A deliberate
- * line break is a `\n` in the string, honored by `white-space: pre-line`.
+ * line break is a `\n` in the string, honored by `white-space: pre-line`. The
+ * one exception is `backdrop`, the decorative artwork behind the identity
+ * region: it is an imported asset, and the only prop this component renders as
+ * something other than text.
  *
  * The heading is owned here, not by the call site: `title` renders the page's
  * single `<h1>` and `headline` renders an `<h2>`, so content inside `<main>`
@@ -39,6 +42,8 @@
  * >
  * ```
  */
+
+import { getImage } from 'astro:assets';
 
 /** One link in the CTA row. */
 export interface CtaLink {
@@ -72,15 +77,40 @@ export interface GridProps {
 
   /** The page intro paragraph. */
   anecdote?: string;
+
+  /**
+   * Decorative artwork blended into the identity panel's gradient, as an
+   * imported asset (from a page's `backdrop` frontmatter). It carries no
+   * meaning and gets no alternative text: it is a background, not content.
+   * Omitted, the panel is the bare gradient.
+   */
+  backdrop?: ImageMetadata;
 }
 
 type Props = GridProps;
 
-const { title, headline, description, cta, metric, anecdote } = Astro.props;
+const { title, headline, description, cta, metric, anecdote, backdrop } = Astro.props;
+
+/**
+ * The backdrop is a CSS background, so it can't go through `<Image>`; `getImage`
+ * is how it still goes through `astro:assets` rather than shipping the multi-
+ * megabyte source. It is painted at 60% of a panel that is never wider than the
+ * page, so 800px covers it at 2x.
+ *
+ * `layout: 'none'` opts out of the site's default `constrained` layout: a
+ * `background-image` takes one URL and can't use a `srcset`, so the responsive
+ * widths that layout generates would all be built and none of them served.
+ */
+const backdropUrl = backdrop
+    ? (await getImage({ src: backdrop, width: 800, format: 'webp', layout: 'none' })).src
+    : undefined;
 ---
 
 <section class="grid">
-    <div class="identity grid-surface">
+    <div
+        class="identity grid-surface"
+        style={backdropUrl ? `--identity-backdrop: url('${backdropUrl}')` : undefined}
+    >
         <h1>{title}</h1>
         {headline && <h2>{headline}</h2>}
         {description && <p>{description}</p>}
@@ -141,6 +171,18 @@ const { title, headline, description, cta, metric, anecdote } = Astro.props;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        text-shadow: 1px 1px #951111;
+        /* The page's `backdrop` over the shared gradient. The artwork is set
+           inline as `--identity-backdrop` (per page, so it can't be a static
+           `url()` here) and resolves to `none` on a page that declares none.
+           The gradient layer stays `fixed` like every other `.grid-surface`,
+           so the panel still samples the one viewport-sized sheet. */
+        background-image: var(--identity-backdrop, none), var(--grid-bg);
+        background-size: 80%, cover;
+        background-repeat: no-repeat, repeat;
+        background-position: 200% 200%, center;
+        background-attachment: local, fixed;
+        background-blend-mode: luminosity;
 
         h1 {
             font-size: .6em;
@@ -156,7 +198,6 @@ const { title, headline, description, cta, metric, anecdote } = Astro.props;
             font-weight: normal;
             line-height: 1.05;
             text-transform: lowercase;
-            text-shadow: 1px 1px #951111;
         }
 
         a:hover {

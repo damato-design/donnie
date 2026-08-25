@@ -40,7 +40,7 @@ import { buildListing, type Listing as ListingData } from '@utils/listings';
 import { pageGrid, projectGrid, decisionGrid, type PageEntry } from '@/grid.config';
 import { siteConfig } from '@/config';
 import uxdx from '@assets/uxdx.jpg';
-import portrait from '@assets/donnie.png';
+import portrait from '@assets/teach.jpg';
 
 /**
  * One path per top-level page and per detail entry.
@@ -105,7 +105,7 @@ if (kind === 'page') {
     headings = bodyHeadings;
   }
 } else if (kind === 'project') {
-  grid = projectGrid(entry);
+  grid = await projectGrid(entry);
   seo = {
     title: `${entry.data.title} - Case Study`,
     description: entry.data.outcomeSummary,
@@ -115,7 +115,7 @@ if (kind === 'page') {
   headings = (await render(entry)).headings;
   tocDepth = 2;
 } else {
-  grid = decisionGrid(entry);
+  grid = await decisionGrid(entry);
   seo = {
     title: `${entry.data.title} - Decision Record`,
     description: entry.data.context,

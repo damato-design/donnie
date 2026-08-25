@@ -60,6 +60,13 @@ const panelFields = ({ image }: SchemaContext) => ({
   /** Text alternative for `image`. Defaults to the entry title. */
   imageAlt: z.string().optional(),
 
+  /**
+   * Decorative artwork behind the panel's identity region, relative to the MDX
+   * file. Left out, the detail page falls back to its section's own backdrop,
+   * so the section reads as one place.
+   */
+  backdrop: image().optional(),
+
   /** Promotional headline, rendered as the panel's <h2>. No default. */
   headline: z.string().optional(),
 
@@ -209,6 +216,14 @@ const pagesCollection = defineCollection({
 
     /** The panel's intro paragraph. */
     intro: z.string().optional(),
+
+    /**
+     * Decorative artwork blended into the panel's identity region, resolved
+     * relative to this MDX file. Each page carries its own, which is what makes
+     * the header read differently from section to section; the detail pages
+     * under a section inherit it. Omitted, the panel is the bare gradient.
+     */
+    backdrop: image().optional(),
 
     /** Meta tags. Both fields fall back to the site's own. */
     seo: z

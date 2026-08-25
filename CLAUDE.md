@@ -151,6 +151,13 @@ Three things keep this from re-introducing the duplication it could:
   `<name> - <author title>`, which is why the home entry (`src/content/index.mdx`, id `home`)
   declares none of them.
 
+`backdrop` is the artwork blended into the panel's identity region, resolved relative to the
+MDX file like any other local image. Each top-level page carries a different one (that is the
+whole point of the field: it is what makes one section's header read differently from the
+next), and the detail pages under a section inherit their section page's, the same way they
+inherit its `Square` media. It is decorative and takes no alt text. Omitted, the panel is the
+bare gradient.
+
 The `Square` media is one of three: `image` (+ `imageAlt`, resolved relative to the MDX file so
 it goes through `astro:assets`), `video` (+ `videoAlt`, a remote URL), or `embed`, an enum
 naming the one piece of markup frontmatter cannot express (`mode-book`).
@@ -211,7 +218,7 @@ what something *other than the prose* has to read.
     `(context) => …` form: `image()` resolves a path **relative to the MDX file**
     (`../../assets/thing.jpg`) into `ImageMetadata`, so a per-entry image goes through
     `astro:assets` like every other local image. Without `image`, the detail page **falls
-    back to whatever its listing page puts in `Square`** (`donnie.png` for projects,
+    back to whatever its listing page puts in `Square`** (`teach.jpg` for projects,
     `uxdx.jpg` for decisions), so a section reads as one place. `imageAlt` defaults to the
     entry title.
   - The rest mirror `GridProps` region for region, and the two structured ones (`cta`,
@@ -356,14 +363,22 @@ label, that label becomes the link's `aria-label` and `title`, so no link is lef
   (`{ value, label }`), and `anecdote`. Content inside `<main>` therefore starts at `<h2>`. Every
   region except `title` is optional and omitted when absent; the anecdote spans the full row when
   there is no metric. `Layout` types that prop with `GridProps`, exported from `Grid.astro`.
+  - **`backdrop` is the one prop that isn't text.** It is an `ImageMetadata` (a page's
+    `backdrop` frontmatter), and `Grid` runs it through `getImage()` rather than `<Image>`,
+    because it paints as a `background-image` layer over `--grid-bg`. The resolved URL is set
+    on the element as `--identity-backdrop`, since the artwork is per page and can't be a
+    static `url()` in the scoped stylesheet; the CSS falls back to `none`. `getImage` is
+    called with `layout: 'none'`: a background takes one URL, so the site's default
+    `constrained` layout would build responsive widths nothing could ever request.
   - **The text props take no markup.** They render as text, so an `<em>` or a `<br>` in a
     headline is not an option. A deliberate line break is a **`\n` in the string**, which the
     panel honors via `white-space: pre-line`.
   - **`cta` is data, not elements**: `CtaLink[]` (`{ label, href, external? }`), and `Grid` adds
     `target`/`rel` for the external ones. Don't pass `<a>` or `<Button>` here.
-- **`Square`** is the media panel: a decorative blob with the page's media stacked over it
-  (they share one grid cell). This is where the old `Hero`'s `aside` content went, the `Media`
-  portrait/photos and the `<mode-book>` embed. Detail pages pass nothing, leaving just the blob.
+- **`Square`** is the media panel: a 1:1 `.grid-surface` box the page's media fills edge to
+  edge. This is where the old `Hero`'s `aside` content went, the `Media`
+  portrait/photos and the `<mode-book>` embed. Detail pages pass nothing, leaving the bare
+  panel.
 - **`Toc`** is the in-page table of contents, built from a **document-ordered** `headings:
   MarkdownHeading[]` prop that `Layout` takes and forwards. `buildTocTree` (`src/utils/toc.ts`)
   nests the flat list by attaching each heading to the nearest preceding shallower one, and
@@ -504,7 +519,7 @@ is no separate ink/ground pair.
   needs none: `ButtonGroup` and `CardList` declare no `Props` at all (`Square` still carries an
   empty one).
 - **Local images go through `astro:assets`.** Import the asset and pass the `ImageMetadata`
-  itself (`import portrait from '@assets/donnie.png'` → `<Media src={portrait} …/>`), never
+  itself (`import portrait from '@assets/teach.jpg'` → `<Media src={portrait} …/>`), never
   `portrait.src`, which skips Sharp entirely. `Media` renders `<Image>` for an imported asset
   (optimized formats, `srcset`, intrinsic dimensions) and a plain element for a string path or a
   remote URL, which is the only route for video and audio. `image.layout: 'constrained'` in

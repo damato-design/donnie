@@ -16,7 +16,7 @@
  * one panel that takes markup, so it keeps a slot.
  *
  * @slot head - SEO / structured data, rendered into <head>.
- * @slot media - The page's media, stacked over Square's blob.
+ * @slot media - The page's media, filling the Square panel.
  * @slot main - The page's content.
  */
 
@@ -122,6 +122,14 @@ const { grid, headings, tocMaxDepth } = Astro.props;
       action={{ href: '/', label: siteConfig.title, logo: true }}
       links={siteConfig.nav}
     />
+    <Square>
+      <slot name="media" />
+    </Square>
+    <Grid {...grid} />
+    <Toc headings={headings} maxDepth={tocMaxDepth} />
+    <Main>
+      <slot name="main" />
+    </Main>
     <Header
       name="contact"
       label="Social profiles"
@@ -129,13 +137,5 @@ const { grid, headings, tocMaxDepth } = Astro.props;
       action={{ href: siteConfig.scheduling, label: 'Schedule a chat' }}
       links={siteConfig.social}
     />
-    <Square>
-      <slot name="media" />
-    </Square>
-    <Grid {...grid} />
-    <Main>
-      <slot name="main" />
-    </Main>
-    <Toc headings={headings} maxDepth={tocMaxDepth} />
   </body>
 </html>

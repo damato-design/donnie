@@ -199,6 +199,10 @@ const attrs = (link: HeaderLink, me = false) => ({
     flex-wrap: wrap;
     align-items: center;
 
+    li {
+      display: flex;
+    }
+
     /** Slashes between the navigation items */
     li:not(:has(.btn)):not(:last-child):after {
       content: '/';
