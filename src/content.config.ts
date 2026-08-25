@@ -162,8 +162,8 @@ const metricSchema = z.union([
  * Pages Collection
  *
  * The site's top-level pages as content: the home page and the five collection
- * listings. Each entry's **id is its route** (`projects.mdx` -> `/projects`,
- * `home.mdx` -> `/`), its frontmatter is the page header panel plus the SEO
+ * listings. Each entry's **id is its route**: `projects/index.mdx` -> `/projects`, and the
+ * root `index.mdx` -> `/` (keyed `home`). Its frontmatter is the page header panel plus the SEO
  * block, and its body is whatever prose `<main>` carries beyond the generated
  * listing (which is all of it on the home page, and none of it on the others).
  *

@@ -12,8 +12,9 @@
  * - no `href`                  -> `<button type=...>`
  *
  * Content is slotted, so an icon + label compose naturally (the button is a
- * flex row). Visual variants are `primary` (filled) and `secondary` (outline).
- * Set `arrow` to append the standard trailing forward arrow (e.g. card CTAs) or
+ * flex row). There is **one visual treatment**, an outline control in
+ * `--accent-color`: no `variant` and no `size` prop, so every button on the site
+ * reads the same. Set `arrow` to append the standard trailing forward arrow or
  * `back` to prepend the leading back arrow (e.g. a detail page's "All projects");
  * fill the `icon` slot to prepend an `<Icon>` (e.g. a Slides/Video glyph).
  *
@@ -23,13 +24,13 @@
  *
  * @example
  * ```astro
- * <Button href="/projects" variant="primary">View My Work</Button>
- * <Button href="https://cal.com/x" variant="secondary" external>Book a call</Button>
- * <Button href="/projects/x" variant="secondary" arrow>View case study</Button>
- * <Button href="https://slides.example" variant="secondary" external>
+ * <Button href="/projects">View My Work</Button>
+ * <Button href="https://cal.com/x" external>Book a call</Button>
+ * <Button href="/projects" back>All projects</Button>
+ * <Button href="https://slides.example" external>
  *   <Icon slot="icon" name="slides" />Slides
  * </Button>
- * <Button variant="secondary" disabled aria-label="Previous page">…</Button>
+ * <Button disabled aria-label="Previous page">…</Button>
  * ```
  */
 

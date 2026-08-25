@@ -37,9 +37,10 @@ interface Props {
 
   /**
    * Headings of this page's `<main>` content, in document order, driving the
-   * table of contents. MDX-backed pages pass `render(entry)`'s `headings`
-   * straight through; pages authored in `.astro` build the same shape by hand.
-   * Omit for no TOC.
+   * table of contents. An MDX body passes `render(entry)`'s `headings` straight
+   * through; a generated listing has none to slug, so `utils/listings.ts` builds
+   * that part of the array from the same items the cards are drawn from. Omit
+   * for no TOC.
    */
   headings?: MarkdownHeading[];
 
@@ -62,8 +63,10 @@ const { grid, headings, tocMaxDepth } = Astro.props;
     <slot name="head" />
 
     <!-- The site's three faces: display, body, and the icon subset. All are
-         declared under `fonts:` in astro.config.mjs and applied in global.css
-         (Kentish, Raleway) or Icon.astro (RemixIcon). -->
+         declared under `fonts:` in astro.config.mjs, and each is applied in
+         exactly one place: Raleway on `body` in global.css, Kentish by the
+         page-header panel (Grid.astro), RemixIcon by Icon.astro. No global rule
+         puts Kentish on headings, so `<main>`'s headings are Raleway. -->
     <Font cssVariable="--font-kentish" preload />
     <Font cssVariable="--font-raleway" preload />
     <Font cssVariable="--font-remixicon" preload />

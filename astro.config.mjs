@@ -75,9 +75,10 @@ export default defineConfig({
    * Fonts
    *
    * Three families, and no others anywhere on the site: **Kentish**, the display
-   * face for headings and titles; **Raleway**, the body face; and **RemixIcon**,
-   * the icon face every glyph on the site is drawn from (see `Icon.astro`).
-   * `global.css` applies the first two; `Icon.astro` applies the third.
+   * face, used by the page-header panel alone (`Grid.astro`, for its headline and
+   * its metric); **Raleway**, the body face, set on `body` in `global.css` and
+   * inherited by everything else including headings; and **RemixIcon**, the icon
+   * face every glyph on the site is drawn from (`Icon.astro`).
    *
    * Astro serves the files itself, so they live in `src/`, not `public/`: files
    * in `public/` are copied into the build output and would ship twice. `<Font>`

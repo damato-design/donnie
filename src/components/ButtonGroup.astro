@@ -4,26 +4,27 @@
  *
  * The layout wrapper for placing one or two action buttons together: a flex row
  * that gives its buttons a consistent gap and wraps on narrow viewports. Reach
- * for it wherever a `<Button>` (or two) is dropped into the page: section CTAs,
- * a card's body links, the 404 home link, etc. (the page-header panel's own
- * `cta` slot lays its links out itself). It owns only the
+ * for it wherever two buttons sit side by side; today that is a talk's
+ * slides/video links in a card body (`EntryList`). A lone button is composed
+ * bare, which is what the detail pages' back links do, and the page-header
+ * panel's `cta` is a prop `Grid` lays out itself. It owns only the
  * grouping/layout; the buttons themselves are composed as slotted children, so
- * each picks its own `variant`/`arrow`.
+ * each picks its own `arrow`/`back`.
  *
  * @component
  * @slot default - The button(s) to lay out (one or two `<Button>`s).
  *
  * @example
  * ```astro
- * <ButtonGroup>
- *   <Button href="/projects" variant="primary">View My Work</Button>
- *   <Button href="/contact" variant="secondary">Get in Touch</Button>
- * </ButtonGroup>
- *
  * <Card href="/talks/x">
  *   ...
  *   <ButtonGroup>
- *     <Button href="https://slides.example" variant="secondary" external>Slides</Button>
+ *     <Button href="https://slides.example" external>
+ *       <Icon slot="icon" name="slides" />Slides
+ *     </Button>
+ *     <Button href="https://video.example" external>
+ *       <Icon slot="icon" name="video" />Video
+ *     </Button>
  *   </ButtonGroup>
  * </Card>
  * ```
