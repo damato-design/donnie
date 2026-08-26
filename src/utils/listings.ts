@@ -36,7 +36,7 @@ export interface TimelineItem {
   date: Date;
   title: string;
   description: string;
-  skills?: string[];
+  tags: string[];
   Content: Awaited<ReturnType<typeof render>>['Content'];
 }
 
@@ -67,8 +67,8 @@ async function projectsListing() {
     slug: `project-${id}`,
     meta: `${data.role} · ${data.year}`,
     title: data.title,
-    description: data.outcomeSummary,
-    tags: data.techStack,
+    description: data.description,
+    tags: data.tags,
     href: `/projects/${id}`,
   }));
 
@@ -79,7 +79,7 @@ async function decisionsListing() {
   const items: EntryItem[] = (await sorted('decisions')).map(({ id, data }) => ({
     slug: `decision-${id}`,
     title: data.title,
-    description: data.context,
+    description: data.description,
     tags: data.tags,
     href: `/decisions/${id}`,
   }));
@@ -94,7 +94,7 @@ async function journeyListing() {
       date: entry.data.date,
       title: entry.data.title,
       description: entry.data.description,
-      skills: entry.data.skills,
+      tags: entry.data.tags,
       Content: (await render(entry)).Content,
     }))
   );
@@ -106,14 +106,14 @@ async function speakingListing() {
   const groups = new Map<number, EntryItem[]>();
 
   for (const { id, data } of await sorted('speaking')) {
-    const { title, description, location, date, topics, slides, video } = data;
+    const { title, description, location, date, tags, slides, video } = data;
 
     const item: EntryItem = {
       slug: `talk-${id}`,
       meta: `${formatMonthYear(date)} · ${location}`,
       title,
       description,
-      tags: topics,
+      tags,
       // A talk has no page of its own, so the card links nowhere; its slides
       // and video are rendered in the card's body instead.
       links: [

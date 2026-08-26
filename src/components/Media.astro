@@ -2,26 +2,31 @@
 /**
  * Media
  *
- * Renders the right element for a given `src`: an image, a video, or audio.
- * This keeps call sites declarative, they pass a `src` and an `alt`/label and
- * don't have to know which element a particular file needs.
+ * Renders the right element for a given `src`: an image, a video, audio, or an
+ * embed. Call sites pass whatever a page's `media` frontmatter carries and an
+ * `alt`/label, and don't have to know, or say, which element it needs. There is
+ * one `media` key in frontmatter for exactly this reason: what a value needs is
+ * something the value itself says.
  *
- * `src` accepts either form:
+ * `src` accepts three forms:
  *
- * - An **imported local asset** (`ImageMetadata`, from `import img from
- *   '@assets/x.png'`) renders through `astro:assets` `<Image>`, so it is
- *   optimized at build time: modern formats, a generated `srcset`, and intrinsic
- *   `width`/`height` so the panel doesn't shift as it loads.
+ * - An **imported local asset** (`ImageMetadata`, which is what a schema's
+ *   `image()` resolves a relative path into) renders through `astro:assets`
+ *   `<Image>`, so it is optimized at build time: modern formats, a generated
+ *   `srcset`, and intrinsic `width`/`height` so the panel doesn't shift as it
+ *   loads.
  * - A **plain string** path or URL (a `/`-rooted public asset, a remote file)
- *   renders as-is. Remote files can't be optimized at build time, and video and
- *   audio are never processed, so those always take this path.
+ *   renders as-is, with the file extension selecting the element. Remote files
+ *   can't be optimized at build time, and video and audio are never processed,
+ *   so those always take this path.
+ * - An **embed name** from `EMBEDS` (`content.config.ts`) renders that custom
+ *   element and loads the module that defines it. This is the one medium that
+ *   is markup rather than a file, which is why frontmatter can only name it.
  *
- * The file extension selects the element for string sources; an imported asset
- * is always an image.
- *
- * Video and audio default to showing native `controls`; pass `controls={false}`
- * to opt out. Any other valid attribute (loading, width, height, autoplay,
- * loop, muted, poster, ...) is forwarded to the rendered element.
+ * **A video here is wallpaper, not a player.** Every call site drops its media
+ * into `Square`, where a video is decorative and captionless, so video defaults
+ * to autoplaying muted on a loop with no controls. Audio still shows controls.
+ * Both are plain attributes, so a call site can override any of them.
  *
  * **Images load eagerly, at high priority.** Every call site puts its media in
  * `Square`, which is above the fold on every page, so this image is the page's
@@ -31,12 +36,11 @@
  * than `<Image>`'s `priority` shorthand, so a call site can still override
  * either one through `...rest`.
  *
- * Sizing belongs to the panel, not to this component: every call site drops its
- * media into `Square`, which is a fixed 1:1 box that centers and clips whatever
- * it is given. The `grayscale` + `overlay` pair below is what turns the photo
- * into the site's red duotone against `Square`'s gradient (and what
- * `src/lib/duotone.ts` reproduces with sharp for the OG cards, since satori can
- * do neither).
+ * Sizing belongs to the panel, not to this component: `Square` is a fixed 1:1
+ * box that centers and clips whatever it is given. The `grayscale` + `overlay`
+ * pair below is what turns the photo into the site's red duotone against
+ * `Square`'s gradient (and what `src/lib/duotone.ts` reproduces with sharp for
+ * the OG cards, since satori can do neither).
  *
  * @component
  *
@@ -47,12 +51,14 @@
  * <Media src={cover} alt="Book cover" />
  * <Media src="/media/talk.mp4" alt="Conference talk" poster="/media/talk.jpg" />
  * <Media src="/media/episode.mp3" alt="Podcast episode" />
- * <Media src="https://example.com/sizzle.webm" alt="Sizzle reel" controls={false} autoplay loop muted />
+ * <Media src="https://example.com/sizzle.webm" alt="Sizzle reel" />
+ * <Media src="mode-book" alt="Mise en Mode, the book" />
  * ```
  */
 
 import { Image } from 'astro:assets';
 import type { HTMLAttributes } from 'astro/types';
+import { EMBEDS } from '@/content.config';
 
 /**
  * Attributes forwarded to whichever element is rendered. `<video>` carries the
@@ -61,35 +67,53 @@ import type { HTMLAttributes } from 'astro/types';
  * `<video>` does and one type has to satisfy every branch.
  */
 interface Props
-  extends Omit<HTMLAttributes<'video'>, 'src' | 'controls' | 'crossorigin' | 'width' | 'height'> {
+  extends Omit<HTMLAttributes<'video'>, 'src' | 'crossorigin' | 'width' | 'height'> {
   /** Explicit width. Imported assets carry their own, so this is rarely needed. */
   width?: number | `${number}`;
   /** Explicit height. Imported assets carry their own, so this is rarely needed. */
   height?: number | `${number}`;
-  /** An imported local image, or a path/URL. The extension selects the element. */
+  /** An imported local image, a path/URL, or an embed name. */
   src: ImageMetadata | string;
   /** Text alternative (img `alt`) / accessible label (aria-label for a/v). */
   alt?: string;
-  /** Show native controls on video/audio (default: true; ignored for images). */
-  controls?: boolean;
 }
 
-const { src, alt = '', controls = true, ...rest } = Astro.props;
+const { src, alt = '', ...rest } = Astro.props;
 
 const VIDEO = ['mp4', 'webm', 'ogv', 'mov', 'm4v'];
 const AUDIO = ['mp3', 'wav', 'ogg', 'oga', 'm4a', 'aac', 'flac'];
 
-/** An imported asset is always an image; a string is classified by extension. */
+/**
+ * What the value is. An imported asset is always an image; a string is an embed
+ * when it names one and is classified by extension otherwise.
+ */
+const embed = typeof src === 'string' && src in EMBEDS ? (src as keyof typeof EMBEDS) : undefined;
 const ext = typeof src === 'string' ? (src.split(/[?#]/)[0].split('.').pop()?.toLowerCase() ?? '') : '';
-const kind =
-  typeof src !== 'string' ? 'asset' : VIDEO.includes(ext) ? 'video' : AUDIO.includes(ext) ? 'audio' : 'image';
+const kind = embed
+  ? 'embed'
+  : typeof src !== 'string'
+    ? 'asset'
+    : VIDEO.includes(ext)
+      ? 'video'
+      : AUDIO.includes(ext)
+        ? 'audio'
+        : 'image';
 
-/** The element for a string source. `asset` goes through `<Image>` instead. */
-const Tag = kind === 'image' ? 'img' : kind;
+/**
+ * The custom element the embed names. Astro renders a capitalized variable
+ * holding a tag name as that tag, which is how a value in frontmatter ends up
+ * as an element here.
+ */
+const Embed = embed as string;
 ---
 
 {
-  kind === 'asset' ? (
+  kind === 'embed' ? (
+    <Fragment>
+      <Embed />
+      <script is:inline type="module" src={EMBEDS[embed as keyof typeof EMBEDS]} />
+    </Fragment>
+  ) : kind === 'asset' ? (
     <Image
       class="media"
       src={src as ImageMetadata}
@@ -107,8 +131,19 @@ const Tag = kind === 'image' ? 'img' : kind;
       fetchpriority="high"
       {...rest}
     />
+  ) : kind === 'video' ? (
+    <video
+      class="media"
+      src={src as string}
+      aria-label={alt || undefined}
+      autoplay
+      loop
+      muted
+      playsinline
+      {...rest}
+    />
   ) : (
-    <Tag class="media" src={src as string} controls={controls} aria-label={alt || undefined} {...rest} />
+    <audio class="media" src={src as string} aria-label={alt || undefined} controls {...rest} />
   )
 }
 
@@ -122,6 +157,8 @@ const Tag = kind === 'image' ? 'img' : kind;
     object-fit: cover;
   }
 
+  /* The embed is a custom element, so it is styled globally rather than by the
+     class the other branches carry. */
   .media, :global(mode-book) {
     mix-blend-mode: overlay;
     filter: grayscale(1);

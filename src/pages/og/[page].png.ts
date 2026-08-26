@@ -8,20 +8,20 @@
  *
  * A card *is* the page's header content, passed through as props, so a card
  * always advertises what the page actually says: both this route and the page
- * itself call `pageGrid` on the same `pages` entry. `/og` previews the same
+ * itself build the panel from the same `pages` entry. `/og` previews the same
  * cards as live HTML.
  */
 import type { APIRoute, GetStaticPaths } from 'astro';
 import { renderOgPng, ogResponseHeaders } from '../../lib/og';
 import { ogUrl } from '@components/OgImage.astro';
-import { getPages, pageGrid } from '@/grid.config';
+import { getPages, panel } from '@utils/collections';
 
 export const getStaticPaths = (async () => {
   const pages = await getPages();
   return Promise.all(
     [...pages].map(async ([page, entry]) => ({
       params: { page },
-      props: { ...(await pageGrid(entry)) },
+      props: { ...(await panel(entry.data)) },
     }))
   );
 }) satisfies GetStaticPaths;

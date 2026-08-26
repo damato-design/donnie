@@ -19,7 +19,7 @@
  * ```astro
  * <StructuredData type="WebSite" />
  * <StructuredData type="Person" />
- * <StructuredData type="Project" data={{ title, outcomeSummary, techStack, year }} />
+ * <StructuredData type="Project" data={{ title, description, tags, year }} />
  * ```
  */
 import { siteConfig } from '@/config';
@@ -28,10 +28,10 @@ import { siteConfig } from '@/config';
 interface ProjectData {
   /** Project title. */
   title: string;
-  /** Brief summary of outcomes and impact. */
-  outcomeSummary: string;
-  /** Technologies and frameworks used. */
-  techStack: string[];
+  /** The outcome summary. */
+  description: string;
+  /** Technologies and approaches. */
+  tags: string[];
   /** Year the project was completed. */
   year: number;
 }
@@ -93,15 +93,15 @@ function build(props: Props) {
       };
 
     case 'Project': {
-      const { title, outcomeSummary, techStack, year } = props.data;
+      const { title, description, tags, year } = props.data;
       return {
         '@context': context,
         '@type': 'CreativeWork',
         name: title,
-        description: outcomeSummary,
+        description,
         author: { '@type': 'Person', name: siteConfig.author.name },
         dateCreated: `${year}-01-01`,
-        keywords: techStack.join(', '),
+        keywords: tags.join(', '),
       };
     }
   }

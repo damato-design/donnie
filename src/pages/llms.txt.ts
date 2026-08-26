@@ -55,12 +55,12 @@ export const GET: APIRoute = async ({ site }) => {
     section(
       'Projects',
       projects.map((e) =>
-        item(e.data.title, mdUrl('projects', e.id), `${e.data.year}, ${e.data.outcomeSummary}`)
+        item(e.data.title, mdUrl('projects', e.id), `${e.data.year}, ${e.data.description}`)
       )
     ),
     section(
       'Decisions',
-      decisions.map((e) => item(e.data.title, mdUrl('decisions', e.id), e.data.context))
+      decisions.map((e) => item(e.data.title, mdUrl('decisions', e.id), e.data.description))
     ),
     section(
       'Journey',

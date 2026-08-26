@@ -43,9 +43,9 @@ and the tooling.
 **`src/config.ts` imports nothing, and must stay that way.** `content.config.ts` reads it
 during `astro sync`, which runs outside the component graph, so a runtime import of an `.astro`
 file there would drag a component into content collection generation. Config holds *data*;
-the modules that consume it hold the shaping into component props (the panel builders in
-`grid.config.ts`; `Layout` for the header bars). Don't move an adapter into `config.ts`, and
-don't give `config.ts` an import.
+the modules that consume it hold the shaping into component props (`content.config.ts`'s
+schema defaults for the page panels; `Layout` for the header bars). Don't move an adapter into
+`config.ts`, and don't give `config.ts` an import.
 
 Where config needs to name something a component owns, it uses a **plain string plus `as
 const`** rather than importing the type: `siteConfig.social[].icon` is `'github'`, which is a
@@ -75,20 +75,33 @@ which is not a folder of its own but `src/content/index.mdx` plus one `<section>
 each (see "Pages are content" below). Their frontmatter carries the whole page header panel
 plus the SEO block.
 
-`src/grid.config.ts` is now purely the **assembler**: it turns an entry into `GridProps` and
-nothing more. Three entry points, `pageGrid(entry)` for a top-level page and
-`projectGrid(entry)` / `decisionGrid(entry)` for the detail pages, which derive a panel from
-the entry (the role/year byline with reading time, the tech-stack or tag count as the metric,
-the summary or context as the anecdote) and then merge the entry's own optional `panelFields`
-frontmatter over it, region by region, via `withOverrides`. The **Open Graph card calls the
-same function on the same entry**, so a card can't advertise something the page no longer
-says. Keep new panel derivations here rather than inlining them in a route.
+**There is no `grid.config.ts`, and no adapter of any kind between frontmatter and the
+panel.** The three collections that have a page of their own (`pages`, `projects`, `decisions`)
+spread the **same `panelFields` block** from `content.config.ts`, so one key means one thing
+everywhere: a page, a case study, and a decision record all spell the headline `headline`, the
+summary `description`, and the closing paragraph `intro`. `Grid` is handed `entry.data`.
 
-It also exports **`getPages()`**, the `Map` of every top-level page keyed by route id. That is
-what replaced `gridContent`'s keys: `SEO` and both `/og` routes read it, so a new `index.mdx`
-gets an Open Graph card and a card mapping with no further edit.
+What an entry doesn't author is filled in **by the schema**, not downstream: `.default()` for a
+value (a project's "Work with me" CTA row, `siteConfig`'s title and description on a page) and
+the schema's own `.transform()` for anything derived from the entry's other fields (the whole
+`seo` block, via `fillSeo`). Add a new default there, next to the field it belongs to.
 
-Both are imported through the **`@/*` path alias** (`@/config`, `@/grid.config`), alongside
+Two things a schema genuinely cannot see live in **`src/utils/collections.ts`** instead, because
+both are lookups into *another* entry:
+
+- **`resolveMetric`/`panel`** turn `{ count: 'decisions' }` into a number at build time.
+  `panel(data)` is the whole of it: resolve the metric, pass the rest through. It returns
+  `GridProps`, which is what pins the schema to the component, so a region renamed in `Grid`
+  without being renamed in `content.config.ts` fails the build.
+- **`sectionOf(collection)`** is the section page a detail page inherits its `backdrop` and
+  `Square` media from.
+
+`utils/collections.ts` also exports **`getPages()`**, the `Map` of every top-level page keyed by
+route id: `SEO` and both `/og` routes read it, so a new `index.mdx` gets an Open Graph card and
+a card mapping with no further edit. The **Open Graph card calls `panel()` on the same entry**
+the page does, so a card can't advertise something the page no longer says.
+
+Config is imported through the **`@/*` path alias** (`@/config`, `@/content.config`), alongside
 the existing `@components/*`, `@layouts/*`, `@utils/*`, `@assets/*`, `@styles/*` aliases in
 `tsconfig.json`. Don't reach for `../../config` or a bare `src/config` specifier.
 
@@ -126,22 +139,23 @@ Two loader details make that layout work, and both are load-bearing:
   as a case study and fail the schema.
 
 Frontmatter is the page header panel plus the SEO block: `title`, `headline`, `description`,
-`cta[]`, `metric`, `intro` (the panel's anecdote), `seo: { title, description, noSuffix }`, the
-media (see below), and `listing`. The **body is `<main>`'s prose**: all of it on the home page,
+`cta[]`, `metric`, `intro`, `backdrop`, `media` (+ `mediaAlt`), `seo: { title, description,
+noSuffix }`, and `listing`. Every one of those except `listing` is the shared `panelFields`
+block, spelled identically on a project or a decision. The **body is `<main>`'s prose**: all of it on the home page,
 none of it on the listings. Because it is MDX, a body can `import` components and read
 `siteConfig`; today none of them do (the home page's closing "Let's Work Together" section is
 plain prose, and its `siteConfig` import is left over and unused).
 
 Three things keep this from re-introducing the duplication it could:
 
-- **`metric` is resolved, not authored.** `{ count: 'projects', label: 'projects' }` names a
-  collection and `pageGrid` counts it at build time, so the number can never go stale.
-  `{ stat: 'countries', label: 'countries' }` is the same idea against the blog's Cabin
-  analytics (`getBlogStat()`, which also serves `reads`, the blog's total page views,
-  compacted to "18k"); it is the one form that can come up empty, and
-  `resolveMetric` drops the whole metric region when analytics is unavailable rather than
-  printing a figure the build could not measure. `{ value: 25, label: 'years' }` is the
-  authored form, for a figure nothing can measure.
+- **`metric` is counted, not authored.** There are exactly two forms.
+  `{ count: <collection>, label: 'projects' }` names **any** collection and `resolveMetric`
+  counts it at build time, so the number can never go stale; `{ value: 25, label: 'years' }` is
+  for a figure nothing can count (the years in the practice, a project's own year). There is no
+  third form for build-time figures, which is why the blog's country count is a **collection**
+  (see "Build-time data" below) rather than a special case: a number worth a headline is a
+  number of things, and things live in collections. A count of **zero drops the whole metric
+  region**, which is what keeps an unreachable Cabin from printing "0 countries".
 - **`cta.href` accepts a `@name`.** `href: '@scheduling'` resolves through `namedLinks` in
   `content.config.ts` to `siteConfig.scheduling`, because YAML can't reference `config.ts` and
   pasting the booking URL into two MDX files is exactly how it drifts. Add a name there rather
@@ -158,15 +172,20 @@ next), and the detail pages under a section inherit their section page's, the sa
 inherit its `Square` media. It is decorative and takes no alt text. Omitted, the panel is the
 bare gradient.
 
-The `Square` media is one of three: `image` (+ `imageAlt`, resolved relative to the MDX file so
-it goes through `astro:assets`), `video` (+ `videoAlt`, a remote URL), or `embed`, an enum
-naming the one piece of markup frontmatter cannot express (`mode-book`).
+**`media` is one key, not three.** It takes a local asset path (resolved relative to the MDX
+file, so it goes through `astro:assets`), a remote URL (the speaking page's sizzle reel), or an
+embed name from `EMBEDS` in `content.config.ts` (`mode-book`, the one medium that is markup
+rather than a file). `Media` reads which element it needs **off the value**, because what a
+value needs is something the value itself says; `mediaAlt` names it, defaulting to the title.
+Don't reintroduce an `image`/`video`/`embed` triple.
 
 ### One route (`src/pages/[...slug].astro`)
 Every page of the site is this file. It builds its paths from three collections (`pages`,
-`projects`, `decisions`) and switches on `kind` for the four things that actually differ: where
-the panel comes from, where the SEO block comes from, which media renders, and what goes in
-`<main>`. Everything else, the shell, the TOC wiring, the structured data, is written once.
+`projects`, `decisions`). Because all three carry the same panel keys, the panel, the SEO block,
+and the media are read the **same way for every kind** (`panel(data)`, `data.seo`, `data.media`)
+and `kind` selects only the four things that genuinely differ: what a detail page inherits from
+its section page, what goes in `<main>`, how deep the TOC goes, and which structured data the
+head carries.
 
 A page's `<main>` is its **listing** (if its frontmatter names one) followed by its **body**. A
 detail page wraps that body in three more things the route owns rather than the content: the
@@ -182,17 +201,20 @@ new listing is a builder there plus a branch in `Listing.astro`, never a new rou
 Every collection has **exactly one canonical order**, defined by the `comparators` map here and
 reached through **`sorted(collection)`**. Pages and `/llms.txt` both call it, so a listing and
 its machine-readable mirror can't fall out of order (they used to carry a comparator each).
-`count(collection)` backs every page header metric, and **`entryPaths(collection)`** is the
-`getStaticPaths` every per-entry route uses.
+`count(collection)` backs every page header metric.
 
 The orders: projects by `year` descending; decisions **alphabetically by title** (the records
 have no date, and filename order was never a decision anyone made); journey, speaking, and
-writing by date descending. `/writing` re-ranks by Cabin read count on top of that, and falls
-back to exactly this order when analytics is missing.
+writing by date descending; countries alphabetically (nothing lists them, they exist to be
+counted). `/writing` re-ranks by Cabin read count on top of that, and falls back to exactly
+this order when analytics is missing.
+
+This module also holds the two panel helpers a schema can't perform (`panel`/`resolveMetric`
+and `sectionOf`) plus `getPages()`; see "Identity is config-driven" above.
 
 ### Content collections (`src/content.config.ts`)
-All content is MDX in `src/content/<collection>/`, validated by Zod — **except `writing`**,
-which has no local files and is fetched at build time from the blog feed (see "Build-time data"
+All content is MDX in `src/content/<collection>/`, validated by Zod — **except `writing` and
+`countries`**, which have no local files and are fetched at build time (see "Build-time data"
 below). Collections:
 
 - **pages** — the top-level pages themselves, as each section's `index.mdx` plus the root's;
@@ -202,35 +224,28 @@ below). Collections:
 frontmatter (see "Markdown-first bodies" below). Their frontmatter is deliberately thin: only
 what something *other than the prose* has to read.
 
-- **projects** — case studies. Required frontmatter is only `title, role, year,
-  outcomeSummary, techStack[]`. `title`/`role`/`year`/`outcomeSummary` feed the page header
-  panel and the listing card, `outcomeSummary` doubles as the SEO description, `techStack` is
-  the card's `TagList` and the panel's metric, and `year` sorts the listing (newest first).
-- **decisions** — ADR-style. Required frontmatter is only `title, context, tags?`; `context`
-  doubles as the card copy and the SEO description.
-- **Both also take `panelFields`**, the shared block of **optional page-header overrides**
-  defined once in `content.config.ts` and spread into each schema, so the same key means the
-  same thing in both: `image?, imageAlt?, headline?, description?, cta?, metric?, anecdote?`.
-  A detail page **derives** its whole header from the entry, and these only *override* a
-  region of that derivation, so an entry never restates what the page already computes.
-  Normally every one of them is absent.
-  - `image?`/`imageAlt?` are `Square`'s media, and the reason both schemas take the
-    `(context) => …` form: `image()` resolves a path **relative to the MDX file**
-    (`../../assets/thing.jpg`) into `ImageMetadata`, so a per-entry image goes through
-    `astro:assets` like every other local image. Without `image`, the detail page **falls
-    back to whatever its listing page puts in `Square`** (`teach.jpg` for projects,
-    `uxdx.jpg` for decisions), so a section reads as one place. `imageAlt` defaults to the
-    entry title.
-  - The rest mirror `GridProps` region for region, and the two structured ones (`cta`,
-    `metric`) are pinned to it with `satisfies z.ZodType<…>` rather than described twice, so
-    adding a field to the panel's own type without adding it here is a build error.
-    `grid.config.ts` merges them over the computed panel in `projectGrid`/`decisionGrid`
-    (see "The dashboard shell"). A present
-    field replaces its region **wholesale**: a `cta` array is the whole row, not an addition
-    to the default one. `title` is deliberately **not** overridable, since the listing card
-    and SEO read the same field.
-- **journey** — timeline entries: `date, title, type(milestone|learning|transition),
-  description, skills?`. Rendered chronologically on `/journey`.
+- **Both spread `panelFields`**, the shared page-header block, so a case study and a
+  decision record are authored in the same words as a page: `title, headline?, description?,
+  cta?, metric?, intro?, backdrop?, media?, mediaAlt?, seo?`. A detail page normally writes
+  only `title`, `headline`, and `description`; everything else is defaulted by the schema or
+  inherited from the section page.
+  - `description` is the summary, and the **one** piece of copy the panel, the listing card,
+    the SEO description, and the `.md` mirror all read. It is required on both (it was
+    `outcomeSummary` on a project and `context` on a decision).
+  - `media`/`backdrop` are absent on every entry today: without them a detail page falls back
+    to whatever its section page shows (`teach.jpg` for projects, `uxdx.jpg` for decisions),
+    so a section reads as one place. Both schemas take the `(context) => …` form because
+    `image()` resolves a path **relative to the MDX file** into `ImageMetadata`.
+  - `cta` on a project **defaults** to the single "Work with me" link. There is deliberately
+    no back link in the panel: `<main>` already ends with an "All projects" / "All decisions"
+    button, and a panel link back to the page you came from is a dead end.
+- **projects** — case studies. Adds `role`, `year`, and `tags[]`. `year` sorts the listing
+  (newest first) and each project **states it again as its `metric`**, because a sort key is
+  data and a metric is display copy. `role` is the listing card's eyebrow.
+- **decisions** — ADR-style. Adds only `tags[]`. No default metric: a decision record has no
+  figure worth a headline.
+- **journey** — timeline entries: `title, description, date,
+  type(milestone|learning|transition), tags[]`. Rendered chronologically on `/journey`.
 - **writing** — **not authored locally**: `blogFeedLoader` in `content.config.ts` pulls posts at
   build time from the blog feed (`blog.damato.design/standard-site.json`). Schema: `title,
   description, publishDate, tags?, url`. Each entry is a preview that links out to the full post
@@ -238,10 +253,15 @@ what something *other than the prose* has to read.
   can use the loader context: `meta` persists the feed's ETag between builds (an unchanged feed
   costs a 304), `parseData` validates each document as it is stored, and `logger` reports through
   Astro's build output. Keep it that way if you extend it.
-- **speaking** — `title, description, eventUrl?, date, location, type(conference|meetup|
-  podcast|workshop|webinar), slides?, video?, duration?, topics?`. The page itself renders only
-  `title`, `description`, `date`, `location`, `topics`, and the `slides`/`video` links; `type`,
-  `duration`, and `eventUrl` exist for the `.md` mirror and `/llms.txt`.
+- **speaking** — `title, description, date, location, type(conference|meetup|podcast|
+  workshop|webinar), tags[], eventUrl?, slides?, video?, duration?`. The page itself renders
+  only `title`, `description`, `date`, `location`, `tags`, and the `slides`/`video` links;
+  `type`, `duration`, and `eventUrl` exist for the `.md` mirror and `/llms.txt`. A talk's
+  `video` is a **link to a recording**, not `Square` media; these entries have no page of
+  their own and so carry no panel fields.
+- **countries** — **not authored locally**: `countriesLoader` stores one entry per country the
+  blog has been read from, from Cabin (see "Build-time data" below). Nothing renders them; the
+  Writing page's `{ count: 'countries' }` metric counts them.
 
 There is no **testimonials** collection. Its `Testimonials.astro` renderer, schema, and three
 placeholder entries were all deleted; don't reintroduce it without real, attributable quotes.
@@ -250,24 +270,32 @@ placeholder entries were all deleted; don't reintroduce it without real, attribu
 pages); only `projects` and `decisions` moved to markdown bodies.
 
 ### Build-time data: blog feed & analytics
-Two build-time fetches power the Writing page. Both run **only at build** (numbers are "as of
-last build") and both **fail soft** so a green build never depends on a third party being up:
+Two build-time fetches power the Writing page, and each one **is a collection**. Both run
+**only at build** (numbers are "as of last build") and both **fail soft** so a green build never
+depends on a third party being up:
 
 - **Blog feed** — the `writing` collection loader fetches `blog.damato.design/standard-site.json`
   and maps each post to a preview entry (`url = <siteUrl>/posts/<slug>`).
 - **Cabin analytics** — `src/utils/analytics.ts` (`getBlogAnalytics()`) fetches per-post read
-  counts (`scope=pages`) plus the site-wide totals (`scope=core`: distinct countries and total
-  page views) from the Cabin API for `blog.damato.design`, authorized by the **build secret**
-  `CABIN_API_KEY` (read from `process.env`; set in Netlify, never committed, not
-  `PUBLIC_`-prefixed, and there is no `.env` file). A missing key or any error returns `null`
-  and the page renders without analytics. `getPageStat()` joins Cabin's `/posts/<slug>` rows to
-  entries by path, and `getBlogStat()` serves the named figures a page's `metric` can ask for
-  (`countries` and `reads`). The two scopes fail **independently**: `core` degrades to zeroes
-  on its own so the rankings never pay for its failure, and a zero figure is treated as no
-  figure, so the panel never prints a number the build could not measure.
-  **Per-post dwell time stays gone** (it measured time-on-page, not reading length, and read as
-  misleading). The `scope=core` figures came back in 2026, the country count as the Writing
-  panel's metric.
+  counts (`scope=pages`) plus the countries the blog has been read from (`scope=core`) from the
+  Cabin API for `blog.damato.design`, authorized by the **build secret** `CABIN_API_KEY` (read
+  from `process.env`; set in Netlify, never committed, not `PUBLIC_`-prefixed, and there is no
+  `.env` file). A missing key or any error returns `null` and the page renders without
+  analytics. `getPageStat()` joins Cabin's `/posts/<slug>` rows to entries by path.
+  **`countries` is returned as a list of names, not a count**, because `countriesLoader` stores
+  one entry per country in the `countries` collection: the Writing panel then asks for
+  `{ count: 'countries' }` exactly the way `/projects` asks for `{ count: 'projects' }`, and
+  there is no second kind of metric. The two scopes fail **independently**: `core` degrades to
+  an empty list on its own so the rankings never pay for its failure, and an empty collection
+  counts zero, which drops the metric region rather than printing a number the build could not
+  measure. **Per-post dwell time stays gone** (it measured time-on-page, not reading length,
+  and read as misleading), and so does the blog's total page-view figure: nothing reads it now
+  that a metric counts collections.
+
+  A build without the key logs `The collection "countries" does not exist or is empty` once
+  per page that counts it. That is Astro's own note about an empty collection, and it is
+  **expected** whenever Cabin is unreachable; the panel drops its metric and the build stays
+  green. Don't silence it by seeding the collection with a placeholder.
 
   **Analytics is invisible locally unless the key is present**, which is what
   `npx netlify dev` is for: it injects the linked site's env vars, so the per-post read lines
@@ -279,11 +307,10 @@ last build") and both **fail soft** so a green build never depends on a third pa
 **top 10 posts by Cabin reads** (ties break by date; falls back
 to most-recent-by-date when analytics is `null`). Each card's `meta` is `<date> · <N> reads`,
 so analytics still drives both the ranking and the per-card counts. The panel's metric is the
-**country count** (`{ stat: 'countries' }` in `writing/index.mdx`), which is why the page has
-no article count in its header; `{ stat: 'reads' }` would put the blog's total there instead,
-since `Grid` carries **one** value+label metric and the two can't both occupy it. The former
-reach line (`<reads> · read in <N> countries`) stays gone with the `PageStats` component that
-held it. A closing CTA links to the full
+**country count** (`{ count: 'countries' }` in `writing/index.mdx`), which is why the page has
+no article count in its header: `Grid` carries **one** value+label metric and the two can't both
+occupy it. The former reach line (`<reads> · read in <N> countries`) stays gone with the
+`PageStats` component that held it. A closing CTA links to the full
 chronological archive on the blog. **Do not** reintroduce pagination or per-post dwell time (both
 removed — dwell time measured time-on-page, not reading length, and read as misleading).
 
@@ -360,9 +387,10 @@ label, that label becomes the link's `aria-label` and `title`, so no link is lef
   so a page passes frontmatter (or a panel derived from an entry) straight through `Layout`'s
   `grid` prop:
   `title` (the page's single `<h1>`), `headline` (an `<h2>`), `description`, `cta`, `metric`
-  (`{ value, label }`), and `anecdote`. Content inside `<main>` therefore starts at `<h2>`. Every
-  region except `title` is optional and omitted when absent; the anecdote spans the full row when
-  there is no metric. `Layout` types that prop with `GridProps`, exported from `Grid.astro`.
+  (`{ value, label }`), and `intro`. Content inside `<main>` therefore starts at `<h2>`. Every
+  region except `title` is optional and omitted when absent; the intro spans the full row when
+  there is no metric. Every one of those names is also the **frontmatter key**, which is what
+  lets a page pass `entry.data` through with no mapping. `Layout` types that prop with `GridProps`, exported from `Grid.astro`.
   - **`backdrop` is the one prop that isn't text.** It is an `ImageMetadata` (a page's
     `backdrop` frontmatter), and `Grid` runs it through `getImage()` rather than `<Image>`,
     because it paints as a `background-image` layer over `--grid-bg`. The resolved URL is set
@@ -377,8 +405,9 @@ label, that label becomes the link's `aria-label` and `title`, so no link is lef
     `target`/`rel` for the external ones. Don't pass `<a>` or `<Button>` here.
 - **`Square`** is the media panel: a 1:1 `.grid-surface` box the page's media fills edge to
   edge. This is where the old `Hero`'s `aside` content went, the `Media`
-  portrait/photos and the `<mode-book>` embed. Detail pages pass nothing, leaving the bare
-  panel.
+  portrait/photos and the `<mode-book>` embed. It holds whatever the entry's **`media`** key
+  names, through the one `Media` component; a detail page inherits its section page's, so a
+  case study still shows the `/projects` portrait.
 - **`Toc`** is the in-page table of contents, built from a **document-ordered** `headings:
   MarkdownHeading[]` prop that `Layout` takes and forwards. `buildTocTree` (`src/utils/toc.ts`)
   nests the flat list by attaching each heading to the nearest preceding shallower one, and
@@ -465,7 +494,7 @@ is no separate ink/ground pair.
   distinguishes a card is the content on the right, and some pages put something
   unrasterizable in `Square` anyway (the `<mode-book>` embed, a streaming sizzle reel). That makes the media a constant, so it lives in `duotone.ts` beside the blend
   rather than in a map, `renderOgPng` takes a bare `GridProps`, and both routes derive their
-  card list from **`getPages()`** in `grid.config.ts`. There is no `og/_pages.ts`.
+  card list from **`getPages()`** in `utils/collections.ts`. There is no `og/_pages.ts`.
 - Components: `SEO`, `StructuredData` (JSON-LD, config-driven), the shell panels above
   (`Header` twice, `Square`, `Grid`, `Main`, `Toc`/`TocList`), `Listing` (the four listing
   layouts), the **`Card` pattern** below (`EntryList` over `CardList` over `Card`),
@@ -480,7 +509,7 @@ is no separate ink/ground pair.
   rules in `Icon.astro`. **Don't inline an SVG path** at a call site.
 - **`OgImage` is the dashboard shell redrawn in satori's CSS subset**, not a card design of
   its own: `Square` on the left at 55%, `Grid` on the right (eyebrow `title`, Kentish
-  `headline`, description, page URL, then the metric + anecdote row), with `Props extends
+  `headline`, description, page URL, then the metric + intro row), with `Props extends
   Omit<GridProps, 'cta'>` so it is handed what the panel is handed.
   - **Where the panel puts its CTA links, the card puts the page's address.** Nothing in a
     PNG is clickable, so a "Explore my work" label is a dead end; the destination is the half
@@ -614,7 +643,9 @@ than every heading, tag, and paragraph read out as one link. A linked card there
   rail on `/journey`, which is the one listing whose entries aren't cards from a list of items.
 - Block content (a flex row with `<time>`/labels) must go in the `badge` or default slot,
   **not** `meta` (which is wrapped in an inline span).
-- **`TagList` renders its items as `#PascalCase` hashtags**, via `toHashtag` in
+- **Every collection calls its tag list `tags`** (it was `techStack`, `skills`, and `topics`
+before), so one key feeds `TagList` everywhere.
+**`TagList` renders its items as `#PascalCase` hashtags**, via `toHashtag` in
   `src/utils/hashtag.ts`. Author a tag, topic, skill, or tech-stack entry as plain readable text
   ("CSS Custom Properties"); the `#` and the casing are added at render time, so the same value
   still reads correctly in the `.md` mirrors and `/llms.txt`.
@@ -735,9 +766,10 @@ the whole of publishing its mirrors.
    frontmatter exactly (schemas are strict — required arrays may be empty but must be valid).
 2. For **projects and decisions**, write the substance as markdown in the **body**, following
    the section order in "Markdown-first bodies" above. Required frontmatter is only the five
-   /three fields the panel, card, and SEO read; the `panelFields` block (`image`, `imageAlt`,
-   `headline`, `description`, `cta`, `metric`, `anecdote`) is optional and normally left out,
-   so the header derives from the entry. Add one only to change that region for this entry.
+   fields the panel, card, and SEO read (`title`, `headline`, `description`, plus a project's
+   `role`/`year`/`metric` and a `tags` list). The rest of `panelFields` (`cta`, `intro`,
+   `backdrop`, `media`, `mediaAlt`, `seo`) is optional and normally left out, so the schema's
+   defaults and the section page fill it. Add one only to change that region for this entry.
    For `journey` and `speaking`, it's still all frontmatter.
 3. Ordering is `src/utils/collections.ts`'s business, not the page's: projects sort by `year`
    (newest first), so set `year` accordingly; decisions sort alphabetically by `title`.

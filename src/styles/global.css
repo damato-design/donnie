@@ -245,12 +245,12 @@ details[open]::details-content {
      square    Square.astro    slides in from the left
      identity  Grid.astro      slides in from the top
      metric    Grid.astro      slides in from the bottom
-     anecdote  Grid.astro      slides in from the right
+     intro     Grid.astro      slides in from the right
 
    The names are declared beside the elements they belong to; the motion lives
    here because `::view-transition-*` are pseudo-elements on the document root,
    not on any component, and because the sequencing is a cross-component
-   concern. `metric` and `anecdote` are optional regions: a page without one
+   concern. `metric` and `intro` are optional regions: a page without one
    registers no such name, and that panel simply sits out the transition.
 
    One thing plays *after* all four: the headline wipe on `identity`'s `<h2>`
@@ -303,25 +303,25 @@ details[open]::details-content {
 ::view-transition-new(identity),
 ::view-transition-old(metric),
 ::view-transition-new(metric),
-::view-transition-old(anecdote),
-::view-transition-new(anecdote) {
+::view-transition-old(intro),
+::view-transition-new(intro) {
   animation-duration: var(--vt-duration);
   animation-timing-function: var(--vt-ease);
   animation-fill-mode: both;
 }
 
 /* The group is the box the old and new snapshots animate inside. It only does
-   visible work when a panel changes size between pages (the anecdote, which
+   visible work when a panel changes size between pages (the intro, which
    takes the full row on a page with no metric); matching its duration to the
    full sequence keeps that resize from finishing early and snapping. */
 ::view-transition-group(square),
 ::view-transition-group(identity),
 ::view-transition-group(metric),
-::view-transition-group(anecdote) {
+::view-transition-group(intro) {
   animation-duration: var(--vt-sequence);
 }
 
-/* Entering: square, identity, metric, anecdote. */
+/* Entering: square, identity, metric, intro. */
 ::view-transition-new(square) {
   animation-name: slide-from-left;
   animation-delay: var(--vt-enter);
@@ -337,13 +337,13 @@ details[open]::details-content {
   animation-delay: calc(var(--vt-enter) + 2 * var(--vt-stagger));
 }
 
-::view-transition-new(anecdote) {
+::view-transition-new(intro) {
   animation-name: slide-from-right;
   animation-delay: calc(var(--vt-enter) + 3 * var(--vt-stagger));
 }
 
 /* Leaving: the same keyframes reversed, in the opposite order. */
-::view-transition-old(anecdote) {
+::view-transition-old(intro) {
   animation-name: slide-from-right;
   animation-direction: reverse;
   animation-delay: 0ms;
@@ -373,15 +373,15 @@ details[open]::details-content {
   ::view-transition-group(square),
   ::view-transition-group(identity),
   ::view-transition-group(metric),
-  ::view-transition-group(anecdote),
+  ::view-transition-group(intro),
   ::view-transition-old(square),
   ::view-transition-new(square),
   ::view-transition-old(identity),
   ::view-transition-new(identity),
   ::view-transition-old(metric),
   ::view-transition-new(metric),
-  ::view-transition-old(anecdote),
-  ::view-transition-new(anecdote) {
+  ::view-transition-old(intro),
+  ::view-transition-new(intro) {
     animation: none;
   }
 }

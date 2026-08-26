@@ -37,8 +37,8 @@ const { listing } = Astro.props;
 
 {listing.kind === 'timeline' && (
   <div class="journey-timeline">
-    {listing.items.map(({ slug, date, title, description, skills, Content }) => (
-      <TimelineEntry id={slug} date={date} title={title} description={description} skills={skills}>
+    {listing.items.map(({ slug, date, title, description, tags, Content }) => (
+      <TimelineEntry id={slug} date={date} title={title} description={description} tags={tags}>
         <Content />
       </TimelineEntry>
     ))}

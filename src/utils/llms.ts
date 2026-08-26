@@ -70,25 +70,25 @@ export function renderProject(entry: CollectionEntry<'projects'>): string {
 
   return blocks(
     `# ${d.title}`,
-    `> ${d.outcomeSummary}`,
+    `> ${d.description}`,
     bullets([`**Role:** ${d.role}`, `**Year:** ${d.year}`]),
-    d.techStack.length ? `Tech stack: ${d.techStack.join(', ')}` : '',
+    d.tags.length ? `Tags: ${d.tags.join(', ')}` : '',
     body(entry)
   );
 }
 
 /**
- * Renders a decision record (ADR) as a full markdown document: the context from
- * frontmatter, then the body, which already carries the decision, alternatives,
- * reasoning, and reflection as markdown.
+ * Renders a decision record (ADR) as a full markdown document: the context (the
+ * entry's `description`) from frontmatter, then the body, which already carries
+ * the decision, alternatives, reasoning, and reflection as markdown.
  */
 export function renderDecision(entry: CollectionEntry<'decisions'>): string {
   const d = entry.data;
 
   return blocks(
     `# ${d.title}`,
-    blocks('## Context', d.context),
-    d.tags?.length ? `Tags: ${d.tags.join(', ')}` : '',
+    blocks('## Context', d.description),
+    d.tags.length ? `Tags: ${d.tags.join(', ')}` : '',
     body(entry)
   );
 }
@@ -101,7 +101,7 @@ export function renderJourney(entry: CollectionEntry<'journey'>): string {
     `# ${d.title}`,
     bullets([`**Date:** ${isoDate(d.date)}`, `**Type:** ${d.type}`]),
     d.description,
-    d.skills?.length ? `Skills: ${d.skills.join(', ')}` : '',
+    d.tags.length ? `Tags: ${d.tags.join(', ')}` : '',
     body(entry)
   );
 }
@@ -129,7 +129,7 @@ export function renderSpeaking(entry: CollectionEntry<'speaking'>): string {
     `# ${d.title}`,
     bullets(meta),
     d.description,
-    d.topics?.length ? `Topics: ${d.topics.join(', ')}` : '',
+    d.tags.length ? `Tags: ${d.tags.join(', ')}` : '',
     links ? blocks('Links:', links) : '',
     body(entry)
   );

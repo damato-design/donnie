@@ -36,14 +36,14 @@ import { Font } from 'astro:assets';
 import OgImage, { ogCard, ogUrl } from '@components/OgImage.astro';
 import ogImageCss from '@components/OgImage.css?raw';
 import { cardMedia } from '@/lib/duotone';
-import { getPages, pageGrid } from '@/grid.config';
+import { getPages, panel } from '@utils/collections';
 
 /** The same blended portrait the renderer embeds, shared by every card. */
 const media = await cardMedia();
 
 /** Every page's panel, resolved exactly as the PNG route resolves it. */
 const cards = await Promise.all(
-  [...(await getPages())].map(async ([page, entry]) => [page, await pageGrid(entry)] as const)
+  [...(await getPages())].map(async ([page, entry]) => [page, await panel(entry.data)] as const)
 );
 
 /** Preview zoom levels, in the order the toolbar lists them. */
@@ -211,7 +211,7 @@ const defaultScale = 60;
       /* Renderer step 2, scoped under the frame so nothing leaks into the
          chrome. */
       .ogp-frame :global(.og-root),
-      .ogp-frame :global(.og-anecdote) {
+      .ogp-frame :global(.og-intro) {
         font-family: var(--font-raleway);
       }
 

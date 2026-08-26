@@ -122,7 +122,7 @@
   text-decoration: underline;
 }
 
-/* `.metric` and `.anecdote` share the bottom row; the seams between them and
+/* `.metric` and `.intro` share the bottom row; the seams between them and
    above them are the 2px the rest of the shell uses. */
 .og-bottom {
   display: flex;
@@ -158,7 +158,7 @@
   text-shadow: 0.6px 0 #f1f1f1;
 }
 
-.og-anecdote {
+.og-intro {
   display: flex;
   flex-direction: column;
   justify-content: center;

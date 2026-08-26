@@ -12,11 +12,13 @@
  * The content tree mirrors the URL tree one for one, so a route's source is
  * wherever the URL says it is.
  *
- * They are one route because they are one page: the same shell, the same header
- * panel, the same SEO block, the same media slot. What differs is only where
- * each region's content comes from, which is what `kind` selects below. Before
- * this there were six `index.astro` files and two `[slug].astro` files, each
- * re-wiring `Layout`, `SEO`, and the panel by hand.
+ * They are one page, not three: the same shell, the same header panel, the same
+ * SEO block, the same media. All three collections spell a panel region the same
+ * way (see `panelFields` in `content.config.ts`), so the panel, the SEO block,
+ * and the media are read the same way for every kind and `kind` selects only the
+ * four things that genuinely differ: what a detail page inherits from its
+ * section, what goes in `<main>`, how deep the table of contents goes, and which
+ * structured data the head carries.
  *
  * The narrower routes still win: `404.astro`, `robots.txt.ts`, `llms.txt.ts`,
  * the per-collection `[slug].md.ts` mirrors, and everything under `/og` are all
@@ -35,12 +37,8 @@ import Media from '@components/Media.astro';
 import TagList from '@components/TagList.astro';
 import Button from '@components/Button.astro';
 import ScrollToTop from '@components/ScrollToTop.astro';
-import { sorted } from '@utils/collections';
+import { panel, sectionOf, sorted, type PanelData } from '@utils/collections';
 import { buildListing, type Listing as ListingData } from '@utils/listings';
-import { pageGrid, projectGrid, decisionGrid, type PageEntry } from '@/grid.config';
-import { siteConfig } from '@/config';
-import uxdx from '@assets/uxdx.jpg';
-import portrait from '@assets/teach.jpg';
 
 /**
  * One path per top-level page and per detail entry.
@@ -76,66 +74,49 @@ type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const props = Astro.props as Props;
 const { kind, entry } = props;
+const data = entry.data as PanelData;
 
 /**
- * The panel, the SEO block, the media, and the TOC, resolved per kind.
+ * A detail page has no artwork of its own, so it inherits its section page's
+ * backdrop and `Square` media (and that media's alternative text with it), the
+ * way a case study should read as part of `/projects` rather than as its own
+ * place. This is the one part of a panel that frontmatter cannot state and a
+ * schema cannot fill: it lives in another entry.
+ */
+const section = kind === 'page' ? undefined : await sectionOf(`${kind}s`);
+const inherited = data.media ? data : (section?.data ?? data);
+
+const grid = await panel({ ...data, backdrop: data.backdrop ?? section?.data.backdrop });
+const media = inherited.media;
+const mediaAlt = inherited.mediaAlt ?? data.title;
+
+/** The SEO block is frontmatter too; only the OG type is the route's to say. */
+const seo = { ...data.seo, type: kind === 'page' ? ('website' as const) : ('article' as const) };
+
+/**
+ * The body, plus whatever `<main>` carries around it.
  *
  * `tocDepth` is 2 on the detail pages because their level-3 headings are
  * one-sentence key-decision / alternative titles that would swamp the panel;
  * the listings keep the default 3, which covers a section heading plus its
  * cards.
  */
-let grid, seo, headings: MarkdownHeading[] | undefined, listing: ListingData | undefined;
+const { Content, headings: bodyHeadings } = await render(entry);
+
+let headings: MarkdownHeading[] = bodyHeadings;
+let listing: ListingData | undefined;
 let tocDepth: number | undefined;
 
 if (kind === 'page') {
-  const page = entry as PageEntry;
-  grid = await pageGrid(page);
-  seo = { ...page.data.seo, type: 'website' as const };
-
-  const rendered = await render(page);
-  const bodyHeadings = rendered.headings;
-
-  if (page.data.listing) {
-    const built = await buildListing(page.data.listing);
+  if (entry.data.listing) {
+    const built = await buildListing(entry.data.listing);
     listing = built.listing;
     // The generated listing comes first in `<main>`, so its headings do too.
     headings = [...built.headings, ...bodyHeadings];
-  } else {
-    headings = bodyHeadings;
   }
-} else if (kind === 'project') {
-  grid = await projectGrid(entry);
-  seo = {
-    title: `${entry.data.title} - Case Study`,
-    description: entry.data.outcomeSummary,
-    noSuffix: false,
-    type: 'article' as const,
-  };
-  headings = (await render(entry)).headings;
-  tocDepth = 2;
 } else {
-  grid = await decisionGrid(entry);
-  seo = {
-    title: `${entry.data.title} - Decision Record`,
-    description: entry.data.context,
-    noSuffix: false,
-    type: 'article' as const,
-  };
-  headings = (await render(entry)).headings;
   tocDepth = 2;
 }
-
-/** The body. Every kind renders one, even when it is empty (the listings). */
-const { Content } = await render(entry);
-
-/**
- * A detail page falls back to whatever its section's listing page shows, so the
- * section reads as one place: the portrait for projects, the stage photo for
- * decisions. An entry with its own `image` overrides that.
- */
-const detailImage = kind === 'project' || kind === 'decision' ? entry.data.image : undefined;
-const detailAlt = detailImage ? (entry.data.imageAlt ?? entry.data.title) : undefined;
 ---
 
 <Layout grid={grid} headings={headings} tocMaxDepth={tocDepth}>
@@ -159,8 +140,8 @@ const detailAlt = detailImage ? (entry.data.imageAlt ?? entry.data.title) : unde
         type="Project"
         data={{
           title: entry.data.title,
-          outcomeSummary: entry.data.outcomeSummary,
-          techStack: entry.data.techStack,
+          description: entry.data.description,
+          tags: entry.data.tags,
           year: entry.data.year,
         }}
       />
@@ -168,47 +149,13 @@ const detailAlt = detailImage ? (entry.data.imageAlt ?? entry.data.title) : unde
   </Fragment>
 
   <Fragment slot="media">
-    {kind === 'page' && entry.data.image && (
-      <Media src={entry.data.image} alt={entry.data.imageAlt ?? entry.data.title} />
-    )}
-    {kind === 'page' && entry.data.video && (
-      <Media
-        src={entry.data.video}
-        alt={entry.data.videoAlt ?? entry.data.title}
-        controls={false}
-        autoplay
-        loop
-        muted
-        playsinline
-      />
-    )}
-    {/* The one medium a frontmatter field cannot express. */}
-    {kind === 'page' && entry.data.embed === 'mode-book' && (
-      <Fragment>
-        <mode-book></mode-book>
-        <script is:inline type="module" src="https://mode.place/mode-book.js"></script>
-      </Fragment>
-    )}
-
-    {kind === 'project' && (
-      <Media
-        src={detailImage ?? portrait}
-        alt={detailAlt ?? `Portrait of ${siteConfig.author.name}`}
-      />
-    )}
-    {kind === 'decision' && (
-      <Media
-        src={detailImage ?? uxdx}
-        alt={detailAlt ?? `${siteConfig.author.name} on stage`}
-      />
-    )}
+    {media && <Media src={media} alt={mediaAlt} />}
   </Fragment>
 
   <Fragment slot="main">
     {listing && <Listing listing={listing} />}
 
-    {kind === 'project' && <TagList items={entry.data.techStack} />}
-    {kind === 'decision' && <TagList items={entry.data.tags ?? []} />}
+    {kind !== 'page' && <TagList items={entry.data.tags} />}
 
     <Content />
 

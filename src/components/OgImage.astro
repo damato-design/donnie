@@ -11,7 +11,7 @@
  * **It is the dashboard shell, redrawn in the subset satori understands.** The
  * card is `Square` beside `Grid`: the duotone media on the left at 55%, and on
  * the right the identity block (eyebrow title, Kentish headline, description,
- * page URL) above a bottom row of the metric and the anecdote. `Props` extends
+ * page URL) above a bottom row of the metric and the intro. `Props` extends
  * `GridProps`, so a card is handed exactly what the real panel is handed, from
  * the same `grid.config.ts` entry.
  *
@@ -82,7 +82,7 @@ interface Props extends Omit<GridProps, 'cta' | 'backdrop'> {
   url: string;
 }
 
-const { title, headline, description, metric, anecdote, media, url } = Astro.props;
+const { title, headline, description, metric, intro, media, url } = Astro.props;
 
 /** A `\n` in the panel's copy is a deliberate line break. */
 const lines = (text: string): string[] => text.split('\n');
@@ -112,7 +112,7 @@ const lines = (text: string): string[] => text.split('\n');
       <div class="og-url">{url}</div>
     </div>
 
-    {(metric || anecdote) && (
+    {(metric || intro) && (
       <div class="og-bottom">
         {metric && (
           <div class="og-metric">
@@ -120,7 +120,7 @@ const lines = (text: string): string[] => text.split('\n');
             {metric.label && <div class="og-metric-label">{metric.label}</div>}
           </div>
         )}
-        {anecdote && <div class="og-anecdote">{anecdote}</div>}
+        {intro && <div class="og-intro">{intro}</div>}
       </div>
     )}
   </div>

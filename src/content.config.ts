@@ -10,9 +10,22 @@
  * - journey: Career timeline entries
  * - writing: Blog post previews, fetched from the blog feed at build time
  * - speaking: Conference talks and presentations
+ * - countries: The countries the blog has been read from, from Cabin analytics
  *
- * Everything except `writing` uses the `glob()` loader over MDX files; `writing`
- * has no local files and uses a custom loader (see `blogFeedLoader` below).
+ * `writing` and `countries` have no local files and use custom loaders (see
+ * `blogFeedLoader` and `countriesLoader` below); everything else uses the
+ * `glob()` loader over MDX files.
+ *
+ * **One vocabulary.** Every collection that renders a page header uses the same
+ * key for the same region (`panelFields` below), so nothing has to be remapped
+ * between frontmatter and `Grid`: a page, a case study, and a decision record
+ * all spell the headline `headline`, the summary `description`, and the panel's
+ * closing paragraph `intro`. What a detail page does not author is filled in
+ * **here**, by a `.default()` or the schema's own `.transform()`, rather than by
+ * an adapter module downstream. The only things still resolved at render time
+ * are the ones a schema genuinely cannot see: a metric that counts another
+ * collection, and the section page a detail page inherits its artwork from
+ * (both in `utils/collections.ts`).
  *
  * @module content.config
  */
@@ -24,88 +37,45 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 import type { Loader } from 'astro/loaders';
 import type { SchemaContext } from 'astro/content/config';
-import type { CtaLink, GridProps } from '@components/Grid.astro';
 import { siteConfig } from '@/config';
+import { getBlogAnalytics } from '@utils/analytics';
 
 /**
- * Page-header frontmatter, shared by the two collections with detail pages
- * (`projects` and `decisions`) so the same key means the same thing in both.
+ * Every collection, and so every figure a `metric` can count.
  *
- * A detail page derives its whole header from the entry: `Square`'s media, and
- * `Grid`'s headline, description, CTA row, metric, and anecdote. These fields
- * are **overrides** on that derivation, and every one of them is optional. Left
- * out (the normal case), a region keeps the value the page computes, so nothing
- * has to be restated in frontmatter just to render. Set one, and it wins for
- * that region only; the rest still come from the entry.
+ * `count` takes any name in this list, which is why there is no second metric
+ * form for build-time figures: a number worth putting in a panel is a number of
+ * *things*, and the things live in a collection (see `countriesLoader` below,
+ * which is what turned "countries the blog was read from" into one of these).
  *
- * `title` is deliberately not overridable here: it is the entry's `title`, which
- * the listing card and SEO also read, so the panel can't drift from them.
- *
- * The regions mirror `GridProps` in `Grid.astro`, and the two structured ones
- * are pinned to it with `satisfies` rather than described twice; `grid.config.ts`
- * merges these over the computed defaults (see `projectGrid`/`decisionGrid`).
- *
- * @param image - Astro's schema-context helper, which resolves a path relative
- *   to the MDX file into `ImageMetadata` so the image goes through
- *   `astro:assets`.
+ * Kept in step with the `collections` export at the bottom of this file; the
+ * `satisfies` there is what fails the build if the two drift apart.
  */
-const panelFields = ({ image }: SchemaContext) => ({
-  /**
-   * Media for this entry's `Square` panel, as a path relative to the MDX file
-   * (e.g. `../../assets/thing.jpg`). Left out, the detail page falls back to
-   * whatever its listing page shows.
-   */
-  image: image().optional(),
+const COLLECTIONS = [
+  'pages',
+  'projects',
+  'decisions',
+  'journey',
+  'writing',
+  'speaking',
+  'countries',
+] as const;
 
-  /** Text alternative for `image`. Defaults to the entry title. */
-  imageAlt: z.string().optional(),
+/** A collection name a `metric` may count. */
+export type CountableCollection = (typeof COLLECTIONS)[number];
 
-  /**
-   * Decorative artwork behind the panel's identity region, relative to the MDX
-   * file. Left out, the detail page falls back to its section's own backdrop,
-   * so the section reads as one place.
-   */
-  backdrop: image().optional(),
+/** The collection listings a page's `<main>` can render. */
+const LISTINGS = ['projects', 'decisions', 'journey', 'writing', 'speaking'] as const;
 
-  /** Promotional headline, rendered as the panel's <h2>. No default. */
-  headline: z.string().optional(),
-
-  /** Supporting copy under the headline. Overrides the computed byline. */
-  description: z.string().optional(),
-
-  /**
-   * The panel's link row. Replaces the default row wholesale.
-   *
-   * `satisfies` ties the schema to `CtaLink` rather than restating it: adding a
-   * field to the panel's own type without adding it here is a build error, so
-   * frontmatter and the component can't drift.
-   */
-  cta: z
-    .array(
-      z.object({
-        /** Link text. */
-        label: z.string(),
-        /** Destination, a site path or an absolute URL. */
-        href: z.string(),
-        /** Open in a new tab (adds the matching `rel`). */
-        external: z.boolean().optional(),
-      }) satisfies z.ZodType<CtaLink>
-    )
-    .optional(),
-
-  /** The headline metric. Overrides the computed count. */
-  metric: z
-    .object({
-      /** The figure itself. A string keeps approximations like "~500". */
-      value: z.union([z.string(), z.number()]),
-      /** What the figure counts. Omit for a bare figure. */
-      label: z.string().optional(),
-    })
-    .optional() satisfies z.ZodType<GridProps['metric']>,
-
-  /** The panel's intro paragraph. Overrides the entry's summary/context. */
-  anecdote: z.string().optional(),
-});
+/**
+ * Embeds: the media a frontmatter field cannot express as a file.
+ *
+ * The value names a custom element and the module that defines it; `Media`
+ * renders the pair. Adding one is a line here plus a line there.
+ */
+export const EMBEDS = {
+  'mode-book': 'https://mode.place/mode-book.js',
+} as const;
 
 /**
  * Named destinations, so a page's frontmatter can point at a configured value
@@ -125,45 +95,147 @@ const ctaSchema = z.object({
   /** Link text. */
   label: z.string(),
   /** A site path, an absolute URL, or a `@name` from `namedLinks`. */
-  href: z.string().transform((href) => namedLinks[href as keyof typeof namedLinks] ?? href),
+  href: z
+    .string()
+    // Annotated, because the lookup's own type is the one named link's literal
+    // and every other href would be typed out of existence by it.
+    .transform((href): string => namedLinks[href as keyof typeof namedLinks] ?? href),
   /** Open in a new tab (adds the matching `rel`). */
   external: z.boolean().optional(),
 });
 
 /**
- * The panel's headline metric.
+ * The panel's headline metric: a figure to count, or one to state.
  *
- * Three forms, because most of them are live figures rather than authored ones:
  * `{ count: 'projects', label: 'projects' }` is resolved against the collection
- * at build time and `{ stat: 'reads', label: 'reads' }` against the Cabin
- * analytics for the blog, so neither number can go stale, while
- * `{ value: 25, label: 'years' }` is for a figure nothing can measure.
+ * at build time, so the number can never go stale, and `{ value: 2021 }` is for
+ * a figure nothing can count (a project's year, the years in the practice).
  *
- * A `stat` is the only form that can come up empty: analytics is additive and
- * fails soft, so the panel drops the metric region when Cabin is unreachable
- * (see `pageGrid` in `grid.config.ts`).
+ * A count of zero drops the region rather than printing "0": an empty
+ * collection is either a build that could not reach its source (see
+ * `countriesLoader`) or nothing worth a headline.
  */
 const metricSchema = z.union([
   z.object({
-    /** A figure nothing can measure. A string keeps approximations like "~500". */
+    /** A figure nothing can count. A string keeps approximations like "~500". */
     value: z.union([z.string(), z.number()]),
-    label: z.string(),
+    /** What the figure counts. Omit for a bare figure. */
+    label: z.string().optional(),
   }),
   z.object({
     /** Collection to count at build time. */
-    count: z.enum(['projects', 'decisions', 'journey', 'writing', 'speaking']),
-    label: z.string(),
-  }),
-  z.object({
-    /**
-     * Build-time blog figure to read from Cabin (see `utils/analytics.ts`):
-     * `countries` is how many countries the blog has been read from, `reads` is
-     * its total page views, compacted for display ("18k").
-     */
-    stat: z.enum(['countries', 'reads']),
-    label: z.string(),
+    count: z.enum(COLLECTIONS),
+    /** What the figure counts. Omit for a bare figure. */
+    label: z.string().optional(),
   }),
 ]);
+
+/** The embed names, as the non-empty tuple `z.enum` wants. */
+const EMBED_NAMES = Object.keys(EMBEDS) as [keyof typeof EMBEDS, ...(keyof typeof EMBEDS)[]];
+
+/**
+ * The `Square` panel's media, in whatever form the page has: a named embed, a
+ * remote file, or a local asset resolved relative to the MDX file.
+ *
+ * There is deliberately **one** key rather than an `image`/`video`/`embed`
+ * triple: which element a value needs is something the value itself says, so
+ * `Media` reads it off the value rather than off the key it arrived under. The
+ * branches are ordered narrowest first, so a mistyped local path fails as a
+ * missing image instead of being accepted as a plain string.
+ */
+const mediaSchema = ({ image }: SchemaContext) =>
+  z.union([z.enum(EMBED_NAMES), z.url(), image()]);
+
+/** Meta tags. Both fields default from the entry when it doesn't name them. */
+const seoSchema = z.object({
+  /** `<title>` and the Open Graph title. */
+  title: z.string().optional(),
+  /** Meta description. Defaults to the entry's own `description`. */
+  description: z.string().optional(),
+  /** Skip the " | <author>" suffix (home represents the site itself). */
+  noSuffix: z.boolean().default(false),
+});
+
+/** An entry after parsing, with the fields `fillSeo` reads and writes. */
+interface SeoBearing {
+  title: string;
+  description?: string;
+  seo?: z.infer<typeof seoSchema>;
+}
+
+/**
+ * Fills the SEO block from the entry, so only a page that wants something
+ * *different* from its own copy has to write one.
+ *
+ * This is the schema's job rather than a route's: the block is derived from
+ * fields the same object already carries, which is exactly what a `.transform()`
+ * can see.
+ */
+function fillSeo<T extends SeoBearing>(data: T, title: string): T & { seo: Required<z.infer<typeof seoSchema>> } {
+  return {
+    ...data,
+    seo: {
+      title: data.seo?.title ?? title,
+      description: data.seo?.description ?? data.description ?? siteConfig.description,
+      noSuffix: data.seo?.noSuffix ?? false,
+    },
+  };
+}
+
+/**
+ * The page header panel, as frontmatter.
+ *
+ * Every collection with a page of its own spreads this, so one key means one
+ * thing everywhere: the `pages` entries, the case studies, and the decision
+ * records are all authored in the same words and all reach `Grid` without a
+ * translation step. A collection then adds what only it has (a project's `role`
+ * and `year`, a page's `listing`) and narrows what it needs to (`description`
+ * is required on an entry, defaulted on a page).
+ *
+ * @param context - Astro's schema context, whose `image()` resolves a path
+ *   relative to the MDX file into `ImageMetadata` so it goes through
+ *   `astro:assets`.
+ */
+const panelFields = (context: SchemaContext) => ({
+  /** The panel's <h1>, and the entry's name everywhere else. */
+  title: z.string(),
+
+  /** The promotional headline, rendered as the panel's <h2>. */
+  headline: z.string().optional(),
+
+  /**
+   * The summary: supporting copy under the headline, and the copy the listing
+   * card, the SEO description, and the machine-readable mirrors all read.
+   * A `\n` is a deliberate line break.
+   */
+  description: z.string().optional(),
+
+  /** The panel's link row. */
+  cta: z.array(ctaSchema).optional(),
+
+  /** The panel's headline metric. */
+  metric: metricSchema.optional(),
+
+  /** The panel's closing paragraph, beside the metric. */
+  intro: z.string().optional(),
+
+  /**
+   * Decorative artwork blended into the panel's identity region, resolved
+   * relative to this MDX file. Each top-level page carries its own, which is
+   * what makes the header read differently from section to section; a detail
+   * page inherits its section's.
+   */
+  backdrop: context.image().optional(),
+
+  /** The `Square` panel's media. A detail page inherits its section's. */
+  media: mediaSchema(context).optional(),
+
+  /** Text alternative for `media`. Defaults to the entry title. */
+  mediaAlt: z.string().optional(),
+
+  /** Meta tags. Derived from the entry when absent. */
+  seo: seoSchema.optional(),
+});
 
 /**
  * Pages Collection
@@ -194,66 +266,23 @@ const pagesCollection = defineCollection({
      */
     generateId: ({ entry }) => entry.replace(/\/?index\.mdx$/, '') || 'home',
   }),
-  schema: ({ image }) => z.object({
-    /** The panel's <h1>. Defaults to the site title, which is what home wants. */
-    title: z.string().default(siteConfig.title),
-
-    /** The promotional headline, rendered as the panel's <h2>. */
-    headline: z.string().optional(),
-
-    /**
-     * Supporting copy under the headline. A `
-` is a deliberate line break.
-     * Defaults to the site description, which is what home wants.
-     */
-    description: z.string().default(siteConfig.description),
-
-    /** The panel's link row. */
-    cta: z.array(ctaSchema).optional(),
-
-    /** The panel's headline metric. */
-    metric: metricSchema.optional(),
-
-    /** The panel's intro paragraph. */
-    intro: z.string().optional(),
-
-    /**
-     * Decorative artwork blended into the panel's identity region, resolved
-     * relative to this MDX file. Each page carries its own, which is what makes
-     * the header read differently from section to section; the detail pages
-     * under a section inherit it. Omitted, the panel is the bare gradient.
-     */
-    backdrop: image().optional(),
-
-    /** Meta tags. Both fields fall back to the site's own. */
-    seo: z
+  schema: (context) =>
+    z
       .object({
-        title: z.string().default(`${siteConfig.author.name} - ${siteConfig.author.title}`),
+        ...panelFields(context),
+
+        /** Defaults to the site's own, which is what home wants. */
+        title: z.string().default(siteConfig.title),
+
+        /** Defaults to the site's own, which is what home wants. */
         description: z.string().default(siteConfig.description),
-        /** Skip the " | <author>" suffix (home represents the site itself). */
-        noSuffix: z.boolean().default(false),
+
+        /** The collection listing to render into `<main>`, if any. */
+        listing: z.enum(LISTINGS).optional(),
       })
-      .default({
-        title: `${siteConfig.author.name} - ${siteConfig.author.title}`,
-        description: siteConfig.description,
-        noSuffix: false,
-      }),
-
-    /**
-     * The `Square` panel's media. Exactly one of these, or none for a bare
-     * panel. `image` is resolved relative to this MDX file and goes through
-     * `astro:assets`; `video` is a remote URL; `embed` names the one
-     * piece of markup a frontmatter field cannot express.
-     */
-    image: image().optional(),
-    imageAlt: z.string().optional(),
-    video: z.string().optional(),
-    videoAlt: z.string().optional(),
-    embed: z.enum(['mode-book']).optional(),
-
-    /** The collection listing to render into `<main>`, if any. */
-    listing: z.enum(['projects', 'decisions', 'journey', 'writing', 'speaking']).optional(),
-  }),
+      .transform((data) =>
+        fillSeo(data, `${siteConfig.author.name} - ${siteConfig.author.title}`)
+      ),
 });
 
 /**
@@ -263,32 +292,44 @@ const pagesCollection = defineCollection({
  * narrative order Overview -> Problem -> Constraints -> Approach -> Key Decisions ->
  * Result & Impact -> Learnings, closing with the first-person "story behind it".
  *
- * Frontmatter holds only what something other than the prose needs to read:
- * the page header panel (title, role, year, outcomeSummary), the listing card
- * (role, year, outcomeSummary, techStack), the year sort, and SEO/JSON-LD,
- * plus the optional `panelFields` overrides above.
+ * Frontmatter is the page header panel (see `panelFields`) plus the two fields
+ * only a case study has: `role` and `year`. `description` is the outcome
+ * summary, which is also the listing card's copy and the SEO description, and
+ * `year` is the listing's sort key (a project states it as its `metric` too,
+ * since a metric is display copy and a sort key is data).
  */
 const projectsCollection = defineCollection({
   loader: glob({ pattern: ['**/*.mdx', '!index.mdx'], base: './src/content/projects' }),
-  schema: (context) => z.object({
-    /** Project title. Renders as the detail page's <h1>. */
-    title: z.string(),
+  schema: (context) =>
+    z
+      .object({
+        ...panelFields(context),
 
-    /** Your role in the project */
-    role: z.string(),
+        /** The outcome summary. Required: the card and SEO read it too. */
+        description: z.string(),
 
-    /** Year the project was completed. Also the projects listing's sort key. */
-    year: z.number(),
+        /**
+         * The panel's link row. A detail page has a back link at the foot of
+         * `<main>` already, so the default row is the one thing a case study
+         * should offer that the page doesn't.
+         */
+        // The default names the resolved URL rather than `@scheduling`: a
+        // Zod default is the parsed value, so it never passes back through the
+        // `namedLinks` transform above.
+        cta: z
+          .array(ctaSchema)
+          .default([{ label: 'Work with me', href: siteConfig.scheduling, external: true }]),
 
-    /** Brief summary of outcomes and impact. Doubles as the SEO description. */
-    outcomeSummary: z.string(),
+        /** Your role in the project. Also the listing card's eyebrow. */
+        role: z.string(),
 
-    /** Technologies and frameworks used. Renders as the card/detail TagList. */
-    techStack: z.array(z.string()),
+        /** Year the project was completed. The projects listing's sort key. */
+        year: z.number(),
 
-    // Optional page-header overrides, identical in shape to `decisions`.
-    ...panelFields(context),
-  }),
+        /** Technologies and approaches. Renders as the card/detail TagList. */
+        tags: z.array(z.string()).default([]),
+      })
+      .transform((data) => fillSeo(data, `${data.title} - Case Study`)),
 });
 
 /**
@@ -298,32 +339,33 @@ const projectsCollection = defineCollection({
  * blockquote) -> Alternatives Considered (one pros/cons table per option) ->
  * Reasoning -> Why it mattered.
  *
- * Frontmatter holds only what something other than the prose needs to read:
- * the page header panel (title, context), the listing card (title, context,
- * tags), and SEO/JSON-LD, plus the optional `panelFields` overrides above.
+ * Frontmatter is the page header panel (see `panelFields`) and nothing else.
+ * `description` is the record's context, which is also the listing card's copy
+ * and the SEO description. There is deliberately no default metric: a decision
+ * record has no figure worth a headline.
  */
 const decisionsCollection = defineCollection({
   loader: glob({ pattern: ['**/*.mdx', '!index.mdx'], base: './src/content/decisions' }),
-  schema: (context) => z.object({
-    /** Decision title. Renders as the detail page's <h1>. */
-    title: z.string(),
+  schema: (context) =>
+    z
+      .object({
+        ...panelFields(context),
 
-    /** Context and background. Doubles as the card copy and SEO description. */
-    context: z.string(),
+        /** The record's context. Required: the card and SEO read it too. */
+        description: z.string(),
 
-    /** Optional tags for categorization. Renders as the card/detail TagList. */
-    tags: z.array(z.string()).optional(),
-
-    // Optional page-header overrides, identical in shape to `projects`.
-    ...panelFields(context),
-  }),
+        /** Tags for categorization. Renders as the card/detail TagList. */
+        tags: z.array(z.string()).default([]),
+      })
+      .transform((data) => fillSeo(data, `${data.title} - Decision Record`)),
 });
 
 /**
  * Journey Timeline Collection
  *
  * Career growth and learning progression timeline with milestones,
- * learning experiences, and career transitions.
+ * learning experiences, and career transitions. These entries have a listing
+ * card but no page of their own, so they carry no panel fields.
  */
 const journeyCollection = defineCollection({
   loader: glob({ pattern: ['**/*.mdx', '!index.mdx'], base: './src/content/journey' }),
@@ -340,8 +382,8 @@ const journeyCollection = defineCollection({
     /** Brief description */
     description: z.string(),
 
-    /** Skills or technologies associated with this entry */
-    skills: z.array(z.string()).optional(),
+    /** Skills and technologies. Renders as the card's TagList. */
+    tags: z.array(z.string()).default([]),
   }),
 });
 
@@ -445,7 +487,7 @@ const writingCollection = defineCollection({
     publishDate: z.coerce.date(),
 
     /** Tags for categorization */
-    tags: z.array(z.string()).optional(),
+    tags: z.array(z.string()).default([]),
 
     /** Canonical URL of the full post on the blog */
     url: z.url(),
@@ -453,9 +495,62 @@ const writingCollection = defineCollection({
 });
 
 /**
+ * Countries loader
+ *
+ * The countries the blog has been read from, one entry each, from Cabin's
+ * site-wide analytics (`utils/analytics.ts`).
+ *
+ * This is a collection rather than a special kind of metric because that is
+ * what it is: a set of things the build can count. `{ count: 'countries' }` in
+ * the Writing page's frontmatter then reads exactly like `{ count: 'projects' }`
+ * and needs no second code path.
+ *
+ * Failure is soft, like the feed's: no API key or an unreachable Cabin leaves
+ * the collection empty, the count is zero, and the panel drops the metric region
+ * rather than printing a figure the build could not measure.
+ */
+const countriesLoader = (): Loader => ({
+  name: 'blog-countries',
+  load: async ({ store, parseData, generateDigest, logger }) => {
+    const analytics = await getBlogAnalytics();
+
+    if (!analytics) {
+      logger.warn('No blog analytics; the country count will be omitted.');
+      return;
+    }
+
+    store.clear();
+
+    for (const name of analytics.countries) {
+      const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const data = await parseData({ id, data: { name } });
+      store.set({ id, data, digest: generateDigest(data) });
+    }
+
+    logger.info(`Loaded ${analytics.countries.length} countries from blog analytics.`);
+  },
+});
+
+/**
+ * Countries Collection
+ *
+ * One entry per country the blog has been read from. Nothing renders these
+ * entries; they exist to be counted (see `countriesLoader`).
+ */
+const countriesCollection = defineCollection({
+  loader: countriesLoader(),
+  schema: z.object({
+    /** The country, as Cabin reports it. */
+    name: z.string(),
+  }),
+});
+
+/**
  * Speaking/Talks Collection
  *
  * Conference talks, meetup presentations, podcast appearances, and workshops.
+ * Like `journey`, these have a listing card but no page of their own, so they
+ * carry no panel fields.
  */
 const speakingCollection = defineCollection({
   loader: glob({ pattern: ['**/*.mdx', '!index.mdx'], base: './src/content/speaking' }),
@@ -481,14 +576,14 @@ const speakingCollection = defineCollection({
     /** Link to slides (optional) */
     slides: z.url().optional(),
 
-    /** Link to video recording (optional) */
+    /** Link to a video recording (optional) */
     video: z.url().optional(),
 
     /** Talk duration (e.g., "45 min", "1 hour") */
     duration: z.string().optional(),
 
-    /** Topics covered in the talk */
-    topics: z.array(z.string()).optional(),
+    /** Topics covered. Renders as the card's TagList. */
+    tags: z.array(z.string()).default([]),
   }),
 });
 
@@ -496,7 +591,9 @@ const speakingCollection = defineCollection({
  * Export all collections
  *
  * This object is what Astro reads to register the collections and generate the
- * types behind `getCollection`/`getEntry`.
+ * types behind `getCollection`/`getEntry`. The `satisfies` pins its keys to
+ * `COLLECTIONS`, the list a `metric` counts against, so adding a collection
+ * without listing it there (or the reverse) is a build error.
  */
 export const collections = {
   pages: pagesCollection,
@@ -505,4 +602,5 @@ export const collections = {
   journey: journeyCollection,
   writing: writingCollection,
   speaking: speakingCollection,
-};
+  countries: countriesCollection,
+} satisfies Record<CountableCollection, unknown>;
