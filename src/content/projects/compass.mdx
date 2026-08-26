@@ -1,49 +1,69 @@
 ---
 title: "Compass, UX Engineering & Design Systems"
+headline: "Guiding Style"
+description: "Founded Compass's design systems practice: turned repeated prototype work into a component library the engineering organization trusted, kept the design and code libraries in lockstep, and grew a solo effort into a cross-functional team whose work still ships today."
+metric:
+  value: 2017
 role: "Senior UX Engineer"
 year: 2017
-duration: "2017–2019"
-outcomeSummary: "Founded Compass's design systems practice: turned repeated prototype work into a component library the engineering organization trusted, kept the design and code libraries in lockstep, and grew a solo effort into a cross-functional team whose work still ships today."
-overview: "At the real-estate tech company Compass, I grew from a frontend engineer into the UX Engineer role, the only engineer inside the design organization, and founded the design systems practice, turning repeated prototype work into a shared library and a team."
-problem: "As the sole engineer reporting into the design organization, I was remaking the same assets for every new prototype. There was no shared component library, and engineering teams had no vetted source of truth for building production versions of approved designs, so approved work drifted on its way to production and every team solved the same problems again."
-constraints:
-  - "A single person embedded in a design org, with no mandate over engineering teams"
-  - "Teams were migrating between frameworks, so no single technology choice could serve everyone"
-  - "Deliverables had to work on both legacy and modern apps"
-approach: "I built the component library out of the design org's real, repeated needs, which is what made engineering treat it as a trusted resource rather than another team's side project. To stop design and code from drifting apart, I generated the Sketch symbol library directly from the coded components, so designers and engineers picked from the same set of parts. And because teams were mid-migration between frameworks, I delivered shared pieces, most visibly a global navigation, in a form any team could adopt without rewriting their app, so one nav shipped everywhere instead of being rebuilt per product."
-keyDecisions:
-  - decision: "Make the global navigation adoptable by every team regardless of how their app was built"
-    reasoning: "Applications were owned by different teams working in different ways, and none of them reported to me. Delivering something framework-agnostic meant adoption was a small ask rather than a migration, which is the only way one nav reaches everywhere."
-    alternatives:
-      - "Ship it for the newest framework only"
-      - "Let each team reimplement the nav"
-  - decision: "Drive the design library from the coded components"
-    reasoning: "Generating Sketch symbols from production components meant designers and engineers argued from one source of truth. It removed a recurring class of disagreement about which artifact was correct."
-    alternatives:
-      - "Hand-maintain a parallel Sketch symbol library"
-      - "Let design and code references diverge"
-  - decision: "Ground the library in the design org's repeated needs, not a wish list"
-    reasoning: "Starting from work the design org actually did every week meant the first version already earned its keep, which is what gave engineering a reason to adopt it voluntarily."
-    alternatives:
-      - "Design a comprehensive library up front"
-      - "Wait for engineering to request components"
-techStack:
+tags:
   - "Component libraries"
   - "Design and code parity"
   - "Cross-framework delivery"
-impact:
-  metrics:
-    - label: "Team"
-      value: "Grew from 1 to a cross-functional design systems team"
-    - label: "Longevity"
-      value: "Much of the work still ships on the site and app today"
-  qualitative: "The library and global navigation became foundational shared resources across product teams, and the design systems team established a durable practice that outlasted my tenure."
-learnings:
-  - "A system earns trust when it is grounded in the design org's real, repeated needs rather than an abstract ideal"
-  - "Adoption follows the size of the ask; a shared piece any team can drop in beats a better one that requires a migration"
-  - "A practice only outlasts you once it is a team rather than a person"
-status: completed
 ---
+
+## Overview
+
+At the real-estate tech company Compass, I grew from a frontend engineer into the UX Engineer role, the only engineer inside the design organization, and founded the design systems practice, turning repeated prototype work into a shared library and a team.
+
+## Problem
+
+> As the sole engineer reporting into the design organization, I was remaking the same assets for every new prototype. There was no shared component library, and engineering teams had no vetted source of truth for building production versions of approved designs, so approved work drifted on its way to production and every team solved the same problems again.
+
+## Constraints
+
+- A single person embedded in a design org, with no mandate over engineering teams
+- Teams were migrating between frameworks, so no single technology choice could serve everyone
+- Deliverables had to work on both legacy and modern apps
+
+## Approach
+
+I built the component library out of the design org's real, repeated needs, which is what made engineering treat it as a trusted resource rather than another team's side project. To stop design and code from drifting apart, I generated the Sketch symbol library directly from the coded components, so designers and engineers picked from the same set of parts. And because teams were mid-migration between frameworks, I delivered shared pieces, most visibly a global navigation, in a form any team could adopt without rewriting their app, so one nav shipped everywhere instead of being rebuilt per product.
+
+## Key Decisions
+
+### Make the global navigation adoptable by every team regardless of how their app was built
+
+| Reasoning | Alternatives |
+| --- | --- |
+| Applications were owned by different teams working in different ways, and none of them reported to me. Delivering something framework-agnostic meant adoption was a small ask rather than a migration, which is the only way one nav reaches everywhere. | Ship it for the newest framework only<br/>Let each team reimplement the nav |
+
+### Drive the design library from the coded components
+
+| Reasoning | Alternatives |
+| --- | --- |
+| Generating Sketch symbols from production components meant designers and engineers argued from one source of truth. It removed a recurring class of disagreement about which artifact was correct. | Hand-maintain a parallel Sketch symbol library<br/>Let design and code references diverge |
+
+### Ground the library in the design org's repeated needs, not a wish list
+
+| Reasoning | Alternatives |
+| --- | --- |
+| Starting from work the design org actually did every week meant the first version already earned its keep, which is what gave engineering a reason to adopt it voluntarily. | Design a comprehensive library up front<br/>Wait for engineering to request components |
+
+## Result & Impact
+
+- **Team:** Grew from 1 to a cross-functional design systems team
+- **Longevity:** Much of the work still ships on the site and app today
+
+The library and global navigation became foundational shared resources across product teams, and the design systems team established a durable practice that outlasted my tenure.
+
+## Learnings
+
+- A system earns trust when it is grounded in the design org's real, repeated needs rather than an abstract ideal
+- Adoption follows the size of the ask; a shared piece any team can drop in beats a better one that requires a migration
+- A practice only outlasts you once it is a team rather than a person
+
+## The story behind it
 
 I started at Compass as a frontend engineer. Within three weeks I was helping build out the frontend engineering team, interviewing at least three candidates a week; the group we assembled was the most talented I have worked with before or since.
 

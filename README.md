@@ -1,93 +1,46 @@
-# Case, A Case-Study-First Portfolio Theme for Astro
+# donnie.damato.design
 
 [![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A case-study-first portfolio theme for Astro. Designed for professionals who want to showcase their thinking, decisions, and real impact, not just screenshots and tech stacks.
+The personal site of **Donnie D'Amato**, Design Systems Architect, author of *Mise en Mode*,
+and international speaker. Live at **[donnie.damato.design](https://donnie.damato.design)**.
 
-## Why Case?
-
-Most portfolio themes focus on listing projects with screenshots and bullet points. Case takes a different approach: it treats every project as a case study with a structured narrative, problem, constraints, approach, key decisions, and measurable outcomes.
-
-This lets you demonstrate not just what you built, but how you think. Hiring managers and clients see your decision-making process, trade-offs you considered, and the real impact of your work. You stand out by showing depth, not just breadth.
-
-## Demo
-
-<div align="center">
-
-[![View Demo](https://img.shields.io/badge/View_Demo-→-0077FF?style=for-the-badge&logo=astro&logoColor=white)](https://case.erland.me)
-
-<table>
-  <tr>
-    <td width="50%">
-      <img src="./screenshots/light-mode.webp" loading="lazy" alt="Light Mode">
-      <p align="center"><em>Light Mode</em></p>
-    </td>
-    <td width="50%">
-      <img src="./screenshots/dark-mode.webp" loading="lazy" alt="Dark Mode">
-      <p align="center"><em>Dark Mode</em></p>
-    </td>
-  </tr>
-</table>
-
-</div>
-
-## Features
-
-### Case Studies Over Screenshots
-
-Document your engineering thinking with structured project narratives.
-
-- **Problem → Solution framework**: Context, constraints, approach, and measurable impact
-- **Decision documentation**: Trade-offs, alternatives, and reasoning behind key choices
-- **Quantified outcomes**: Performance improvements, team impact, and business results
-- **Strategic highlighting**: Feature your strongest work on the homepage
-
-### Built-in Decision Records
-
-Document architectural decisions with full context and alternatives.
-
-- Problem statement and background context
-- Options considered with trade-off analysis
-- Chosen approach with reasoning
-- Outcomes and learnings
-- Tag-based organization and filtering
-
-### Content Types for Technical Portfolios
-
-Purpose-built collections for engineering professionals.
-
-- **Projects**, Deep-dive case studies with structured narratives
-- **Decisions**, ADR-style technical decision logs
-- **Journey**, Career milestones, transitions, and key learnings
-- **Writing**, Technical articles with auto-generated TOC
-- **Speaking**, Talks, podcasts, and workshop materials
-- **Tools**, Tech stack and development environment
-- **Testimonials**, Peer and client recommendations
-
-## Quick Start
-
-### 1. Create a new project
+## Commands
 
 ```bash
-npm create astro@latest -- --template erlandv/case
+npm run dev      # local dev server at http://localhost:4321
+npm run build    # astro check (type check) && astro build
+npm run preview  # preview the built dist/
 ```
 
-### 2. Configure your site
+A green `npm run build` is the bar: it validates every content collection against its Zod
+schema. The project uses no `.env` files; the one build-time secret (`CABIN_API_KEY`, for the
+Writing page's read counts) is supplied by Netlify and the build degrades gracefully without it.
 
-```bash
-cp .env.example .env
-# Edit .env with your information
-```
+## What's here
 
-### 3. Start development
+Astro v7, static output, MDX content collections, and a dashboard-shell layout.
 
-```bash
-npm run dev
-```
+- **`src/config.ts`** — identity, social links, nav, scheduling URL. Plain literals, no env vars.
+- **`src/content/`** — the site's content, mirroring the URL tree. Each top-level page is an
+  `index.mdx` in the `pages` collection (`src/content/index.mdx` is `/`,
+  `src/content/projects/index.mdx` is `/projects`), and the entries beside it are that
+  section's own collection: `projects` (case studies), `decisions` (ADR-style records),
+  `journey` (timeline), `speaking` (talks). Two collections have no local files and are fetched
+  at build time: `writing` from [blog.damato.design](https://blog.damato.design), and
+  `countries` from the blog's analytics.
+- **`src/pages/[...slug].astro`** — the one route that renders every page of the site.
+- **`src/layouts/Layout.astro`** — the only layout, a named CSS grid of panels.
+- **`src/lib/og.ts`** — generates the Open Graph cards (satori → resvg). `/og` previews them as
+  live HTML, and is built in `astro dev` only.
 
-Your site is now running at [http://localhost:4321](http://localhost:4321)
+Machine-readable routes are generated alongside the HTML: `/llms.txt`, a `.md` mirror for every
+entry, and a per-section OG image.
 
-## License
+For architecture, conventions, and the editorial voice, see [CLAUDE.md](./CLAUDE.md).
 
-Case Theme is free for personal and commercial use under the [MIT License](./LICENSE). Attribution is not required, but a link back to this repository is always appreciated if you find the theme useful.
+## Credits
+
+Built on the [Case](https://github.com/erlandv/case) theme by
+[Erland](https://erland.me) ([MIT](./LICENSE)). The content model and tooling survive from it;
+the presentation has since been rebuilt as a dashboard shell.

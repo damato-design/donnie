@@ -34,6 +34,8 @@ interface Props {
   openLabel?: string;
 }
 
+import Icon from '@components/Icon.astro';
+
 const { closedLabel = 'Read more', openLabel = 'Show less' } = Astro.props;
 
 const body = Astro.slots.has('default')
@@ -48,9 +50,7 @@ const body = Astro.slots.has('default')
   >
     <summary class="expand-toggle">
       <span class="expand-text"></span>
-      <svg class="expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="6 9 12 15 18 9"></polyline>
-      </svg>
+      <span class="expand-icon"><Icon name="chevron-down" /></span>
     </summary>
     <div class="disclosure-content prose" set:html={body} />
   </details>
@@ -60,11 +60,11 @@ const body = Astro.slots.has('default')
   .expand-toggle {
     display: inline-flex;
     align-items: center;
-    gap:1ch;
+    gap: 1ch;
     background: none;
     border: none;
     font-size: 0.7em;
-    color: currentColor;
+    color: var(--accent-color);
     cursor: pointer;
     transition: opacity 0.2s ease;
   }

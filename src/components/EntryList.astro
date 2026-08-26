@@ -1,0 +1,110 @@
+---
+/**
+ * EntryList
+ *
+ * A listing of collection entries as cards. Every card listing on the site is
+ * the same shape (an eyebrow, a title, a summary, a `TagList`, and a
+ * destination), so this composes `CardList` + `Card` + `TagList` once instead
+ * of once per page. Projects, decisions, and writing each render
+ * one of these; speaking renders one per year group.
+ *
+ * Items are **data, not markup**: `utils/listings.ts` maps a collection's
+ * entries to `EntryItem`s and passes them through, which is also what lets the
+ * same array drive the table of contents (`cardHeadings` there), so a TOC link
+ * and the `id` it jumps to cannot drift apart.
+ *
+ * There is no empty state: every listing on the site is populated, and the
+ * pages whose lists are conditional (speaking's per-year groups) only build a
+ * list once they have entries for it.
+ *
+ * @component
+ *
+ * @example
+ * ```ts
+ * // in utils/listings.ts
+ * const items: EntryItem[] = (await sorted('projects')).map(({ id, data }) => ({
+ *   slug: `project-${id}`,
+ *   meta: `${data.role} · ${data.year}`,
+ *   title: data.title,
+ *   description: data.description,
+ *   tags: data.tags,
+ *   href: `/projects/${id}`,
+ * }));
+ * ```
+ */
+
+import Card from '@components/Card.astro';
+import CardList from '@components/CardList.astro';
+import TagList from '@components/TagList.astro';
+import ButtonGroup from '@components/ButtonGroup.astro';
+import Button from '@components/Button.astro';
+import Icon, { type IconName } from '@components/Icon.astro';
+
+/** A supplementary link in a card's body (the speaking page's slides/video). */
+export interface EntryLink {
+  /** Link text. */
+  label: string;
+  /** Destination. */
+  href: string;
+  /** Open in a new tab. */
+  external?: boolean;
+  /** Prepend a glyph (the speaking page's slides/video marks). */
+  icon?: IconName;
+}
+
+/** One card in the listing. */
+export interface EntryItem {
+  /** Anchor target for the card, and the TOC slug that jumps to it. */
+  slug: string;
+  /** Eyebrow line above the title (a date, a role and year, a read count). */
+  meta?: string;
+  /** Card heading. */
+  title: string;
+  /** Card summary. */
+  description: string;
+  /** Tags, rendered as a `TagList`. */
+  tags?: string[];
+  /** Where the card goes. Given one, the whole card is clickable. */
+  href?: string;
+  /** Open the card's link in a new tab. */
+  external?: boolean;
+  /**
+   * Extra links rendered in the card's body, for entries whose material lives
+   * in more than one place (a talk's slides and video). They sit above the
+   * card's own hit area, so they stay clickable on a linked card.
+   */
+  links?: EntryLink[];
+}
+
+interface Props {
+  /** The cards, in the order they should appear. */
+  items: EntryItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<CardList>
+  {items.map((item) => (
+    <li>
+      <Card id={item.slug} href={item.href} external={item.external}>
+        {item.meta && <Fragment slot="meta">{item.meta}</Fragment>}
+        <Fragment slot="title">{item.title}</Fragment>
+        <Fragment slot="description">{item.description}</Fragment>
+
+        <TagList slot="tags" items={item.tags ?? []} />
+
+        {item.links?.length ? (
+          <ButtonGroup>
+            {item.links.map((link) => (
+              <Button href={link.href} external={link.external}>
+                {link.icon && <Icon slot="icon" name={link.icon} />}
+                {link.label}
+              </Button>
+            ))}
+          </ButtonGroup>
+        ) : null}
+      </Card>
+    </li>
+  ))}
+</CardList>

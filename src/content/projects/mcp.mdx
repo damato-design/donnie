@@ -1,43 +1,67 @@
 ---
 title: "Personal MCP Server, Live Content for AI Assistants"
+headline: "Digital Twin"
+description: "A service that gathers my thoughts, projects, and writing in one place, so when people ask an AI to 'behave like Donnie' the answer comes from my actual content, almost like asking me directly without scheduling time with me."
+metric:
+  value: 2026
 role: "Creator"
 year: 2026
-outcomeSummary: "A service that gathers my thoughts, projects, and writing in one place, so when people ask an AI to 'behave like Donnie' the answer comes from my actual content, almost like asking me directly without scheduling time with me."
-overview: "mcp.damato.design turns the damato.design ecosystem (expertise, projects, media, blog, and design system docs) into structured content an AI assistant can actually read, so the model answers from my work instead of its impression of it."
-problem: "People increasingly ask AI assistants to 'behave like Donnie,' but the model answers from whatever it happened to train on, which is often outdated, incomplete, or simply invented. Being represented badly by a tool other people trust is a real problem, and I wanted a single place holding my thoughts, projects, and writing so an AI can respond as accurately as if you had asked me directly."
-constraints:
-  - "Had to work across the many AI clients people already use, with no per-client custom work"
-  - "Content lives across several subdomains and those sites should stay the single source of truth"
-  - "Zero install for whoever connects to it"
-approach: "Rather than copy my content into a new store, the server reads what my sites already publish and exposes each piece as something an assistant can request by name. That keeps the published sites authoritative: nothing to sync, nothing to go stale. Anyone connects with a single URL and gets the same answers I would give, drawn from the same words I actually wrote."
-keyDecisions:
-  - decision: "Source content from what the sites already publish rather than a separate store"
-    reasoning: "The published sites stay the single source of truth, so the server never drifts from what is live and there is no second copy of my thinking to maintain."
-    alternatives:
-      - "Maintain a separate content store or CMS for the server"
-      - "Hardcode the content into the server"
-  - decision: "Expose a small, predictably named surface aligned to emerging standards"
-    reasoning: "Following the conventions the ecosystem is settling on, rather than inventing my own, keeps it usable in whatever client someone already has. A bounded, well-named surface is easy for an AI to navigate, mirroring how I think about bounded, semantic token systems."
-    alternatives:
-      - "A single catch-all entry point"
-      - "Many narrow, category-specific ones"
-  - decision: "Host it centrally instead of asking people to run it themselves"
-    reasoning: "Consumers connect with one URL and no setup, and improvements reach everyone at once instead of waiting for each person to update."
-    alternatives:
-      - "Distribute something each person installs and runs locally"
-techStack:
+tags:
   - "Model Context Protocol"
   - "llms.txt"
   - "Content architecture"
-impact:
-  qualitative: "AI assistants can now answer questions about my work and design systems thinking from my actual, current content, and the same published sources power both the websites and the server, so there is nothing extra to keep in sync."
-learnings:
-  - "Treating already-published content as the source of truth keeps an AI integration honest and low-maintenance"
-  - "A bounded, well-named surface matters as much for AI consumers as for human ones"
-  - "Hands-on work is the fastest way to understand where generative tools actually fit around a design system"
-  - "Keeping this kind of service live carries a real, ongoing cost, enough to pause a personal project, which is its own lesson in what generative infrastructure asks of a team"
-status: ongoing
 ---
+
+## Overview
+
+mcp.damato.design turns the damato.design ecosystem (expertise, projects, media, blog, and design system docs) into structured content an AI assistant can actually read, so the model answers from my work instead of its impression of it.
+
+## Problem
+
+> People increasingly ask AI assistants to 'behave like Donnie,' but the model answers from whatever it happened to train on, which is often outdated, incomplete, or simply invented. Being represented badly by a tool other people trust is a real problem, and I wanted a single place holding my thoughts, projects, and writing so an AI can respond as accurately as if you had asked me directly.
+
+## Constraints
+
+- Had to work across the many AI clients people already use, with no per-client custom work
+- Content lives across several subdomains and those sites should stay the single source of truth
+- Zero install for whoever connects to it
+
+## Approach
+
+Rather than copy my content into a new store, the server reads what my sites already publish and exposes each piece as something an assistant can request by name. That keeps the published sites authoritative: nothing to sync, nothing to go stale. Anyone connects with a single URL and gets the same answers I would give, drawn from the same words I actually wrote.
+
+## Key Decisions
+
+### Source content from what the sites already publish rather than a separate store
+
+| Reasoning | Alternatives |
+| --- | --- |
+| The published sites stay the single source of truth, so the server never drifts from what is live and there is no second copy of my thinking to maintain. | Maintain a separate content store or CMS for the server<br/>Hardcode the content into the server |
+
+### Expose a small, predictably named surface aligned to emerging standards
+
+| Reasoning | Alternatives |
+| --- | --- |
+| Following the conventions the ecosystem is settling on, rather than inventing my own, keeps it usable in whatever client someone already has. A bounded, well-named surface is easy for an AI to navigate, mirroring how I think about bounded, semantic token systems. | A single catch-all entry point<br/>Many narrow, category-specific ones |
+
+### Host it centrally instead of asking people to run it themselves
+
+| Reasoning | Alternatives |
+| --- | --- |
+| Consumers connect with one URL and no setup, and improvements reach everyone at once instead of waiting for each person to update. | Distribute something each person installs and runs locally |
+
+## Result & Impact
+
+AI assistants can now answer questions about my work and design systems thinking from my actual, current content, and the same published sources power both the websites and the server, so there is nothing extra to keep in sync.
+
+## Learnings
+
+- Treating already-published content as the source of truth keeps an AI integration honest and low-maintenance
+- A bounded, well-named surface matters as much for AI consumers as for human ones
+- Hands-on work is the fastest way to understand where generative tools actually fit around a design system
+- Keeping this kind of service live carries a real, ongoing cost, enough to pause a personal project, which is its own lesson in what generative infrastructure asks of a team
+
+## The story behind it
 
 The honest reason it exists: people kept asking AIs to act like me, and I wanted those answers to come from something real. It also gave me a firsthand feel for how these tools reach for context, which is the same question I ask about a design system: can someone find the right thing by name, or do they guess?
 

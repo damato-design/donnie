@@ -20,14 +20,9 @@
  */
 
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
-import { siteConfig } from '../config';
-import { isoDate } from '@utils/llms';
-
-/** Joins non-empty blocks with a blank line between them. */
-function blocks(...parts: Array<string | false | null | undefined>): string {
-  return parts.filter(Boolean).join('\n\n');
-}
+import { siteConfig } from '@/config';
+import { blocks, isoDate, textResponse } from '@utils/llms';
+import { sorted } from '@utils/collections';
 
 /** Builds one `## Heading` + bulleted list section, or `''` when there are no items. */
 function section(title: string, items: string[]): string {
@@ -44,21 +39,14 @@ export const GET: APIRoute = async ({ site }) => {
   const mdUrl = (collection: string, id: string) =>
     new URL(`/${collection}/${id}.md`, site).href;
 
-  const projects = (await getCollection('projects')).sort(
-    (a, b) => b.data.year - a.data.year
-  );
-  const decisions = (await getCollection('decisions')).sort((a, b) =>
-    a.data.title.localeCompare(b.data.title)
-  );
-  const journey = (await getCollection('journey')).sort(
-    (a, b) => b.data.date.getTime() - a.data.date.getTime()
-  );
-  const speaking = (await getCollection('speaking')).sort(
-    (a, b) => b.data.date.getTime() - a.data.date.getTime()
-  );
-  const writing = (await getCollection('writing')).sort(
-    (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
-  );
+  // Each collection's canonical order, the same one its listing page uses.
+  const [projects, decisions, journey, speaking, writing] = await Promise.all([
+    sorted('projects'),
+    sorted('decisions'),
+    sorted('journey'),
+    sorted('speaking'),
+    sorted('writing'),
+  ]);
 
   const doc = blocks(
     `# ${siteConfig.title}`,
@@ -67,12 +55,12 @@ export const GET: APIRoute = async ({ site }) => {
     section(
       'Projects',
       projects.map((e) =>
-        item(e.data.title, mdUrl('projects', e.id), `${e.data.year}, ${e.data.outcomeSummary}`)
+        item(e.data.title, mdUrl('projects', e.id), `${e.data.year}, ${e.data.description}`)
       )
     ),
     section(
       'Decisions',
-      decisions.map((e) => item(e.data.title, mdUrl('decisions', e.id), e.data.context))
+      decisions.map((e) => item(e.data.title, mdUrl('decisions', e.id), e.data.description))
     ),
     section(
       'Journey',
@@ -94,7 +82,5 @@ export const GET: APIRoute = async ({ site }) => {
     )
   );
 
-  return new Response(`${doc}\n`, {
-    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-  });
+  return textResponse(doc);
 };

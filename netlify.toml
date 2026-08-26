@@ -1,3 +1,40 @@
 [build]
   command = "npm run build"
   publish = "dist"
+
+# Response headers
+#
+# Netlify's default is `max-age=0, must-revalidate` on everything, which makes a
+# browser revalidate even the content-hashed assets that can never change. These
+# rules are the two halves of that: fingerprinted files are immutable for a year,
+# and everything else keeps revalidating so a deploy is picked up immediately.
+#
+# The security headers are the set that costs nothing on a static site with no
+# forms, no cookies and no cross-origin embedding. There is deliberately no CSP:
+# the shell relies on Astro's scoped `<style>` blocks and an inline analytics
+# script, so a useful policy would need per-build hashes rather than a literal
+# here.
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+# Everything Astro fingerprints: hashed JS, CSS, images and font files. The hash
+# is in the filename, so a changed file is a changed URL and this can never serve
+# something stale.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# The generated Open Graph cards are not fingerprinted, so they are cached for a
+# day rather than forever: a rebuild that changes a page's headline changes its
+# card at the same URL.
+[[headers]]
+  for = "/og/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=86400"

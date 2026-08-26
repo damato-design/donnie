@@ -3,7 +3,7 @@
  * SEO Component
  * 
  * Generates comprehensive meta tags for SEO, Open Graph, and Twitter Cards.
- * Should be placed in the "head" slot of BaseLayout.
+ * Should be placed in the "head" slot of Layout.
  * 
  * Features:
  * - Page title with site name suffix
@@ -17,17 +17,18 @@
  * 
  * @example
  * ```astro
- * <BaseLayout>
- *   <SEO 
+ * <Layout>
+ *   <SEO
  *     slot="head"
- *     title="About Me" 
+ *     title="About Me"
  *     description="Learn more about my background"
  *   />
- *   <div>Content</div>
- * </BaseLayout>
+ *   <div slot="main">Content</div>
+ * </Layout>
  * ```
  */
-import { siteConfig } from '../config';
+import { siteConfig } from '@/config';
+import { getPages } from '@utils/collections';
 
 interface Props {
   /** Page title (will be suffixed with author name unless noSuffix is true) */
@@ -74,11 +75,12 @@ const currentURL = canonicalURL || Astro.url.href;
 
 // Map the current path to its top-level OG image. Deeper pages (e.g.
 // /projects/foo) reuse their section's image; everything else falls back to
-// the home card. These slugs must match `getStaticPaths` in
-// src/pages/og/[page].png.ts.
-const topLevelOg = ['projects', 'decisions', 'journey', 'writing', 'speaking', 'contact'];
+// the home card. The page list is the `pages` collection itself, which is what
+// `src/pages/og/[page].png.ts` enumerates to emit the PNGs, so a new section
+// cannot end up pointing at an image that was never generated.
+const pages = await getPages();
 const ogSegment = Astro.url.pathname.replace(/^\/+/, '').split('/')[0];
-const ogSlug = topLevelOg.includes(ogSegment) ? ogSegment : 'home';
+const ogSlug = pages.has(ogSegment) ? ogSegment : 'home';
 
 // Resolve the OG image against the site root. `new URL` ignores the base when
 // the provided image is already an absolute URL, so this covers both cases.

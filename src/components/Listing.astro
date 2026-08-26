@@ -1,0 +1,70 @@
+---
+/**
+ * Listing
+ *
+ * Renders whichever collection listing a page named in its frontmatter. The
+ * data and the matching table-of-contents headings both come from
+ * `buildListing` in `utils/listings.ts`; this file is only the layout for each
+ * of its four shapes.
+ *
+ * There is no empty state anywhere: every listing on the site is populated, and
+ * speaking's per-year groups only exist once they have talks.
+ *
+ * @component
+ */
+
+import EntryList from '@components/EntryList.astro';
+import TimelineEntry from '@components/TimelineEntry.astro';
+import type { Listing } from '@utils/listings';
+
+interface Props {
+  /** The resolved listing, tagged by layout. */
+  listing: Listing;
+}
+
+const { listing } = Astro.props;
+---
+
+{listing.kind === 'cards' && <EntryList items={listing.items} />}
+
+{listing.kind === 'groups' &&
+  listing.groups.map(([year, items]) => (
+    <section>
+      <h2 id={`year-${year}`}>{year}</h2>
+      <EntryList items={items} />
+    </section>
+  ))}
+
+{listing.kind === 'timeline' && (
+  <div class="journey-timeline">
+    {listing.items.map(({ slug, date, title, description, tags, Content }) => (
+      <TimelineEntry id={slug} date={date} title={title} description={description} tags={tags}>
+        <Content />
+      </TimelineEntry>
+    ))}
+  </div>
+)}
+
+{listing.kind === 'articles' && (
+  <Fragment>
+    <h2 id="top-articles">Top {listing.shown} Articles</h2>
+    <p>The following are top 10 most popular articles based on reading analytics. For the comprehensive list of all articles, <a href="https://blog.damato.design">visit the blog</a>.</p>
+    <EntryList items={listing.items} />
+  </Fragment>
+)}
+
+<style>
+  /*
+   * Two-column timeline: a fixed 32px rail on the left, entries on the right.
+   * The continuous vertical line is a gradient stripe (no element) painted into
+   * the rail — a 2px line centered at 16px, starting at the first dot's center.
+   * Each entry paints its own dot (see TimelineEntry.astro).
+   */
+  .journey-timeline {
+    --y-offset: 19px;
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    background: linear-gradient(currentColor, currentColor) no-repeat 12px var(--y-offset, 0px) / 2px 100%;
+    margin-inline-start: -12px;
+  }
+</style>

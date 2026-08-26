@@ -1,0 +1,242 @@
+---
+/**
+ * Open Graph card preview (`/og`)
+ *
+ * A development surface for `OgImage.astro`: it renders the same template, with
+ * the same content and the same pre-blended media, as live HTML in the browser
+ * so the card can be iterated on without rasterizing a PNG through satori on
+ * every change. Editing `OgImage.astro` or `OgImage.css` hot-reloads here.
+ *
+ * This is the one page that does **not** use `Layout`: the shell's grid and
+ * `global.css` would style the card out from under itself, and the point of the
+ * page is to show the template in isolation.
+ *
+ * **It is built in `astro dev` only** (see `getStaticPaths` below), so it is not
+ * deployed, is not in the sitemap, and costs the production build nothing.
+ *
+ * Two things the *renderer* does after Astro is done have to be re-created
+ * here, or the preview would lie (see `src/lib/og.ts`):
+ *
+ * 1. **The stylesheet is inlined.** `OgImage.css` is a plain stylesheet meant
+ *    for `juice`, not an Astro-scoped one, so it is injected with `is:inline`
+ *    rather than imported.
+ * 2. **The font families.** Astro's Fonts API emits hashed `@font-face` family
+ *    names, so the literal `'Kentish'` / `'Raleway'` in `OgImage.css` (which is
+ *    what satori is handed) resolves to nothing in a browser; the preview points
+ *    those rules at the `--font-*` variables the same declaration exposes.
+ *
+ * The duotone media needs no such treatment: `cardMedia()` produces the blended
+ * data URI for both paths, so these are the same pixels the PNG carries rather
+ * than a CSS approximation. It is blended once and reused by every card, though
+ * each `<img>` still carries its own copy of the base64, which is what makes
+ * this page a megabyte and a half. Fine for something only opened locally.
+ *
+ * A per-card link to the real PNG sits under each preview for a side-by-side
+ * check when something looks off.
+ */
+import type { GetStaticPaths } from 'astro';
+import { Font } from 'astro:assets';
+import OgImage, { ogCard, ogUrl } from '@components/OgImage.astro';
+import ogImageCss from '@components/OgImage.css?raw';
+import { cardMedia } from '@/lib/duotone';
+import { getPages, panel } from '@utils/collections';
+
+/**
+ * Dev only: in a production build this returns no paths, so the page is never
+ * emitted. It is worth gating rather than shipping because it inlines the
+ * blended portrait as base64 once per card, which made it the single largest
+ * file in the deploy, and it is of no use to anyone who is not editing the
+ * card template.
+ *
+ * The rest parameter is what allows the gate. A plain `index.astro` is built
+ * unconditionally; a dynamic route builds only the paths it is handed, and
+ * `preview: undefined` resolves to `/og` itself. The PNG route next door is a
+ * more specific pattern, so it still wins for `/og/<page>.png`.
+ */
+export const getStaticPaths = (() =>
+  import.meta.env.DEV ? [{ params: { preview: undefined } }] : []) satisfies GetStaticPaths;
+
+/** The same blended portrait the renderer embeds, shared by every card. */
+const media = await cardMedia();
+
+/** Every page's panel, resolved exactly as the PNG route resolves it. */
+const cards = await Promise.all(
+  [...(await getPages())].map(async ([page, entry]) => [page, await panel(entry.data)] as const)
+);
+
+/** Preview zoom levels, in the order the toolbar lists them. */
+const scales = [40, 60, 100];
+const defaultScale = 60;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>OG card preview</title>
+    <Font cssVariable="--font-kentish" preload />
+    <Font cssVariable="--font-raleway" preload />
+    <!-- OgImage.css verbatim, the way `juice` hands it to satori. -->
+    <style is:inline set:html={ogImageCss}></style>
+  </head>
+  <body>
+    <header class="ogp-header">
+      <h1>OG card preview</h1>
+      <p>
+        <code>OgImage.astro</code> and <code>OgImage.css</code>, rendered live at
+        {ogCard.width}&times;{ogCard.height}. Edit either file and this reloads. The
+        link under each card is the real satori PNG.
+      </p>
+      <fieldset class="ogp-scale">
+        <legend>Zoom</legend>
+        {scales.map((scale) => (
+          <label>
+            <input
+              type="radio"
+              name="ogp-scale"
+              id={`ogp-scale-${scale}`}
+              checked={scale === defaultScale}
+            />
+            {scale}%
+          </label>
+        ))}
+      </fieldset>
+    </header>
+
+    <main class="ogp-cards">
+      {cards.map(([page, grid]) => (
+        <section class="ogp-card">
+          <h2>{page}</h2>
+          <div class="ogp-viewport">
+            <div class="ogp-frame">
+              <OgImage {...grid} media={media} url={ogUrl(page, Astro.site)} />
+            </div>
+          </div>
+          <a href={`/og/${page}.png`}>og/{page}.png</a>
+        </section>
+      ))}
+    </main>
+
+    <style>
+      /*
+       * Preview chrome. The card's own styles arrive inlined in the head;
+       * everything here is either the page around the card or one of the two
+       * renderer steps the browser has to be told about (see the file comment).
+       */
+      :root {
+        --ogp-scale: 0.6;
+        --ogp-bg: #1a1a1a;
+        --ogp-fg: #f7f7f7;
+        --ogp-muted: #9a9a9a;
+        --ogp-line: #3a3a3a;
+      }
+
+      /* The zoom toolbar, with no script: each radio picks a scale. */
+      :root:has(#ogp-scale-40:checked) { --ogp-scale: 0.4; }
+      :root:has(#ogp-scale-60:checked) { --ogp-scale: 0.6; }
+      :root:has(#ogp-scale-100:checked) { --ogp-scale: 1; }
+
+      body {
+        margin: 0;
+        padding: 2rem;
+        background: var(--ogp-bg);
+        color: var(--ogp-fg);
+        font-family: var(--font-raleway);
+      }
+
+      .ogp-header {
+        max-width: 60ch;
+        margin-bottom: 2.5rem;
+      }
+
+      .ogp-header h1 {
+        font-family: var(--font-kentish);
+        font-weight: 400;
+        margin: 0 0 0.5rem;
+      }
+
+      .ogp-header p {
+        margin: 0 0 1.25rem;
+        color: var(--ogp-muted);
+        line-height: 1.5;
+      }
+
+      .ogp-header code {
+        color: var(--ogp-fg);
+      }
+
+      .ogp-scale {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        width: max-content;
+        border-radius: 0.25rem;
+        padding: 0.5rem 0.75rem;
+      }
+
+      .ogp-scale legend {
+        color: var(--ogp-muted);
+        font-size: 0.8rem;
+      }
+
+      .ogp-scale label {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .ogp-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+      }
+
+      .ogp-card h2 {
+        font-family: var(--font-kentish);
+        font-weight: 400;
+        font-size: 1.1rem;
+        margin: 0 0 0.5rem;
+        color: var(--ogp-muted);
+      }
+
+      .ogp-card a {
+        display: inline-block;
+        margin-top: 0.5rem;
+        color: #3b82f6;
+        font-size: 0.85rem;
+      }
+
+      /*
+       * The card is laid out at its true size and scaled down visually, so what
+       * is on screen is the real geometry rather than a reflowed copy. The
+       * viewport takes the scaled size back off the layout.
+       */
+      .ogp-viewport {
+        width: calc(1200px * var(--ogp-scale));
+        height: calc(630px * var(--ogp-scale));
+        overflow: hidden;
+      }
+
+      .ogp-frame {
+        width: 1200px;
+        height: 630px;
+        transform: scale(var(--ogp-scale));
+        transform-origin: top left;
+      }
+
+      /* Renderer step 2, scoped under the frame so nothing leaks into the
+         chrome. */
+      .ogp-frame :global(.og-root),
+      .ogp-frame :global(.og-intro) {
+        font-family: var(--font-raleway);
+      }
+
+      .ogp-frame :global(.og-headline),
+      .ogp-frame :global(.og-metric-value) {
+        font-family: var(--font-kentish);
+      }
+    </style>
+  </body>
+</html>

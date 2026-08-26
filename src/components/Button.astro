@@ -12,9 +12,11 @@
  * - no `href`                  -> `<button type=...>`
  *
  * Content is slotted, so an icon + label compose naturally (the button is a
- * flex row). Visual variants are `primary` (filled) and `secondary` (outline).
- * Set `arrow` to append the standard trailing forward arrow (e.g. card CTAs);
- * fill the `icon` slot to prepend a leading icon (e.g. a Slides/Video glyph).
+ * flex row). There is **one visual treatment**, an outline control in
+ * `--accent-color`: no `variant` and no `size` prop, so every button on the site
+ * reads the same. Set `arrow` to append the standard trailing forward arrow or
+ * `back` to prepend the leading back arrow (e.g. a detail page's "All projects");
+ * fill the `icon` slot to prepend an `<Icon>` (e.g. a Slides/Video glyph).
  *
  * @component
  * @slot default - Button label / icon content.
@@ -22,38 +24,41 @@
  *
  * @example
  * ```astro
- * <Button href="/projects" variant="primary">View My Work</Button>
- * <Button href="https://cal.com/x" variant="secondary" external>Book a call</Button>
- * <Button href="/projects/x" variant="secondary" arrow>View case study</Button>
- * <Button href="https://slides.example" variant="secondary" external>
- *   <SomeIcon slot="icon" />Slides
+ * <Button href="/projects">View My Work</Button>
+ * <Button href="https://cal.com/x" external>Book a call</Button>
+ * <Button href="/projects" back>All projects</Button>
+ * <Button href="https://slides.example" external>
+ *   <Icon slot="icon" name="slides" />Slides
  * </Button>
- * <Button variant="secondary" disabled aria-label="Previous page">…</Button>
+ * <Button disabled aria-label="Previous page">…</Button>
  * ```
  */
 
-import ArrowIcon from '@components/ArrowIcon.astro';
+import Icon from '@components/Icon.astro';
+import type { HTMLAttributes } from 'astro/types';
 
-interface Props {
+/**
+ * Any other valid attribute (aria-label, id, title, data-*, ...) is forwarded to
+ * the rendered element. `<a>` is the base set; `href` and `type` are redeclared
+ * below because this component gives them narrower meanings.
+ */
+interface Props extends Omit<HTMLAttributes<'a'>, 'href' | 'type'> {
   /** Destination. Provided -> renders a link; omitted -> renders a <button>. */
   href?: string;
-  /** Visual style. */
-  variant?: 'primary' | 'secondary';
   /** Open link in a new tab. */
   external?: boolean;
   /** Disabled state (non-interactive). */
   disabled?: boolean;
   /** Append the standard trailing forward arrow after the label. */
   arrow?: boolean;
+  /** Prepend the standard leading back arrow before the label. */
+  back?: boolean;
   /** Button type when rendered as <button>. */
   type?: 'button' | 'submit' | 'reset';
-  /** Any other valid attributes (aria-label, id, ...). */
-  [key: string]: unknown;
 }
 
 const {
   href,
-  variant,
   external = false,
   disabled = false,
   arrow = false,
@@ -75,17 +80,16 @@ const tagAttrs =
 <Tag
   class:list={[
     'btn',
-    { [`btn--${variant}`]: variant },
     { 'btn--disabled': disabled },
   ]}
   {...tagAttrs}
   {...rest}
 >
   <span>
-    {back && <ArrowIcon direction="left" />}
+    {back && <Icon name="arrow-left" />}
     <slot name="icon" />
     <slot />
-    {arrow && <ArrowIcon />}
+    {arrow && <Icon name="arrow-right" />}
   </span>
 </Tag>
 
@@ -95,33 +99,21 @@ const tagAttrs =
     line-height: inherit;
     cursor: pointer;
     color: currentColor;
-    background: var(--bgcolor);
+    background: transparent;
     display: inline-flex;
-
-    span {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-  }
-
-  .btn:where([class*="btn--"]) {
     border: 1px solid;
+    color: var(--accent-color);
     text-decoration: none;
     font-weight: bolder;
-    font-size: 0.7em;
+    font-size: 0.8em;
     letter-spacing: 2px;
 
     span {
-      padding: 12px 24px;
-    }
-  }
-
-  .btn--primary {
-    background-color: currentColor;
-    span {
-      color: var(--bgcolor);
+      display: inline-flex;
+      padding: 8px 16px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
   }
 

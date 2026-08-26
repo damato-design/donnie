@@ -1,0 +1,95 @@
+---
+/**
+ * Icon
+ *
+ * Every glyph on the site, drawn from **Remix Icon** (https://remixicon.com).
+ * This is the only icon primitive; it replaced the former `ArrowIcon` and
+ * `SocialIcon` (which were the same component with different path data) along
+ * with the glyphs that used to sit inline in `Disclosure`, `ScrollToTop`, and
+ * the speaking page.
+ *
+ * The face is a **subset** of remixicon.woff2 carrying only the codepoints
+ * mapped below, declared under `fonts:` in `astro.config.mjs` and reached here
+ * through `--font-remixicon`. Adding a name therefore means two edits: the
+ * `content` rule below, and regenerating the subset (the command is in that
+ * config comment).
+ *
+ * The glyph is decorative: it is `aria-hidden`, and the call site is
+ * responsible for naming its control (`Header` does this with `aria-label`,
+ * `Button` with its own label text).
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <Icon name="arrow-right" />
+ * <Icon name="github" size="1.25rem" />
+ * ```
+ */
+
+/** The glyphs this site draws. Each has a `content` rule below. */
+export type IconName =
+  | 'arrow-left'
+  | 'arrow-right'
+  | 'chevron-down'
+  | 'chevron-up'
+  | 'linkedin'
+  | 'bluesky'
+  | 'github'
+  | 'mastodon'
+  | 'slides'
+  | 'video';
+
+interface Props {
+  /** Which glyph to draw. */
+  name: IconName;
+  /**
+   * Rendered size, as any CSS length. Defaults to `1rem`, which is the size
+   * every glyph on the site was drawn at before the font replaced the inline
+   * SVGs.
+   */
+  size?: string;
+}
+
+const { name, size } = Astro.props;
+---
+
+<i
+  class="icon"
+  data-icon={name}
+  style={size ? `--icon-size: ${size}` : undefined}
+  aria-hidden="true"></i>
+
+<style>
+  /* The reset an icon face needs: no italics, no ligatures, no inherited
+     letter-spacing (`:where(h1)` in global.css sets `.5em`, which would push
+     the glyph off-centre inside a heading). */
+  .icon {
+    font-family: var(--font-remixicon);
+    font-size: var(--icon-size, 1rem);
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    line-height: inherit;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    flex-shrink: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Remix Icon codepoints, all `-line` (outlined) variants. These are the ten
+     the subset in `src/assets/fonts/RemixIcon-Subset.woff2` contains; a name
+     with no matching subset codepoint renders as nothing. */
+  .icon[data-icon='arrow-left']::before { content: '\ea60'; }
+  .icon[data-icon='arrow-right']::before { content: '\ea6c'; }
+  .icon[data-icon='chevron-down']::before { content: '\ea4e'; }
+  .icon[data-icon='chevron-up']::before { content: '\ea78'; }
+  .icon[data-icon='linkedin']::before { content: '\eeb6'; }
+  .icon[data-icon='bluesky']::before { content: '\f499'; }
+  .icon[data-icon='github']::before { content: '\edcb'; }
+  .icon[data-icon='mastodon']::before { content: '\ef24'; }
+  .icon[data-icon='slides']::before { content: '\f158'; }
+  .icon[data-icon='video']::before { content: '\f00b'; }
+</style>

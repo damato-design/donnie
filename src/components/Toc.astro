@@ -1,0 +1,122 @@
+---
+/**
+ * Toc
+ *
+ * The dashboard's table-of-contents panel: an in-page nav built from the
+ * headings of whatever is inside `<main>`.
+ *
+ * Headings arrive as Astro's own `MarkdownHeading[]`, in document order. For the
+ * MDX-backed detail pages that array comes straight from `render(entry)`, which
+ * slugs every heading and emits a matching `id` in the rendered HTML, so the
+ * anchors work with nothing else to do. Pages whose `<main>` is authored in
+ * `.astro` build the same shape by hand and put the matching `id` on their
+ * headings or (via `<Card id>`) on their cards.
+ *
+ * The flat list is nested by `buildTocTree`, so a page whose `<main>` mixes
+ * section headings with cards shows each heading with its cards underneath.
+ *
+ * The panel renders nothing at all when there are no headings, so a page can opt
+ * out simply by passing none.
+ *
+ * The panel is a native `<details>`, and it carries **no `open` attribute**:
+ * that is what makes it collapsed by default on mobile, where the list sits
+ * between the page header and `<main>` and would otherwise push the content it
+ * indexes off the screen. On desktop it has a column of its own, so the styles
+ * below force `::details-content` open and make the summary inert (cursor,
+ * pointer events, no chevron), leaving it reading as the panel's heading. The
+ * open/close animation is the shared one in `global.css`.
+ *
+ * @component
+ */
+
+import type { MarkdownHeading } from 'astro';
+import { buildTocTree } from '@utils/toc';
+import Icon from '@components/Icon.astro';
+import TocList from '@components/TocList.astro';
+
+interface Props {
+  /** Headings of the current page's `<main>` content, in document order. */
+  headings?: MarkdownHeading[];
+
+  /**
+   * Deepest level to list. The default of 3 covers a section heading plus the
+   * cards under it. The MDX detail pages pass 2, because their level-3 headings
+   * are full sentences (one per key decision / alternative) that would swamp
+   * the panel.
+   */
+  maxDepth?: number;
+}
+
+const { headings = [], maxDepth = 3 } = Astro.props;
+
+const items = buildTocTree(headings, maxDepth);
+---
+
+{items.length > 0 && (
+    <details class="toc dash-surface">
+        <summary>
+            <h2>On this page</h2>
+            <span class="toc-indicator"><Icon name="chevron-down" /></span>
+        </summary>
+        <nav aria-label="Table of contents">
+            <TocList items={items} />
+        </nav>
+    </details>
+)}
+
+<style>
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1ch;
+    /* Desktop: a heading, not a control. */
+    cursor: default;
+    pointer-events: none;
+  }
+
+  summary h2 {
+    margin-block: 0.83em;
+  }
+
+  /* The chevron only means something where the panel can actually collapse. */
+  .toc-indicator {
+    display: none;
+    transition: transform 0.2s ease;
+  }
+
+  /* Desktop has a column for the list, so it is always open regardless of the
+     element's own state: `global.css` collapses `::details-content` for every
+     `<details>` on the page, and this is the panel that opts out. */
+  .toc::details-content {
+    height: auto;
+    content-visibility: visible;
+  }
+
+  @media (max-width: 800px) {
+    summary {
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .toc-indicator {
+      display: inline-flex;
+    }
+
+    .toc[open] .toc-indicator {
+      transform: rotate(180deg);
+    }
+
+    /* Hand the collapsing back to the element's own state (and to the shared
+       animation in `global.css`). */
+    .toc::details-content {
+      height: 0;
+      content-visibility: hidden;
+    }
+
+    .toc[open]::details-content {
+      height: auto;
+      content-visibility: visible;
+    }
+  }
+</style>

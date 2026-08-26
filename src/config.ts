@@ -4,6 +4,19 @@
  * Centralized configuration for the entire site, defined as plain literals.
  * Edit the values here to change identity, metadata, social links, or navigation.
  *
+ * **This module imports nothing, and must stay that way.** `content.config.ts`
+ * reads it during `astro sync`, which runs outside the component graph, so a
+ * runtime import of an `.astro` file here would drag a component into content
+ * collection generation. That is why the components that read this config own
+ * the adapters that shape it into their props (the panel builders in
+ * `grid.config.ts`; `Layout` for the header bars) rather than this module
+ * owning them. Data belongs here; anything that has to know a component's prop
+ * types does not.
+ *
+ * The lists below are shaped so they need no adapter at all: a `nav` or
+ * `social` entry is already a valid `HeaderLink`, and `Layout` hands them
+ * straight to `Header`.
+ *
  * The site URL is intentionally NOT stored here: it comes from Astro's built-in
  * `Astro.site` (set by `site:` in astro.config.mjs), and any variant is built with
  * `new URL('/path', Astro.site)`.
@@ -11,7 +24,7 @@
  * Configuration Sections:
  * - Site metadata (language, title, description)
  * - Author information (name, title, bio, email, location)
- * - Social links (GitHub, LinkedIn, Mastodon, Bluesky)
+ * - Social profiles (label, glyph, and URL)
  * - Navigation structure
  *
  * @module config
@@ -45,7 +58,21 @@ export const siteConfig = {
    *
    * Default meta description for SEO and social sharing.
    */
-  description: 'User Experience Architect in New York, author of Mise en Mode, and international speaker who bridges design and engineering.',
+  description: 'Focused on improving the practice of design systems and AI model behavior.',
+
+  /**
+   * Browser chrome color
+   *
+   * The dark end of the dashboard shell, used wherever a browser or an OS paints
+   * around the page rather than inside it: the `theme-color` meta tag and the web
+   * app manifest's `theme_color`/`background_color` (so an installed app's splash
+   * screen is the shell, not a white flash before it).
+   *
+   * It lives here because those two consumers are in different files and drifted
+   * apart once already. It is a plain colour, not one of `global.css`'s `--dash-*`
+   * gradients, since neither consumer can resolve a CSS variable or a gradient.
+   */
+  themeColor: '#0a0a0a',
 
   /**
    * Author information
@@ -71,28 +98,43 @@ export const siteConfig = {
   },
 
   /**
-   * Social media links
+   * Social profiles
    *
-   * Set to empty string to hide a specific platform.
-   * Only configured (non-empty) links will be displayed.
+   * Order determines display order in the connect bar. Remove an entry (or
+   * blank its `href`) to hide that platform.
+   *
+   * Each entry carries its own display name and glyph, so no component has to
+   * keep a lookup table keyed by platform. `icon` is a plain string here rather
+   * than an imported `IconName`, to keep this module import-free (see above);
+   * `as const` makes it a literal type, so a typo still fails to compile where
+   * `Header` assigns it to `IconName`.
+   *
+   * These are read by `Header` (the connect bar, which marks them `rel="me"`)
+   * and by `StructuredData` (JSON-LD `sameAs`), which is why they are a plain
+   * list here rather than part of a header-shaped structure. Both are identity
+   * claims: this list is "profiles that are me", not "links I like", so an
+   * external link that is not Donnie's own account does not belong in it. Nothing about a new tab is recorded: an absolute
+   * URL opens in one, which `Header` derives.
    */
-  social: {
-    /** LinkedIn profile URL */
-    linkedin: 'https://linkedin.com/in/fauxserious',
+  social: [
+    { label: 'LinkedIn', icon: 'linkedin', href: 'https://linkedin.com/in/fauxserious' },
+    { label: 'Bluesky', icon: 'bluesky', href: 'https://bsky.app/profile/donnie.damato.design' },
+    { label: 'GitHub', icon: 'github', href: 'https://github.com/fauxserious' },
+    { label: 'Mastodon', icon: 'mastodon', href: 'https://mastodon.social/@donniedamato' },
+  ],
 
-    /** Bluesky profile URL */
-    bluesky: 'https://bsky.app/profile/donnie.damato.design',
-
-    /** GitHub profile URL */
-    github: 'https://github.com/fauxserious',
-
-     /** Mastodon profile URL */
-    mastodon: 'https://mastodon.social/@donniedamato',
-  },
   
   /**
+   * Scheduling link
+   *
+   * The primary "get in touch" action. Surfaced by the connect bar on every
+   * page, which replaced the former /contact page.
+   */
+  scheduling: 'https://cal.com/donnie-damato',
+
+  /**
    * Navigation links
-   * 
+   *
    * Main site navigation structure. Order determines display order in the nav bar.
    * Add or remove items to customize navigation.
    */
@@ -102,27 +144,5 @@ export const siteConfig = {
     { label: 'Journey', href: '/journey' },
     { label: 'Writing', href: '/writing' },
     { label: 'Speaking', href: '/speaking' },
-    { label: 'Connect', href: '/contact' },
   ],
 } as const;
-
-/**
- * Type export for the entire site configuration
- * 
- * Use this type when you need to reference the full config structure.
- */
-export type SiteConfig = typeof siteConfig;
-
-/**
- * Type export for social links object
- * 
- * Use this type when working specifically with social media links.
- */
-export type SocialLinks = typeof siteConfig.social;
-
-/**
- * Type export for a single navigation item
- * 
- * Use this type when working with individual nav items.
- */
-export type NavItem = typeof siteConfig.nav[number];

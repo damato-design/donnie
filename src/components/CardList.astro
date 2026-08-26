@@ -1,13 +1,43 @@
-<ul>
-  <slot/>
+---
+/**
+ * CardList
+ *
+ * The listing shell every card listing sits in: it owns the `<ul>` wrapper and
+ * its layout, so call sites only map their items into `<li><Card/></li>` in the
+ * default slot.
+ *
+ * It takes no options: every card listing on the site is drawn the same, so a
+ * decision record and a case study carry the same heading rather than one
+ * listing tightening its own. A listing that genuinely needs different cards
+ * gets a new shell, not a flag here.
+ *
+ * Pages do not usually compose this directly: `EntryList` does, from a page's
+ * array of items. Reach for it when a listing genuinely needs bespoke cards.
+ *
+ * @component
+ *
+ * @slot default - The `<li><Card/></li>` items.
+ *
+ * @example
+ * ```astro
+ * <CardList>
+ *   {items.map((item) => <li><Card>...</Card></li>)}
+ * </CardList>
+ * ```
+ */
+---
+
+<ul class="card-list">
+  <slot />
 </ul>
 
 <style>
-  ul {
+  .card-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
+    gap: var(--grid-padding);
   }
 </style>

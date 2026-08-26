@@ -1,0 +1,345 @@
+---
+/**
+ * Grid
+ *
+ * The dashboard's page-header panel: one block carrying the page's identity
+ * (title, headline, description, CTAs), a single headline metric, and a short
+ * intro. It is the only page-header primitive; there is no separate hero or
+ * intro component.
+ *
+ * Every region is a **prop**, so a page can pass frontmatter (or a config entry,
+ * or a collection field) straight in. Nothing is slotted, and no region accepts
+ * markup: they are plain strings the component renders as text. A deliberate
+ * line break is a `\n` in the string, honored by `white-space: pre-line`. The
+ * one exception is `backdrop`, the decorative artwork behind the identity
+ * region: it is an imported asset, and the only prop this component renders as
+ * something other than text.
+ *
+ * The heading is owned here, not by the call site: `title` renders the page's
+ * single `<h1>` and `headline` renders an `<h2>`, so content inside `<main>`
+ * starts at `<h2>`. Every region except `title` is optional and is omitted
+ * entirely when absent; the intro spans the full row when there is no metric
+ * beside it.
+ *
+ * `Layout` renders this, not the page: every page has exactly one, so the route
+ * passes its content as `Layout`'s `grid` prop and never imports this component.
+ * That content is assembled in `grid.config.ts`, from a `pages` entry's
+ * frontmatter or from the collection entry a detail page renders.
+ *
+ * @component
+ *
+ * @example
+ * ```astro
+ * <Layout
+ *   grid={{
+ *     title: 'Speaking',
+ *     headline: 'Catch me live on Wireframe',
+ *     description: 'A weekday live show.',
+ *     cta: [{ label: 'Watch now', href: 'https://wireframe.ds.house', external: true }],
+ *     metric: { value: 24, label: 'talks' },
+ *     intro: 'I regularly speak at conferences and on podcasts…',
+ *   }}
+ * >
+ * ```
+ */
+
+import { getImage } from 'astro:assets';
+
+/** One link in the CTA row. */
+export interface CtaLink {
+  /** Link text. */
+  label: string;
+  /** Destination. */
+  href: string;
+  /** Open in a new tab (adds the matching `rel`). */
+  external?: boolean;
+}
+
+/** The panel's content. Exported so `Layout` can type its `grid` prop. */
+export interface GridProps {
+  /** The page name, rendered as the page's <h1>. */
+  title: string;
+
+  /** The promotional headline, rendered as an <h2>. */
+  headline?: string;
+
+  /** Supporting copy under the headline. */
+  description?: string;
+
+  /** One or two links, laid out in a row. */
+  cta?: CtaLink[];
+
+  /** The headline metric: a number and, optionally, what it counts. Omit for no metric. */
+  metric?: {
+    value: string | number;
+    label?: string;
+  };
+
+  /** The page intro paragraph. */
+  intro?: string;
+
+  /**
+   * Decorative artwork blended into the identity panel's gradient, as an
+   * imported asset (from a page's `backdrop` frontmatter). It carries no
+   * meaning and gets no alternative text: it is a background, not content.
+   * Omitted, the panel is the bare gradient.
+   */
+  backdrop?: ImageMetadata;
+}
+
+type Props = GridProps;
+
+const { title, headline, description, cta, metric, intro, backdrop } = Astro.props;
+
+/**
+ * The backdrop is a CSS background, so it can't go through `<Image>`; `getImage`
+ * is how it still goes through `astro:assets` rather than shipping the multi-
+ * megabyte source. It is painted at 60% of a panel that is never wider than the
+ * page, so 800px covers it at 2x.
+ *
+ * `layout: 'none'` opts out of the site's default `constrained` layout: a
+ * `background-image` takes one URL and can't use a `srcset`, so the responsive
+ * widths that layout generates would all be built and none of them served.
+ */
+const backdropUrl = backdrop
+    ? (await getImage({ src: backdrop, width: 800, format: 'webp', layout: 'none' })).src
+    : undefined;
+---
+
+<section class="grid">
+    <div
+        class="identity grid-surface"
+        style={backdropUrl ? `--identity-backdrop: url('${backdropUrl}')` : undefined}
+    >
+        <h1>{title}</h1>
+        {/* The inner span is the reveal's, not the content's: it gives each
+            wrapped line its own mask (see the styles below). `headline` is
+            still a plain string. */}
+        {headline && <h2><span>{headline}</span></h2>}
+        {description && <p>{description}</p>}
+        {cta?.length && (
+            <div class="cta">
+                {cta.map((link) => (
+                    <a
+                        href={link.href}
+                        target={link.external ? '_blank' : undefined}
+                        rel={link.external ? 'noopener noreferrer' : undefined}
+                    >{link.label}</a>
+                ))}
+            </div>
+        )}
+    </div>
+    <div class="metric grid-surface">
+        <output>{metric?.value}</output>
+        {metric?.label && <span>{metric?.label}</span>}
+    </div>
+    <div class="intro grid-surface">
+        <p>{intro}</p>
+    </div>
+</section>
+
+<style>
+    /* Inherited, because one animation on the <h2> drives two things: the
+       heading's own `translate`, and the gradient on the span inside it.
+       Transforms don't apply to non-replaced inline boxes, so the rise has to
+       stay on the block while the mask lives on the inline. */
+    @property --t {
+        syntax: '<length-percentage>';
+        initial-value: 0px;
+        inherits: true;
+    }
+
+    @keyframes t { 0% { --t: var(--reveal-rise) } }
+
+    .grid {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto 1fr;
+        gap: var(--grid-gap);
+
+        /* The regions paint via `.grid-surface` and are inset by `.grid > *`,
+           both in global.css. */
+        & > * {
+            transition: transform 1s ease;
+        }
+
+        :where(:first-child) {
+            margin-block-start: 0;
+        }
+
+        :where(:last-child) {
+            margin-block-end: 0;
+        }
+    }
+
+    /* The three regions are captured individually across navigations. The name
+       is declared here (it belongs to the element), the motion it drives lives
+       in global.css under "View transition choreography". */
+    .identity {
+        view-transition-name: identity;
+        aspect-ratio: 1;
+        grid-column: 1 / -1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        /* The page's `backdrop` over the shared gradient. The artwork is set
+           inline as `--identity-backdrop` (per page, so it can't be a static
+           `url()` here) and resolves to `none` on a page that declares none.
+           The gradient layer stays `fixed` like every other `.grid-surface`,
+           so the panel still samples the one viewport-sized sheet. */
+        background-image: var(--identity-backdrop, none), var(--grid-bg);
+        background-size: 80%, cover;
+        background-repeat: no-repeat, repeat;
+        background-position: 200% 200%, center;
+        background-attachment: local, fixed;
+
+        h1 {
+            font-size: .6em;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: .5em;
+            max-width: 60ch;
+            text-wrap: pretty;
+        }
+
+        h2 {
+            font-size: min(3.5em, 12vw);
+            font-family: var(--font-kentish);
+            font-weight: normal;
+            text-transform: lowercase;
+
+            /* The reveal, two knobs.
+
+               --reveal-rise  How far a line travels, and the height of the
+                   mask box with it. They are deliberately one number: that is
+                   what holds the wipe edge still while the text rises through
+                   it. It has to cover a line's ink, which runs from Kentish's
+                   1.2em ascent down to the deepest ligature swash ('es', .44em
+                   below the baseline), so 1.64em is the floor. Under that, the
+                   edge drifts down as the text rises, which reads as a wipe
+                   rather than a reveal.
+               --reveal-drop  Painting room below the baseline. An inline box
+                   is only as tall as the font's own metrics (.139em of descent
+                   here), and ink outside the box the background paints into is
+                   never painted at all. Vertical padding on an inline box
+                   paints without affecting layout, so this one is free: raise
+                   it if a swash is clipped at rest.
+               --reveal-side  The same thing on the inline axis, for a flourish
+                   that overhangs the start or end of a line. Kentish's 'em'
+                   ligature reaches .159em back before its own pen position
+                   (the curl on an opening 'E'); nothing overhangs the end by
+                   more than .005em. Unlike the block axis this padding does
+                   affect layout, so the heading's negative margin below hands
+                   the room straight back. */
+            --reveal-rise: 1.7em;
+            --reveal-drop: .4em;
+            --reveal-side: .2em;
+
+            line-height: 1.05;
+            margin-block: 8px;
+            /* Cancels the span's inline padding, so the text starts and wraps
+               exactly where it would without it. Both sides, so the width the
+               lines wrap inside is unchanged too. */
+            margin-inline: calc(-1 * var(--reveal-side));
+            translate: 0 var(--t);
+            /* The wipe is the tail of the shell's entrance, not a page-load
+               flourish: `--vt-sequence` (global.css) is how long the four
+               sliding panels take, so the headline starts the moment the last
+               one lands and is the final motion of a navigation. `both` is
+               load-bearing, as it is for the panels: `backwards` holds the
+               text hidden through that delay, `forwards` keeps it revealed
+               afterwards. */
+            animation: t .4s var(--vt-ease) var(--vt-sequence) both;
+
+            /* `clone` gives every wrapped line its own copy of the background,
+               clipped to that line's own glyphs, and that is the whole job of
+               the span: a swash is masked by the gradient of the line it
+               belongs to rather than by whichever line it hangs into. Lines'
+               ink may overlap freely now, so the leading above is a design
+               decision again and nothing here depends on it.
+
+               The gradient runs upwards from the box's bottom edge, so the
+               transparent band covers the whole line at `--reveal-rise` and
+               none of it at 0. The heading translates by the same value, which
+               is what pins the edge in place. */
+            span {
+                -webkit-box-decoration-break: clone;
+                box-decoration-break: clone;
+                /* The padding is not cosmetic: Chrome paints a background only
+                   within the fragment's own border box, even when the clip is
+                   `text`, so ink hanging outside that box is never painted at
+                   all. Repeating the gradient does not reach it either. These
+                   two grow the box itself, which is the only thing that does.
+                   `100%` then follows the padded width automatically. */
+                padding-block-end: var(--reveal-drop);
+                padding-inline: var(--reveal-side);
+                background: linear-gradient(0deg, #0000 var(--t), var(--grid-fg) 0)
+                    0 0 / 100% var(--reveal-rise) no-repeat text;
+                color: #0000;
+            }
+        }
+
+        a:hover {
+            color: currentColor;
+        }
+    }
+
+    /* A `\n` in the headline or description is an intentional line break. */
+    .identity h2,
+    .identity p {
+        white-space: pre-line;
+        max-width: 30ch;
+        text-wrap: pretty;
+    }
+
+    .metric {
+        view-transition-name: metric;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        line-height: 1;
+        min-width: 5em;
+
+        output {
+            font-size: 2em;
+            font-family: var(--font-kentish);
+        }
+
+        span {
+            font-size: .8em;
+            text-transform: uppercase;
+            font-weight: bolder;
+            margin-block-start: 8px;
+        }
+    }
+
+    .intro {
+        view-transition-name: intro;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        font-size: .8em;
+        text-wrap: pretty;
+    }
+
+    /* The wipe is movement, so it opts out with the panels it follows. At rest
+       `--t` is 0, which is the headline simply present and unshifted. */
+    @media (prefers-reduced-motion: reduce) {
+        .identity h2 {
+            animation: none;
+        }
+    }
+
+    /* Without a metric beside it, the intro takes the whole row. */
+    .grid:not(:has(.metric)) .intro {
+        grid-column: 1 / -1;
+    }
+
+    .cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--grid-padding);
+        margin-block-start: var(--grid-padding);
+    }
+</style>

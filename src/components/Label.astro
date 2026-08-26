@@ -10,10 +10,6 @@
  * It communicates purely through typographic hierarchy: color, weight, and case.
  * See https://blog.damato.design/posts/chip-away/
  *
- * Variations are props, not separate components:
- * - `color` tints the text (neutral by default).
- * - `uppercase` switches to the emphasized treatment (smaller, bold, tracked).
- *
  * Content is slotted, so a label can include a leading icon.
  *
  * @component
@@ -21,21 +17,13 @@
  * @example
  * ```astro
  * <Label>react</Label>
- * <Label color="accent" uppercase>Conference</Label>
  * ```
  */
 
-interface Props {
-  /** Text tint */
-  color?: 'neutral' | 'accent' | 'green' | 'purple' | 'amber' | 'pink';
-  /** Emphasized treatment (uppercase, bolder, smaller) */
-  uppercase?: boolean;
-}
-
-const { color = 'neutral', uppercase = false } = Astro.props;
+interface Props {}
 ---
 
-<span class:list={['label', `label--${color}`, uppercase && 'label--uppercase']}>
+<span class="label">
   <slot />
 </span>
 

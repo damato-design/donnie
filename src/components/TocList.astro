@@ -1,0 +1,47 @@
+---
+/**
+ * TocList
+ *
+ * One level of the table of contents, rendering its children by recursing into
+ * itself. Split out of `Toc` purely so the nesting can recurse; `Toc` owns the
+ * panel, the filtering, and the tree building.
+ *
+ * @component
+ */
+
+import type { TocNode } from '@utils/toc';
+
+interface Props {
+  /** The nodes to render at this level. */
+  items: TocNode[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul>
+  {items.map((item) => (
+    <li>
+      <a href={`#${item.slug}`}>{item.text}</a>
+      {item.children.length > 0 && <Astro.self items={item.children} />}
+    </li>
+  ))}
+</ul>
+
+<style>
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Nested levels indent and sit slightly quieter than their parent. */
+  li ul {
+    margin-block-start: 8px;
+    padding-inline-start: var(--grid-padding);
+    font-size: 0.9em;
+  }
+</style>

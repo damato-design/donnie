@@ -2,14 +2,14 @@
 /**
  * TimelineEntry Component
  * 
- * Displays a single entry in a journey/career timeline with visual indicators, metadata,
- * and optional expandable content. Features a vertical timeline design with color-coded
- * dots and type badges to distinguish between milestones, learning experiences, and transitions.
- * 
+ * Displays a single entry in a journey/career timeline: a dot on the shared rail,
+ * then a `Card` carrying the entry's date, title, description, tags, and an
+ * optional disclosure for the longer story.
+ *
  * Each entry can include:
- * - Date and type indicator
+ * - Date
  * - Title and description
- * - Skills/technologies list
+ * - Tags (skills/technologies)
  * - Expandable detailed content (via slot)
  * 
  * @component
@@ -22,18 +22,16 @@
  * <TimelineEntry
  *   date={new Date('2024-01-15')}
  *   title="Launched New Product"
- *   type="milestone"
  *   description="Successfully launched the redesigned platform to 10k users"
- *   skills={['React', 'TypeScript', 'AWS']}
+ *   tags={['React', 'TypeScript', 'AWS']}
  * />
  * 
  * <!-- Timeline entry with expandable content (the disclosure auto-hides when empty) -->
  * <TimelineEntry
  *   date={new Date('2023-06-01')}
  *   title="Joined Tech Company"
- *   type="transition"
  *   description="Started as Senior Frontend Developer"
- *   skills={['Vue.js', 'Node.js']}
+ *   tags={['Vue.js', 'Node.js']}
  * >
  *   <p>Detailed information about the role and achievements...</p>
  * </TimelineEntry>
@@ -52,28 +50,28 @@ interface Props {
   /** Title/heading of the timeline entry */
   title: string;
   
-  /** Type of entry (determines color coding and badge label) */
-  type: 'milestone' | 'learning' | 'transition';
-  
   /** Brief description of the event or achievement */
   description: string;
   
-  /** Optional array of skills or technologies associated with this entry */
-  skills?: string[];
+  /** Skills or technologies associated with this entry */
+  tags?: string[];
+
+  /** Optional anchor target, forwarded to the card so a TOC can jump to it. */
+  id?: string;
 }
 
-const { date, title, type, description, skills } = Astro.props;
+const { date, title, description, tags, id } = Astro.props;
 
 const formattedDate = formatMonthYear(date);
 ---
 
 <article class="timeline-entry">
-  <div class="timeline-content" data-type={type}>
-    <Card>
+  <div class="timeline-content">
+    <Card id={id}>
       <Fragment slot="meta">{formattedDate}</Fragment>
       <Fragment slot="title">{title}</Fragment>
       <Fragment slot="description">{description}</Fragment>
-      <TagList slot="tags" items={skills ?? []} />
+      <TagList slot="tags" items={tags ?? []} />
 
       <Disclosure>
         <slot />
@@ -98,22 +96,12 @@ const formattedDate = formatMonthYear(date);
   .timeline-content {
     grid-column: 1 / -1;
     padding-inline-start: 32px;
-    margin-block-end: 32px;
 
     background: radial-gradient(
       circle at 13px calc(var(--y-offset, 0px) + 6px),
-      currentColor 0 6px,
-      var(--bgcolor) 6px 9px,
+      var(--accent-color) 0 5px,
+      var(--dark-color) 6px 9px,
       transparent 9px
     ) no-repeat;
   }
-
-  .timeline-content[data-type="learning"] {
-    --dot-color: #10b981;
-  }
-
-  .timeline-content[data-type="transition"] {
-    --dot-color: #f59e0b;
-  }
-
 </style>

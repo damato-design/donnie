@@ -1,37 +1,60 @@
 ---
 title: "deltazeus, Weather Feed & Passive Notifications"
+headline: "Morning Calibration"
+description: "A passive weather notification service that sends RSS feed updates only when the weather changes significantly from the previous day."
+metric:
+  value: 2015
 role: "Creator"
 year: 2015
-outcomeSummary: "A passive weather notification service that sends RSS feed updates only when the weather changes significantly from the previous day."
-overview: "deltazeus reframed checking the weather from an active ritual into a passive one, an RSS feed that only updates when tomorrow's weather differs meaningfully from today's."
-problem: "People check the weather every day to prepare, but most days are similar to the last. That makes the daily check largely redundant, what if the weather notified you only when it actually changed?"
-constraints:
-  - "Keep the cost of the underlying weather data low"
-  - "Avoid requiring any app download or account"
-  - "A single screen of setup and nothing to return to"
-approach: "Setup asked for a location once and handed back a feed you could subscribe to with whatever reader you already used. The feed stayed silent unless tomorrow's conditions differed meaningfully from today's, so the only time it asked for your attention was the only time it had something to say. Feeds that nobody was reading stopped updating themselves, which kept the running cost tied to actual use."
-keyDecisions:
-  - decision: "Deliver updates through a feed instead of a dedicated app"
-    reasoning: "It let people receive the weather wherever they already read things, with no download and no account, which suits a service you are meant to forget about."
-    alternatives:
-      - "A native push-notification app"
-      - "Email-only delivery"
-  - decision: "Only refresh feeds someone is actually reading"
-    reasoning: "Tying the work to real subscriptions kept the cost of the weather data proportional to use rather than to the size of the database."
-    alternatives:
-      - "Refresh every feed on a fixed schedule"
-techStack:
+tags:
   - "Passive notifications"
   - "Feed-based delivery"
   - "Weather data"
-impact:
-  qualitative: "The passive, change-driven idea deltazeus explored came first, later echoed by social platforms like Facebook and Google Plus."
-learnings:
-  - "Passive, change-driven notifications can beat active daily checking"
-  - "Tying the work to real usage is a simple lever for keeping a service affordable"
-  - "Even a lightweight service has a standing cost, and eventually it stops being worth keeping lit"
-status: archived
 ---
+
+## Overview
+
+deltazeus reframed checking the weather from an active ritual into a passive one, an RSS feed that only updates when tomorrow's weather differs meaningfully from today's.
+
+## Problem
+
+> People check the weather every day to prepare, but most days are similar to the last. That makes the daily check largely redundant, what if the weather notified you only when it actually changed?
+
+## Constraints
+
+- Keep the cost of the underlying weather data low
+- Avoid requiring any app download or account
+- A single screen of setup and nothing to return to
+
+## Approach
+
+Setup asked for a location once and handed back a feed you could subscribe to with whatever reader you already used. The feed stayed silent unless tomorrow's conditions differed meaningfully from today's, so the only time it asked for your attention was the only time it had something to say. Feeds that nobody was reading stopped updating themselves, which kept the running cost tied to actual use.
+
+## Key Decisions
+
+### Deliver updates through a feed instead of a dedicated app
+
+| Reasoning | Alternatives |
+| --- | --- |
+| It let people receive the weather wherever they already read things, with no download and no account, which suits a service you are meant to forget about. | A native push-notification app<br/>Email-only delivery |
+
+### Only refresh feeds someone is actually reading
+
+| Reasoning | Alternatives |
+| --- | --- |
+| Tying the work to real subscriptions kept the cost of the weather data proportional to use rather than to the size of the database. | Refresh every feed on a fixed schedule |
+
+## Result & Impact
+
+The passive, change-driven idea deltazeus explored came first, later echoed by social platforms like Facebook and Google Plus.
+
+## Learnings
+
+- Passive, change-driven notifications can beat active daily checking
+- Tying the work to real usage is a simple lever for keeping a service affordable
+- Even a lightweight service has a standing cost, and eventually it stops being worth keeping lit
+
+## The story behind it
 
 The name nods to the idea: a delta is a change, and Zeus is the god of sky and weather, a feed that speaks up only when tomorrow's weather actually differs from today's.
 

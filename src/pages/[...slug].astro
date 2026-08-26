@@ -1,0 +1,167 @@
+---
+/**
+ * Every page of the site.
+ *
+ * One rest route generating three kinds of page from three collections:
+ *
+ *   /                     `src/content/index.mdx`
+ *   /projects             `src/content/projects/index.mdx`   (and the four others)
+ *   /projects/<slug>      `src/content/projects/<slug>.mdx`
+ *   /decisions/<slug>     `src/content/decisions/<slug>.mdx`
+ *
+ * The content tree mirrors the URL tree one for one, so a route's source is
+ * wherever the URL says it is.
+ *
+ * They are one page, not three: the same shell, the same header panel, the same
+ * SEO block, the same media. All three collections spell a panel region the same
+ * way (see `panelFields` in `content.config.ts`), so the panel, the SEO block,
+ * and the media are read the same way for every kind and `kind` selects only the
+ * four things that genuinely differ: what a detail page inherits from its
+ * section, what goes in `<main>`, how deep the table of contents goes, and which
+ * structured data the head carries.
+ *
+ * The narrower routes still win: `404.astro`, `robots.txt.ts`, `llms.txt.ts`,
+ * the per-collection `[slug].md.ts` mirrors, and everything under `/og` are all
+ * more specific than a rest parameter, so none of them are shadowed.
+ *
+ * @page
+ */
+
+import type { GetStaticPaths, InferGetStaticPropsType, MarkdownHeading } from 'astro';
+import { render } from 'astro:content';
+import Layout from '@layouts/Layout.astro';
+import SEO from '@components/SEO.astro';
+import StructuredData from '@components/StructuredData.astro';
+import Listing from '@components/Listing.astro';
+import Media from '@components/Media.astro';
+import TagList from '@components/TagList.astro';
+import Button from '@components/Button.astro';
+import ScrollToTop from '@components/ScrollToTop.astro';
+import { panel, sectionOf, sorted, type PanelData } from '@utils/collections';
+import { buildListing, type Listing as ListingData } from '@utils/listings';
+
+/**
+ * One path per top-level page and per detail entry.
+ *
+ * A page's id *is* its route, with `home` as the site root, so adding
+ * `src/content/whatever/index.mdx` publishes `/whatever` with a panel, an SEO
+ * block, and an Open Graph card, without touching this file.
+ */
+export const getStaticPaths = (async () => {
+  const [pages, projects, decisions] = await Promise.all([
+    sorted('pages'),
+    sorted('projects'),
+    sorted('decisions'),
+  ]);
+
+  return [
+    ...pages.map((entry) => ({
+      params: { slug: entry.id === 'home' ? undefined : entry.id },
+      props: { kind: 'page' as const, entry },
+    })),
+    ...projects.map((entry) => ({
+      params: { slug: `projects/${entry.id}` },
+      props: { kind: 'project' as const, entry },
+    })),
+    ...decisions.map((entry) => ({
+      params: { slug: `decisions/${entry.id}` },
+      props: { kind: 'decision' as const, entry },
+    })),
+  ];
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const props = Astro.props as Props;
+const { kind, entry } = props;
+const data = entry.data as PanelData;
+
+/**
+ * A detail page has no artwork of its own, so it inherits its section page's
+ * backdrop and `Square` media (and that media's alternative text with it), the
+ * way a case study should read as part of `/projects` rather than as its own
+ * place. This is the one part of a panel that frontmatter cannot state and a
+ * schema cannot fill: it lives in another entry.
+ */
+const section = kind === 'page' ? undefined : await sectionOf(`${kind}s`);
+const inherited = data.media ? data : (section?.data ?? data);
+
+const grid = await panel({ ...data, backdrop: data.backdrop ?? section?.data.backdrop });
+const media = inherited.media;
+const mediaAlt = inherited.mediaAlt ?? data.title;
+
+/** The SEO block is frontmatter too; only the OG type is the route's to say. */
+const seo = { ...data.seo, type: kind === 'page' ? ('website' as const) : ('article' as const) };
+
+/**
+ * The body, plus whatever `<main>` carries around it.
+ *
+ * `tocDepth` is 2 on the detail pages because their level-3 headings are
+ * one-sentence key-decision / alternative titles that would swamp the panel;
+ * the listings keep the default 3, which covers a section heading plus its
+ * cards.
+ */
+const { Content, headings: bodyHeadings } = await render(entry);
+
+let headings: MarkdownHeading[] = bodyHeadings;
+let listing: ListingData | undefined;
+let tocDepth: number | undefined;
+
+if (kind === 'page') {
+  if (entry.data.listing) {
+    const built = await buildListing(entry.data.listing);
+    listing = built.listing;
+    // The generated listing comes first in `<main>`, so its headings do too.
+    headings = [...built.headings, ...bodyHeadings];
+  }
+} else {
+  tocDepth = 2;
+}
+---
+
+<Layout grid={grid} headings={headings} tocMaxDepth={tocDepth}>
+  <Fragment slot="head">
+    <SEO
+      title={seo.title}
+      description={seo.description}
+      noSuffix={seo.noSuffix}
+      type={seo.type}
+    />
+    {/* The site root is what `WebSite` and `Person` describe, so they belong to
+        being the root rather than to anything the page authored. */}
+    {kind === 'page' && entry.id === 'home' && (
+      <Fragment>
+        <StructuredData type="WebSite" />
+        <StructuredData type="Person" />
+      </Fragment>
+    )}
+    {kind === 'project' && (
+      <StructuredData
+        type="Project"
+        data={{
+          title: entry.data.title,
+          description: entry.data.description,
+          tags: entry.data.tags,
+          year: entry.data.year,
+        }}
+      />
+    )}
+  </Fragment>
+
+  <Fragment slot="media">
+    {media && <Media src={media} alt={mediaAlt} />}
+  </Fragment>
+
+  <Fragment slot="main">
+    {listing && <Listing listing={listing} />}
+
+    {kind !== 'page' && <TagList items={entry.data.tags} />}
+
+    <Content />
+
+    {kind === 'project' && <Button href="/projects" back>All projects</Button>}
+    {kind === 'decision' && <Button href="/decisions" back>All decisions</Button>}
+
+    {kind !== 'page' && <ScrollToTop />}
+  </Fragment>
+</Layout>

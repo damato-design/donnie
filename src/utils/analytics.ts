@@ -16,9 +16,9 @@
  * Writing page renders exactly as it did before analytics existed. Cabin being
  * down must never break a deploy.
  *
- * The API key is read from `process.env.CABIN_API_KEY`, a build-time secret. It
- * is intentionally NOT `PUBLIC_`-prefixed, so it never reaches the client, and
- * it is distinct from the identity literals in `siteConfig`.
+ * The API key comes from `process.env.CABIN_API_KEY`, supplied by the host's
+ * build environment (Netlify). This project uses no `.env` files, and the key is
+ * deliberately not `PUBLIC_`-prefixed, so it never reaches the client.
  *
  * @module analytics
  */
@@ -46,31 +46,52 @@ export const MIN_READS = 0;
 export interface PageStat {
   /** Total page views for the post. */
   reads: number;
-  /** Average time on page, in seconds. */
-  avgSeconds: number;
 }
 
 /** Normalized blog analytics consumed by the Writing page. */
 export interface BlogAnalytics {
   /** Per-post stats keyed by path (`/posts/<slug>`). */
   pages: Map<string, PageStat>;
-  /** Total page views across the blog (from the core summary). */
-  totalReads: number;
-  /** Number of distinct countries readers came from. */
-  countryCount: number;
+  /**
+   * The distinct countries the blog has been read from (`scope=core`), as
+   * names rather than a count: they are loaded into the `countries` collection
+   * (see `content.config.ts`), and a page's metric counts that collection like
+   * any other.
+   */
+  countries: string[];
 }
 
 /** Shape of a `scope=pages` row (only the fields we use). */
 interface CabinPageRow {
   path: string;
   page_views: number;
-  average_duration_seconds: number;
 }
 
-/** Shape of the `scope=core` response (only the fields we use). */
+/** Shape of the `scope=core` response (only the field we use). */
 interface CabinCore {
-  summary?: { page_views?: number };
-  countries?: Array<{ code: string; value: number }>;
+  countries?: unknown[];
+}
+
+/** The keys Cabin might name a country by, most specific first. */
+const COUNTRY_KEYS = ['country', 'country_name', 'name', 'country_code', 'code', 'iso_code'];
+
+/**
+ * Normalizes Cabin's country rows to distinct names.
+ *
+ * The rows are strings in some accounts and objects in others, so this reads
+ * whichever key is present rather than assuming a shape; anything unreadable is
+ * dropped rather than counted as an unnamed country.
+ */
+function countryNames(rows: unknown[] | undefined): string[] {
+  const names = (rows ?? []).map((row) => {
+    if (typeof row === 'string') return row;
+    if (!row || typeof row !== 'object') return '';
+    const record = row as Record<string, unknown>;
+    const key = COUNTRY_KEYS.find((k) => typeof record[k] === 'string' && record[k]);
+    return key ? (record[key] as string) : '';
+  });
+
+  return [...new Set(names.filter(Boolean))];
 }
 
 /** Today's date as `YYYY-MM-DD` (build date). */
@@ -86,9 +107,8 @@ function normalizePath(path: string): string {
 
 /**
  * Pulls the page rows out of the `scope=pages` response. Cabin wraps list data
- * in a keyed object (like `core`), so the rows may be the top-level value or
- * nested under a key (e.g. `pages`/`data`). Returns the first array of row-like
- * objects found.
+ * in a keyed object, so the rows may be the top-level value or nested under a
+ * key (e.g. `pages`/`data`). Returns the first array of row-like objects found.
  */
 function extractRows(raw: unknown): CabinPageRow[] {
   if (Array.isArray(raw)) return raw as CabinPageRow[];
@@ -102,7 +122,7 @@ function extractRows(raw: unknown): CabinPageRow[] {
   return [];
 }
 
-/** Calls the Cabin API for a given scope, returning parsed JSON. */
+/** Calls the Cabin API for one scope, returning parsed JSON. */
 async function fetchCabin(scope: 'core' | 'pages', apiKey: string): Promise<unknown> {
   const url = new URL(CABIN_API_URL);
   url.searchParams.set('domain', CABIN_DOMAIN);
@@ -130,37 +150,38 @@ export function getBlogAnalytics(): Promise<BlogAnalytics | null> {
   if (cached) return cached;
 
   cached = (async () => {
-    // Astro loads .env into import.meta.env (server-side, non-PUBLIC vars
-    // included); netlify dev / CI inject into process.env. Support both.
-    const apiKey = import.meta.env.CABIN_API_KEY ?? process.env.CABIN_API_KEY;
+    const apiKey = process.env.CABIN_API_KEY;
     if (!apiKey) {
       // Expected in local dev / forks without the secret: render without analytics.
-      console.warn('[analytics] CABIN_API_KEY not found in import.meta.env or process.env; rendering without analytics.');
+      console.warn('[analytics] CABIN_API_KEY is not set; rendering without analytics.');
       return null;
     }
 
     try {
       const [pagesRaw, coreRaw] = await Promise.all([
         fetchCabin('pages', apiKey),
-        fetchCabin('core', apiKey),
+        // The country list is additive to a page that already ranks by reads,
+        // so its failure degrades to an empty list rather than rejecting the
+        // pair and costing the rankings too.
+        fetchCabin('core', apiKey).catch((error) => {
+          console.warn(
+            `[analytics] Cabin core fetch failed; the country count will be omitted. ${
+              error instanceof Error ? error.message : error
+            }`
+          );
+          return null;
+        }),
       ]);
 
-      const pageRows = extractRows(pagesRaw);
       const pages = new Map<string, PageStat>();
-      for (const row of pageRows) {
+      for (const row of extractRows(pagesRaw)) {
         if (!row?.path) continue;
-        pages.set(normalizePath(row.path), {
-          reads: row.page_views ?? 0,
-          avgSeconds: row.average_duration_seconds ?? 0,
-        });
+        pages.set(normalizePath(row.path), { reads: row.page_views ?? 0 });
       }
 
       const core = (coreRaw ?? {}) as CabinCore;
-      return {
-        pages,
-        totalReads: core.summary?.page_views ?? 0,
-        countryCount: core.countries?.length ?? 0,
-      } satisfies BlogAnalytics;
+
+      return { pages, countries: countryNames(core.countries) } satisfies BlogAnalytics;
     } catch (error) {
       console.warn(
         `[analytics] Cabin fetch failed; Writing page will render without analytics. ${
@@ -184,17 +205,9 @@ export function getPageStat(analytics: BlogAnalytics | null, url: string): PageS
 }
 
 /**
- * Formats a read count compactly for display (e.g. 18420 -> "18K"), lowercased
+ * Formats a read count compactly for display (e.g. 18420 -> "18k"), lowercased
  * to sit naturally in the meta line.
  */
 export function formatReads(n: number): string {
   return new Intl.NumberFormat('en-US', { notation: 'compact' }).format(n).toLowerCase();
-}
-
-/**
- * Formats average time-on-page for display: "~N min", or "<1 min" under a minute.
- */
-export function formatAvgRead(seconds: number): string {
-  if (seconds < 60) return '<1 min';
-  return `~${Math.round(seconds / 60)} min`;
 }

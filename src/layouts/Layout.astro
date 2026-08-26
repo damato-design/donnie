@@ -1,0 +1,146 @@
+---
+/**
+ * Layout
+ *
+ * The dashboard shell, and the only layout: `global.css` lays `<body>` out as a
+ * named grid and this file fills each area. The two `Header` bars and `Toc` are
+ * the same on every page, so the layout renders them itself; the page-specific
+ * panels arrive through slots.
+ *
+ * This is the composition root: the header bars are assembled here, from
+ * `siteConfig`, rather than by `Header` itself, which knows nothing about which
+ * of the two it is.
+ *
+ * The page header panel (`Grid`) is data, not markup: the page passes its
+ * content as the `grid` prop and the layout renders the panel. `Square` is the
+ * one panel that takes markup, so it keeps a slot.
+ *
+ * @slot head - SEO / structured data, rendered into <head>.
+ * @slot media - The page's media, filling the Square panel.
+ * @slot main - The page's content.
+ */
+
+import { ClientRouter } from "astro:transitions";
+import { Font } from 'astro:assets';
+import { siteConfig } from "@/config";
+import Header from '@components/Header.astro';
+import Square from '@components/Square.astro';
+import Main from '@components/Main.astro';
+import Grid, { type GridProps } from '@components/Grid.astro';
+import Toc from '@components/Toc.astro'
+import type { MarkdownHeading } from 'astro';
+import '@styles/global.css';
+
+interface Props {
+  /** Content of the page header panel. See `Grid`. */
+  grid: GridProps;
+
+  /**
+   * Headings of this page's `<main>` content, in document order, driving the
+   * table of contents. An MDX body passes `render(entry)`'s `headings` straight
+   * through; a generated listing has none to slug, so `utils/listings.ts` builds
+   * that part of the array from the same items the cards are drawn from. Omit
+   * for no TOC.
+   */
+  headings?: MarkdownHeading[];
+
+  /** Deepest table-of-contents level to list. See `Toc`. */
+  tocMaxDepth?: number;
+}
+
+const { grid, headings, tocMaxDepth } = Astro.props;
+
+---
+
+<!doctype html>
+<html lang={siteConfig.language}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO tags injected via slot -->
+    <slot name="head" />
+
+    <!-- The site's three faces: display, body, and the icon subset. All are
+         declared under `fonts:` in astro.config.mjs, and each is applied in
+         exactly one place: Raleway on `body` in global.css, Kentish by the
+         page-header panel (Grid.astro), RemixIcon by Icon.astro. No global rule
+         puts Kentish on headings, so `<main>`'s headings are Raleway. -->
+    <Font cssVariable="--font-kentish" preload />
+    <Font cssVariable="--font-raleway" preload />
+    <Font cssVariable="--font-remixicon" preload />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <!-- Generated from siteConfig by src/pages/site.webmanifest.ts, which reads
+         the same themeColor this meta tag does. -->
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content={siteConfig.themeColor} />
+
+    <ClientRouter />
+
+    <script>
+      /**
+       * Kick autoplay videos into playing after every page load, including the
+       * client-side navigations driven by <ClientRouter /> (View Transitions).
+       *
+       * On a real page load the browser autoplays a muted <video autoplay> as
+       * it parses it. But when the ClientRouter swaps a freshly-fetched page
+       * into the live document, that video node is *inserted* rather than
+       * parsed, so the browser neither starts its autoplay nor, in many cases,
+       * begins fetching the source at all, the media stays blank until a manual
+       * refresh. This listener lives on `document` (which survives every swap),
+       * so it is attached once and runs on each navigation: it forces an
+       * unstarted source to load, then plays.
+       */
+      function playAutoplayVideos() {
+        document
+          .querySelectorAll<HTMLVideoElement>('video[autoplay]')
+          .forEach((video) => {
+            if (!video.paused) return;
+            if (video.readyState === 0) video.load();
+            video.play().catch(() => {});
+          });
+      }
+
+      document.addEventListener('astro:page-load', playAutoplayVideos);
+    </script>
+
+    <script is:inline defer src="https://scripts.withcabin.com/hello.js"></script>
+  </head>
+  <body>
+    <!-- First in the tab order, and the only reason the shell is
+         keyboard-navigable at a reasonable cost: the content panel is the
+         fifth of six areas in DOM order. Styled in global.css. -->
+    <a class="skip-link grid-surface" href="#top">Skip to content</a>
+
+    <!-- The two header bars. `Header` is the same component both times; which
+         list it carries and which grid area it lands in are decided here, at the
+         composition root, from siteConfig. -->
+    <Header
+      name="nav"
+      label="Main navigation"
+      action={{ href: '/', label: siteConfig.title, logo: true }}
+      links={siteConfig.nav}
+    />
+    <Square>
+      <slot name="media" />
+    </Square>
+    <Grid {...grid} />
+    <Toc headings={headings} maxDepth={tocMaxDepth} />
+    <Main>
+      <slot name="main" />
+    </Main>
+    <Header
+      name="contact"
+      label="Social profiles"
+      profiles
+      action={{ href: siteConfig.scheduling, label: 'Schedule a chat' }}
+      links={siteConfig.social}
+    />
+  </body>
+</html>

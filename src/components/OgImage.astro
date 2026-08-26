@@ -8,37 +8,120 @@
  * onto the markup with `juice` and the result is fed through satori -> resvg to
  * produce a PNG (see `src/lib/og.ts`).
  *
+ * **It is the dashboard shell, redrawn in the subset satori understands.** The
+ * card is `Square` beside `Grid`: the duotone media on the left at 55%, and on
+ * the right the identity block (eyebrow title, Kentish headline, description,
+ * page URL) above a bottom row of the metric and the intro. `Props` extends
+ * `GridProps`, so a card is handed exactly what the real panel is handed, from
+ * the same `grid.config.ts` entry.
+ *
+ * What differs from the panel, and why:
+ *
+ * - **The CTA row carries the page's URL**, not the panel's `cta` labels.
+ *   Nothing in a PNG is clickable, so "Explore my work" is a dead end on a
+ *   card; the address it would have gone to is the part worth showing. `cta` is
+ *   therefore not a prop here.
+ *
+ * - **The gradient is painted once**, on `.og-grid`, with the 2px seams drawn
+ *   as black borders. The site gets the same effect from
+ *   `background-attachment: fixed`, which satori has no concept of; per-panel
+ *   gradients would step at every seam.
+ * - **`\n` becomes a `<div>` per line** rather than `white-space: pre-line`,
+ *   which is the one form satori is guaranteed to break the way the panel does.
+ * - **The media arrives pre-blended** as a data URI (see `src/lib/duotone.ts`):
+ *   satori supports neither `filter: grayscale()` nor `mix-blend-mode`.
+ *
  * Styling lives in `OgImage.css` as plain (unscoped) class selectors precisely
  * so `juice` can inline it; satori only understands a flexbox subset of CSS, so
- * the stylesheet stays within that subset. The portrait is passed in as a
- * base64 data URI rather than a path so satori can resolve it at build time.
+ * the stylesheet stays within that subset.
  *
  * @component
  */
 
-interface Props {
-  /** Large heading (the top-level page name). */
-  title: string;
-  /** Supporting copy below the heading. */
-  description: string;
-  /** Portrait <img> src. The renderer passes a short placeholder and injects
-   *  the real base64 data URI onto the parsed node afterward (for performance,
-   *  see src/lib/og.ts). */
-  portrait: string;
-  /** Footer wordmark, e.g. "donnie.damato.design". */
-  wordmark: string;
+import type { GridProps } from './Grid.astro';
+
+/**
+ * The card's geometry, in the pixels satori lays out. `square` is 55% of the
+ * width, matching `body`'s `grid-template-columns: 55% auto` in global.css, and
+ * `seam` is `--grid-gap`. Exported because the media has to be rasterized at
+ * exactly the square's size before it ever reaches the template.
+ */
+export const ogCard = {
+  width: 1200,
+  height: 630,
+  square: 660,
+  seam: 2,
+} as const;
+
+/**
+ * How a page's address is shown on its card: host and path, no scheme, no
+ * trailing slash. `page` is a `pages` collection id, whose `home` entry is the
+ * site root; `site` is `Astro.site` (`context.site` in an endpoint), the single
+ * source for the origin.
+ */
+export function ogUrl(page: string, site: URL | undefined): string {
+  const { host, pathname } = new URL(page === 'home' ? '/' : `/${page}`, site);
+  return pathname === '/' ? host : `${host}${pathname}`;
 }
 
-const { title, description, portrait, wordmark } = Astro.props;
+/**
+ * `cta` and `backdrop` are dropped rather than translated: nothing in a PNG is
+ * clickable (the card shows the page's address instead), and satori supports
+ * neither multi-layer backgrounds nor blend modes, which is the whole of what
+ * the panel's backdrop is.
+ */
+interface Props extends Omit<GridProps, 'cta' | 'backdrop'> {
+  /**
+   * The duotone media `src`. The renderer passes a short placeholder and
+   * injects the real data URI onto the parsed node afterward (for performance,
+   * see src/lib/og.ts).
+   */
+  media: string;
+
+  /** The page this card advertises, from `ogUrl`. */
+  url: string;
+}
+
+const { title, headline, description, metric, intro, media, url } = Astro.props;
+
+/** A `\n` in the panel's copy is a deliberate line break. */
+const lines = (text: string): string[] => text.split('\n');
 ---
 
 <div class="og-root">
-  <div class="og-body">
-    <div class="og-text">
-      <div class="og-title">{title}</div>
-      <div class="og-description">{description}</div>
-    </div>
-    <img class="og-portrait" src={portrait} width="380" height="415" />
+  <div class="og-square">
+    <img class="og-media" src={media} width={ogCard.square} height={ogCard.height} />
   </div>
-  <div class="og-wordmark">{wordmark}</div>
+
+  <div class="og-grid">
+    <div class="og-identity">
+      <div class="og-eyebrow">{title}</div>
+
+      {headline && (
+        <div class="og-headline">
+          {lines(headline).map((line) => <div>{line}</div>)}
+        </div>
+      )}
+
+      {description && (
+        <div class="og-description">
+          {lines(description).map((line) => <div>{line}</div>)}
+        </div>
+      )}
+
+      <div class="og-url">{url}</div>
+    </div>
+
+    {(metric || intro) && (
+      <div class="og-bottom">
+        {metric && (
+          <div class="og-metric">
+            <div class="og-metric-value">{metric.value}</div>
+            {metric.label && <div class="og-metric-label">{metric.label}</div>}
+          </div>
+        )}
+        {intro && <div class="og-intro">{intro}</div>}
+      </div>
+    )}
+  </div>
 </div>
