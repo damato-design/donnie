@@ -25,11 +25,10 @@ export default defineConfig({
    */
   integrations: [
     mdx(),
-    sitemap({
-      // `/og` is the development preview of the Open Graph card template, not a
-      // page of the site (it is `noindex` too).
-      filter: (page) => !page.endsWith('/og/'),
-    }),
+    // No filter: the only page that ever needed excluding was the `/og` card
+    // preview, and that is now built in dev only, so a production build has
+    // nothing to leave out.
+    sitemap(),
   ],
 
   /**

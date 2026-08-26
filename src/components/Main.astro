@@ -3,7 +3,14 @@
  * Main
  *
  * The dashboard's content panel: the `<main>` landmark the page's own content
- * is slotted into, and the target of `ScrollToTop`'s `#top` anchor.
+ * is slotted into, and the target of both `ScrollToTop`'s `#top` anchor and the
+ * skip link at the top of `Layout`.
+ *
+ * `tabindex="-1"` is there for that skip link: a fragment link pointing at an
+ * element that cannot hold focus leaves focus behind in some browsers, so the
+ * jump moves the viewport without moving the keyboard. It makes the landmark
+ * focusable programmatically only, never by tabbing, and browsers reserve the
+ * focus ring for `:focus-visible`, so nothing draws one.
  *
  * It carries no styling of its own. `.main` places it in the shell's grid and
  * gives it the content inset, `.dash-surface` paints it; both live in
@@ -17,6 +24,6 @@
 interface Props {}
 ---
 
-<main id="top" class="main dash-surface">
+<main id="top" class="main dash-surface" tabindex="-1">
     <slot/>
 </main>

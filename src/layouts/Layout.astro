@@ -113,6 +113,11 @@ const { grid, headings, tocMaxDepth } = Astro.props;
     <script is:inline defer src="https://scripts.withcabin.com/hello.js"></script>
   </head>
   <body>
+    <!-- First in the tab order, and the only reason the shell is
+         keyboard-navigable at a reasonable cost: the content panel is the
+         fifth of six areas in DOM order. Styled in global.css. -->
+    <a class="skip-link grid-surface" href="#top">Skip to content</a>
+
     <!-- The two header bars. `Header` is the same component both times; which
          list it carries and which grid area it lands in are decided here, at the
          composition root, from siteConfig. -->

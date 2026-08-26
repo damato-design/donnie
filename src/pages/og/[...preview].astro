@@ -9,8 +9,10 @@
  *
  * This is the one page that does **not** use `Layout`: the shell's grid and
  * `global.css` would style the card out from under itself, and the point of the
- * page is to show the template in isolation. It is `noindex`, and
- * `astro.config.mjs` keeps `/og/` out of the sitemap.
+ * page is to show the template in isolation.
+ *
+ * **It is built in `astro dev` only** (see `getStaticPaths` below), so it is not
+ * deployed, is not in the sitemap, and costs the production build nothing.
  *
  * Two things the *renderer* does after Astro is done have to be re-created
  * here, or the preview would lie (see `src/lib/og.ts`):
@@ -32,11 +34,27 @@
  * A per-card link to the real PNG sits under each preview for a side-by-side
  * check when something looks off.
  */
+import type { GetStaticPaths } from 'astro';
 import { Font } from 'astro:assets';
 import OgImage, { ogCard, ogUrl } from '@components/OgImage.astro';
 import ogImageCss from '@components/OgImage.css?raw';
 import { cardMedia } from '@/lib/duotone';
 import { getPages, panel } from '@utils/collections';
+
+/**
+ * Dev only: in a production build this returns no paths, so the page is never
+ * emitted. It is worth gating rather than shipping because it inlines the
+ * blended portrait as base64 once per card, which made it the single largest
+ * file in the deploy, and it is of no use to anyone who is not editing the
+ * card template.
+ *
+ * The rest parameter is what allows the gate. A plain `index.astro` is built
+ * unconditionally; a dynamic route builds only the paths it is handed, and
+ * `preview: undefined` resolves to `/og` itself. The PNG route next door is a
+ * more specific pattern, so it still wins for `/og/<page>.png`.
+ */
+export const getStaticPaths = (() =>
+  import.meta.env.DEV ? [{ params: { preview: undefined } }] : []) satisfies GetStaticPaths;
 
 /** The same blended portrait the renderer embeds, shared by every card. */
 const media = await cardMedia();

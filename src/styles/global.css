@@ -167,6 +167,41 @@ body > :is(.nav, .contact, .main, .toc),
   padding: var(--grid-padding);
 }
 
+/* Skip link
+   ==========================================================================
+   The shell's DOM order is nav, square, grid, toc, main, contact, so a keyboard
+   user would otherwise tab the masthead, the page header panel's links and the
+   whole table of contents before reaching the content. This jumps them to
+   `<main id="top">`, the same landmark `ScrollToTop` returns to.
+
+   It is `fixed` because `body` is a grid: an in-flow first child would claim a
+   cell of its own. It stays in the tab order at all times (parked off the top
+   edge by a transform rather than hidden with `display: none`, which would take
+   it out of that order), and it paints through `.grid-surface` like any other
+   panel rather than declaring a background.
+
+   `z-index: 1` matches `ScrollToTop` rather than climbing above it. The two are
+   the only positioned things in the shell and they sit in opposite corners, so
+   there is nothing here to escalate over. */
+.skip-link {
+  position: fixed;
+  top: var(--grid-gap);
+  left: var(--grid-gap);
+  z-index: 1;
+  padding: var(--grid-padding);
+  transform: translateY(calc(-100% - var(--grid-gap)));
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .skip-link {
+    transition: transform var(--vt-duration) var(--vt-ease);
+  }
+}
+
 a {
   color: currentColor;
   text-underline-offset: .12em;

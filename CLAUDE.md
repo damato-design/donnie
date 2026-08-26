@@ -172,6 +172,13 @@ next), and the detail pages under a section inherit their section page's, the sa
 inherit its `Square` media. It is decorative and takes no alt text. Omitted, the panel is the
 bare gradient.
 
+**Keep a backdrop source small and in `webp`.** `Grid` only ever paints it at 800px wide, but
+Astro emits the *original* asset into `dist/_astro/` alongside the derivative it actually
+serves, so an oversized source is deployed in full and never requested: the six backdrops were
+once 1.2MB to 3.6MB PNGs, 10MB of a build that referenced none of them. They are now ~1600px
+webp at quality 82, roughly 150KB each, with the alpha channel intact (the artwork is a cutout,
+so a format without transparency is not an option).
+
 **`media` is one key, not three.** It takes a local asset path (resolved relative to the MDX
 file, so it goes through `astro:assets`), a remote URL (the speaking page's sizzle reel), or an
 embed name from `EMBEDS` in `content.config.ts` (`mode-book`, the one medium that is markup
@@ -322,9 +329,18 @@ To refresh this without a code change, a **Netlify Scheduled Function**
 (`netlify/functions/weekly-rebuild.mjs`, weekly cron) POSTs to a Netlify build hook
 (URL in the `BUILD_HOOK_URL` env var) to trigger a rebuild. There is no GitHub Action.
 
+`netlify.toml` also carries the **response headers**, because Netlify's default is
+`max-age=0, must-revalidate` on every file including the content-hashed ones. `/_astro/*` is
+fingerprinted, so it is `immutable` for a year; the generated OG cards are not, so they get a
+day; everything else keeps revalidating so a deploy lands immediately. The security headers
+alongside them are the ones a static site with no forms and no cookies gets for free.
+**There is deliberately no CSP**: the shell relies on Astro's scoped `<style>` blocks and an
+inline analytics script, so a useful policy would need per-build hashes rather than a literal
+in the toml.
+
 ### The dashboard shell (`src/layouts/Layout.astro`)
 `Layout` is the **only** layout, and every page of the site uses it (the lone exception is
-`og/index.astro`, the OG card development preview; see "Pages & components").
+`og/[...preview].astro`, the OG card development preview; see "Pages & components").
 `global.css` lays `<body>` out as a
 named CSS grid, and each panel is a component the layout places into one area:
 
@@ -333,6 +349,16 @@ named CSS grid, and each panel is a component the layout places into one area:
 'square  grid'      Square.astro   Grid.astro
 'main    toc'       <main>         Toc.astro
 ```
+
+The one thing in `<body>` that is **not** a panel is the **skip link**, and it is first in
+the DOM for the reason skip links exist: `<main>` is the fifth of the six areas above, so
+without it a keyboard user tabs the masthead, the panel's CTA links and every entry in the
+table of contents before reaching the content. It targets `#top`, the same landmark
+`ScrollToTop` returns to, and `Main` carries `tabindex="-1"` so the jump moves **focus** and
+not just the viewport. It is `position: fixed` because `body` is a grid and an in-flow first
+child would claim a cell, and it is parked off the top edge by a transform rather than hidden,
+since `display: none` would take it out of the tab order it exists to lead. It paints through
+`.grid-surface` like everything else; there is **no `sr-only` utility class** here or anywhere.
 
 **Placement and surface live in `global.css`, not in the components.** Each panel carries a
 plain class (`.nav`, `.contact`, `.square`, `.grid`, `.main`, `.toc`) and `global.css` assigns
@@ -477,11 +503,18 @@ is no separate ink/ground pair.
   stated. The icons are all `purpose: 'any'` **on purpose**: the mark is drawn edge to edge, and
   a `maskable` entry without artwork honoring the 80% safe zone would have Android crop the
   glyph rather than letterbox it.
-- **`og/index.astro` is a development surface, not a page of the site.** It renders
+- **`og/[...preview].astro` is a development surface, not a page of the site.** It renders
   `OgImage.astro` as live HTML at 1200x630 for every card, so the template can be iterated
   on with hot reload instead of a satori render per change. It is therefore the **one page
-  that doesn't use `Layout`** (the shell would style the card out from under itself); it is
-  `noindex`, and `astro.config.mjs` passes `sitemap()` a `filter` that drops `/og/`.
+  that doesn't use `Layout`** (the shell would style the card out from under itself), and it
+  is `noindex`.
+  - **It is built in dev only**, which is what the rest parameter in its filename buys: a
+    `getStaticPaths` returning `import.meta.env.DEV ? [{ params: { preview: undefined } }] : []`
+    emits `/og` under `astro dev` and nothing at all in a production build. A plain
+    `index.astro` has no such switch. That one gate covers everything: the page is not
+    deployed (it was the largest file in `dist/`, a megabyte and a half of inline base64) and
+    it cannot reach the sitemap, so **`sitemap()` takes no `filter`** any more. The PNG route
+    beside it is a more specific pattern and still wins for `/og/<page>.png`.
   Because the browser is not satori, the page re-creates the two things the renderer does
   after Astro is finished, and its file comment says so: it injects `OgImage.css` with
   `is:inline` (it is a `juice` stylesheet, not a scoped one), and points the card's literal

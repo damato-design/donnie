@@ -22,12 +22,17 @@ Writing page's read counts) is supplied by Netlify and the build degrades gracef
 Astro v7, static output, MDX content collections, and a dashboard-shell layout.
 
 - **`src/config.ts`** — identity, social links, nav, scheduling URL. Plain literals, no env vars.
-- **`src/pages.config.ts`** — titles, headings, and intros for the static pages.
-- **`src/content/`** — the content collections: `projects` (case studies), `decisions`
-  (ADR-style records), `journey` (timeline), `speaking` (talks). `writing` has no local files;
-  it is pulled from [blog.damato.design](https://blog.damato.design) at build time.
+- **`src/content/`** — the site's content, mirroring the URL tree. Each top-level page is an
+  `index.mdx` in the `pages` collection (`src/content/index.mdx` is `/`,
+  `src/content/projects/index.mdx` is `/projects`), and the entries beside it are that
+  section's own collection: `projects` (case studies), `decisions` (ADR-style records),
+  `journey` (timeline), `speaking` (talks). Two collections have no local files and are fetched
+  at build time: `writing` from [blog.damato.design](https://blog.damato.design), and
+  `countries` from the blog's analytics.
+- **`src/pages/[...slug].astro`** — the one route that renders every page of the site.
 - **`src/layouts/Layout.astro`** — the only layout, a named CSS grid of panels.
-- **`src/lib/og.ts`** — generates the Open Graph cards (satori → resvg).
+- **`src/lib/og.ts`** — generates the Open Graph cards (satori → resvg). `/og` previews them as
+  live HTML, and is built in `astro dev` only.
 
 Machine-readable routes are generated alongside the HTML: `/llms.txt`, a `.md` mirror for every
 entry, and a per-section OG image.
