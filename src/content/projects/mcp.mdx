@@ -1,7 +1,7 @@
 ---
 title: "Personal MCP Server, Live Content for AI Assistants"
 headline: "Digital Twin"
-description: "A service that gathers my thoughts, projects, and writing in one place, so when people ask an AI to 'behave like Donnie' the answer comes from my actual content, almost like asking me directly without scheduling time with me."
+description: "A service that gathers my thoughts, projects, and writing in one place, so when people ask an AI to 'behave like Donnie' the answer comes from my actual content."
 metric:
   value: 2026
 role: "Creator"
@@ -14,7 +14,7 @@ tags:
 
 ## Overview
 
-mcp.damato.design turns the damato.design ecosystem (expertise, projects, media, blog, and design system docs) into structured content an AI assistant can actually read, so the model answers from my work instead of its impression of it.
+[mcp.damato.design](https://mcp.damato.design) turns the damato.design ecosystem (expertise, projects, media, blog, and design system docs) into structured content an AI assistant can actually read, so the model answers from my work instead of its impression of it.
 
 ## Problem
 
@@ -56,13 +56,13 @@ AI assistants can now answer questions about my work and design systems thinking
 
 ## Learnings
 
-- Treating already-published content as the source of truth keeps an AI integration honest and low-maintenance
+- Treating already-published content as the source of truth keeps an AI integration up-to-date and low-maintenance
 - A bounded, well-named surface matters as much for AI consumers as for human ones
 - Hands-on work is the fastest way to understand where generative tools actually fit around a design system
 - Keeping this kind of service live carries a real, ongoing cost, enough to pause a personal project, which is its own lesson in what generative infrastructure asks of a team
 
 ## The story behind it
 
-The honest reason it exists: people kept asking AIs to act like me, and I wanted those answers to come from something real. It also gave me a firsthand feel for how these tools reach for context, which is the same question I ask about a design system: can someone find the right thing by name, or do they guess?
+People kept asking AIs to act like me, and I wanted those answers to come from something real. It also gave me a firsthand feel for how these tools reach for context, which is the same question I ask about a design system: can someone find the right thing by name, or do they guess?
 
 In practice an assistant asks for a piece of my work the way you would name it, `donnie://projects/miseenmode` or `blog://posts/truly-semantic`, and an `ask-damato` prompt lets a client ask for my answer specifically when several sources are connected. Point any compatible client at `https://mcp.damato.design/` to connect, though it is paused for now to keep hosting costs down.

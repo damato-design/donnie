@@ -1,7 +1,7 @@
 ---
 title: "GoDaddy, UXCore & Semantic Theming"
 headline: "House of Brands"
-description: "Lead UXCore, GoDaddy's design system, and the cross-organization adoption that makes it real: aligned brand, localization, and accessibility stakeholders on one semantic Intent vocabulary now theming across 20M+ customers, and moved dozens of product teams onto a composable component library without asking any of them to migrate."
+description: "Lead UXCore, GoDaddy's design system, and the cross-organization adoption that supports stakeholders on one semantic vocabulary now theming across 20M+ customers."
 metric:
   value: 2019
 role: "Principal, UX Platform · Design Systems Lead"
@@ -29,7 +29,7 @@ Leading the team behind UXCore, GoDaddy's design system, and the relationships a
 
 ## Approach
 
-The work came in two units, and each was mostly a coordination problem. The first was theming: brand styling had shipped as statically generated palettes, one set per brand and locale permutation, so I replaced it with a single semantic vocabulary, the Intents, served centrally and applied at runtime. The hard part was getting brand, localization, accessibility, and product leadership to agree on one naming convention all of them could live inside, then teaching it to the designers and engineers who would use it daily. The second was the component library: rather than ship a replacement teams would have to adopt, I rebuilt UXCore in place, a ship of Theseus, swapping the components teams already used piece by piece toward a small set of composable primitives, so they kept the same library while it changed underneath them. Running alongside both was the partner relationship itself: triaging every incoming request within a day, pairing with teams on calls, and negotiating what belonged in the system and what did not.
+The work came in two units, and each was mostly a coordination problem. The first was theming: brand styling had shipped as statically generated palettes, one set per brand and locale permutation, so I replaced it with a single semantic vocabulary, the Intents, served centrally and applied at runtime. The hard part was getting brand, localization, accessibility, and product leadership to agree on one naming convention all of them could live inside, then teaching it to the designers and engineers who would use it daily. The second was the component library: rather than ship a replacement teams would have to adopt, I rebuilt UXCore in place, a [ship of Theseus](https://en.wikipedia.org/wiki/Ship_of_Theseus), swapping the components teams already used piece by piece toward a small set of composable primitives, so they kept the same library while it changed underneath them. Running alongside both was the partner relationship itself: triaging every incoming request within a day, pairing with teams on calls, and negotiating what belonged in the system and what did not.
 
 ## Key Decisions
 
@@ -60,7 +60,7 @@ The work came in two units, and each was mostly a coordination problem. The firs
 ## Result & Impact
 
 - **Theming model:** Dozens of generated palettes replaced by a single layer one team owns
-- **Token surface:** ~500 semantic Intent tokens theming across 20M+ customers
+- **Token surface:** ~200 semantic Intent tokens theming across 20M+ customers
 - **Support response:** Partner requests triaged within ~24 hours
 
 The Intent system gave designers, engineers, and brand partners a shared semantic language to make decisions in, and rebuilding in place moved dozens of product teams toward composable primitives without a single migration project on anyone's roadmap.
@@ -70,11 +70,11 @@ The Intent system gave designers, engineers, and brand partners a shared semanti
 - Teams resist adopting a new system even when it is objectively better; meeting them where they are beats shipping a superior replacement they would refuse
 - An open contributor model needs someone empowered to say no, and that person needs a relationship with contributors good enough to survive saying it
 - Fast, human support (triage within a day) is adoption work; keeping partner teams unblocked is what keeps them trusting the system
-- A shared vocabulary only stays bounded if adopters know how to generalize; teams kept minting component-specific Intents for very particular cases, and the set ballooned to around 500, far past what was intended
+- A shared vocabulary only stays bounded if adopters know how to generalize; teams kept minting component-specific Intents which ballooned to around 500, far past what was intended
 - Deprecation is as much design system work as creation, and most of it is negotiation
 
 ## The story behind it
 
-The Intent token system was an idea I had adopted at my previous company and kept developing. The aim was a small, bounded vocabulary that designers and engineers could share. Adoption pulled the other way: teams minted component-specific Intents for very particular cases rather than generalizing, and the set grew to around 500. That taught me something I have carried since, that a system's vocabulary is only as bounded as the education and the governance around it, and that token bloat is the very problem that later led me to Mise en Mode.
+The Intent token system was an idea I had adopted at my previous company and kept developing. The aim was a small, bounded vocabulary that designers and engineers could share. Adoption pulled the other way: teams minted component-specific Intents for very particular cases rather than generalizing, and the set grew to around 500. That taught me something I have carried since, that a system's vocabulary is only as bounded as the education and the governance around it, and that token bloat is the very problem that later led me to [Mise en Mode](https://mode.place).
 
 Support turned out to be the largest part of the role, and the most valuable. Every request from a partner team was a decision about the relationship as much as the code: whether to open a low-priority ticket, pair on a call, or push back and explain why the system would not go there. Triaging within a day meant I never blocked a team, which bought the credibility to steer them toward the better experience rather than mandate it.

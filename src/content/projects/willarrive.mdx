@@ -1,7 +1,7 @@
 ---
 title: "willarrive.in, Real-Time NYC Train Arrivals"
 headline: "Pleasant Travel"
-description: "A minimal PWA for New York City transit: save a subway line to your device, grant location once, and see the next trains in both directions at your nearest station in real time, with almost no tapping."
+description: "A minimal PWA for New York City transit: save a subway line to your device, grant location once, and see the next trains at your nearest station in real time."
 metric:
   value: 2016
 role: "Creator"
@@ -32,12 +32,6 @@ The first launch asks for your location once; from then on, opening the saved li
 
 ## Key Decisions
 
-### Give each line its own branded app instead of one app with a line picker
-
-| Reasoning | Alternatives |
-| --- | --- |
-| Riders take the same line every day. Saving the one you ride means the choice is already made by the time you open it, and the page arrives branded like the signage in the station you are standing in. | A single app with in-app line selection |
-
 ### Let the device pick the nearest station
 
 | Reasoning | Alternatives |
@@ -58,4 +52,4 @@ willarrive.in showed how far you can cut interaction cost when a tool is allowed
 
 The name was part of the spark: the domain willarrive.in was available, and a line subdomain reads as a sentence, `e.willarrive.in`, "E will arrive in." Each line got its own branded page, the E rendered as a blue circle with a white E, just like the station signage.
 
-Arrivals came from the MTA's own real-time feed. There was no public key at the time, so I inspected the requests on the MTA's site, found the API key they were using, and, since nothing checked which site was making the call, queried the same feed from mine.
+Arrivals came from the MTA's own real-time feed. There was no public key at the time, so I inspected the requests on the MTA's site, found the API key they were using, and, since nothing checked which site was making the call, queried the same feed from mine. Remember to have your server check where the request is coming from, kids!
