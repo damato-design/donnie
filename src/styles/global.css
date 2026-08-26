@@ -17,6 +17,12 @@
   --vt-enter: 200ms;
   --vt-ease: cubic-bezier(0.33, 0.85, 0.4, 1);
 
+  /* The full length of the entrance, from the first panel's delay to the last
+     one's final frame. Anything that has to wait for the shell to finish times
+     itself against this rather than restating the arithmetic: the group
+     durations below, and the headline wipe in Grid.astro that tails it. */
+  --vt-sequence: calc(var(--vt-enter) + .4 * var(--vt-stagger) + var(--vt-duration));
+
   /* Clearance a sliding panel travels *beyond* its own footprint, so it starts
      and ends off screen rather than parked in `body`'s centred gutter.
      Measured against the viewport because the gutter is too.
@@ -247,6 +253,12 @@ details[open]::details-content {
    concern. `metric` and `anecdote` are optional regions: a page without one
    registers no such name, and that panel simply sits out the transition.
 
+   One thing plays *after* all four: the headline wipe on `identity`'s `<h2>`
+   (Grid.astro). `::view-transition-new()` is a live rendering of the new
+   content, so an animation inside a panel runs while that panel slides; the
+   wipe delays itself by `--vt-sequence` so it starts once the last panel has
+   landed and is the final motion of a navigation.
+
    Each direction is a single keyframe describing the *entrance*. The exit
    replays it with `animation-direction: reverse`, so a panel always leaves the
    way it arrived, and the exit order is the entrance order backwards (the
@@ -306,7 +318,7 @@ details[open]::details-content {
 ::view-transition-group(identity),
 ::view-transition-group(metric),
 ::view-transition-group(anecdote) {
-  animation-duration: calc(var(--vt-enter) + 3 * var(--vt-stagger) + var(--vt-duration));
+  animation-duration: var(--vt-sequence);
 }
 
 /* Entering: square, identity, metric, anecdote. */

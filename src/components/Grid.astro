@@ -112,7 +112,10 @@ const backdropUrl = backdrop
         style={backdropUrl ? `--identity-backdrop: url('${backdropUrl}')` : undefined}
     >
         <h1>{title}</h1>
-        {headline && <h2>{headline}</h2>}
+        {/* The inner span is the reveal's, not the content's: it gives each
+            wrapped line its own mask (see the styles below). `headline` is
+            still a plain string. */}
+        {headline && <h2><span>{headline}</span></h2>}
         {description && <p>{description}</p>}
         {cta?.length && (
             <div class="cta">
@@ -140,6 +143,18 @@ const backdropUrl = backdrop
 </section>
 
 <style>
+    /* Inherited, because one animation on the <h2> drives two things: the
+       heading's own `translate`, and the gradient on the span inside it.
+       Transforms don't apply to non-replaced inline boxes, so the rise has to
+       stay on the block while the mask lives on the inline. */
+    @property --t {
+        syntax: '<length-percentage>';
+        initial-value: 0px;
+        inherits: true;
+    }
+
+    @keyframes t { 0% { --t: var(--reveal-rise) } }
+
     .grid {
         display: grid;
         grid-template-columns: auto 1fr;
@@ -171,7 +186,6 @@ const backdropUrl = backdrop
         display: flex;
         flex-direction: column;
         justify-content: center;
-        text-shadow: 1px 1px #951111;
         /* The page's `backdrop` over the shared gradient. The artwork is set
            inline as `--identity-backdrop` (per page, so it can't be a static
            `url()` here) and resolves to `none` on a page that declares none.
@@ -195,11 +209,79 @@ const backdropUrl = backdrop
 
         h2 {
             font-size: min(3.5em, 12vw);
-            margin-block: 8px;
             font-family: var(--font-kentish);
             font-weight: normal;
-            line-height: 1.05;
             text-transform: lowercase;
+
+            /* The reveal, two knobs.
+
+               --reveal-rise  How far a line travels, and the height of the
+                   mask box with it. They are deliberately one number: that is
+                   what holds the wipe edge still while the text rises through
+                   it. It has to cover a line's ink, which runs from Kentish's
+                   1.2em ascent down to the deepest ligature swash ('es', .44em
+                   below the baseline), so 1.64em is the floor. Under that, the
+                   edge drifts down as the text rises, which reads as a wipe
+                   rather than a reveal.
+               --reveal-drop  Painting room below the baseline. An inline box
+                   is only as tall as the font's own metrics (.139em of descent
+                   here), and ink outside the box the background paints into is
+                   never painted at all. Vertical padding on an inline box
+                   paints without affecting layout, so this one is free: raise
+                   it if a swash is clipped at rest.
+               --reveal-side  The same thing on the inline axis, for a flourish
+                   that overhangs the start or end of a line. Kentish's 'em'
+                   ligature reaches .159em back before its own pen position
+                   (the curl on an opening 'E'); nothing overhangs the end by
+                   more than .005em. Unlike the block axis this padding does
+                   affect layout, so the heading's negative margin below hands
+                   the room straight back. */
+            --reveal-rise: 1.7em;
+            --reveal-drop: .4em;
+            --reveal-side: .2em;
+
+            line-height: 1.05;
+            margin-block: 8px;
+            /* Cancels the span's inline padding, so the text starts and wraps
+               exactly where it would without it. Both sides, so the width the
+               lines wrap inside is unchanged too. */
+            margin-inline: calc(-1 * var(--reveal-side));
+            translate: 0 var(--t);
+            /* The wipe is the tail of the shell's entrance, not a page-load
+               flourish: `--vt-sequence` (global.css) is how long the four
+               sliding panels take, so the headline starts the moment the last
+               one lands and is the final motion of a navigation. `both` is
+               load-bearing, as it is for the panels: `backwards` holds the
+               text hidden through that delay, `forwards` keeps it revealed
+               afterwards. */
+            animation: t .4s var(--vt-ease) var(--vt-sequence) both;
+
+            /* `clone` gives every wrapped line its own copy of the background,
+               clipped to that line's own glyphs, and that is the whole job of
+               the span: a swash is masked by the gradient of the line it
+               belongs to rather than by whichever line it hangs into. Lines'
+               ink may overlap freely now, so the leading above is a design
+               decision again and nothing here depends on it.
+
+               The gradient runs upwards from the box's bottom edge, so the
+               transparent band covers the whole line at `--reveal-rise` and
+               none of it at 0. The heading translates by the same value, which
+               is what pins the edge in place. */
+            span {
+                -webkit-box-decoration-break: clone;
+                box-decoration-break: clone;
+                /* The padding is not cosmetic: Chrome paints a background only
+                   within the fragment's own border box, even when the clip is
+                   `text`, so ink hanging outside that box is never painted at
+                   all. Repeating the gradient does not reach it either. These
+                   two grow the box itself, which is the only thing that does.
+                   `100%` then follows the padded width automatically. */
+                padding-block-end: var(--reveal-drop);
+                padding-inline: var(--reveal-side);
+                background: linear-gradient(0deg, #0000 var(--t), var(--grid-fg) 0)
+                    0 0 / 100% var(--reveal-rise) no-repeat text;
+                color: #0000;
+            }
         }
 
         a:hover {
@@ -243,6 +325,14 @@ const backdropUrl = backdrop
         justify-content: center;
         font-size: .8em;
         text-wrap: pretty;
+    }
+
+    /* The wipe is movement, so it opts out with the panels it follows. At rest
+       `--t` is 0, which is the headline simply present and unshifted. */
+    @media (prefers-reduced-motion: reduce) {
+        .identity h2 {
+            animation: none;
+        }
     }
 
     /* Without a metric beside it, the anecdote takes the whole row. */
