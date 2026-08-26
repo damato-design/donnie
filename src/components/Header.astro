@@ -204,9 +204,8 @@ const attrs = (link: HeaderLink, me = false) => ({
     }
 
     /** Slashes between the navigation items */
-    li:not(:has(.btn)):not(:last-child):after {
-      content: '/';
-      margin-inline: 16px;
+    &:not(:has(.btn)) {
+      gap: var(--grid-padding);
     }
   }
 
