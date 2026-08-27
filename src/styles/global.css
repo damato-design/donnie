@@ -207,6 +207,10 @@ a {
   text-underline-offset: .12em;
 }
 
+code {
+  font-family: ui-monospace, Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+}
+
 :where(ul) {
   padding-left: 1em;
 
