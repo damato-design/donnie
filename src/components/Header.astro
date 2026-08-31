@@ -207,6 +207,11 @@ const attrs = (link: HeaderLink, me = false) => ({
     &:not(:has(.btn)) {
       gap: var(--grid-padding);
 
+      /* Twice the column gap, so a wrapped row has room for the current-page
+         bar to sit in the space beneath the row above it rather than landing
+         on the top edge of the row below. */
+      row-gap: calc(var(--grid-padding) * 2);
+
       li:last-child {
         margin-inline-end: var(--grid-padding);
       }
@@ -215,5 +220,127 @@ const attrs = (link: HeaderLink, me = false) => ({
 
   a:is([aria-current='page'], [href*="cal.com"]) {
     color: var(--accent-color);
+  }
+
+  /* The masthead's links fill their row rather than sitting centred in it, so
+     that a link's bottom edge *is* the bottom of the row it is on. That is what
+     the bar below hangs off, and it is what keeps the bar with its word when
+     the list wraps. The logo keeps the header's own `align-items: center`;
+     only the list stretches. */
+  .nav nav {
+    display: flex;
+    align-self: stretch;
+  }
+
+  .nav ul {
+    align-items: stretch;
+  }
+
+  .nav li a {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  /* The current-page bar
+     ------------------------------------------------------------------------
+     One bar, under the current page, which follows the pointer or the keyboard
+     while the list is being explored and returns to the current page when it is
+     let go.
+
+     It is a single box pointed at a link by CSS anchor positioning, so moving it
+     is a matter of moving the *name*: the current item holds `--nav-current` at
+     rest and hands it to whichever sibling is hovered or focused. Nothing is
+     drawn per link and nothing is duplicated.
+
+     Because it is one box throughout, the move animates: the insets the anchor
+     resolves to are interpolated like any other length, so a plain `transition`
+     on the pseudo-element is the whole of the slide. That is the argument for a
+     single box over a bar per link, which could only ever hand off between two
+     separate elements.
+
+     The `transition` is deliberately not inside a `prefers-reduced-motion:
+     no-preference` query, unlike the shell's other motion: it is a 2px rule
+     travelling a few hundred pixels, not a panel flying across the viewport, and
+     under the query the bar snapped between items on machines that ask for less
+     motion, which read as broken rather than as restrained.
+
+     It hangs off the bottom edge of the link, which the rule above stretches to
+     fill its row, plus the header's own content inset. On one row that lands it
+     flush with the bottom of the `<header>`, in the 2px seam between the
+     masthead and the panels below: a length of that gap lighting up under the
+     current word, rather than an underline hung off the text. Reading the block
+     edge off the anchor rather than pinning it to the header (`bottom: 0`) is
+     what keeps the bar with its word when the list wraps.
+
+     Masthead only. The connect bar's links are external, so none of them is ever
+     current and there is no resting place for the bar to return to. */
+
+  /* The bar without anchor positioning: drawn on the current link itself, where
+     it cannot follow anything, so Firefox still gets the part that matters. The
+     `@supports` block below takes it over wherever the real one can be drawn. */
+  .nav a[aria-current='page']::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin-top: var(--grid-padding);
+    height: var(--grid-gap);
+    background: var(--accent-color);
+  }
+
+  @supports (anchor-name: --nav-current) {
+    .nav a[aria-current='page']::after {
+      content: none;
+    }
+
+    .nav {
+      position: relative;
+      /* Keep the name inside the masthead, so nothing outside can claim it. */
+      anchor-scope: --nav-current;
+    }
+
+    /* At rest the bar is anchored to the current page. */
+    .nav a[aria-current='page'] {
+      anchor-name: --nav-current;
+    }
+
+    /* While the list is being explored it is anchored to the hovered or focused
+       link instead. The `:not()` is what keeps these two rules from fighting
+       when the current item is itself the hovered one: the name simply stays
+       where it is, so neither the order they are written in nor their
+       specificity matters. */
+    .nav ul:has(a:is(:hover, :focus-visible)) a[aria-current='page']:not(:hover, :focus-visible) {
+      anchor-name: none;
+    }
+
+    .nav ul a:is(:hover, :focus-visible) {
+      anchor-name: --nav-current;
+    }
+
+    /* `:has()` gates the whole pseudo-element: with no current item and nothing
+       hovered (the 404 page), `--nav-current` names nothing, and an unresolved
+       anchor would leave the bar somewhere arbitrary rather than nowhere. */
+    .nav:has(a:is([aria-current='page'], :hover, :focus-visible))::after {
+      content: '';
+      position: absolute;
+      position-anchor: --nav-current;
+      /* Stretched between the anchor's own edges, so the bar is exactly as wide
+         as the word it belongs to, and no taller than the shell's own seams. */
+      left: anchor(left);
+      right: anchor(right);
+      top: anchor(bottom);
+      /* The header's own content inset, so the bar clears the row and lands on
+         the panel's bottom edge. It is half the list's row gap, which is what
+         centres it in the space between two wrapped rows. */
+      margin-top: var(--grid-padding);
+      height: var(--grid-gap);
+      background: var(--accent-color);
+      /* The three insets above are all that ever change, and all of them are
+         lengths, so the shorthand's implicit `all` has exactly them to work on
+         and the bar slides to its new anchor. */
+      transition: var(--vt-duration) var(--vt-ease);
+    }
   }
 </style>
