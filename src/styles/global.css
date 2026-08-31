@@ -36,6 +36,33 @@
   --vt-slide-block: 150vh;
 }
 
+/* Motion policy
+   ==========================================================================
+   The tempo tokens are the site's one motion switch. Zeroing the three
+   durations stops everything timed against them, so nothing downstream asks
+   about the preference itself; `--vt-sequence` is a calc over them and reaches
+   0s on its own.
+
+   Durations rather than the slide distances, deliberately. The distances are
+   the vestibular half of this, and zeroing only those is the narrower reading
+   of the preference, but it leaves the small movements running: the masthead's
+   current-page bar crosses a couple of hundred pixels in `--vt-duration`, and a
+   sharp little slide like that is exactly the sort of thing someone asking for
+   less motion wants gone. `--vt-ease` is left alone; it means nothing over 0s.
+
+   This does not replace the two `animation: none` blocks further down (the
+   panel choreography) or in Grid.astro (the headline wipe). An animation still
+   runs at 0s, `both` fill and all, and the wipe's own duration is a literal
+   `.4s` rather than a token. Those say it outright; this covers the
+   transitions, and anything added later. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --vt-duration: 0s;
+    --vt-stagger: 0s;
+    --vt-enter: 0s;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -190,16 +217,11 @@ body > :is(.nav, .contact, .main, .toc),
   z-index: 1;
   padding: var(--grid-padding);
   transform: translateY(calc(-100% - var(--grid-gap)));
+  transition: transform var(--vt-duration) var(--vt-ease);
 }
 
 .skip-link:focus {
   transform: translateY(0);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .skip-link {
-    transition: transform var(--vt-duration) var(--vt-ease);
-  }
 }
 
 a {

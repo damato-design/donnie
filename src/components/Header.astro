@@ -259,11 +259,10 @@ const attrs = (link: HeaderLink, me = false) => ({
      single box over a bar per link, which could only ever hand off between two
      separate elements.
 
-     The `transition` is deliberately not inside a `prefers-reduced-motion:
-     no-preference` query, unlike the shell's other motion: it is a 2px rule
-     travelling a few hundred pixels, not a panel flying across the viewport, and
-     under the query the bar snapped between items on machines that ask for less
-     motion, which read as broken rather than as restrained.
+     The `transition` asks nothing about `prefers-reduced-motion`, and shouldn't:
+     `--vt-duration` is itself 0s under that preference (see the motion policy in
+     global.css), so this slide is off with the rest of the shell's motion
+     without restating the query here.
 
      It hangs off the bottom edge of the link, which the rule above stretches to
      fill its row, plus the header's own content inset. On one row that lands it
