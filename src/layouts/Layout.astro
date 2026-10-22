@@ -28,6 +28,7 @@ import Square from '@components/Square.astro';
 import Main from '@components/Main.astro';
 import Grid, { type GridProps } from '@components/Grid.astro';
 import Toc from '@components/Toc.astro'
+import PrintLink from '@components/PrintLink.astro';
 import type { MarkdownHeading } from 'astro';
 import '@styles/global.css';
 
@@ -135,6 +136,8 @@ const { grid, headings, tocMaxDepth } = Astro.props;
     <Main>
       <slot name="main" />
     </Main>
+    <!-- Print only: the QR code back to this page, closing the printout. -->
+    <PrintLink />
     <Header
       name="contact"
       label="Social profiles"

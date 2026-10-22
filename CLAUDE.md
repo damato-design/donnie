@@ -365,6 +365,16 @@ plain class (`.nav`, `.contact`, `.square`, `.grid`, `.main`, `.toc`) and `globa
 its `grid-area` next to the `grid-template-areas` that names it. There is no `area` prop and no
 inline `style="grid-area: …"`; a new panel gets a class and a rule.
 
+**Print keeps `<main>` alone**, and that rule is the exception to the above: each other panel
+(`Header`, `Square`, `Grid`, `Toc`, plus `ScrollToTop`) hides itself under `@media print` in
+**its own** `<style>`, because Astro's scoped selector (`.header[data-astro-cid-…]`) outranks
+anything `global.css` can write against the same element and would win back its `display`.
+`global.css` only drops `body` to a plain block and hides the skip link, which it owns.
+What stands in for all those links on paper is **`PrintLink`**, rendered by `Layout` after
+`<main>` and `display: none` on screen: a QR code of `Astro.url` (the canonical URL) drawn at
+build time by `uqr` (a zero-dependency devDependency) and inlined as SVG, plus the address
+written out. It ships no client script.
+
 Each panel *also* carries one of two **surface classes**, and paints through it rather than
 declaring its own background: **`.dash-surface`** for the dark frame around the page (nav,
 contact, main, toc) and **`.grid-surface`** for the red identity panels (square, and `Grid`'s

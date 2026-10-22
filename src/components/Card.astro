@@ -129,4 +129,12 @@ const linkAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : 
       position: relative;
     }
   }
+
+  /* A card is one entry; split across two sheets, its title ends up on one
+     and its summary and tags on the next. */
+  @media print {
+    .card {
+      break-inside: avoid;
+    }
+  }
 </style>

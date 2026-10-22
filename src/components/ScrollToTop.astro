@@ -76,4 +76,12 @@ import Icon from '@components/Icon.astro';
       animation-range: 300px 360px;
     }
   }
+
+  /* A fixed control repeats on every printed page, and there is nothing on
+     paper to scroll. */
+  @media print {
+    #scroll-to-top {
+      display: none;
+    }
+  }
 </style>

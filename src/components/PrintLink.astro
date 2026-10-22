@@ -1,0 +1,58 @@
+---
+/**
+ * PrintLink
+ *
+ * The way back from paper: a QR code for the current page plus its address
+ * written out, shown only in print. Everything that links in the shell is
+ * hidden there (see the `@media print` rules in each panel), so this is what
+ * stands in for them.
+ *
+ * The code is drawn at build time by `uqr` and inlined as an SVG, so the page
+ * ships no script for it. It encodes `Astro.url`, the same value `SEO` writes
+ * as the canonical URL, so a scan lands on the canonical page.
+ *
+ * It is `display: none` on screen, which also keeps it out of the shell's grid
+ * (an in-flow child of `body` would claim a cell) and out of the accessibility
+ * tree; the written address is what a reader of the printout gets either way.
+ *
+ * @component
+ */
+
+import { renderSVG } from 'uqr';
+
+const { href, host, pathname } = Astro.url;
+const qr = renderSVG(href);
+const address = pathname === '/' ? host : `${host}${pathname.replace(/\/$/, '')}`;
+---
+
+<aside class="print-link">
+  <Fragment set:html={qr} />
+  <p>Scan to read this page online<br/><span class="address">{address}</span></p>
+</aside>
+
+<style>
+  .print-link {
+    display: none;
+  }
+
+  @media print {
+    .print-link {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: var(--grid-padding);
+      break-inside: avoid;
+
+      /* `:global` because the SVG arrives through `set:html`, outside this
+         scope. It carries only a viewBox, so this is its whole size. */
+      & :global(svg) {
+        flex: none;
+        width: 1in;
+      }
+    }
+
+    .address {
+      font-weight: 700;
+    }
+  }
+</style>

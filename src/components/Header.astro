@@ -184,6 +184,13 @@ const attrs = (link: HeaderLink, me = false) => ({
     }
   }
 
+  /* Both bars are navigation, and nothing on paper can follow a link. */
+  @media print {
+    .header {
+      display: none;
+    }
+  }
+
   .btn {
     padding: 16px;
     line-height: 1;

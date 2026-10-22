@@ -103,6 +103,33 @@ html {
   }
 }
 
+/* Print policy
+   ==========================================================================
+   Paper is white, and browsers drop backgrounds when printing unless asked
+   not to, so the screen palette would leave mid-grey text on white. The fix
+   is the tokens rather than the elements: every component reads its colour
+   through these, so redefining them here reaches all of it with no
+   specificity to fight.
+
+   The surfaces go to `none` as well, so ticking "Background graphics" in the
+   print dialog doesn't put the dark frame and the contour texture back on
+   the page. `--dark-color` turns white because the one thing in `<main>`
+   that reads it, the ring around a timeline dot, is a cut-out of the page
+   behind it. `--accent-color` darkens to stay legible as `<strong>` text. */
+@media print {
+  :root {
+    --dash-bg: none;
+    --dash-fg: #111;
+    --accent-color: #b31b1b;
+    --dark-color: white;
+  }
+
+  html {
+    color-scheme: light;
+    background: none;
+  }
+}
+
 body {
   margin: 0 auto;
   min-height: 100vh;
@@ -153,6 +180,19 @@ body > .main {
 
 body > .toc {
   grid-area: toc;
+}
+
+/* Print keeps `<main>` alone. Each of the other panels hides itself in its
+   own component, because a scoped selector there outranks anything this file
+   could write against the same element. With five of six areas gone the grid
+   has nothing left to arrange, so `body` drops back to a plain block and
+   `<main>` takes the full width of the page rather than its 55% column. */
+@media print {
+  body {
+    display: block;
+    min-height: 0;
+    max-width: none;
+  }
 }
 
 /* Panel surfaces
@@ -224,6 +264,12 @@ body > :is(.nav, .contact, .main, .toc),
   transform: translateY(0);
 }
 
+@media print {
+  .skip-link {
+    display: none;
+  }
+}
+
 a {
   color: currentColor;
   text-underline-offset: .12em;
@@ -272,6 +318,23 @@ td {
   padding: 8px 16px;
   vertical-align: top;
   border: 1px solid currentColor;
+}
+
+/* Page breaks. A quote or a pros/cons table split across two sheets loses
+   the half that makes sense of the other, and a heading stranded at the foot
+   of a page introduces nothing. A table taller than a whole page has to break
+   somewhere, so its rows are kept whole as the fallback; `<thead>` repeats on
+   each sheet by default. */
+@media print {
+  blockquote,
+  table,
+  tr {
+    break-inside: avoid;
+  }
+
+  :is(h1, h2, h3, h4, h5, h6) {
+    break-after: avoid;
+  }
 }
 
 /* Disclosure (native <details>/<summary>)

@@ -331,6 +331,13 @@ const backdropUrl = backdrop
         }
     }
 
+    /* The page header is identity, not content; print keeps `<main>` alone. */
+    @media print {
+        .grid {
+            display: none;
+        }
+    }
+
     /* Without a metric beside it, the intro takes the whole row. */
     .grid:not(:has(.metric)) .intro {
         grid-column: 1 / -1;
